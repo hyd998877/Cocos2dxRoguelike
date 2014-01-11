@@ -120,6 +120,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx)
         LayerColor* pTextLayer = static_cast<LayerColor*>(cell->getChildByTag(kTag_TextLayer));
         LabelTTF* pTextLabel = static_cast<LabelTTF*>(pTextLayer->getChildByTag(kTag_TextLabel));
         pTextLabel->setString(textString);
+        pTextLabel->setPosition(Point(pTextLabel->getFontSize() + pTextLabel->getContentSize().width / 2, pTextLabel->getContentSize().height / 2));
     }
 
     return cell;
