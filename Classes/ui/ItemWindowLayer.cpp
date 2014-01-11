@@ -81,6 +81,11 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
         // 表示indexを更新
         m_showItemDetailIdx = touchedIdx;
     });
+    auto pItemItemListWaku = CREATE_WINDOW_WAKU();
+    pItemItemListWaku->setPreferredSize(pItemListLayer->getContentSize());
+    pItemItemListWaku->setPosition(Point(pItemItemListWaku->getContentSize().width / 2, pItemItemListWaku->getContentSize().height / 2));
+    pItemListLayer->addChild(pItemItemListWaku);
+    
     pItemListLayer->setTag(ItemWindowLayer::ItemTableLayerTag);
     this->addChild(pItemListLayer);
     
@@ -129,7 +134,8 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
     
     // -----------------------------
     // メニューボタン
-    float addNextMenuPositonX = 8;
+    float addNextMenuPositonX = 4;
+    float addNextMenuPositonY = 4;
     // 捨てるボタン
     auto pMenuItemDrop = ItemWindowLayer::createMenuItemSprite(Color3B::RED, [this](Object* pSeneder) {
         // hoge
@@ -149,8 +155,9 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
             m_itemDropMenuCallback(pSeneder, dropItemDto);
         }
     });
-    pMenuItemDrop->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX , pMenuItemDrop->getContentSize().height / 2));
-    addNextMenuPositonX += pMenuItemDrop->getContentSize().width + 8;
+    pMenuItemDrop->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX , pMenuItemDrop->getContentSize().height / 2 + addNextMenuPositonY));
+    addNextMenuPositonX += pMenuItemDrop->getContentSize().width + 4;
+    addNextMenuPositonY += 0;
     
     // 使用ボタン
     auto pMenuItemUse = ItemWindowLayer::createMenuItemSprite(Color3B::GRAY, [this](Object* pSeneder) {
@@ -171,13 +178,18 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
             m_itemUseMenuCallback(pSeneder, dropItemDto);
         }
     });
-    pMenuItemUse->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemDrop->getContentSize().height / 2));
-    addNextMenuPositonX += pMenuItemUse->getContentSize().width + 8;
+    pMenuItemUse->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemDrop->getContentSize().height / 2 + addNextMenuPositonY));
+    addNextMenuPositonX += pMenuItemUse->getContentSize().width + 4;
+    addNextMenuPositonY += 0;
     
     auto pMenu = Menu::create(pMenuItemDrop, pMenuItemUse, NULL);
     pMenu->setPosition(Point::ZERO);
     pItemDetailLayer->addChild(pMenu);
     
+    auto pItemDetailWaku = CREATE_WINDOW_WAKU();
+    pItemDetailWaku->setPreferredSize(pItemDetailLayer->getContentSize());
+    pItemDetailWaku->setPosition(Point(pItemDetailWaku->getContentSize().width / 2, pItemDetailWaku->getContentSize().height / 2));
+    pItemDetailLayer->addChild(pItemDetailWaku);
     this->addChild(pItemDetailLayer);
     
     return true;

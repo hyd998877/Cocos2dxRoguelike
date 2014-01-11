@@ -20,23 +20,23 @@ DropItemSprite::~DropItemSprite()
     
 }
 
-bool DropItemSprite::initWithDropItemDto(DropItemDto pDropItemDto)
+bool DropItemSprite::initWithDropItemDto(DropItemDto dropItemDto)
 {
-    m_dropItemDto = pDropItemDto;
+    m_dropItemDto = dropItemDto;
     
-//    // ActorのSpriteFrameのplistをキャッシュ
-//    String* spriteFramePlistName = String::createWithFormat("actor_%d.plist", m_dropItemDto.playerId);
-//    SpriteFrameCache::getInstance()->addSpriteFramesWithFile(spriteFramePlistName->getCString());
-    
-    // Spriteを生成
-//    String* spriteFrameName = String::createWithFormat("actor_%d_%s_%d.jpg", m_dropItemDto.playerId, "bottom", 1);
-//    if ( !Sprite::initWithSpriteFrameName(spriteFrameName->getCString()) )
-//    {
-//        return false;
-//    }
-    // TODO: とりあえずSpriteFrameCacheはまだやらない。そんなにアイテム多くないので
     auto spriteFileName = StringUtils::format("item_%d.png", m_dropItemDto.imageResId);
     if (!Sprite::initWithFile(spriteFileName))
+    {
+        return false;
+    }
+    
+    return true;
+}
+bool DropItemSprite::initWithTextureDropItemDto(DropItemDto dropItemDto, Texture2D *texture)
+{
+    m_dropItemDto = dropItemDto;
+
+    if (!Sprite::initWithTexture(texture))
     {
         return false;
     }
@@ -46,19 +46,28 @@ bool DropItemSprite::initWithDropItemDto(DropItemDto pDropItemDto)
 
 DropItemSprite* DropItemSprite::createWithDropItemDto(DropItemDto pDropItemDto)
 {
-    auto *pRet = new DropItemSprite();
-    if (pRet && pRet->initWithDropItemDto(pDropItemDto))
+    DropItemSprite *sprite = new DropItemSprite();
+    if (sprite && sprite->initWithDropItemDto(pDropItemDto))
     {
-        pRet->autorelease();
-        return pRet;
+        sprite->autorelease();
+        return sprite;
     }
-    else
-    {
-        delete pRet;
-        pRet = NULL;
-        return NULL;
-    }
+    CC_SAFE_DELETE(sprite);
+    return nullptr;
 }
+
+DropItemSprite* DropItemSprite::createWithTextureDropItemDto(DropItemDto dropItemDto, Texture2D *texture)
+{
+    DropItemSprite *sprite = new DropItemSprite();
+    if (sprite && sprite->initWithTextureDropItemDto(dropItemDto, texture))
+    {
+        sprite->autorelease();
+        return sprite;
+    }
+    CC_SAFE_DELETE(sprite);
+    return nullptr;
+}
+
 
 void DropItemSprite::setDropMapItem(DropMapItem dropMapItem)
 {

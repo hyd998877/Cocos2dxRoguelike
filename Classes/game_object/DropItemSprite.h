@@ -35,7 +35,9 @@ public:
     
     // 初期化とか
     virtual bool initWithDropItemDto(DropItemDto dropItemDto);
+    virtual bool initWithTextureDropItemDto(DropItemDto dropItemDto, Texture2D *texture);
     static DropItemSprite* createWithDropItemDto(DropItemDto dropItemDto);
+    static DropItemSprite* createWithTextureDropItemDto(DropItemDto dropItemDto, Texture2D *texture);
     
     void setDropMapItem(DropMapItem dropMapItem);
     DropMapItem* getDropMapItem();

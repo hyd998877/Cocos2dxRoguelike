@@ -127,10 +127,11 @@ bool RogueScene::init()
     // ---------------------
     auto draw = DrawNode::create();
     draw->setPosition(Point::ZERO);
+    draw->setOpacity(0.5f);
     
     // 線の太さと色
     float lineSize = 1 * 0.5;
-    Color4F color = Color4F::MAGENTA;
+    auto color = Color4F::MAGENTA;
     
     // 縦線を引く
     for (int x = 1; x < m_baseMapSize.width; x++)
@@ -184,6 +185,10 @@ bool RogueScene::init()
     // ゲームログ表示
     //-------------------------
     //    float startWidth = pFaceSprite->getContentSize().width * pFaceSprite->getScaleX();
+    auto pGameLogWaku = CREATE_WINDOW_WAKU();
+    pGameLogWaku->setPreferredSize(Size(winSize.width * 0.8, m_baseTileSize.height * 1.5));
+    pGameLogWaku->setPosition(pGameLogWaku->getPreferredSize().width / 2, pGameLogWaku->getPreferredSize().height / 2);
+    
     auto pGameLogLayer = LayerColor::create(Color4B(0, 0, 0, 192));
     pGameLogLayer->setContentSize(Size(winSize.width * 0.8, m_baseTileSize.height * 1.5));
     pGameLogLayer->setPosition(winSize.width / 2 - pGameLogLayer->getContentSize().width / 2, 0);
@@ -192,6 +197,9 @@ bool RogueScene::init()
     auto pLogTextLabel = LabelTTF::create("", GAME_FONT(baseFontSize), baseFontSize, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
     pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getFontSize() / 4));
     pGameLogLayer->addChild(pLogTextLabel);
+    
+    pGameLogLayer->addChild(pGameLogWaku);
+    
     this->addChild(pGameLogLayer, RogueScene::zGameLogIndex, RogueScene::kGameLogTag);
     
     // ------------------------
