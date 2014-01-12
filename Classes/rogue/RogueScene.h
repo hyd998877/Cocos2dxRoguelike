@@ -90,6 +90,7 @@ private:
     int m_TurnCount;
     void changeGameStatus(GameStatus gameStatus);
     void enemyTurn();
+    void checkEnmeyTurnEnd();
     
     // マップベース情報
     cocos2d::Size m_baseContentSize;

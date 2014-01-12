@@ -541,58 +541,51 @@ void RogueScene::enemyTurn()
             }
             else if (m_mapManager.getActorMapItem(&moveMapIndex)->mapDataType == MapDataType::PLAYER)
             {
-                auto pPlayerDto = pPlayerActorSprite->getActorDto();
-                auto pEnemyDto = pEnemySprite->getActorDto();
+                // 移動中のステータスへ
+                changeGameStatus(GameStatus::ENEMY_ACTION);
                 
-                int damage = BattleLogic::exec(pEnemyDto, pPlayerDto);
+                // 攻撃アニメーション
+                auto pMove1 = MoveTo::create(0.2f, pEnemySprite->getPosition() + indexToPointNotTileSize(addMoveIndex));
+                auto pMove2 = MoveTo::create(0.2f, pEnemySprite->getPosition());
                 
-                // 攻撃イベント
-                logMessage("%sの攻撃: %sに%dダメージ", pEnemyDto->name.c_str(), pPlayerDto->name.c_str(), damage);
-                
-                pEnemySprite->getActorMapItem()->attackDone = true;
+                pEnemySprite->runAction(Sequence::create(pMove1, pMove2,
+                                                         CallFunc::create([this, pEnemySprite, pPlayerActorSprite]() {
+                    auto pPlayerDto = pPlayerActorSprite->getActorDto();
+                    auto pEnemyDto = pEnemySprite->getActorDto();
+                                        
+                    int damage = BattleLogic::exec(pEnemyDto, pPlayerDto);
+                    
+                    // 攻撃イベント
+                    this->logMessage("%sの攻撃: %sに%dダメージ", pEnemyDto->name.c_str(), pPlayerDto->name.c_str(), damage);
+                    
+                    pEnemySprite->getActorMapItem()->attackDone = true;
+                    
+                    checkEnmeyTurnEnd();
+                    
+                }), NULL));
             }
             else
             {
-                // 移動中のステータスへ
+                // アニメーション中のステータスへ
                 changeGameStatus(GameStatus::ENEMY_ACTION);
                 // 移動開始
-                moveMap(addMoveIndex, enemyMapItem.seqNo, enemyMapItem.mapDataType, CallFuncN::create([this, pEnemySprite](Object* pObj) {
-
-                    // 移動終わり次のモンスターへいきたいところ
-                    // listをメンバ変数で持っちゃえばいけるか？
-                    auto pEnemySprite = static_cast<ActorSprite*>(pObj);
+                moveMap(addMoveIndex, enemyMapItem.seqNo, enemyMapItem.mapDataType,
+                        CallFunc::create([this, pEnemySprite]() {
+                    // 移動終わり
                     pEnemySprite->getActorMapItem()->moveDone = true;
                     
-                    bool isTurnEnd = true;
-                    std::list<ActorMapItem> enemyList = m_mapManager.findEnemyMapItem();
-                    for (ActorMapItem enemyMapItem : enemyList)
-                    {
-                        auto pEnemySprite = getEnemyActorSprite(enemyMapItem.seqNo);
-                        auto pEnemyMapItem = pEnemySprite->getActorMapItem();
-                        if (!pEnemyMapItem->moveDone && !pEnemyMapItem->attackDone)
-                        {
-                            isTurnEnd = false;
-                            break;
-                        }
-                    }
-                    if (isTurnEnd)
-                    {
-                        changeGameStatus(GameStatus::PLAYER_TURN);
-                    }
-                    else
-                    {
-                        changeGameStatus(GameStatus::ENEMY_TURN);
-                    }
+                    checkEnmeyTurnEnd();
                 }));
             }
         }
     }
-    // 留まった時とかはここでターン終了
-    if (m_gameStatus != GameStatus::ENEMY_ACTION)
-    {
-        changeGameStatus(GameStatus::PLAYER_TURN);
-    }
+    checkEnmeyTurnEnd();
+}
+
+void RogueScene::checkEnmeyTurnEnd()
+{
     bool isTurnEnd = true;
+    std::list<ActorMapItem> enemyList = m_mapManager.findEnemyMapItem();
     for (ActorMapItem enemyMapItem : enemyList)
     {
         auto pEnemySprite = getEnemyActorSprite(enemyMapItem.seqNo);
@@ -602,6 +595,14 @@ void RogueScene::enemyTurn()
             isTurnEnd = false;
             break;
         }
+    }
+    if (isTurnEnd)
+    {
+        changeGameStatus(GameStatus::PLAYER_TURN);
+    }
+    else
+    {
+        changeGameStatus(GameStatus::ENEMY_TURN);
     }
 }
 
@@ -669,23 +670,38 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
     auto pEnemyMapItem = m_mapManager.getActorMapItem(&touchPointMapIndex);
     if (pEnemyMapItem->mapDataType == MapDataType::ENEMY)
     {
-        auto pPlayerDto = pActorSprite->getActorDto();
+        changeGameStatus(GameStatus::PLAYER_ACTION);
+        
+        // 攻撃アニメーション
+        auto pMove1 = MoveTo::create(0.2f, pActorSprite->getPosition() + indexToPointNotTileSize(addMoveIndex));
+        auto pMove2 = MoveTo::create(0.2f, pActorSprite->getPosition());
+        
         auto pEnemySprite = getEnemyActorSprite(pEnemyMapItem->seqNo);
-        auto pEnemyDto = pEnemySprite->getActorDto();
         
-        int damage = BattleLogic::exec(pPlayerDto, pEnemyDto);
-        
-        // 攻撃イベント
-        logMessage("%sの攻撃: %sに%dのダメージ", pPlayerDto->name.c_str(), pEnemyDto->name.c_str(), damage);
-        
-        // 敵の死亡判定
-        if (pEnemyDto->hitPoint == 0)
-        {
-            logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
+        pActorSprite->runAction(Sequence::create(pMove1, pMove2,
+                                                 CallFunc::create([this, pActorSprite, pEnemySprite](void) {
+            auto pPlayerDto = pActorSprite->getActorDto();
+            auto pEnemyDto = pEnemySprite->getActorDto();
             
-            // マップから消える
-            removeEnemyActorSprite(pEnemySprite);
-        }
+            int damage = BattleLogic::exec(pPlayerDto, pEnemyDto);
+            
+            // 攻撃イベント
+            logMessage("%sの攻撃: %sに%dのダメージ", pPlayerDto->name.c_str(), pEnemyDto->name.c_str(), damage);
+            
+            // 敵の死亡判定
+            if (pEnemyDto->hitPoint == 0)
+            {
+                logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
+                
+                // マップから消える
+                removeEnemyActorSprite(pEnemySprite);
+            }
+            changeGameStatus(GameStatus::ENEMY_TURN);
+            
+        }), NULL));
+        
+        // コールバックまでgameStatusを更新はしない
+        return;
     }
     else
     {
@@ -704,13 +720,13 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
             if (pTouchPointMapItem->mapDataType == MapDataType::MAP_ITEM)
             {
                 // ドロップアイテムを拾う
-                auto pDropMapItem = (DropMapItem*) pTouchPointMapItem;
+                auto pDropMapItem = static_cast<DropMapItem*>(pTouchPointMapItem);
                 
                 // TODO: 拾うSE再生
                 
                 // itemを取得
                 auto pDropItemLayer = getChildByTag(RogueScene::kTiledMapTag)->getChildByTag(RogueScene::TiledMapTag::kTiledMapDropItemBaseTag);
-                auto pDropItemSprite = (DropItemSprite*) pDropItemLayer->getChildByTag(RogueScene::TiledMapTag::kTiledMapDropItemBaseTag + pDropMapItem->seqNo);
+                auto pDropItemSprite = static_cast<DropItemSprite*>(pDropItemLayer->getChildByTag(RogueScene::TiledMapTag::kTiledMapDropItemBaseTag + pDropMapItem->seqNo));
                 
                 // メッセージログ
                 auto pDropItemDto = pDropItemSprite->getDropItemDto();
@@ -721,16 +737,6 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
                 
                 // Map上から削除する
                 removeDropItemSprite(pDropItemLayer, pDropItemSprite);
-                
-//                // mapManagerから消す
-//                m_mapManager.removeMapItem(pDropMapItem);
-//                
-//                // ミニマップを更新
-//                auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-//                pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->removeChildByTag(pDropItemSprite->getTag());
-//                
-//                // Map上からremoveする
-//                pDropItemLayer->removeChild(pDropItemSprite);
             }
             
             // 移動処理
@@ -984,6 +990,8 @@ void RogueScene::showItemList(int showTextIndex)
             else
             {
                 this->logMessage("%sを床におけなかった。", dropItemDto.name.c_str());
+                // アイテムを戻す
+                this->getItemWindowLayer()->addItemList(&dropItemDto);
             }
             // インベントリは閉じる
             this->hideItemList();
