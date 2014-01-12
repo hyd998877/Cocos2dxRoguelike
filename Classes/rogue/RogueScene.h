@@ -46,13 +46,14 @@ protected:
         zTiledMapFrontIndex        = 30000,
     };
     
+    // 廃止予定
     enum Tag {
         kTiledMapTag          = 1,
 //        kCursorBaseTag      = 9000,
 //        kCursorMoveFindTag  = 9001,
 //        kCursorMoveStepTag  = 9002,
 //        kCursorSelectedTag  = 9003,
-        kActorBaseTag         = 100000,
+//        kActorBaseTag         = 100000,
         kMiniMapTag           = 150000,
         kStatusBarTag         = 200000,
         kStatusBar2Tag        = 200001,
@@ -61,6 +62,10 @@ protected:
         kItemDetailTag        = 221000,
         kMenuTag              = 300000,
         kModalTag             = 900000,
+    };
+    enum BaseMapLayerTag {
+        ActorPlayerTag   = 100000,
+        ActionCursorTag  = 110000,
     };
     
     // ミニマップ上のタグ
@@ -83,7 +88,12 @@ protected:
         zMenuIndex       = 300000,
         zModalIndex      = 900000,
     };
-
+    enum BaseMapLayerZIndex {
+        ActorPlayerZIndex   = 100000,
+        ActionCursorZIndex  = 110000,
+    };
+    
+    
 private:
     // ゲーム管理
     GameStatus m_gameStatus;
@@ -143,6 +153,7 @@ private:
     // ミニマップ関連
     void addMiniMapItem(MapItem* pMapItem, int baseSpriteTag);
     
+    SpriteBatchNode* getGridSpriteBatchNode();
 //    // TODO: プレイヤー情報（あとで別の場所に持っていく）
 //    std::list<DropItemSprite::DropItemDto> m_playerItemList;
     

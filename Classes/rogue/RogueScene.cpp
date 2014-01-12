@@ -23,6 +23,7 @@
 
 USING_NS_CC;
 
+// プロトタイプ宣言
 int GetRandom(int min,int max);
 
 std::size_t f_r(const std::string& s, char c)
@@ -31,6 +32,7 @@ std::size_t f_r(const std::string& s, char c)
     return (pos == std::string::npos) ? 0 : (1 + f_r(s.substr(pos+1), c));
 }
 
+// -----------------------------------
 RogueScene::RogueScene()
 :m_gameStatus(GameStatus::INIT),
 m_TurnCount(0),
@@ -269,7 +271,7 @@ bool RogueScene::init()
     actorSprite->setActorMapItem(actorMapItem);
     actorSprite->runBottomAction();
     // プレイヤーは画面中心にくるのでmapLayerに追加しない
-    this->addChild(actorSprite, RogueScene::zActorBaseIndex, (RogueScene::kActorBaseTag + actorMapItem.seqNo));
+    this->addChild(actorSprite, RogueScene::ActorPlayerZIndex, (RogueScene::ActorPlayerTag + actorMapItem.seqNo));
     
     // マップに追加
     m_mapManager.addActor(actorSprite->getActorMapItem());
@@ -395,13 +397,47 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     }
     else if (m_gameStatus == GameStatus::PLAYER_TURN)
     {
+        auto pPlayer = getPlayerActorSprite(1);
+        
+        // TODO: miniMapLayerからとってきたbatchNodeなのでちょっと無理やり
+        auto pBatchNode = getGridSpriteBatchNode();
+        if (pBatchNode)
+        {
+            bool isCreated = false;
+            for (auto pNode : this->getChildren())
+            {
+                if (pNode->getZOrder() == RogueScene::ActionCursorZIndex)
+                {
+                    isCreated = true;
+                    break;
+                }
+            }
+            
+            if (!isCreated)
+            {
+                std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(pPlayer->getActorMapItem()->mapIndex);
+                for (auto mapIndex : searchMapIndexList)
+                {
+                    auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
+                    pSprite->setPosition(indexToPoint(mapIndex.x, mapIndex.y));
+                    
+                    pSprite->setColor(Color3B::ORANGE);
+                    pSprite->setOpacity(64);
+                    
+                    // 1.0秒でフェードイン、フェードアウトを繰り返すように設定
+                    Sequence* sequence = Sequence::create(FadeTo::create(0.5f, 64), FadeTo::create(0.5f, 0), NULL);
+                    RepeatForever* repeat = RepeatForever::create(sequence);
+                    pSprite->runAction(repeat);
+                    this->addChild(pSprite, RogueScene::ActionCursorZIndex, RogueScene::ActionCursorTag);
+                }
+            }
+        }
         // カーソルはクリアする
         m_mapManager.clearCursor();
         // ターン数を進める
         m_TurnCount++;
         
         // TODO: とりあえずここで・・・
-        auto pPlayer = getPlayerActorSprite(1);
         auto pPlayerDto = pPlayer->getActorDto();
         
         // １ターンに1空腹度が減るという
@@ -439,33 +475,7 @@ void RogueScene::enemyTurn()
             
             // プレイヤーの周辺で最もコストが低い箇所へ移動
             auto playerMapIndex = pPlayerActorSprite->getActorMapItem()->mapIndex;
-            std::list<MapIndex> searchMapIndexList;
-            searchMapIndexList.clear();
-            
-            // 右
-            MapIndex searchMapIndex = playerMapIndex;
-            searchMapIndex.x += 1;
-            searchMapIndex.y += 0;
-            searchMapIndex.moveDictType = MoveDirectionType::MOVE_LEFT;
-            searchMapIndexList.push_back(searchMapIndex);
-            // 左
-            searchMapIndex = playerMapIndex;
-            searchMapIndex.x += -1;
-            searchMapIndex.y += 0;
-            searchMapIndex.moveDictType = MoveDirectionType::MOVE_RIGHT;
-            searchMapIndexList.push_back(searchMapIndex);
-            // 上
-            searchMapIndex = playerMapIndex;
-            searchMapIndex.x += 0;
-            searchMapIndex.y += 1;
-            searchMapIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
-            searchMapIndexList.push_back(searchMapIndex);
-            // 下
-            searchMapIndex = playerMapIndex;
-            searchMapIndex.x += 0;
-            searchMapIndex.y += -1;
-            searchMapIndex.moveDictType = MoveDirectionType::MOVE_UP;
-            searchMapIndexList.push_back(searchMapIndex);
+            std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(playerMapIndex);
             
             // そもそもプレイヤーが隣接しているかチェック
             bool isPlayerAttack = false;
@@ -504,6 +514,7 @@ void RogueScene::enemyTurn()
                     it = moveList.end();
                 }
             }
+            searchMapIndexList.clear();
             
             // 移動有無関係なく向きは変える
             auto pEnemySprite = getEnemyActorSprite(enemyMapItem.seqNo);
@@ -842,8 +853,7 @@ void RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapD
     actorMapItem->mapIndex = moveMapIndex;
     
     // ミニマップも更新
-    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-    auto pMiniMapActorNode = pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->getChildByTag(pActorSprite->getTag());
+    auto pMiniMapActorNode = getGridSpriteBatchNode()->getChildByTag(pActorSprite->getTag());
     
     float scale = 1.0f / 8.0f;
     auto point = indexToPointNotTileSize(pActorSprite->getActorMapItem()->mapIndex) / 8;
@@ -1092,8 +1102,7 @@ void RogueScene::removeEnemyActorSprite(ActorSprite* pEnemySprite)
     m_mapManager.removeMapItem(pEnemySprite->getActorMapItem());
     
     // ミニマップを更新
-    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-    pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->removeChildByTag(pEnemySprite->getTag());
+    getGridSpriteBatchNode()->removeChildByTag(pEnemySprite->getTag());
     
     // Map上からremoveする
     pEnemyMapLayer->removeChild(pEnemySprite);
@@ -1138,11 +1147,23 @@ void RogueScene::removeDropItemSprite(Node* pRemoveParentNode, DropItemSprite* p
     m_mapManager.removeMapItem(pDropItemSprite->getDropMapItem());
     
     // ミニマップを更新
-    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-    pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->removeChildByTag(pDropItemSprite->getTag());
+    getGridSpriteBatchNode()->removeChildByTag(pDropItemSprite->getTag());
     
     // Map上からremoveする
     pRemoveParentNode->removeChild(pDropItemSprite);
+}
+
+SpriteBatchNode* RogueScene::getGridSpriteBatchNode()
+{
+    auto pMiniMapLayer = getChildByTag(RogueScene::kMiniMapTag);
+    auto pBatchNode = static_cast<SpriteBatchNode*>(pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode));
+    if (!pBatchNode)
+    {
+        pBatchNode = SpriteBatchNode::create("grid32.png");
+        pBatchNode->setTag(MiniMapLayerTag::BatchNode);
+        pMiniMapLayer->addChild(pBatchNode);
+    }
+    return pBatchNode;
 }
 
 void RogueScene::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag)
@@ -1167,33 +1188,29 @@ void RogueScene::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag)
         alpha = 128;
     }
     
-    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-    auto pBatchNode = static_cast<SpriteBatchNode*>(pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode));
-    if (!pBatchNode)
+    auto pBatchNode = getGridSpriteBatchNode();
+    if (pBatchNode)
     {
-        pBatchNode = SpriteBatchNode::create("grid32.png");
-        pBatchNode->setTag(MiniMapLayerTag::BatchNode);
-        pMiniMapLayer->addChild(pBatchNode);
+        auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
+        pSprite->setPosition(indexToPoint(pMapItem->mapIndex.x, pMapItem->mapIndex.y));
+        
+        pSprite->setColor(spriteColor);
+        pSprite->setOpacity(alpha);
+        
+        // タイルの1/8サイズ
+        float scale = 1.0f / 8.0f;
+        pSprite->setScale(scale);
+        pSprite->setContentSize(m_baseTileSize / 8);
+        // 現在位置からPositionを取得して1/8にする
+        auto point = indexToPointNotTileSize(pMapItem->mapIndex) / 8;
+        pSprite->setPosition(point.x + pSprite->getContentSize().width / 2 * scale,
+                             point.y + pSprite->getContentSize().height / 2 * scale);
+        // 移動時に更新できるようにtag管理
+        pSprite->setTag(baseSpriteTag);
+        
+        // add
+        pBatchNode->addChild(pSprite);
     }
-    auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
-    pSprite->setPosition(indexToPoint(pMapItem->mapIndex.x, pMapItem->mapIndex.y));
-    
-    pSprite->setColor(spriteColor);
-    pSprite->setOpacity(alpha);
-    
-    // タイルの1/8サイズ
-    float scale = 1.0f / 8.0f;
-    pSprite->setScale(scale);
-    pSprite->setContentSize(m_baseTileSize / 8);
-    // 現在位置からPositionを取得して1/8にする
-    auto point = indexToPointNotTileSize(pMapItem->mapIndex) / 8;
-    pSprite->setPosition(point.x + pSprite->getContentSize().width / 2 * scale,
-                         point.y + pSprite->getContentSize().height / 2 * scale);
-    // 移動時に更新できるようにtag管理
-    pSprite->setTag(baseSpriteTag);
-    
-    // add
-    pBatchNode->addChild(pSprite);
 }
 
 void RogueScene::refreshStatus()
@@ -1281,7 +1298,7 @@ MapIndex RogueScene::mapIndexToTileIndex(MapIndex mapIndex)
 
 ActorSprite* RogueScene::getPlayerActorSprite(int seqNo)
 {
-    return (ActorSprite*)getChildByTag(RogueScene::kActorBaseTag + seqNo);
+    return (ActorSprite*)getChildByTag(RogueScene::ActorPlayerTag + seqNo);
 }
 
 ActorSprite* RogueScene::getEnemyActorSprite(int seqNo)
@@ -1303,4 +1320,3 @@ int GetRandom(int min,int max)
 {
 	return min + (int)(rand()*(max-min+1.0)/(1.0+RAND_MAX));
 }
-

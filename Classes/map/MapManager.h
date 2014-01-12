@@ -152,6 +152,8 @@ public:
     MapItem searchTargetMapItem(std::list<MapIndex> searchMapIndexList);
     
     std::list<ActorMapItem> findEnemyMapItem();
+    
+    static std::list<MapIndex> createRelatedMapIndexList(MapIndex baseMapIndex);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__MapManager__) */

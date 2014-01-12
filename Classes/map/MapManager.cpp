@@ -436,6 +436,42 @@ std::list<ActorMapItem> MapManager::findEnemyMapItem()
 }
 
 #pragma mark
+#pragma mark staticメソッド
+
+std::list<MapIndex> MapManager::createRelatedMapIndexList(MapIndex baseMapIndex)
+{
+    std::list<MapIndex> relatedMapIndexList;
+    relatedMapIndexList.clear();
+    
+    // 右
+    MapIndex searchMapIndex = baseMapIndex;
+    searchMapIndex.x += 1;
+    searchMapIndex.y += 0;
+    searchMapIndex.moveDictType = MoveDirectionType::MOVE_LEFT;
+    relatedMapIndexList.push_back(searchMapIndex);
+    // 左
+    searchMapIndex = baseMapIndex;
+    searchMapIndex.x += -1;
+    searchMapIndex.y += 0;
+    searchMapIndex.moveDictType = MoveDirectionType::MOVE_RIGHT;
+    relatedMapIndexList.push_back(searchMapIndex);
+    // 上
+    searchMapIndex = baseMapIndex;
+    searchMapIndex.x += 0;
+    searchMapIndex.y += 1;
+    searchMapIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
+    relatedMapIndexList.push_back(searchMapIndex);
+    // 下
+    searchMapIndex = baseMapIndex;
+    searchMapIndex.x += 0;
+    searchMapIndex.y += -1;
+    searchMapIndex.moveDictType = MoveDirectionType::MOVE_UP;
+    relatedMapIndexList.push_back(searchMapIndex);
+    
+    return relatedMapIndexList;
+}
+
+#pragma mark
 #pragma mark DEBUG関連
 
 void MapManager::DEBUG_LOG_MAP_ITEM_LAYER()
