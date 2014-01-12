@@ -189,9 +189,8 @@ bool RogueScene::init()
     // ------------------------
     // ミニマップ
     // ------------------------
-    // 青で半透明
-//    auto miniMapLayer = LayerColor::create(Color4B(0, 0, 196, 128));
-    auto miniMapLayer = LayerColor::create(Color4B(0, 0, 196, 0));
+    // 透明
+    auto miniMapLayer = LayerColor::create(Color4B(0, 0, 0, 0));
     // 1/8サイズ
     miniMapLayer->setContentSize(Size(m_baseMapSize.width * m_baseTileSize.width / 8,
                                       m_baseMapSize.height * m_baseTileSize.height / 8));
@@ -295,7 +294,7 @@ bool RogueScene::init()
     enemyDto.attackPoint = 2;
     enemyDto.defencePoint = 0;
     // 経験値
-    enemyDto.exp = 0;
+    enemyDto.exp = 2;
     enemyDto.nextExp = 10;
     // HP
     enemyDto.hitPoint = 10;
@@ -657,12 +656,22 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
     if (pEnemyMapItem->mapDataType == MapDataType::ENEMY)
     {
         auto pPlayerDto = pActorSprite->getActorDto();
-        auto pEnemyDto = getEnemyActorSprite(pEnemyMapItem->seqNo)->getActorDto();
+        auto pEnemySprite = getEnemyActorSprite(pEnemyMapItem->seqNo);
+        auto pEnemyDto = pEnemySprite->getActorDto();
         
         int damage = BattleLogic::exec(pPlayerDto, pEnemyDto);
         
         // 攻撃イベント
         logMessage("%sの攻撃: %sに%dのダメージ", pPlayerDto->name.c_str(), pEnemyDto->name.c_str(), damage);
+        
+        // 敵の死亡判定
+        if (pEnemyDto->hitPoint == 0)
+        {
+            logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
+            
+            // マップから消える
+            removeEnemyActorSprite(pEnemySprite);
+        }
     }
     else
     {
@@ -696,15 +705,18 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
                 // イベントリに追加する
                 getItemWindowLayer()->addItemList(pDropItemDto);
                 
-                // mapManagerから消す
-                m_mapManager.removeMapItem(pDropMapItem);
+                // Map上から削除する
+                removeDropItemSprite(pDropItemLayer, pDropItemSprite);
                 
-                // ミニマップを更新
-                auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-                pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->removeChildByTag(pDropItemSprite->getTag());
-                
-                // Map上からremoveする
-                pDropItemLayer->removeChild(pDropItemSprite);
+//                // mapManagerから消す
+//                m_mapManager.removeMapItem(pDropMapItem);
+//                
+//                // ミニマップを更新
+//                auto pMiniMapLayer = getChildByTag(kMiniMapTag);
+//                pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->removeChildByTag(pDropItemSprite->getTag());
+//                
+//                // Map上からremoveする
+//                pDropItemLayer->removeChild(pDropItemSprite);
             }
             
             // 移動処理
@@ -1050,6 +1062,21 @@ bool RogueScene::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, M
     return true;
 }
 
+void RogueScene::removeEnemyActorSprite(ActorSprite* pEnemySprite)
+{
+    auto pEnemyMapLayer = getChildByTag(RogueScene::kTiledMapTag)->getChildByTag(RogueScene::TiledMapTag::kTiledMapEnemyBaseTag);
+    
+    // mapManagerから消す
+    m_mapManager.removeMapItem(pEnemySprite->getActorMapItem());
+    
+    // ミニマップを更新
+    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
+    pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->removeChildByTag(pEnemySprite->getTag());
+    
+    // Map上からremoveする
+    pEnemyMapLayer->removeChild(pEnemySprite);
+}
+
 bool RogueScene::tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, MapIndex mapIndex)
 {
     // すでにアイテムが置いてある場合は置けない
@@ -1081,6 +1108,19 @@ bool RogueScene::tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, Map
     addMiniMapItem(pDropItemSprite->getDropMapItem(), pDropItemSprite->getTag());
     
     return true;
+}
+
+void RogueScene::removeDropItemSprite(Node* pRemoveParentNode, DropItemSprite* pDropItemSprite)
+{
+    // mapManagerから消す
+    m_mapManager.removeMapItem(pDropItemSprite->getDropMapItem());
+    
+    // ミニマップを更新
+    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
+    pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->removeChildByTag(pDropItemSprite->getTag());
+    
+    // Map上からremoveする
+    pRemoveParentNode->removeChild(pDropItemSprite);
 }
 
 void RogueScene::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag)

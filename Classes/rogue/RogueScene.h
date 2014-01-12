@@ -118,6 +118,9 @@ private:
     bool tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, MapIndex mapIndex);
     bool tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, MapIndex mapIndex);
     
+    void removeEnemyActorSprite(ActorSprite* pActorSprite);
+    void removeDropItemSprite(Node* pRemoveParentNode, DropItemSprite* pDropItemSprite);
+    
     // マップ座標変換
     cocos2d::Point indexToPoint(int mapIndex_x, int mapIndex_y);
     cocos2d::Point indexToPoint(MapIndex mapIndex);
