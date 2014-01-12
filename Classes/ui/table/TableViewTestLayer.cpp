@@ -65,6 +65,26 @@ void TableViewTestLayer::tableCellTouched(TableView* table, TableViewCell* cell)
     {
         m_callback(this, cell->getIdx());
     }
+    
+    touchCellRefreshColor(table, cell->getIdx());
+}
+
+void TableViewTestLayer::touchCellRefreshColor(TableView* pTable, int touchCellIdx)
+{
+    for (auto pLayer : pTable->getChildren())
+    {
+        for (auto pCell : pLayer->getChildren())
+        {
+            if (static_cast<TableViewCell*>(pCell)->getIdx() == touchCellIdx)
+            {
+                pCell->getChildByTag(kTag_TextLayer)->setColor(Color3B::GREEN);
+            }
+            else
+            {
+                pCell->getChildByTag(kTag_TextLayer)->setColor(Color3B::BLACK);
+            }
+        }
+    }
 }
 
 Size TableViewTestLayer::tableCellSizeForIndex(TableView *table, long idx)
@@ -120,7 +140,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx)
         LayerColor* pTextLayer = static_cast<LayerColor*>(cell->getChildByTag(kTag_TextLayer));
         LabelTTF* pTextLabel = static_cast<LabelTTF*>(pTextLayer->getChildByTag(kTag_TextLabel));
         pTextLabel->setString(textString);
-        pTextLabel->setPosition(Point(pTextLabel->getFontSize() + pTextLabel->getContentSize().width / 2, pTextLabel->getContentSize().height / 2));
+        pTextLabel->setPosition(Point(pTextLabel->getFontSize() + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
     }
 
     return cell;
@@ -137,7 +157,11 @@ long TableViewTestLayer::numberOfCellsInTableView(TableView *table)
 void TableViewTestLayer::makeItemList(std::list<std::string> itemList)
 {
     m_itemList = itemList;
-    static_cast<TableView*>(this->getChildByTag(kTag_TableView))->reloadData();
+    
+    auto pTableView = static_cast<TableView*>(this->getChildByTag(kTag_TableView));
+    
+    touchCellRefreshColor(pTableView, -1);
+    pTableView->reloadData();
 }
 
 #pragma mark

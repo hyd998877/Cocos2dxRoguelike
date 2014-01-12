@@ -36,6 +36,8 @@ public:
     virtual cocos2d::extension::TableViewCell* tableCellAtIndex(cocos2d::extension::TableView *table, long idx);
     virtual long numberOfCellsInTableView(cocos2d::extension::TableView *table);
     
+    void touchCellRefreshColor(cocos2d::extension::TableView* pTable, int touchCellIdx);
+    
     // リスト作成
     void makeItemList(std::list<std::string> itemList);
     
