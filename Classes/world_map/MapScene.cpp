@@ -56,7 +56,7 @@ Control::Handler MapScene::onResolveCCBCCControlSelector(cocos2d::Object *pTarge
 void MapScene::tappedMenuItem1(Object * pTarget)
 {
     CCLOG("tappedMenuItem1");
-    Scene* scene = TitleSceneLoader::createScene();
+    Scene* scene = TitleSceneLoader::scene();
     TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
     Director::getInstance()->replaceScene(trans);
 }

@@ -21,11 +21,12 @@ class RogueScene : public cocos2d::Layer
 protected:
     
     enum GameStatus {
-        INIT        = 0,
-        PLAYER_TURN = 10,
+        INIT           = 0,
+        PLAYER_TURN    = 10,
         PLAYER_ACTION  = 11,
-        ENEMY_TURN  = 20,
-        ENEMY_ACTION  = 21,
+        ENEMY_TURN     = 20,
+        ENEMY_ACTION   = 21,
+        GAME_OVER      = 99,
     };
     // TiledMap（background, colision)
         // TiledMapFront

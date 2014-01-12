@@ -18,7 +18,7 @@ class TitleSceneLoader : public cocosbuilder::LayerLoader
 public:
     CCB_STATIC_NEW_AUTORELEASE_OBJECT_METHOD(TitleSceneLoader, loader);
     
-    static Scene* createScene();
+    static Scene* scene();
 protected:
     CCB_VIRTUAL_NEW_AUTORELEASE_CREATECCNODE_METHOD(TitleScene);
 };

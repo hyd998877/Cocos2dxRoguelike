@@ -8,7 +8,7 @@
 
 #include "TitleSceneLoader.h"
 
-Scene* TitleSceneLoader::createScene()
+Scene* TitleSceneLoader::scene()
 {
     // CocosBuilderのファイルを読み込みゲーム画面を生成する
     cocosbuilder::NodeLoaderLibrary* nodeLoaderLibrary = cocosbuilder::NodeLoaderLibrary::newDefaultNodeLoaderLibrary();

@@ -19,7 +19,7 @@
 #include "ItemLogic.h"
 #include "BattleLogic.h"
 
-//#include "MenuItemSelectLabelSprite.h"
+#include "TitleSceneLoader.h"
 
 USING_NS_CC;
 
@@ -373,10 +373,24 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     GameStatus beforeGameStatus = m_gameStatus;
     m_gameStatus = gameStatus;
     
-    // 敵のターン開始時
-    if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION)
+    if (m_gameStatus == GameStatus::GAME_OVER)
+    {
+        // 次のsceneで残ってしまうのでここで始末する
+        this->getEventDispatcher()->removeAllEventListeners();
+        
+        // TODO: ゲームオーバーの演出
+        
+        // TODO: ゲームオーバー画面Scene？表示
+        
+        // TODO: とりあえずタイトルへ
+        Scene* scene = TitleSceneLoader::scene();
+        TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
+        Director::getInstance()->replaceScene(trans);
+    }
+    else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION)
         && m_gameStatus == GameStatus::ENEMY_TURN)
     {
+        // 敵のターン開始時
         enemyTurn();
     }
     else if (m_gameStatus == GameStatus::PLAYER_TURN)
@@ -1196,10 +1210,12 @@ void RogueScene::refreshStatus()
         if (pPlayerDto->hitPoint == 0)
         {
             logMessage("%sは死亡した。", pPlayerDto->name.c_str());
+            changeGameStatus(RogueScene::GameStatus::GAME_OVER);
         }
         if (pPlayerDto->magicPoint == 0)
         {
             logMessage("%sは空腹で倒れた。", pPlayerDto->name.c_str());
+            changeGameStatus(RogueScene::GameStatus::GAME_OVER);
         }
     }
 }
