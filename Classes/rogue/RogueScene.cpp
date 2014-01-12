@@ -1237,10 +1237,28 @@ void RogueScene::refreshStatus()
             logMessage("%sは死亡した。", pPlayerDto->name.c_str());
             changeGameStatus(RogueScene::GameStatus::GAME_OVER);
         }
-        if (pPlayerDto->magicPoint == 0)
+        else if (pPlayerDto->magicPoint == 0)
         {
             logMessage("%sは空腹で倒れた。", pPlayerDto->name.c_str());
             changeGameStatus(RogueScene::GameStatus::GAME_OVER);
+        }
+        else
+        {
+            // 残りHPで文字色を変える
+            float hitPointDiv = (float)pPlayerDto->hitPoint / (float)pPlayerDto->hitPointLimit;
+            float mpDiv = (float)pPlayerDto->magicPoint / (float)pPlayerDto->magicPointLimit;
+            if (hitPointDiv <= 0.25 || mpDiv <= 0.10)
+            {
+                pLabelText->setColor(Color3B::RED);
+            }
+            else if (hitPointDiv <= 0.50 || mpDiv <= 0.30)
+            {
+                pLabelText->setColor(Color3B::YELLOW);
+            }
+            else
+            {
+                pLabelText->setColor(Color3B::WHITE);
+            }
         }
     }
 }
