@@ -61,6 +61,11 @@ protected:
         kMenuTag              = 300000,
         kModalTag             = 900000,
     };
+    
+    // ミニマップ上のタグ
+    enum MiniMapLayerTag {
+        BatchNode = 100,
+    };
     enum Index {
         zTiledMapIndex   = 1,
 //        zCursorBaseIndex     = 9000,
@@ -129,6 +134,10 @@ private:
     ActorSprite* getEnemyActorSprite(int seqNo);
     
     ItemWindowLayer* getItemWindowLayer();
+    
+    // ミニマップ関連
+    void addMiniMapItem(MapItem* pMapItem, int baseSpriteTag);
+    
 //    // TODO: プレイヤー情報（あとで別の場所に持っていく）
 //    std::list<DropItemSprite::DropItemDto> m_playerItemList;
     

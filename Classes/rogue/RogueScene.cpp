@@ -70,7 +70,6 @@ bool RogueScene::init()
     listener->onTouchBegan = CC_CALLBACK_2(RogueScene::onTouchBegan, this);
     listener->onTouchMoved = CC_CALLBACK_2(RogueScene::onTouchMoved, this);
     listener->onTouchEnded = CC_CALLBACK_2(RogueScene::onTouchEnded, this);
-//    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     this->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
     
     auto winSize = Director::getInstance()->getWinSize();
@@ -107,21 +106,6 @@ bool RogueScene::init()
                         RogueScene::TiledMapIndex::zTiledMapDropItemBaseIndex,
                         RogueScene::TiledMapTag::kTiledMapDropItemBaseTag);
     
-    // 障害物をmapManagerに適応する
-    auto pColisionLayer = pTiledMap->getLayer("colision");
-    for (int x = 0; x < m_baseMapSize.width; x++)
-    {
-        for (int y = 0; y < m_baseMapSize.height; y++)
-        {
-            if (pColisionLayer->getTileAt(Point(x, y)))
-            {
-                MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
-                auto tileMapIndex = mapIndexToTileIndex(mapIndex);
-                m_mapManager.addObstacle(&tileMapIndex);
-            }
-        }
-    }
-    
     // ---------------------
     // グリッド線を生成
     // ---------------------
@@ -156,7 +140,7 @@ bool RogueScene::init()
     statusLayer->setContentSize(Size(winSize.width, m_baseTileSize.height * 0.8));
     statusLayer->setPosition(Point(0, winSize.height - statusLayer->getContentSize().height));
     
-    // TODO: あとで更新する
+    // 更新する
     auto sampleText = LabelTTF::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(16), 16);
     
     sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
@@ -169,7 +153,7 @@ bool RogueScene::init()
     //    pStatusLayer2->setContentSize(Size(m_baseTileSize.width, m_baseTileSize.height));
     //    pStatusLayer2->setPosition(Point(0, 0));
     //
-    //    // TODO: アイコン表示するかな（ステータスバー２？）
+    //    // アイコン表示するかな（ステータスバー２？）
     //    auto pFaceSprite = Sprite::createWithSpriteFrame(SpriteFrame::create("actor_4_f.png", Rect(0, 0, 96, 96)));
     //    float scale = 1.0f / 3.0f;
     //    pFaceSprite->setScale(scale, scale);
@@ -206,13 +190,39 @@ bool RogueScene::init()
     // ミニマップ
     // ------------------------
     // 青で半透明
-    auto miniMapLayer = LayerColor::create(Color4B(0, 0, 196, 128));
+//    auto miniMapLayer = LayerColor::create(Color4B(0, 0, 196, 128));
+    auto miniMapLayer = LayerColor::create(Color4B(0, 0, 196, 0));
     // 1/8サイズ
     miniMapLayer->setContentSize(Size(m_baseMapSize.width * m_baseTileSize.width / 8,
                                       m_baseMapSize.height * m_baseTileSize.height / 8));
     // ステータスバーの下くらい
     miniMapLayer->setPosition(0, miniMapLayer->getPositionY() + winSize.height - miniMapLayer->getContentSize().height - statusLayer->getContentSize().height);
     this->addChild(miniMapLayer, RogueScene::zMiniMapIndex, RogueScene::kMiniMapTag);
+    
+    
+    // ------------------------
+    // 障害物
+    // ------------------------
+    
+    // 障害物をmapManagerに適応する
+    auto pColisionLayer = pTiledMap->getLayer("colision");
+    for (int x = 0; x < m_baseMapSize.width; x++)
+    {
+        for (int y = 0; y < m_baseMapSize.height; y++)
+        {
+            MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
+            auto tileMapIndex = mapIndexToTileIndex(mapIndex);
+            if (pColisionLayer->getTileAt(Point(x, y)))
+            {
+                m_mapManager.addObstacle(&tileMapIndex);
+            }
+            else
+            {
+                // ミニマップ更新
+                addMiniMapItem(m_mapManager.getMapItem(&tileMapIndex), -1);
+            }
+        }
+    }
     
     // ------------------------
     // イベントリ作成
@@ -268,15 +278,7 @@ bool RogueScene::init()
     refreshStatus();
     
     // プレイヤーの位置表示用（同じく1/8サイズ）
-    auto miniMapActorLayer = LayerColor::create(Color4B::YELLOW);
-    // タイルの1/8サイズ
-    miniMapActorLayer->setContentSize(m_baseTileSize / 8);
-    // 現在位置からPositionを取得して1/8にする
-    miniMapActorLayer->setPosition(indexToPointNotTileSize(actorSprite->getActorMapItem()->mapIndex) / 8);
-    // 移動時に更新できるようにplayerIdをtag管理
-    miniMapActorLayer->setTag(actorSprite->getTag());
-    // add
-    miniMapLayer->addChild(miniMapActorLayer);
+    addMiniMapItem(actorSprite->getActorMapItem(), actorSprite->getTag());
     
     // ---------------------
     // 敵キャラ生成
@@ -699,7 +701,7 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
                 
                 // ミニマップを更新
                 auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-                pMiniMapLayer->removeChildByTag(pDropItemSprite->getTag());
+                pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->removeChildByTag(pDropItemSprite->getTag());
                 
                 // Map上からremoveする
                 pDropItemLayer->removeChild(pDropItemSprite);
@@ -809,8 +811,12 @@ void RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapD
     
     // ミニマップも更新
     auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-    auto pMiniMapActorNode = (Node*) pMiniMapLayer->getChildByTag(pActorSprite->getTag());
-    pMiniMapActorNode->setPosition(indexToPointNotTileSize(actorMapItem->mapIndex) / 8);
+    auto pMiniMapActorNode = pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode)->getChildByTag(pActorSprite->getTag());
+    
+    float scale = 1.0f / 8.0f;
+    auto point = indexToPointNotTileSize(pActorSprite->getActorMapItem()->mapIndex) / 8;
+    pMiniMapActorNode->setPosition(point.x + pMiniMapActorNode->getContentSize().width / 2 * scale,
+                         point.y + pMiniMapActorNode->getContentSize().height / 2 * scale);
     
     // move実行
     pActionTargetNode->runAction(Sequence::create(pMoveRunAction, moveFinishedCallFunc, NULL));
@@ -965,8 +971,6 @@ void RogueScene::showItemList(int showTextIndex)
             std::string useMessage = ItemLogic::use(dropItemDto.itemId, pPlayerSprite->getActorDto());
             
             this->logMessage(useMessage.c_str());
-//            
-//            this->refreshStatus();
             
             // インベントリは閉じる
             this->hideItemList();
@@ -989,8 +993,6 @@ void RogueScene::showItemList(int showTextIndex)
     pScale9Sprite2->setContentSize(Size(40, 20));
     
     auto pMenuItemSprite = MenuItemSprite::create(pScale9Sprite1, pScale9Sprite2, [this](Object* pSeneder) {
-        // hoge
-//        pModalLayer->removeFromParentAndCleanup(true);
         this->hideItemList();
     });
     pMenuItemSprite->setPosition(Point(winSize.width - pMenuItemSprite->getContentSize().width / 2, pMenuItemSprite->getContentSize().height / 2));
@@ -1043,18 +1045,7 @@ bool RogueScene::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, M
     m_mapManager.addActor(enemySprite->getActorMapItem());
     
     // ミニマップも更新
-    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-    
-    // 敵の位置表示用（同じく1/8サイズ）TODO: 数が多くなるならBatchNodeとかにしないと？
-    auto miniMapEnemyLayer = LayerColor::create(Color4B::RED);
-    // タイルの1/8サイズ
-    miniMapEnemyLayer->setContentSize(m_baseTileSize / 8);
-    // 現在位置からPositionを取得して1/8にする
-    miniMapEnemyLayer->setPosition(indexToPointNotTileSize(enemySprite->getActorMapItem()->mapIndex) / 8);
-    // 移動時に更新できるようにplayerIdをtag管理
-    miniMapEnemyLayer->setTag(enemySprite->getTag());
-    // add
-    pMiniMapLayer->addChild(miniMapEnemyLayer);
+    addMiniMapItem(enemySprite->getActorMapItem(), enemySprite->getTag());
     
     return true;
 }
@@ -1087,20 +1078,60 @@ bool RogueScene::tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, Map
     m_mapManager.addDropItem(pDropItemSprite->getDropMapItem());
     
     // ミニマップも更新
-    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
-    // TODO: spriteBatchNodeにしないとダメかも？
-    auto pMiniMapItemLayer = LayerColor::create(Color4B(51, 204, 255, 255));
-    // タイルの1/8サイズ
-    pMiniMapItemLayer->setContentSize(m_baseTileSize / 8);
-    // 現在位置からPositionを取得して1/8にする
-    pMiniMapItemLayer->setPosition(indexToPointNotTileSize(pDropItemSprite->getDropMapItem()->mapIndex) / 8);
-    // 移動時に更新できるようにtag管理
-    pMiniMapItemLayer->setTag(pDropItemSprite->getTag());
-
-    // add
-    pMiniMapLayer->addChild(pMiniMapItemLayer);
+    addMiniMapItem(pDropItemSprite->getDropMapItem(), pDropItemSprite->getTag());
     
     return true;
+}
+
+void RogueScene::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag)
+{
+    Color3B spriteColor;
+    int alpha = 255;
+    if (pMapItem->mapDataType == MapDataType::MAP_ITEM)
+    {
+        spriteColor = Color3B(51, 204, 255);
+    }
+    else if (pMapItem->mapDataType == MapDataType::ENEMY)
+    {
+        spriteColor = Color3B::RED;
+    }
+    else if (pMapItem->mapDataType == MapDataType::PLAYER)
+    {
+        spriteColor = Color3B::YELLOW;
+    }
+    else if (pMapItem->mapDataType == MapDataType::NONE)
+    {
+        spriteColor = Color3B(0, 0, 196);
+        alpha = 128;
+    }
+    
+    auto pMiniMapLayer = getChildByTag(kMiniMapTag);
+    auto pBatchNode = static_cast<SpriteBatchNode*>(pMiniMapLayer->getChildByTag(MiniMapLayerTag::BatchNode));
+    if (!pBatchNode)
+    {
+        pBatchNode = SpriteBatchNode::create("grid32.png");
+        pBatchNode->setTag(MiniMapLayerTag::BatchNode);
+        pMiniMapLayer->addChild(pBatchNode);
+    }
+    auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
+    pSprite->setPosition(indexToPoint(pMapItem->mapIndex.x, pMapItem->mapIndex.y));
+    
+    pSprite->setColor(spriteColor);
+    pSprite->setOpacity(alpha);
+    
+    // タイルの1/8サイズ
+    float scale = 1.0f / 8.0f;
+    pSprite->setScale(scale);
+    pSprite->setContentSize(m_baseTileSize / 8);
+    // 現在位置からPositionを取得して1/8にする
+    auto point = indexToPointNotTileSize(pMapItem->mapIndex) / 8;
+    pSprite->setPosition(point.x + pSprite->getContentSize().width / 2 * scale,
+                         point.y + pSprite->getContentSize().height / 2 * scale);
+    // 移動時に更新できるようにtag管理
+    pSprite->setTag(baseSpriteTag);
+    
+    // add
+    pBatchNode->addChild(pSprite);
 }
 
 void RogueScene::refreshStatus()
