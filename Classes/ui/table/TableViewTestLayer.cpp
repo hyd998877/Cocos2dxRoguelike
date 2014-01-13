@@ -40,8 +40,6 @@ bool TableViewTestLayer::init(std::list<TableLayout> itemList, Size contentSize)
 
     this->setContentSize(contentSize);
     
-//	Size winSize = Director::getInstance()->getWinSize();
-    
 	TableView* tableView = TableView::create(this, Size(contentSize.width, contentSize.height * 0.9));
 	tableView->setDirection(ScrollView::Direction::VERTICAL);
     // 上がぴったりすぎるので0.02ほど
@@ -90,9 +88,8 @@ void TableViewTestLayer::touchCellRefreshColor(TableView* pTable, int touchCellI
 
 Size TableViewTestLayer::tableCellSizeForIndex(TableView *table, long idx)
 {
-//	Size winSize = Director::getInstance()->getWinSize();
     Size contentSize = getContentSize();
-    return Size(contentSize.width, contentSize.height / 6);
+    return Size(contentSize.width, contentSize.height / TableViewTestLayer::LIST_SIZE);
 }
 
 TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx)
@@ -120,15 +117,13 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx)
         SpriteFrameCache::getInstance()->addSpriteFrame(pSpriteFrame, tableItem.imageFileName);
     }
     
-//    auto textString = StringUtils::format("%s", tableItem.labelText.c_str());
     TableViewCell *cell = table->dequeueCell();
     if (!cell) {
         cell = new CustomTableViewCell();
         cell->autorelease();
         
-        LayerColor* pTextLayer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7),
-                                                        contentSize.width * 0.9, contentSize.height / 6 * 0.9);
-        pTextLayer->setPosition(contentSize.width * 0.05, contentSize.height / 6 * 0.05);
+        LayerColor* pTextLayer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), contentSize.width * 0.9, contentSize.height / TableViewTestLayer::LIST_SIZE * 0.9);
+        pTextLayer->setPosition(contentSize.width * 0.05, contentSize.height / TableViewTestLayer::LIST_SIZE * 0.05);
         pTextLayer->setTag(TableViewTestLayer::ItemLayerTag);
         
         auto pItemImageSprite = Sprite::createWithSpriteFrame(pSpriteFrame);

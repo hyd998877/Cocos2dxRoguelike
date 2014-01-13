@@ -9,6 +9,7 @@ public cocos2d::LayerColor,
 public cocos2d::extension::TableViewDataSource,
 public cocos2d::extension::TableViewDelegate
 {
+    const int LIST_SIZE = 6;
 protected:
     
     enum Tag
