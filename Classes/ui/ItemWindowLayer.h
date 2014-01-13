@@ -28,11 +28,8 @@ public:
     static ItemWindowLayer* createWithContentSize(cocos2d::Size contentSize);
     
     DropItemSprite::DropItemDto findItem(int itemListIndex);
-    void addItemList(DropItemSprite::DropItemDto* pDropItemDto);
+    void addItemList(DropItemSprite::DropItemDto dropItemDto);
     void reloadItemList();
-    
-    void setItemDetail(int itemListIndex);
-    void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
     
     static MenuItemSprite* createMenuItemSprite(Color3B color, const ccMenuCallback& callback);
     
@@ -44,6 +41,9 @@ private:
     std::list<DropItemSprite::DropItemDto> m_itemDtoList;
     ItemWindowMenuCallback m_itemUseMenuCallback;
     ItemWindowMenuCallback m_itemDropMenuCallback;
+    
+    void setItemDetail(int itemListIndex);
+    void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ItemWindowLayer__) */

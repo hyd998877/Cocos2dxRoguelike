@@ -69,30 +69,25 @@ protected:
     };
     
     // ミニマップ上のタグ
-    enum MiniMapLayerTag {
-        BatchNode = 100,
-    };
-    enum Index {
-        zTiledMapIndex   = 1,
-//        zCursorBaseIndex     = 9000,
-//        zCursorMoveFindIndex = 9001,
-//        zCursorMoveStepIndex = 9002,
-//        zCursorSelectedIndex = 9003,
-        zActorBaseIndex  = 100000,
-        zMiniMapIndex    = 150000,
-        zStatusBarIndex  = 200000,
-        zStatusBar2Index = 200001,
-        zGameLogIndex    = 210000,
-        zItemListIndex   = 220000,
-        zItemDetailIndex = 221000,
-        zMenuIndex       = 300000,
-        zModalIndex      = 900000,
-    };
-    enum BaseMapLayerZIndex {
-        ActorPlayerZIndex   = 100000,
-        ActionCursorZIndex  = 110000,
+    enum {
+        MiniMapLayerBatchNodeTag = 100,
     };
     
+    enum ZOrder {
+        TiledMapLayerZOrder = 1,
+        ActorBaseZOrder,
+        ActorPlayerZOrder,
+        ActionCursorZOrder,
+        MiniMapLayerZOrder,
+        MiniMapLayerMapNoneZOrder,
+        MiniMapLayerMapItemZOrder,
+        MiniMapLayerMapActorZOrder,
+        StatusBarLayerZOrder,
+        GameLogLayerZOrder,
+        ItemListLayerZOrder,
+        MenuLayerZOrder,
+        ModalLayerZOrder,
+    };
     
 private:
     // ゲーム管理

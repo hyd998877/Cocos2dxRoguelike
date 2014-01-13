@@ -50,10 +50,12 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
     int padding = 2;
 
     // アイテム一覧レイヤー（左側）
-    std::list<std::string> itemNameList;
+    std::list<TableViewTestLayer::TableLayout> itemNameList;
     for (DropItemSprite::DropItemDto dropItem : m_itemDtoList)
     {
-        itemNameList.push_back(dropItem.name);
+        TableViewTestLayer::TableLayout layout = {StringUtils::format("item_%d.png", dropItem.imageResId), dropItem.name};
+        
+        itemNameList.push_back(layout);
     }
     
     auto pItemListLayer = TableViewTestLayer::createWithTextArray(itemNameList,
@@ -210,9 +212,9 @@ DropItemSprite::DropItemDto ItemWindowLayer::findItem(int itemListIndex)
     return {0, 0, ""};
 }
 
-void ItemWindowLayer::addItemList(DropItemSprite::DropItemDto* pDropItemDto)
+void ItemWindowLayer::addItemList(DropItemSprite::DropItemDto dropItemDto)
 {
-    m_itemDtoList.push_back(*pDropItemDto);
+    m_itemDtoList.push_back(dropItemDto);
 }
 
 void ItemWindowLayer::reloadItemList()
@@ -223,10 +225,11 @@ void ItemWindowLayer::reloadItemList()
     auto pItemTabelLayer = static_cast<TableViewTestLayer*>(getChildByTag(ItemWindowLayer::ItemTableLayerTag));
     if (pItemTabelLayer)
     {
-        std::list<std::string> itemNameList;
+        std::list<TableViewTestLayer::TableLayout> itemNameList;
         for (DropItemSprite::DropItemDto dropItem : m_itemDtoList)
         {
-            itemNameList.push_back(dropItem.name);
+            TableViewTestLayer::TableLayout layout = {StringUtils::format("item_%d.png", dropItem.imageResId), dropItem.name};
+            itemNameList.push_back(layout);
         }
         pItemTabelLayer->makeItemList(itemNameList);
     }

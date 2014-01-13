@@ -11,22 +11,28 @@ public cocos2d::extension::TableViewDelegate
 {
 protected:
     
-    enum kTag
+    enum Tag
     {
-        kTag_TextLayer = 1,
-        kTag_TextLabel,
-        kTag_TableView,
+        ItemLayerTag = 1,
+        ItemTextLabelTag,
+        ItemImageTag,
+        TableViewTag,
     };
     
 public:
+    typedef struct _TableLayout {
+        std::string imageFileName;
+        std::string labelText;
+    } TableLayout;
+    
     // 一覧タップ時のコールバック
     typedef std::function<void(Object*, long idx)> TableCellTouchedCallback;
     void setCallback(const TableCellTouchedCallback& callback);
     
     // 初期
-    virtual bool init(std::list<std::string> itemList, cocos2d::Size contentSize);
+    virtual bool init(std::list<TableLayout> itemList, cocos2d::Size contentSize);
     TableViewTestLayer();
-    static TableViewTestLayer* createWithTextArray(std::list<std::string> itemList, cocos2d::Size contentSize);
+    static TableViewTestLayer* createWithTextArray(std::list<TableLayout> itemList, cocos2d::Size contentSize);
     
     // デリゲート関連
     virtual void scrollViewDidScroll(cocos2d::extension::ScrollView* view) {};
@@ -39,11 +45,12 @@ public:
     void touchCellRefreshColor(cocos2d::extension::TableView* pTable, int touchCellIdx);
     
     // リスト作成
-    void makeItemList(std::list<std::string> itemList);
+    void makeItemList(std::list<TableLayout> itemList);
     
 private:
+    
     // TODO: とりあえず文字列だけ（アイコンの表示とかでimgResIdがほしい）typedef作るか
-    std::list<std::string> m_itemList;
+    std::list<TableLayout> m_itemList;
     
     // コールバック
     TableCellTouchedCallback m_callback;
