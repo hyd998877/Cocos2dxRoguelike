@@ -98,6 +98,7 @@ private:
     // ゲーム管理
     GameStatus m_gameStatus;
     int m_TurnCount;
+    int m_enemyCount;
     void changeGameStatus(GameStatus gameStatus);
     void enemyTurn();
     void checkEnmeyTurnEnd();

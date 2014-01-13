@@ -32,10 +32,13 @@ std::size_t f_r(const std::string& s, char c)
     return (pos == std::string::npos) ? 0 : (1 + f_r(s.substr(pos+1), c));
 }
 
-// -----------------------------------
+#pragma mark
+#pragma mark main
+
 RogueScene::RogueScene()
 :m_gameStatus(GameStatus::INIT),
 m_TurnCount(0),
+m_enemyCount(0),
 m_baseMapSize(Size::ZERO),
 m_baseTileSize(Size::ZERO),
 m_baseContentSize(Size::ZERO)
@@ -200,7 +203,6 @@ bool RogueScene::init()
     miniMapLayer->setPosition(0, miniMapLayer->getPositionY() + winSize.height - miniMapLayer->getContentSize().height - statusLayer->getContentSize().height);
     this->addChild(miniMapLayer, RogueScene::zMiniMapIndex, RogueScene::kMiniMapTag);
     
-    
     // ------------------------
     // 障害物
     // ------------------------
@@ -281,6 +283,28 @@ bool RogueScene::init()
     // プレイヤーの位置表示用（同じく1/8サイズ）
     addMiniMapItem(actorSprite->getActorMapItem(), actorSprite->getTag());
     
+    // タッチカーソル表示
+    // TODO: miniMapLayerからとってきたbatchNodeなのでちょっと無理やり
+    auto pBatchNode = getGridSpriteBatchNode();
+    if (pBatchNode)
+    {
+        std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(actorSprite->getActorMapItem()->mapIndex);
+        for (auto mapIndex : searchMapIndexList)
+        {
+            auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
+            pSprite->setPosition(indexToPoint(mapIndex.x, mapIndex.y));
+            
+            pSprite->setColor(Color3B::ORANGE);
+            pSprite->setOpacity(64);
+            
+            // 1.0秒でフェードイン、フェードアウトを繰り返すように設定
+            Sequence* sequence = Sequence::create(FadeTo::create(0.5f, 64), FadeTo::create(0.5f, 0), NULL);
+            RepeatForever* repeat = RepeatForever::create(sequence);
+            pSprite->runAction(repeat);
+            this->addChild(pSprite, RogueScene::ActionCursorZIndex, RogueScene::ActionCursorTag);
+        }
+    }
+    
     // ---------------------
     // 敵キャラ生成
     // ---------------------
@@ -289,7 +313,7 @@ bool RogueScene::init()
     enemyDto.faceImgId = 0;
     enemyDto.imageResId = 1011;
     // 基本
-    enemyDto.attackRange = 1; // TODO: 未使用
+    enemyDto.attackRange = 1; // 未使用
     enemyDto.movePoint = 10; // 索敵範囲
     enemyDto.playerId = 901;
     // 攻守
@@ -392,6 +416,59 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION)
         && m_gameStatus == GameStatus::ENEMY_TURN)
     {
+        // TODO: 敵のリポップ
+        // ランダムなタイミングでランダムに湧く
+        int rand = GetRandom(1, 5); // 5%
+        if (rand == 1)
+        {
+            // 壁とかすでに敵がいる場所だったら残念なので、10回くらいトライする
+            for (int i = 0; i < 10; i++)
+            {
+                // 出現位置をランダムで決める
+                int randX = GetRandom(0, m_baseMapSize.width-1); // x軸
+                int randY = GetRandom(0, m_baseMapSize.height-1); // y軸
+                MapIndex rePopIndex = {randX, randY, MoveDirectionType::MOVE_NONE};
+
+                CCLOG("rePop  %d, %d", rePopIndex.x, rePopIndex.y);
+                
+                if (!isTiledMapColisionLayer(rePopIndex))
+                {
+                    auto rePopTargetMapItem = m_mapManager.getMapItem(&rePopIndex);
+                    if (rePopTargetMapItem->mapDataType == MapDataType::NONE
+                        || rePopTargetMapItem->mapDataType == MapDataType::MAP_ITEM)
+                    {
+                        // TODO: 敵データは仮
+                        ActorSprite::ActorDto enemyDto;
+                        enemyDto.name = "スライム";
+                        enemyDto.faceImgId = 0;
+                        enemyDto.imageResId = 1011;
+                        // 基本
+                        enemyDto.attackRange = 1; // 未使用
+                        enemyDto.movePoint = 10; // 索敵範囲
+                        enemyDto.playerId = 901;
+                        // 攻守
+                        enemyDto.attackPoint = 2;
+                        enemyDto.defencePoint = 0;
+                        // 経験値
+                        enemyDto.exp = 2;
+                        enemyDto.nextExp = 10;
+                        // HP
+                        enemyDto.hitPoint = 10;
+                        enemyDto.hitPointLimit = 10;
+                        enemyDto.lv = 1;
+                        // 満腹度？精神力？
+                        enemyDto.magicPoint = 100;
+                        enemyDto.magicPointLimit = 100;
+                        
+                        rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
+                        tileSetEnemyActorMapItem(enemyDto, rePopIndex);
+                        
+                        break;
+                    }
+                }
+            }
+        }
+        
         // 敵のターン開始時
         enemyTurn();
     }
@@ -399,39 +476,6 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     {
         auto pPlayer = getPlayerActorSprite(1);
         
-        // TODO: miniMapLayerからとってきたbatchNodeなのでちょっと無理やり
-        auto pBatchNode = getGridSpriteBatchNode();
-        if (pBatchNode)
-        {
-            bool isCreated = false;
-            for (auto pNode : this->getChildren())
-            {
-                if (pNode->getZOrder() == RogueScene::ActionCursorZIndex)
-                {
-                    isCreated = true;
-                    break;
-                }
-            }
-            
-            if (!isCreated)
-            {
-                std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(pPlayer->getActorMapItem()->mapIndex);
-                for (auto mapIndex : searchMapIndexList)
-                {
-                    auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
-                    pSprite->setPosition(indexToPoint(mapIndex.x, mapIndex.y));
-                    
-                    pSprite->setColor(Color3B::ORANGE);
-                    pSprite->setOpacity(64);
-                    
-                    // 1.0秒でフェードイン、フェードアウトを繰り返すように設定
-                    Sequence* sequence = Sequence::create(FadeTo::create(0.5f, 64), FadeTo::create(0.5f, 0), NULL);
-                    RepeatForever* repeat = RepeatForever::create(sequence);
-                    pSprite->runAction(repeat);
-                    this->addChild(pSprite, RogueScene::ActionCursorZIndex, RogueScene::ActionCursorTag);
-                }
-            }
-        }
         // カーソルはクリアする
         m_mapManager.clearCursor();
         // ターン数を進める
@@ -867,7 +911,7 @@ void RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapD
 bool RogueScene::isTiledMapColisionLayer(MapIndex touchPointMapIndex)
 {
     // 障害物判定
-    auto pMapLayer = (TMXTiledMap*)getChildByTag(kTiledMapTag);
+    auto pMapLayer = static_cast<TMXTiledMap*>(getChildByTag(kTiledMapTag));
     
     auto pColisionLayer = pMapLayer->getLayer("colision");
     // TileMapは左上から0,0なので座標変換する
@@ -976,11 +1020,7 @@ void RogueScene::showItemList(int showTextIndex)
     }
     else
     {
-        // TODO: アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
-            // アイテムを捨てる
-            // アイテムを使う
-            // アイテムを装備する
-            // 閉じる
+        // アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
         pItemWindowLayer = ItemWindowLayer::createWithContentSize(winSize * 0.8);
         pItemWindowLayer->setPosition(Point(winSize.width / 2 - pItemWindowLayer->getContentSize().width / 2,
                                             winSize.height /2 - pItemWindowLayer->getContentSize().height / 2));
@@ -1067,8 +1107,9 @@ bool RogueScene::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, M
     }
     auto pTileMapLayer = getChildByTag(RogueScene::kTiledMapTag);
     auto pEnemyLayer = pTileMapLayer->getChildByTag(RogueScene::kTiledMapEnemyBaseTag);
-    // TODO: 倒したときのことも考えないといけない 出現数のカウントでOK?
-    long enemyCount = pEnemyLayer->getChildrenCount();
+    // 出現数のカウントをseqNoにする
+    long enemyCount = m_enemyCount;
+    m_enemyCount++;
     
     ActorMapItem enemyMapItem;
     enemyMapItem.mapDataType = MapDataType::ENEMY;
