@@ -47,7 +47,7 @@ protected:
     };
     
     // 廃止予定
-    enum Tag {
+    enum _Tag {
         kTiledMapTag          = 1,
 //        kCursorBaseTag      = 9000,
 //        kCursorMoveFindTag  = 9001,
@@ -59,9 +59,8 @@ protected:
         kStatusBar2Tag        = 200001,
         kGameLogTag           = 210000,
         kItemListTag          = 220000,
-        kItemDetailTag        = 221000,
         kMenuTag              = 300000,
-        kModalTag             = 900000,
+//        kModalTag             = 900000,
     };
     enum BaseMapLayerTag {
         ActorPlayerTag   = 100000,
@@ -71,6 +70,10 @@ protected:
     // ミニマップ上のタグ
     enum {
         MiniMapLayerBatchNodeTag = 100,
+    };
+    
+    enum Tag {
+        ModalLayerTag             = 900000,
     };
     
     enum ZOrder {

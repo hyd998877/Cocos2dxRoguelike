@@ -133,11 +133,25 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
                                         pItemDetailLayer->getContentSize().height * 0.25));
     pItemDetailLabel->setTag(ItemWindowLayer::ItemDetailTag);
     pItemDetailLayer->addChild(pItemDetailLabel);
+    // メニュー
+    pItemDetailLayer->addChild(initCreateMenu());
     
+    auto pItemDetailWaku = CREATE_WINDOW_WAKU();
+    pItemDetailWaku->setPreferredSize(pItemDetailLayer->getContentSize());
+    pItemDetailWaku->setPosition(Point(pItemDetailWaku->getContentSize().width / 2, pItemDetailWaku->getContentSize().height / 2));
+    pItemDetailLayer->addChild(pItemDetailWaku);
+    this->addChild(pItemDetailLayer);
+    
+    return true;
+}
+
+Menu* ItemWindowLayer::initCreateMenu()
+{
     // -----------------------------
     // メニューボタン
     float addNextMenuPositonX = 4;
     float addNextMenuPositonY = 4;
+    
     // 捨てるボタン
     auto pMenuItemDrop = ItemWindowLayer::createMenuItemSprite(Color3B::RED, [this](Object* pSeneder) {
         // hoge
@@ -180,21 +194,36 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
             m_itemUseMenuCallback(pSeneder, dropItemDto);
         }
     });
-    pMenuItemUse->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemDrop->getContentSize().height / 2 + addNextMenuPositonY));
+    pMenuItemUse->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemUse->getContentSize().height / 2 + addNextMenuPositonY));
     addNextMenuPositonX += pMenuItemUse->getContentSize().width + 4;
     addNextMenuPositonY += 0;
     
-    auto pMenu = Menu::create(pMenuItemDrop, pMenuItemUse, NULL);
+    // 装備（する/はずす）ボタン
+    auto pMenuItemEquip = ItemWindowLayer::createMenuItemSprite(Color3B::BLUE, [this](Object* pSeneder) {
+        CCLOG("item equip menu pressed");
+        if (m_showItemDetailIdx < 0)
+        {
+            return;
+        }
+        if (m_itemEquipMenuCallback)
+        {
+            auto it = m_itemDtoList.begin();
+            std::advance(it, m_showItemDetailIdx);
+            // ステータスを装備状態を反転
+            it->isEquip = !it->isEquip;
+            
+            auto dropItemDto = (DropItemSprite::DropItemDto) *it;
+            m_itemEquipMenuCallback(pSeneder, dropItemDto);
+        }
+    });
+    pMenuItemEquip->setPosition(Point(pMenuItemUse->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemEquip->getContentSize().height / 2 + addNextMenuPositonY));
+    addNextMenuPositonX += pMenuItemEquip->getContentSize().width + 4;
+    addNextMenuPositonY += 0;
+    
+    auto pMenu = Menu::create(pMenuItemDrop, pMenuItemUse, pMenuItemEquip, NULL);
     pMenu->setPosition(Point::ZERO);
-    pItemDetailLayer->addChild(pMenu);
     
-    auto pItemDetailWaku = CREATE_WINDOW_WAKU();
-    pItemDetailWaku->setPreferredSize(pItemDetailLayer->getContentSize());
-    pItemDetailWaku->setPosition(Point(pItemDetailWaku->getContentSize().width / 2, pItemDetailWaku->getContentSize().height / 2));
-    pItemDetailLayer->addChild(pItemDetailWaku);
-    this->addChild(pItemDetailLayer);
-    
-    return true;
+    return pMenu;
 }
 
 #pragma mardk
@@ -209,7 +238,7 @@ DropItemSprite::DropItemDto ItemWindowLayer::findItem(int itemListIndex)
         auto dropItemDto = (DropItemSprite::DropItemDto) *it;
         return dropItemDto;
     }
-    return {0, 0, ""};
+    return {0, 0, DropItemSprite::ItemType::NONE, 0, "", false};
 }
 
 void ItemWindowLayer::addItemList(DropItemSprite::DropItemDto dropItemDto)
@@ -262,7 +291,15 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
             }
             else
             {
-                pItemNameLabel->setString(pDropItemDto->name);
+                // TODO: とりあえず装備中で文言かえる
+                if (pDropItemDto->isEquip)
+                {
+                    pItemNameLabel->setString(StringUtils::format("%s(装備中)", pDropItemDto->name.c_str()));
+                }
+                else
+                {
+                    pItemNameLabel->setString(pDropItemDto->name);
+                }
             }
         }
         
@@ -281,6 +318,8 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
                     pItemDetailLabel->setString("HPが少し回復します。");
                 else if (pDropItemDto->itemId == 2)
                     pItemDetailLabel->setString("満腹度が少し回復します。");
+                else if (pDropItemDto->itemId == 3)
+                    pItemDetailLabel->setString("よくある剣です。");
                 
             }
         }
@@ -298,6 +337,10 @@ void ItemWindowLayer::setItemUseMenuCallback(const ItemWindowMenuCallback& itemU
 void ItemWindowLayer::setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback)
 {
     m_itemDropMenuCallback = itemDropMenuCallback;
+}
+void ItemWindowLayer::setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback)
+{
+    m_itemEquipMenuCallback = itemEquipMenuCallback;
 }
 
 #pragma mardk

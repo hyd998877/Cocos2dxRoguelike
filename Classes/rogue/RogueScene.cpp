@@ -257,7 +257,20 @@ bool RogueScene::init()
     // 満腹度？精神力？
     actorDto.magicPoint = 100;
     actorDto.magicPointLimit = 100;
-
+    // 装備
+    ActorSprite::ActorEquipDto equipDto;
+    equipDto.weaponObjectId = 0;
+    equipDto.weaponId = 0;
+    equipDto.weaponName = "";
+    equipDto.weaponImgResId = 0;
+    equipDto.weaponStr = 0;
+    equipDto.accessoryObjectId = 0;
+    equipDto.accessoryId = 0;
+    equipDto.accessoryName = "";
+    equipDto.accessoryImgResId = 0;
+    equipDto.accessoryDef = 0;
+    actorDto.equip = equipDto;
+    
     ActorMapItem actorMapItem;
     actorMapItem.mapDataType = MapDataType::PLAYER;
     // 画面の中心（固定）
@@ -329,6 +342,19 @@ bool RogueScene::init()
     // 満腹度？精神力？
     enemyDto.magicPoint = 100;
     enemyDto.magicPointLimit = 100;
+    // 装備
+    ActorSprite::ActorEquipDto enemyEquipDto;
+    enemyEquipDto.weaponObjectId = 0;
+    enemyEquipDto.weaponId = 0;
+    enemyEquipDto.weaponName = "";
+    enemyEquipDto.weaponImgResId = 0;
+    enemyEquipDto.weaponStr = 0;
+    enemyEquipDto.accessoryId = 0;
+    enemyEquipDto.accessoryObjectId = 0;
+    enemyEquipDto.accessoryName = "";
+    enemyEquipDto.accessoryImgResId = 0;
+    enemyEquipDto.accessoryDef = 0;
+    enemyDto.equip = enemyEquipDto;
     
     MapIndex enemyMapIndex1 = {4, 4, MoveDirectionType::MOVE_DOWN};
     tileSetEnemyActorMapItem(enemyDto, enemyMapIndex1);
@@ -345,20 +371,37 @@ bool RogueScene::init()
     // アイテム配置
     //-------------------------
     DropItemSprite::DropItemDto dropItemDto;
+    dropItemDto.objectId = 1; // 単純に連番でいい
     dropItemDto.itemId = 1;
+    dropItemDto.itemType = DropItemSprite::ItemType::HP_RECOVER_VALUE;
     dropItemDto.imageResId = 64; // imageId 10064
     dropItemDto.name = "ポーション";
+    dropItemDto.isEquip = false;
     
     MapIndex mapIndex = {7, 5, MoveDirectionType::MOVE_NONE};
     tileSetDropMapItem(dropItemDto, mapIndex);
 
     DropItemSprite::DropItemDto dropItemDto2;
+    dropItemDto2.objectId = 2;
     dropItemDto2.itemId = 2;
+    dropItemDto2.itemType = DropItemSprite::ItemType::MP_RECOVER_VALUE;
     dropItemDto2.imageResId = 168; // imageId 10168
     dropItemDto2.name = "ぶどう";
+    dropItemDto2.isEquip = false;
     
     MapIndex mapIndex2 = {10, 9, MoveDirectionType::MOVE_NONE};
     tileSetDropMapItem(dropItemDto2, mapIndex2);
+
+    DropItemSprite::DropItemDto dropItemDto3;
+    dropItemDto3.objectId = 3;
+    dropItemDto3.itemId = 3; // weaponId
+    dropItemDto3.itemType = DropItemSprite::ItemType::EQUIP_WEAPON;
+    dropItemDto3.imageResId = 1; // imageId 10001
+    dropItemDto3.name = "ブロンズソード";
+    dropItemDto3.isEquip = false;
+    
+    MapIndex mapIndex3 = {6, 6, MoveDirectionType::MOVE_NONE};
+    tileSetDropMapItem(dropItemDto3, mapIndex3);
     
     // -------------------------------
     // メニュー
@@ -1001,7 +1044,7 @@ void RogueScene::showItemList(int showTextIndex)
     auto winSize = Director::getInstance()->getWinSize();
     
     // モーダルレイヤー作成
-    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::kModalTag));
+    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::ModalLayerTag));
     if (pModalLayer)
     {
         pModalLayer->setVisible(true);
@@ -1009,7 +1052,7 @@ void RogueScene::showItemList(int showTextIndex)
     else
     {
         pModalLayer = ModalLayer::create();
-        this->addChild(pModalLayer, RogueScene::ModalLayerZOrder, RogueScene::kModalTag);
+        this->addChild(pModalLayer, RogueScene::ModalLayerZOrder, RogueScene::ModalLayerTag);
     }
     
     auto pItemWindowLayer = static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(RogueScene::kItemListTag));
@@ -1034,6 +1077,9 @@ void RogueScene::showItemList(int showTextIndex)
             {
                 this->logMessage("%sを床においた。", dropItemDto.name.c_str());
                 
+                // TODO: 装備してたら外す
+                
+                
                 // ターン消費
                 this->changeGameStatus(RogueScene::ENEMY_TURN);
             }
@@ -1055,6 +1101,62 @@ void RogueScene::showItemList(int showTextIndex)
             std::string useMessage = ItemLogic::use(dropItemDto.itemId, pPlayerSprite->getActorDto());
             
             this->logMessage(useMessage.c_str());
+            
+            // インベントリは閉じる
+            this->hideItemList();
+            
+            // ターン消費
+            this->changeGameStatus(RogueScene::ENEMY_TURN);
+        });
+        pItemWindowLayer->setItemEquipMenuCallback([this](Object* pSender, DropItemSprite::DropItemDto dropItemDto) {
+            CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", dropItemDto.itemType);
+            
+            auto pPlayerSprite = getPlayerActorSprite(1);
+            
+            if (dropItemDto.isEquip)
+            {
+                if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
+                {
+                    // 武器装備
+                    pPlayerSprite->getActorDto()->equip.weaponObjectId = dropItemDto.objectId;
+                    pPlayerSprite->getActorDto()->equip.weaponId       = dropItemDto.itemId;
+                    pPlayerSprite->getActorDto()->equip.weaponImgResId = dropItemDto.imageResId;
+                    pPlayerSprite->getActorDto()->equip.weaponName     = dropItemDto.name;
+                    pPlayerSprite->getActorDto()->equip.weaponStr      = 5; // TODO: valueはマスタから実はnameも取りたい・・・
+                }
+                else if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
+                {
+                    // 防具装備
+                    pPlayerSprite->getActorDto()->equip.accessoryObjectId = dropItemDto.objectId;
+                    pPlayerSprite->getActorDto()->equip.accessoryId       = dropItemDto.itemId;
+                    pPlayerSprite->getActorDto()->equip.accessoryImgResId = dropItemDto.imageResId;
+                    pPlayerSprite->getActorDto()->equip.accessoryName     = dropItemDto.name;
+                    pPlayerSprite->getActorDto()->equip.accessoryDef      = 2; // TODO: valueはマスタから実はnameも取りたい・・・
+                }
+                this->logMessage("%sを装備した。", dropItemDto.name.c_str());
+            }
+            else
+            {
+                if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
+                {
+                    // 武器装備
+                    pPlayerSprite->getActorDto()->equip.weaponObjectId = 0;
+                    pPlayerSprite->getActorDto()->equip.weaponId       = 0;
+                    pPlayerSprite->getActorDto()->equip.weaponImgResId = 0;
+                    pPlayerSprite->getActorDto()->equip.weaponName     = "";
+                    pPlayerSprite->getActorDto()->equip.weaponStr      = 0;
+                }
+                else if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
+                {
+                    // 防具装備
+                    pPlayerSprite->getActorDto()->equip.accessoryObjectId = 0;
+                    pPlayerSprite->getActorDto()->equip.accessoryId       = 0;
+                    pPlayerSprite->getActorDto()->equip.accessoryImgResId = 0;
+                    pPlayerSprite->getActorDto()->equip.accessoryName     = "";
+                    pPlayerSprite->getActorDto()->equip.accessoryDef      = 0;
+                }
+                this->logMessage("%sの装備をはずした。", dropItemDto.name.c_str());
+            }
             
             // インベントリは閉じる
             this->hideItemList();
@@ -1090,7 +1192,7 @@ void RogueScene::showItemList(int showTextIndex)
 void RogueScene::hideItemList()
 {
     // モーダルレイヤー非表示にする
-    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::kModalTag));
+    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::ModalLayerTag));
     if (pModalLayer)
     {
         pModalLayer->setVisible(false);
@@ -1363,18 +1465,18 @@ MapIndex RogueScene::mapIndexToTileIndex(MapIndex mapIndex)
 
 ActorSprite* RogueScene::getPlayerActorSprite(int seqNo)
 {
-    return (ActorSprite*)getChildByTag(RogueScene::ActorPlayerTag + seqNo);
+    return static_cast<ActorSprite*>(getChildByTag(RogueScene::ActorPlayerTag + seqNo));
 }
 
 ActorSprite* RogueScene::getEnemyActorSprite(int seqNo)
 {
     auto pEnemyMapLayer = getChildByTag(RogueScene::kTiledMapTag)->getChildByTag(RogueScene::TiledMapTag::kTiledMapEnemyBaseTag);
-    return (ActorSprite*)pEnemyMapLayer->getChildByTag(RogueScene::TiledMapTag::kTiledMapEnemyBaseTag + seqNo);
+    return static_cast<ActorSprite*>(pEnemyMapLayer->getChildByTag(RogueScene::TiledMapTag::kTiledMapEnemyBaseTag + seqNo));
 }
 
 ItemWindowLayer* RogueScene::getItemWindowLayer()
 {
-    auto pModalLayer = getChildByTag(RogueScene::kModalTag);
+    auto pModalLayer = getChildByTag(RogueScene::ModalLayerTag);
     return static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(RogueScene::kItemListTag));
 }
 

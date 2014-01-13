@@ -17,6 +17,22 @@ USING_NS_CC;
 class ActorSprite  : public cocos2d::Sprite
 {
 public:
+    
+    typedef struct _ActorEquipDto {
+        // 武器
+        int weaponObjectId;
+        int weaponId;
+        std::string weaponName;
+        int weaponImgResId;
+        int weaponStr;
+        // アクセサリー
+        int accessoryObjectId;
+        int accessoryId;
+        std::string accessoryName;
+        int accessoryImgResId;
+        int accessoryDef;
+    } ActorEquipDto;
+    
     // TODO: classにして値変更のデリゲートメソッド作るべき？
     typedef struct _ActorDto {
         /** プレイヤーを一意に識別するID. */
@@ -51,7 +67,7 @@ public:
         int attackRange;
         
         /** 装備. */
-        //ActorPlayerEquipDto equipDto;
+        ActorEquipDto equip;
         /** スキルリスト. */
         //List<ActorPlayerSkillDto> skillDtoList;
     } ActorDto;

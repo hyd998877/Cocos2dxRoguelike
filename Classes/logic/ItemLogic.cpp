@@ -17,7 +17,7 @@ std::string ItemLogic::use(int itemId, ActorSprite::ActorDto* pUseActorDto)
 {
     std::string itemName;
     // ItemType
-    ItemType itemType;
+    DropItemSprite::ItemType itemType;
     // value
     int value;
     
@@ -27,7 +27,7 @@ std::string ItemLogic::use(int itemId, ActorSprite::ActorDto* pUseActorDto)
         // TODO: とりあえず
         itemName = "ポーション";
         // ItemType
-        itemType = ItemType::HP_RECOVER_VALUE;
+        itemType = DropItemSprite::ItemType::HP_RECOVER_VALUE;
         // value
         value = 10;
     }
@@ -36,7 +36,7 @@ std::string ItemLogic::use(int itemId, ActorSprite::ActorDto* pUseActorDto)
         // TODO: とりあえず
         itemName = "ぶどう";
         // ItemType
-        itemType = ItemType::MP_RECOVER_VALUE;
+        itemType = DropItemSprite::ItemType::MP_RECOVER_VALUE;
         // value
         value = 30;
     }
@@ -44,7 +44,7 @@ std::string ItemLogic::use(int itemId, ActorSprite::ActorDto* pUseActorDto)
     // 実行結果値
     int execValue = value;
     
-    if (itemType == ItemType::HP_RECOVER_VALUE)
+    if (itemType == DropItemSprite::ItemType::HP_RECOVER_VALUE)
     {
         if (pUseActorDto->hitPoint + value > pUseActorDto->hitPointLimit)
         {
@@ -55,7 +55,7 @@ std::string ItemLogic::use(int itemId, ActorSprite::ActorDto* pUseActorDto)
         auto pStr = String::createWithFormat("%sをつかってHPが%d回復した。", itemName.c_str(), execValue);
         return pStr->getCString();
     }
-    else if (itemType == ItemType::MP_RECOVER_VALUE)
+    else if (itemType == DropItemSprite::ItemType::MP_RECOVER_VALUE)
     {
         if (pUseActorDto->magicPoint + value > pUseActorDto->magicPointLimit)
         {

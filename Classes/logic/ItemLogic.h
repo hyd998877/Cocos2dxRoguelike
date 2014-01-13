@@ -11,13 +11,7 @@
 
 #include "cocos2d.h"
 #include "ActorSprite.h"
-
-enum ItemType {
-    HP_RECOVER_VALUE   = 100,
-    HP_RECOVER_PERCENT = 101,
-    MP_RECOVER_VALUE   = 200,
-    MP_RECOVER_PERCENT = 201,
-};
+#include "DropItemSprite.h"
 
 class ItemLogic
 {

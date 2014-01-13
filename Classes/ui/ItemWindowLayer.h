@@ -27,6 +27,7 @@ public:
     virtual bool initWithContentSize(cocos2d::Size contentSize);
     static ItemWindowLayer* createWithContentSize(cocos2d::Size contentSize);
     
+    Menu* initCreateMenu();
     DropItemSprite::DropItemDto findItem(int itemListIndex);
     void addItemList(DropItemSprite::DropItemDto dropItemDto);
     void reloadItemList();
@@ -36,11 +37,13 @@ public:
     typedef std::function<void(Object*, DropItemSprite::DropItemDto)> ItemWindowMenuCallback;
     void setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback);
     void setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback);
+    void setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback);
 private:
     int m_showItemDetailIdx;
     std::list<DropItemSprite::DropItemDto> m_itemDtoList;
     ItemWindowMenuCallback m_itemUseMenuCallback;
     ItemWindowMenuCallback m_itemDropMenuCallback;
+    ItemWindowMenuCallback m_itemEquipMenuCallback;
     
     void setItemDetail(int itemListIndex);
     void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
