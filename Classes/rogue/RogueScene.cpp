@@ -502,6 +502,19 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
                         // 満腹度？精神力？
                         enemyDto.magicPoint = 100;
                         enemyDto.magicPointLimit = 100;
+                        // 装備
+                        ActorSprite::ActorEquipDto enemyEquipDto;
+                        enemyEquipDto.weaponObjectId = 0;
+                        enemyEquipDto.weaponId = 0;
+                        enemyEquipDto.weaponName = "";
+                        enemyEquipDto.weaponImgResId = 0;
+                        enemyEquipDto.weaponStr = 0;
+                        enemyEquipDto.accessoryId = 0;
+                        enemyEquipDto.accessoryObjectId = 0;
+                        enemyEquipDto.accessoryName = "";
+                        enemyEquipDto.accessoryImgResId = 0;
+                        enemyEquipDto.accessoryDef = 0;
+                        enemyDto.equip = enemyEquipDto;
                         
                         rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
                         tileSetEnemyActorMapItem(enemyDto, rePopIndex);
