@@ -18,6 +18,5 @@
 
 ## 開発状況
 
-![](https://raw.github.com/kyokomi/Cocos2dxSRPGQuest/master/work/screen_captiue_20140118.png)
-
+![](https://bitbucket.org/kyokomi/cocos2droguelike/raw/30b6fd4248f14b72d696dee47dcda82dc7808db5/work/screen_captiue_20140118.png)
  
