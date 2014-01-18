@@ -258,18 +258,7 @@ bool RogueScene::init()
     actorDto.magicPoint = 100;
     actorDto.magicPointLimit = 100;
     // 装備
-    ActorSprite::ActorEquipDto equipDto;
-    equipDto.weaponObjectId = 0;
-    equipDto.weaponId = 0;
-    equipDto.weaponName = "";
-    equipDto.weaponImgResId = 0;
-    equipDto.weaponStr = 0;
-    equipDto.accessoryObjectId = 0;
-    equipDto.accessoryId = 0;
-    equipDto.accessoryName = "";
-    equipDto.accessoryImgResId = 0;
-    equipDto.accessoryDef = 0;
-    actorDto.equip = equipDto;
+    actorDto.equip = ActorSprite::createEquipDto();
     
     ActorMapItem actorMapItem;
     actorMapItem.mapDataType = MapDataType::PLAYER;
@@ -343,18 +332,7 @@ bool RogueScene::init()
     enemyDto.magicPoint = 100;
     enemyDto.magicPointLimit = 100;
     // 装備
-    ActorSprite::ActorEquipDto enemyEquipDto;
-    enemyEquipDto.weaponObjectId = 0;
-    enemyEquipDto.weaponId = 0;
-    enemyEquipDto.weaponName = "";
-    enemyEquipDto.weaponImgResId = 0;
-    enemyEquipDto.weaponStr = 0;
-    enemyEquipDto.accessoryId = 0;
-    enemyEquipDto.accessoryObjectId = 0;
-    enemyEquipDto.accessoryName = "";
-    enemyEquipDto.accessoryImgResId = 0;
-    enemyEquipDto.accessoryDef = 0;
-    enemyDto.equip = enemyEquipDto;
+    enemyDto.equip = ActorSprite::createEquipDto();
     
     MapIndex enemyMapIndex1 = {4, 4, MoveDirectionType::MOVE_DOWN};
     tileSetEnemyActorMapItem(enemyDto, enemyMapIndex1);
@@ -374,7 +352,7 @@ bool RogueScene::init()
     dropItemDto.objectId = 1; // 単純に連番でいい
     dropItemDto.itemId = 1;
     dropItemDto.itemType = DropItemSprite::ItemType::HP_RECOVER_VALUE;
-    dropItemDto.imageResId = 64; // imageId 10064
+    dropItemDto.imageResId = 641;
     dropItemDto.name = "ポーション";
     dropItemDto.isEquip = false;
     
@@ -385,8 +363,8 @@ bool RogueScene::init()
     dropItemDto2.objectId = 2;
     dropItemDto2.itemId = 2;
     dropItemDto2.itemType = DropItemSprite::ItemType::MP_RECOVER_VALUE;
-    dropItemDto2.imageResId = 168; // imageId 10168
-    dropItemDto2.name = "ぶどう";
+    dropItemDto2.imageResId = 645;
+    dropItemDto2.name = "エーテル";
     dropItemDto2.isEquip = false;
     
     MapIndex mapIndex2 = {10, 9, MoveDirectionType::MOVE_NONE};
@@ -396,12 +374,23 @@ bool RogueScene::init()
     dropItemDto3.objectId = 3;
     dropItemDto3.itemId = 3; // weaponId
     dropItemDto3.itemType = DropItemSprite::ItemType::EQUIP_WEAPON;
-    dropItemDto3.imageResId = 1; // imageId 10001
-    dropItemDto3.name = "ブロンズソード";
+    dropItemDto3.imageResId = 816;
+    dropItemDto3.name = "木の剣";
     dropItemDto3.isEquip = false;
     
     MapIndex mapIndex3 = {6, 6, MoveDirectionType::MOVE_NONE};
     tileSetDropMapItem(dropItemDto3, mapIndex3);
+
+    DropItemSprite::DropItemDto dropItemDto4;
+    dropItemDto4.objectId = 4;
+    dropItemDto4.itemId = 4; // accessoryId
+    dropItemDto4.itemType = DropItemSprite::ItemType::EQUIP_ACCESSORY;
+    dropItemDto4.imageResId = 1040;
+    dropItemDto4.name = "木の盾";
+    dropItemDto4.isEquip = false;
+    
+    MapIndex mapIndex4 = {6, 9, MoveDirectionType::MOVE_NONE};
+    tileSetDropMapItem(dropItemDto4, mapIndex4);
     
     // -------------------------------
     // メニュー
@@ -503,18 +492,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
                         enemyDto.magicPoint = 100;
                         enemyDto.magicPointLimit = 100;
                         // 装備
-                        ActorSprite::ActorEquipDto enemyEquipDto;
-                        enemyEquipDto.weaponObjectId = 0;
-                        enemyEquipDto.weaponId = 0;
-                        enemyEquipDto.weaponName = "";
-                        enemyEquipDto.weaponImgResId = 0;
-                        enemyEquipDto.weaponStr = 0;
-                        enemyEquipDto.accessoryId = 0;
-                        enemyEquipDto.accessoryObjectId = 0;
-                        enemyEquipDto.accessoryName = "";
-                        enemyEquipDto.accessoryImgResId = 0;
-                        enemyEquipDto.accessoryDef = 0;
-                        enemyDto.equip = enemyEquipDto;
+                        enemyDto.equip = ActorSprite::createEquipDto();
                         
                         rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
                         tileSetEnemyActorMapItem(enemyDto, rePopIndex);

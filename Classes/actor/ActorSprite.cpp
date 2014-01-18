@@ -177,3 +177,26 @@ FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, std::string frame
     
     return Animate::create(pAnimation);
 }
+
+ActorSprite::ActorEquipDto ActorSprite::createEquipDto()
+{
+    ActorSprite::ActorEquipDto equipDto;
+    equipDto.weaponObjectId    = 0;
+    equipDto.weaponId          = 0;
+    equipDto.weaponName        = "";
+    equipDto.weaponImgResId    = 0;
+    equipDto.weaponStr         = 0;
+    equipDto.accessoryId       = 0;
+    equipDto.accessoryObjectId = 0;
+    equipDto.accessoryName     = "";
+    equipDto.accessoryImgResId = 0;
+    equipDto.accessoryDef      = 0;
+    return equipDto;
+}
+
+ActorSprite::ActorDto ActorSprite::createDto()
+{
+    ActorSprite::ActorDto actorDto;
+    actorDto.equip = ActorSprite::createEquipDto();
+    return actorDto;
+}

@@ -24,7 +24,7 @@ bool DropItemSprite::initWithDropItemDto(DropItemDto dropItemDto)
 {
     m_dropItemDto = dropItemDto;
     
-    auto spriteFileName = StringUtils::format("item_%d.png", m_dropItemDto.imageResId);
+    auto spriteFileName = DropItemSprite::createItemImageFileName(m_dropItemDto.imageResId);
     if (!Sprite::initWithFile(spriteFileName))
     {
         return false;

@@ -136,6 +136,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
     // メニュー
     pItemDetailLayer->addChild(initCreateMenu());
     
+    // 枠線
     auto pItemDetailWaku = CREATE_WINDOW_WAKU();
     pItemDetailWaku->setPreferredSize(pItemDetailLayer->getContentSize());
     pItemDetailWaku->setPosition(Point(pItemDetailWaku->getContentSize().width / 2, pItemDetailWaku->getContentSize().height / 2));
@@ -174,6 +175,7 @@ Menu* ItemWindowLayer::initCreateMenu()
     pMenuItemDrop->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX , pMenuItemDrop->getContentSize().height / 2 + addNextMenuPositonY));
     addNextMenuPositonX += pMenuItemDrop->getContentSize().width + 4;
     addNextMenuPositonY += 0;
+    pMenuItemDrop->setTag(ItemWindowLayer::ItemDetailMenuDropTag);
     
     // 使用ボタン
     auto pMenuItemUse = ItemWindowLayer::createMenuItemSprite(Color3B::GRAY, [this](Object* pSeneder) {
@@ -197,6 +199,7 @@ Menu* ItemWindowLayer::initCreateMenu()
     pMenuItemUse->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemUse->getContentSize().height / 2 + addNextMenuPositonY));
     addNextMenuPositonX += pMenuItemUse->getContentSize().width + 4;
     addNextMenuPositonY += 0;
+    pMenuItemUse->setTag(ItemWindowLayer::ItemDetailMenuUseTag);
     
     // 装備（する/はずす）ボタン
     auto pMenuItemEquip = ItemWindowLayer::createMenuItemSprite(Color3B::BLUE, [this](Object* pSeneder) {
@@ -219,8 +222,10 @@ Menu* ItemWindowLayer::initCreateMenu()
     pMenuItemEquip->setPosition(Point(pMenuItemUse->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemEquip->getContentSize().height / 2 + addNextMenuPositonY));
     addNextMenuPositonX += pMenuItemEquip->getContentSize().width + 4;
     addNextMenuPositonY += 0;
+    pMenuItemEquip->setTag(ItemWindowLayer::ItemDetailMenuEquipTag);
     
     auto pMenu = Menu::create(pMenuItemDrop, pMenuItemUse, pMenuItemEquip, NULL);
+    pMenu->setTag(ItemWindowLayer::ItemDetailMenuTag);
     pMenu->setPosition(Point::ZERO);
     
     return pMenu;
@@ -257,7 +262,7 @@ void ItemWindowLayer::reloadItemList()
         std::list<TableViewTestLayer::TableLayout> itemNameList;
         for (DropItemSprite::DropItemDto dropItem : m_itemDtoList)
         {
-            TableViewTestLayer::TableLayout layout = {StringUtils::format("item_%d.png", dropItem.imageResId), dropItem.name};
+            TableViewTestLayer::TableLayout layout = {DropItemSprite::createItemImageFileName(dropItem.imageResId), dropItem.name};
             itemNameList.push_back(layout);
         }
         pItemTabelLayer->makeItemList(itemNameList);
@@ -320,7 +325,37 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
                     pItemDetailLabel->setString("満腹度が少し回復します。");
                 else if (pDropItemDto->itemId == 3)
                     pItemDetailLabel->setString("よくある剣です。");
-                
+                else if (pDropItemDto->itemId == 4)
+                    pItemDetailLabel->setString("よくある盾です。");
+            }
+        }
+        // menu
+        auto pItemDetailMenu = static_cast<Menu*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemDetailMenuTag));
+        if (pItemDetailMenu)
+        {
+            auto pMenuUse = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuUseTag));
+            auto pMenuDrop = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuDropTag));
+            auto pMenuEquip = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuEquipTag));
+            
+            // 未指定
+            if (pDropItemDto->itemType == DropItemSprite::ItemType::NONE)
+            {
+                pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
+                pMenuDrop->setEnabled(false);pMenuDrop->setVisible(false);
+                pMenuEquip->setEnabled(false);pMenuEquip->setVisible(false);
+            }
+            else if (pDropItemDto->itemType == DropItemSprite::ItemType::EQUIP_WEAPON || pDropItemDto->itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
+            {
+                // 装備可能・置く
+                pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
+                pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
+                pMenuEquip->setEnabled(true);pMenuEquip->setVisible(true);
+            }
+            else
+            {
+                pMenuUse->setEnabled(true);pMenuUse->setVisible(true);
+                pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
+                pMenuEquip->setEnabled(false);pMenuEquip->setVisible(false);
             }
         }
     }

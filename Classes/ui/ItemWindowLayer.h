@@ -20,6 +20,10 @@ protected:
         ItemDetailLayerTag = 20000,
         ItemNameTag        = 21000,
         ItemDetailTag      = 22000,
+        ItemDetailMenuTag      = 30000,
+        ItemDetailMenuUseTag   = 30001,
+        ItemDetailMenuDropTag  = 30002,
+        ItemDetailMenuEquipTag = 30003,
     };
 public:
     ItemWindowLayer();

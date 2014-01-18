@@ -90,6 +90,9 @@ public:
     void runRightAction();
     void runTopAction();
     
+    static ActorEquipDto createEquipDto();    
+    static ActorDto createDto();
+    
 private:
     ActorMapItem m_actorMapItem;
     ActorDto m_actorDto;

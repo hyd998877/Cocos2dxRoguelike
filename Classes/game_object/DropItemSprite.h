@@ -46,6 +46,11 @@ public:
         
     } DropItemDto;
     
+    static std::string createItemImageFileName(int itemResId)
+    {
+        return cocos2d::StringUtils::format("icon_set/item_%d.png", itemResId);
+    }
+    
     // コンストラクタ、デストラクタ
     DropItemSprite();
     ~DropItemSprite();
