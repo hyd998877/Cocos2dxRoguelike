@@ -1063,23 +1063,40 @@ void RogueScene::showItemList(int showTextIndex)
             
             auto pPlayerSprite = getPlayerActorSprite(1);
             
-            // アイテムをマップのプレイヤーの足元に置く
-            if (this->tileSetDropMapItem(dropItemDto, pPlayerSprite->getActorMapItem()->mapIndex))
-            {
-                this->logMessage("%sを床においた。", dropItemDto.name.c_str());
-                
-                // TODO: 装備してたら外す
-                
-                
-                // ターン消費
-                this->changeGameStatus(RogueScene::ENEMY_TURN);
-            }
-            else
+            // すでにアイテムが置いてある場合は置けない
+            if (m_mapManager.getDropMapItem(&pPlayerSprite->getActorMapItem()->mapIndex)->mapDataType != MapDataType::NONE)
             {
                 this->logMessage("%sを床におけなかった。", dropItemDto.name.c_str());
                 // アイテムを戻す
                 this->getItemWindowLayer()->addItemList(dropItemDto);
             }
+            else
+            {
+                // 装備してたら外す
+                if (dropItemDto.isEquip)
+                {
+                    dropItemDto.isEquip = false;
+                    
+                    if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
+                    {
+                        pPlayerSprite->equipReleaseWeapon();
+                    }
+                    else if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
+                    {
+                        pPlayerSprite->equipReleaseAccessory();
+                    }
+                }
+                
+                // アイテムをマップのプレイヤーの足元に置く
+                if (this->tileSetDropMapItem(dropItemDto, pPlayerSprite->getActorMapItem()->mapIndex))
+                {
+                    this->logMessage("%sを床においた。", dropItemDto.name.c_str());
+                    
+                    // ターン消費
+                    this->changeGameStatus(RogueScene::ENEMY_TURN);
+                }
+            }
+            
             // インベントリは閉じる
             this->hideItemList();
         });
@@ -1130,21 +1147,13 @@ void RogueScene::showItemList(int showTextIndex)
             {
                 if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
                 {
-                    // 武器装備
-                    pPlayerSprite->getActorDto()->equip.weaponObjectId = 0;
-                    pPlayerSprite->getActorDto()->equip.weaponId       = 0;
-                    pPlayerSprite->getActorDto()->equip.weaponImgResId = 0;
-                    pPlayerSprite->getActorDto()->equip.weaponName     = "";
-                    pPlayerSprite->getActorDto()->equip.weaponStr      = 0;
+                    // 武器解除
+                    pPlayerSprite->equipReleaseWeapon();
                 }
                 else if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
                 {
                     // 防具装備
-                    pPlayerSprite->getActorDto()->equip.accessoryObjectId = 0;
-                    pPlayerSprite->getActorDto()->equip.accessoryId       = 0;
-                    pPlayerSprite->getActorDto()->equip.accessoryImgResId = 0;
-                    pPlayerSprite->getActorDto()->equip.accessoryName     = "";
-                    pPlayerSprite->getActorDto()->equip.accessoryDef      = 0;
+                    pPlayerSprite->equipReleaseAccessory();
                 }
                 this->logMessage("%sの装備をはずした。", dropItemDto.name.c_str());
             }

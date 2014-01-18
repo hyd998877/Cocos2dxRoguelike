@@ -84,6 +84,12 @@ public:
     ActorMapItem* getActorMapItem();
     ActorDto* getActorDto();
     
+    // 装備
+    void equipWeapon(long objectId, int weaponId);
+    void equipReleaseWeapon();
+    void equipAccessory(long objectId, int accessoryId);
+    void equipReleaseAccessory();
+    
     void runMoveAction(MapIndex moveMapIndex);
     void runBottomAction();
     void runLeftAction();

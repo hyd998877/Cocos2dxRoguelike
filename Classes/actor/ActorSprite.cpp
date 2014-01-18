@@ -69,6 +69,34 @@ ActorSprite::ActorDto* ActorSprite::getActorDto()
     return &m_actorDto;
 }
 
+void ActorSprite::equipWeapon(long objectId, int weaponId)
+{
+    // TODO: マスターデータの仕組みが必要
+}
+
+void ActorSprite::equipReleaseWeapon()
+{
+    m_actorDto.equip.weaponObjectId = 0;
+    m_actorDto.equip.weaponId       = 0;
+    m_actorDto.equip.weaponImgResId = 0;
+    m_actorDto.equip.weaponName     = "";
+    m_actorDto.equip.weaponStr      = 0;
+}
+
+void ActorSprite::equipAccessory(long objectId, int accessoryId)
+{
+    // TODO: マスターデータの仕組みが必要
+}
+
+void ActorSprite::equipReleaseAccessory()
+{
+    m_actorDto.equip.accessoryObjectId = 0;
+    m_actorDto.equip.accessoryId       = 0;
+    m_actorDto.equip.accessoryImgResId = 0;
+    m_actorDto.equip.accessoryName     = "";
+    m_actorDto.equip.accessoryDef      = 0;
+}
+
 void ActorSprite::runMoveAction(MapIndex moveMapIndex)
 {
     if (moveMapIndex.x == 0 && moveMapIndex.y == 0)
@@ -177,6 +205,8 @@ FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, std::string frame
     
     return Animate::create(pAnimation);
 }
+
+// static
 
 ActorSprite::ActorEquipDto ActorSprite::createEquipDto()
 {
