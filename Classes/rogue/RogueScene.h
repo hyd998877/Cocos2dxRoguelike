@@ -108,6 +108,7 @@ private:
 
     // マップ制御
     MapManager m_mapManager;
+    MapIndex getRandomMapIndex(bool isColision, bool isActor);
     
     // タッチイベント系
     void touchEventExec(cocos2d::Point touchPoint);

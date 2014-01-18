@@ -82,7 +82,8 @@ bool RogueScene::init()
     // ---------------------
     // タイルマップを生成
     // ---------------------
-    auto pTiledMap = TMXTiledMap::create("tmx/desert.tmx");
+//    auto pTiledMap = TMXTiledMap::create("tmx/desert.tmx");
+    auto pTiledMap = TMXTiledMap::create("tmx/quest_1.tmx");
     pTiledMap->setPosition(Point::ZERO);
     this->addChild(pTiledMap, RogueScene::TiledMapLayerZOrder, RogueScene::kTiledMapTag);
     
@@ -116,11 +117,11 @@ bool RogueScene::init()
     // ---------------------
     auto draw = DrawNode::create();
     draw->setPosition(Point::ZERO);
-    draw->setOpacity(0.5f);
+//    draw->setOpacity(0.2f);
     
     // 線の太さと色
     float lineSize = 1 * 0.5;
-    auto color = Color4F::MAGENTA;
+    auto color = Color4F(1, 1, 1, 0.5f);
     
     // 縦線を引く
     for (int x = 1; x < m_baseMapSize.width; x++)
@@ -175,11 +176,11 @@ bool RogueScene::init()
     //-------------------------
     //    float startWidth = pFaceSprite->getContentSize().width * pFaceSprite->getScaleX();
     auto pGameLogWaku = CREATE_WINDOW_WAKU();
-    pGameLogWaku->setPreferredSize(Size(winSize.width * 0.8, m_baseTileSize.height * 1.5));
+    pGameLogWaku->setPreferredSize(Size(winSize.width * 0.6, m_baseTileSize.height * 1.5));
     pGameLogWaku->setPosition(pGameLogWaku->getPreferredSize().width / 2, pGameLogWaku->getPreferredSize().height / 2);
     
     auto pGameLogLayer = LayerColor::create(Color4B(0, 0, 0, 192));
-    pGameLogLayer->setContentSize(Size(winSize.width * 0.8, m_baseTileSize.height * 1.5));
+    pGameLogLayer->setContentSize(Size(winSize.width * 0.6, m_baseTileSize.height * 1.5));
     pGameLogLayer->setPosition(winSize.width / 2 - pGameLogLayer->getContentSize().width / 2, 0);
     
     int baseFontSize = 10;
@@ -271,7 +272,7 @@ bool RogueScene::init()
     actorMapItem.attackDone = false;
     
     auto actorSprite = ActorSprite::createWithActorDto(actorDto);
-    actorSprite->setPosition(indexToPoint(actorMapItem.mapIndex)); // 画面の中心
+    actorSprite->setPosition(indexToPoint(actorMapItem.mapIndex));
     actorSprite->setActorMapItem(actorMapItem);
     actorSprite->runBottomAction();
     // プレイヤーは画面中心にくるのでmapLayerに追加しない
@@ -307,6 +308,15 @@ bool RogueScene::init()
         }
     }
     
+    // プレイヤー位置の移動
+    MapIndex playerRandMapIndex = getRandomMapIndex(false, true);
+    MapIndex moveIndex = {
+        playerRandMapIndex.x - actorMapItem.mapIndex.x,
+        playerRandMapIndex.y - actorMapItem.mapIndex.y,
+        actorMapItem.mapIndex.moveDictType
+    };
+    moveMap(moveIndex, actorMapItem.seqNo, MapDataType::PLAYER, NULL);
+    
     // ---------------------
     // 敵キャラ生成
     // ---------------------
@@ -334,15 +344,15 @@ bool RogueScene::init()
     // 装備
     enemyDto.equip = ActorSprite::createEquipDto();
     
-    MapIndex enemyMapIndex1 = {4, 4, MoveDirectionType::MOVE_DOWN};
+    MapIndex enemyMapIndex1 = getRandomMapIndex(false, true);
     tileSetEnemyActorMapItem(enemyDto, enemyMapIndex1);
     
     ActorSprite::ActorDto enemyDto2 = enemyDto;
-    MapIndex enemyMapIndex2 = {14,12, MoveDirectionType::MOVE_DOWN};
+    MapIndex enemyMapIndex2 = getRandomMapIndex(false, true);
     tileSetEnemyActorMapItem(enemyDto2, enemyMapIndex2);
     
     ActorSprite::ActorDto enemyDto3 = enemyDto;
-    MapIndex enemyMapIndex3 = {20,4, MoveDirectionType::MOVE_DOWN};
+    MapIndex enemyMapIndex3 = getRandomMapIndex(false, true);
     tileSetEnemyActorMapItem(enemyDto3, enemyMapIndex3);
     
     //-------------------------
@@ -356,7 +366,7 @@ bool RogueScene::init()
     dropItemDto.name = "ポーション";
     dropItemDto.isEquip = false;
     
-    MapIndex mapIndex = {7, 5, MoveDirectionType::MOVE_NONE};
+    MapIndex mapIndex = getRandomMapIndex(false, false);
     tileSetDropMapItem(dropItemDto, mapIndex);
 
     DropItemSprite::DropItemDto dropItemDto2;
@@ -367,7 +377,7 @@ bool RogueScene::init()
     dropItemDto2.name = "エーテル";
     dropItemDto2.isEquip = false;
     
-    MapIndex mapIndex2 = {10, 9, MoveDirectionType::MOVE_NONE};
+    MapIndex mapIndex2 = getRandomMapIndex(false, false);;
     tileSetDropMapItem(dropItemDto2, mapIndex2);
 
     DropItemSprite::DropItemDto dropItemDto3;
@@ -378,7 +388,7 @@ bool RogueScene::init()
     dropItemDto3.name = "木の剣";
     dropItemDto3.isEquip = false;
     
-    MapIndex mapIndex3 = {6, 6, MoveDirectionType::MOVE_NONE};
+    MapIndex mapIndex3 = getRandomMapIndex(false, false);;
     tileSetDropMapItem(dropItemDto3, mapIndex3);
 
     DropItemSprite::DropItemDto dropItemDto4;
@@ -389,7 +399,7 @@ bool RogueScene::init()
     dropItemDto4.name = "木の盾";
     dropItemDto4.isEquip = false;
     
-    MapIndex mapIndex4 = {6, 9, MoveDirectionType::MOVE_NONE};
+    MapIndex mapIndex4 = getRandomMapIndex(false, false);;
     tileSetDropMapItem(dropItemDto4, mapIndex4);
     
     // -------------------------------
@@ -448,59 +458,41 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION)
         && m_gameStatus == GameStatus::ENEMY_TURN)
     {
-        // TODO: 敵のリポップ
+        // 敵のリポップ
+        
         // ランダムなタイミングでランダムに湧く
-        int rand = GetRandom(1, 5); // 5%
+        int rand = GetRandom(1, 10); // 1%
         if (rand == 1)
         {
-            // 壁とかすでに敵がいる場所だったら残念なので、10回くらいトライする
-            for (int i = 0; i < 10; i++)
-            {
-                // 出現位置をランダムで決める
-                int randX = GetRandom(0, m_baseMapSize.width-1); // x軸
-                int randY = GetRandom(0, m_baseMapSize.height-1); // y軸
-                MapIndex rePopIndex = {randX, randY, MoveDirectionType::MOVE_NONE};
-
-                CCLOG("rePop  %d, %d", rePopIndex.x, rePopIndex.y);
-                
-                if (!isTiledMapColisionLayer(rePopIndex))
-                {
-                    auto rePopTargetMapItem = m_mapManager.getMapItem(&rePopIndex);
-                    if (rePopTargetMapItem->mapDataType == MapDataType::NONE
-                        || rePopTargetMapItem->mapDataType == MapDataType::MAP_ITEM)
-                    {
-                        // TODO: 敵データは仮
-                        ActorSprite::ActorDto enemyDto;
-                        enemyDto.name = "スライム";
-                        enemyDto.faceImgId = 0;
-                        enemyDto.imageResId = 1011;
-                        // 基本
-                        enemyDto.attackRange = 1; // 未使用
-                        enemyDto.movePoint = 10; // 索敵範囲
-                        enemyDto.playerId = 901;
-                        // 攻守
-                        enemyDto.attackPoint = 2;
-                        enemyDto.defencePoint = 0;
-                        // 経験値
-                        enemyDto.exp = 2;
-                        enemyDto.nextExp = 10;
-                        // HP
-                        enemyDto.hitPoint = 10;
-                        enemyDto.hitPointLimit = 10;
-                        enemyDto.lv = 1;
-                        // 満腹度？精神力？
-                        enemyDto.magicPoint = 100;
-                        enemyDto.magicPointLimit = 100;
-                        // 装備
-                        enemyDto.equip = ActorSprite::createEquipDto();
-                        
-                        rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
-                        tileSetEnemyActorMapItem(enemyDto, rePopIndex);
-                        
-                        break;
-                    }
-                }
-            }
+            MapIndex rePopIndex = getRandomMapIndex(false, true);
+            
+            // TODO: 敵データは仮
+            ActorSprite::ActorDto enemyDto;
+            enemyDto.name = "スライム";
+            enemyDto.faceImgId = 0;
+            enemyDto.imageResId = 1011;
+            // 基本
+            enemyDto.attackRange = 1; // 未使用
+            enemyDto.movePoint = 10; // 索敵範囲
+            enemyDto.playerId = 901;
+            // 攻守
+            enemyDto.attackPoint = 2;
+            enemyDto.defencePoint = 0;
+            // 経験値
+            enemyDto.exp = 2;
+            enemyDto.nextExp = 10;
+            // HP
+            enemyDto.hitPoint = 10;
+            enemyDto.hitPointLimit = 10;
+            enemyDto.lv = 1;
+            // 満腹度？精神力？
+            enemyDto.magicPoint = 100;
+            enemyDto.magicPointLimit = 100;
+            // 装備
+            enemyDto.equip = ActorSprite::createEquipDto();
+            
+            rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
+            tileSetEnemyActorMapItem(enemyDto, rePopIndex);
         }
         
         // 敵のターン開始時
@@ -518,13 +510,63 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
         // TODO: とりあえずここで・・・
         auto pPlayerDto = pPlayer->getActorDto();
         
-        // １ターンに1空腹度が減るという
-        if (pPlayerDto->magicPoint > 0)
+        // 10ターンに1空腹度が減るという
+        if (m_TurnCount % 10 == 0)
         {
-            pPlayerDto->magicPoint--;
+            if (pPlayerDto->magicPoint > 0)
+            {
+                pPlayerDto->magicPoint--;
+            }
         }
         refreshStatus();
     }
+}
+
+MapIndex RogueScene::getRandomMapIndex(bool isColision, bool isActor)
+{
+    MapIndex randMapIndex;
+    int randX = 0;
+    int randY = 0;
+    while (true)
+    {
+        // 出現位置をランダムで決める
+        randX = GetRandom(0, m_baseMapSize.width-1); // x軸
+        randY = GetRandom(0, m_baseMapSize.height-1); // y軸
+        randMapIndex = {randX, randY, MoveDirectionType::MOVE_NONE};
+        
+        // 壁以外
+        if (!isColision)
+        {
+            if (isTiledMapColisionLayer(randMapIndex))
+            {
+                // リトライ
+                continue;
+            }
+        }
+        
+        // マップ上を確認
+        auto randTargetMapItem = m_mapManager.getMapItem(&randMapIndex);
+        
+        if (isActor)
+        {
+            // アイテムの上もOK
+            if (randTargetMapItem->mapDataType == MapDataType::NONE || randTargetMapItem->mapDataType == MapDataType::MAP_ITEM)
+            {
+                // OK
+                break;
+            }
+        }
+        else
+        {
+            // NONEのみ
+            if (randTargetMapItem->mapDataType == MapDataType::NONE)
+            {
+                // OK
+                break;
+            }
+        }
+    }
+    return randMapIndex;
 }
 
 #pragma mark
