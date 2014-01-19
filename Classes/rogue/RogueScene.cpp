@@ -178,11 +178,11 @@ bool RogueScene::init()
     //-------------------------
     //    float startWidth = pFaceSprite->getContentSize().width * pFaceSprite->getScaleX();
     auto pGameLogWaku = CREATE_WINDOW_WAKU();
-    pGameLogWaku->setPreferredSize(Size(winSize.width * 0.6, m_baseTileSize.height * 1.5));
+    pGameLogWaku->setPreferredSize(Size(winSize.width * 0.5, m_baseTileSize.height * 1.5));
     pGameLogWaku->setPosition(pGameLogWaku->getPreferredSize().width / 2, pGameLogWaku->getPreferredSize().height / 2);
     
     auto pGameLogLayer = LayerColor::create(Color4B(0, 0, 0, 192));
-    pGameLogLayer->setContentSize(Size(winSize.width * 0.6, m_baseTileSize.height * 1.5));
+    pGameLogLayer->setContentSize(Size(winSize.width * 0.5, m_baseTileSize.height * 1.5));
     pGameLogLayer->setPosition(winSize.width / 2 - pGameLogLayer->getContentSize().width / 2, 0);
     
     int baseFontSize = 10;
@@ -290,25 +290,25 @@ bool RogueScene::init()
     
     // タッチカーソル表示
     // TODO: miniMapLayerからとってきたbatchNodeなのでちょっと無理やり
-    auto pBatchNode = getGridSpriteBatchNode();
-    if (pBatchNode)
-    {
-        std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(actorSprite->getActorMapItem()->mapIndex);
-        for (auto mapIndex : searchMapIndexList)
-        {
-            auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
-            pSprite->setPosition(indexToPoint(mapIndex.x, mapIndex.y));
-            
-            pSprite->setColor(Color3B::ORANGE);
-            pSprite->setOpacity(64);
-            
-            // 1.0秒でフェードイン、フェードアウトを繰り返すように設定
-            Sequence* sequence = Sequence::create(FadeTo::create(0.5f, 64), FadeTo::create(0.5f, 0), NULL);
-            RepeatForever* repeat = RepeatForever::create(sequence);
-            pSprite->runAction(repeat);
-            this->addChild(pSprite, RogueScene::ActionCursorZOrder, RogueScene::ActionCursorTag);
-        }
-    }
+//    auto pBatchNode = getGridSpriteBatchNode();
+//    if (pBatchNode)
+//    {
+//        std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(actorSprite->getActorMapItem()->mapIndex);
+//        for (auto mapIndex : searchMapIndexList)
+//        {
+//            auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
+//            pSprite->setPosition(indexToPoint(mapIndex.x, mapIndex.y));
+//            
+//            pSprite->setColor(Color3B::ORANGE);
+//            pSprite->setOpacity(64);
+//            
+//            // 1.0秒でフェードイン、フェードアウトを繰り返すように設定
+//            Sequence* sequence = Sequence::create(FadeTo::create(0.5f, 64), FadeTo::create(0.5f, 0), NULL);
+//            RepeatForever* repeat = RepeatForever::create(sequence);
+//            pSprite->runAction(repeat);
+//            this->addChild(pSprite, RogueScene::ActionCursorZOrder, RogueScene::ActionCursorTag);
+//        }
+//    }
     
     // プレイヤー位置の移動
     MapIndex playerRandMapIndex = getRandomMapIndex(false, true);
@@ -407,6 +407,74 @@ bool RogueScene::init()
     // -------------------------------
     // メニュー
     // -------------------------------
+    
+    auto pKeyUp = Sprite::create("ui/keypad.png");
+    auto pKeyUpPress = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
+    pKeyUpPress->setColor(Color3B::ORANGE);
+    auto pMenuKeyUp = MenuItemSprite::create(pKeyUp, pKeyUpPress, [this](Object *pSender) {
+        CCLOG("pMenuKeyUpが押された！");
+        if (m_gameStatus == GameStatus::PLAYER_TURN)
+        {
+            auto winSize = Director::getInstance()->getWinSize();
+            Point point = Point(winSize.width / 2, winSize.height / 2);
+            MapIndex mapIndex = this->pointToIndex(point);
+            this->touchEventExec(this->indexToPoint(mapIndex.x, mapIndex.y + 1));
+        }
+    });
+    pMenuKeyUp->setOpacity(128);
+    pMenuKeyUp->setPosition(indexToPoint(1, 2));
+    
+    auto pKeyRight = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
+    auto pKeyRightPress = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
+    pKeyRightPress->setColor(Color3B::ORANGE);
+    auto pMenuKeyRight = MenuItemSprite::create(pKeyRight, pKeyRightPress, [this](Object *pSender) {
+        CCLOG("pMenuKeyRightが押された！");
+        if (m_gameStatus == GameStatus::PLAYER_TURN)
+        {
+            auto winSize = Director::getInstance()->getWinSize();
+            Point point = Point(winSize.width / 2, winSize.height / 2);
+            MapIndex mapIndex = this->pointToIndex(point);
+            this->touchEventExec(this->indexToPoint(mapIndex.x + 1, mapIndex.y));
+        }
+    });
+    pMenuKeyRight->setOpacity(128);
+    pMenuKeyRight->setRotation(90.0f);
+    pMenuKeyRight->setPosition(indexToPoint(2, 1));
+    
+    auto pKeyDown = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
+    auto pKeyDownPress = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
+    pKeyDownPress->setColor(Color3B::ORANGE);
+    auto pMenuKeyDown = MenuItemSprite::create(pKeyDown, pKeyDownPress, [this](Object *pSender) {
+        CCLOG("pMenuKeyDownが押された！");
+        if (m_gameStatus == GameStatus::PLAYER_TURN)
+        {
+            auto winSize = Director::getInstance()->getWinSize();
+            Point point = Point(winSize.width / 2, winSize.height / 2);
+            MapIndex mapIndex = this->pointToIndex(point);
+            this->touchEventExec(this->indexToPoint(mapIndex.x, mapIndex.y - 1));
+        }
+    });
+    pMenuKeyDown->setOpacity(128);
+    pMenuKeyDown->setRotation(180.0f);
+    pMenuKeyDown->setPosition(indexToPoint(1, 0));
+    
+    auto pKeyLeft = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
+    auto pKeyLeftPress = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
+    pKeyLeftPress->setColor(Color3B::ORANGE);
+    auto pMenuKeyLeft = MenuItemSprite::create(pKeyLeft, pKeyLeftPress, [this](Object *pSender) {
+        CCLOG("pMenuKeyLeftが押された！");
+        if (m_gameStatus == GameStatus::PLAYER_TURN)
+        {
+            auto winSize = Director::getInstance()->getWinSize();
+            Point point = Point(winSize.width / 2, winSize.height / 2);
+            MapIndex mapIndex = this->pointToIndex(point);
+            this->touchEventExec(this->indexToPoint(mapIndex.x - 1, mapIndex.y));
+        }
+    });
+    pMenuKeyLeft->setOpacity(128);
+    pMenuKeyLeft->setRotation(270.0f);
+    pMenuKeyLeft->setPosition(indexToPoint(0, 1));
+    
     auto rect = Rect(0, 0, 300, 30);
     auto capRect = Rect(0, 0, 300, 30);
     auto pScale9Sprite1 = extension::Scale9Sprite::create("menu_button.png", rect, capRect);
@@ -422,7 +490,7 @@ bool RogueScene::init()
     });
     pMenuItem1->setColor(Color3B::GREEN);
     pMenuItem1->setPosition(Point(winSize.width - pMenuItem1->getContentSize().width / 2, pMenuItem1->getContentSize().height / 2));
-    auto pMenu = Menu::create(pMenuItem1, NULL);
+    auto pMenu = Menu::create(pMenuKeyUp, pMenuKeyRight, pMenuKeyDown, pMenuKeyLeft, pMenuItem1, NULL);
     pMenu->setPosition(Point::ZERO);
     this->addChild(pMenu, RogueScene::MenuLayerZOrder, RogueScene::kMenuTag);
 
@@ -782,10 +850,10 @@ void RogueScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event)
 {
     if (m_gameStatus == GameStatus::PLAYER_TURN)
     {
-        auto touchPoint = this->convertToWorldSpace(this->convertTouchToNodeSpace(touch));
-
-        // 行動判定
-        touchEventExec(touchPoint);
+//        auto touchPoint = this->convertToWorldSpace(this->convertTouchToNodeSpace(touch));
+//
+//        // 行動判定
+//        touchEventExec(touchPoint);
     }
 }
 
@@ -800,7 +868,7 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
     auto pMapLayer = (TMXTiledMap*)getChildByTag(kTiledMapTag);
     // マップ移動分を考慮
     MapIndex touchPointMapIndex = touchPointToIndex(touchPoint - pMapLayer->getPosition());
-    CCLOG("onTouchBegan touchPointMapIndex x = %d y = %d", touchPointMapIndex.x, touchPointMapIndex.y);
+    CCLOG("touchEventExec touchPointMapIndex x = %d y = %d", touchPointMapIndex.x, touchPointMapIndex.y);
     
     // 画面外判定
     if (isMapLayerOver(touchPointMapIndex))
@@ -816,6 +884,11 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
         return;
     }
     
+    touchEventExec(addMoveIndex, touchPointMapIndex);
+}
+
+void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex)
+{
     // キャラの向きを変更
     auto pActorSprite = getPlayerActorSprite(1);
     pActorSprite->runMoveAction(addMoveIndex);

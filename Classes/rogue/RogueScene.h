@@ -114,7 +114,8 @@ private:
     
     // タッチイベント系
     void touchEventExec(cocos2d::Point touchPoint);
-    void touchEventExec(MapIndex touchPointMapIndex);
+    void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
+    
     MapIndex checkTouchEventIndex(MapIndex touchPointMapIndex);
     void moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapDataType, cocos2d::CallFunc* moveFinishedCallFunc);
     bool isTiledMapColisionLayer(MapIndex touchPointMapIndex);
