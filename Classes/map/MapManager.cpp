@@ -10,6 +10,8 @@
 #include <iostream>
 #include <string>
 
+#define DEBUG_LOG_MAP_ITEM_LAYER_FLG 1
+
 void MapManager::init(int top, int bottom, int left, int right)
 {
     m_top = top;
@@ -50,13 +52,13 @@ void MapManager::clearCursor()
 /**
  * キャラクター移動範囲検索.
  */
-std::list<MapIndex> MapManager::createMovePointList(MapIndex* moveFromMapIndex, MapItem* moveToMapItem)
+std::list<MapIndex> MapManager::createMovePointList(MapIndex moveFromMapIndex, MapItem* moveToMapItem)
 {
     // 経路情報を初期化
     m_mapMovePointList.clear();
     
     // 移動先を取得
-    MapItem* moveFromMapItem = getMapItem(moveFromMapIndex);
+    MapItem* moveFromMapItem = getMapItem(&moveFromMapIndex);
     
     // 経路探索(再帰呼び出し)
     findMovePointList(moveFromMapItem->mapIndex.x, moveFromMapItem->mapIndex.y, moveFromMapItem->moveDist, moveToMapItem);
@@ -64,7 +66,7 @@ std::list<MapIndex> MapManager::createMovePointList(MapIndex* moveFromMapIndex, 
     // TODO: 1件も取れない時に目的地だけ返してしまう
     
     // 目的地を最終到達点として最後に追加（ただしカーソル情報なので移動の向きをここで指定する）
-    MapIndex moveEndMapIndex = *moveFromMapIndex;
+    MapIndex moveEndMapIndex = moveFromMapIndex;
     
     MoveDirectionType moveDict = checkMoveDirectionType(moveEndMapIndex, m_mapMovePointList.back());
     moveEndMapIndex.moveDictType = moveDict;
@@ -224,7 +226,7 @@ void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
 void MapManager::addActor(ActorMapItem* actorMapItem)
 {
     m_mapObjectDataArray[actorMapItem->mapIndex.x][actorMapItem->mapIndex.y] = *actorMapItem;
-#if 0
+#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     DEBUG_LOG_MAP_ITEM_LAYER();
 #endif
 }
@@ -232,18 +234,18 @@ void MapManager::addActor(ActorMapItem* actorMapItem)
 /**
  * プレイヤー移動
  */
-void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex* pMoveMapIndex)
+void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex moveMapIndex)
 {
     MapIndex beforeMapIndex = pActorMapItem->mapIndex;
-    pActorMapItem->mapIndex = *pMoveMapIndex;
-    m_mapObjectDataArray[pMoveMapIndex->x][pMoveMapIndex->y] = *pActorMapItem;
+    pActorMapItem->mapIndex = moveMapIndex;
+    m_mapObjectDataArray[moveMapIndex.x][moveMapIndex.y] = *pActorMapItem;
     
     ActorMapItem mapItem;
     mapItem.mapDataType = MapDataType::NONE;
     mapItem.mapIndex = beforeMapIndex;
     mapItem.moveDist = 0;
     m_mapObjectDataArray[beforeMapIndex.x][beforeMapIndex.y] = mapItem;
-#if 0
+#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     DEBUG_LOG_MAP_ITEM_LAYER();
 #endif
 }
@@ -254,7 +256,7 @@ void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex* pMoveMapIndex)
 void MapManager::addDropItem(DropMapItem* pDropMapItem)
 {
     m_mapDropItemDataArray[pDropMapItem->mapIndex.x][pDropMapItem->mapIndex.y] = *pDropMapItem;
-#if 0
+#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     DEBUG_LOG_MAP_ITEM_LAYER();
 #endif
 }
@@ -299,7 +301,7 @@ void MapManager::removeMapItem(MapItem* pRemoveMapItem)
         noneMapItem.itemId = 0;
         m_mapDropItemDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
     }
-#if 0
+#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     DEBUG_LOG_MAP_ITEM_LAYER();
 #endif
 }

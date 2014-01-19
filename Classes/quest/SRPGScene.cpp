@@ -111,7 +111,7 @@ bool SRPGScene::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event)
     m_pStartPoint = this->convertToWorldSpace(this->convertTouchToNodeSpace(touch));
 	m_pDelta = Point::ZERO;
 	m_touched = true;
-
+    
     // updateメソッドを毎フレーム実行
 	this->unscheduleUpdate();
     this->scheduleUpdate();
@@ -144,8 +144,8 @@ void SRPGScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event)
 		this->unschedule(schedule_selector(SRPGScene::touchUnSchedule));
 	}
 	this->scheduleOnce(schedule_selector(SRPGScene::touchUnSchedule), 0.3f);
-	m_touched = false;
-
+    m_touched = false;
+    
     // フリック対象に場合はグリッドのイベントは処理しない
     if (checkFlick()) return;
     

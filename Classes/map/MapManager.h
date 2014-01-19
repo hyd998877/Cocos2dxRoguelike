@@ -133,11 +133,11 @@ public:
     void init(int top, int bottom, int left, int right);
     
     std::list<MapIndex> createActorFindDist(MapIndex mapIndex, int dist);
-    std::list<MapIndex> createMovePointList(MapIndex* moveFromMapIndex, MapItem* moveToMapItem);
+    std::list<MapIndex> createMovePointList(MapIndex moveFromMapIndex, MapItem* moveToMapItem);
     void clearCursor();
     
     void addActor(ActorMapItem* pActorMapItem);
-    void moveActor(ActorMapItem* actorMapItem, MapIndex* moveMapIndex);
+    void moveActor(ActorMapItem* actorMapItem, MapIndex moveMapIndex);
     void addDropItem(DropMapItem* pDropMapItem);
     void addObstacle(MapIndex* pMapIndex);
     void removeMapItem(MapItem* pRemoveMapItem);

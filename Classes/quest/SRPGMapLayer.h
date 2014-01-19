@@ -55,6 +55,7 @@ public:
     Point indexToPoint(MapIndex mapIndex);
     MapIndex pointToIndex(Point point);
     MapIndex touchPointToIndex(Point point);
+    MapIndex mapIndexToTileIndex(MapIndex mapIndex);
     
     // マップ移動生成
     Point createTouchMoveMapPoint(Point mapPosition, float updateDelta, Point pDelta);
@@ -95,7 +96,7 @@ private:
     Point m_touchStartPoint;
     Point convertToSRPGMapPoint(Touch *pTouch);
     
-    void executeMapIndex(MapIndex* mapIndex);
+    void executeMapIndex(MapIndex mapIndex);
 };
 
 

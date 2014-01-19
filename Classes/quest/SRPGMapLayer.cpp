@@ -48,6 +48,26 @@ bool SRPGMapLayer::init()
     // マップマネージャを生成
     m_mapManager.init(0, (int)m_baseMapSize.height, 0, (int)m_baseMapSize.width);
     
+    // 障害物をmapManagerに適応する
+    auto pColisionLayer = pTiledMap->getLayer("colision");
+    for (int x = 0; x < m_baseMapSize.width; x++)
+    {
+        for (int y = 0; y < m_baseMapSize.height; y++)
+        {
+            MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
+            auto tileMapIndex = mapIndexToTileIndex(mapIndex);
+            if (pColisionLayer->getTileAt(Point(x, y)))
+            {
+                m_mapManager.addObstacle(&tileMapIndex);
+            }
+//            else
+//            {
+//                // ミニマップ更新
+//                addMiniMapItem(m_mapManager.getMapItem(&tileMapIndex), -1);
+//            }
+        }
+    }
+    
     // ---------------------
     // グリッド線を生成
     // ---------------------
@@ -286,7 +306,11 @@ void SRPGMapLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event)
     // タッチの開始位置と終了位置のグリッドが一致したらグリッド選択とする
     if (MAP_INDEX_DIFF(startSRPGMapIndex, endSRPGMapIndex))
     {
-    	if (m_moveAnimation) return;
+    	if (m_moveAnimation)
+        {
+            CCLOG("m_moveAnimation true");
+            return;
+        }
     	m_moveAnimation = true;
 
         // 表示前のカーソルクリア
@@ -297,7 +321,7 @@ void SRPGMapLayer::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event)
         moveMapPointList.push_back(endSRPGMapIndex);
         addMapCursor(MapDataType::SELECTED_DIST, moveMapPointList);
         // 選択位置の処理実行
-        executeMapIndex(&endSRPGMapIndex);
+        executeMapIndex(endSRPGMapIndex);
     }
 }
 
@@ -311,15 +335,15 @@ Point SRPGMapLayer::convertToSRPGMapPoint(Touch *pTouch)
     return this->convertToWorldSpace(this->convertTouchToNodeSpace(pTouch)) - this->getPosition();
 }
 
-void SRPGMapLayer::executeMapIndex(MapIndex* mapIndex)
+void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
 {
     // グリッド選択
-    CCLOG("onTouchEnded mapIdx x = %d y = %d grid selected", mapIndex->x, mapIndex->y);
-    auto pMapItem = m_mapManager.getMapItem(mapIndex);
-    CCLOG("mapDataType = %d", pMapItem->mapDataType);
-    if (pMapItem->mapDataType == MapDataType::PLAYER)
+    CCLOG("executeMapIndex mapIdx x = %d y = %d grid selected", mapIndex.x, mapIndex.y);
+    auto pActorMapItem = m_mapManager.getActorMapItem(&mapIndex);
+    CCLOG("mapDataType = %d", pActorMapItem->mapDataType);
+    if (pActorMapItem->mapDataType == MapDataType::PLAYER)
     {
-        auto pActorMapItem = m_mapManager.getActorMapItem(mapIndex);
+        auto pActorMapItem = m_mapManager.getActorMapItem(&mapIndex);
         // 移動可能範囲のリストを作成
         std::list<MapIndex> moveList = m_mapManager.createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
         // 移動可能範囲を表示
@@ -327,43 +351,54 @@ void SRPGMapLayer::executeMapIndex(MapIndex* mapIndex)
         
         CCLOG("touched player seqNo = %d", pActorMapItem->seqNo);
         m_moveAnimation = false;
+        return;
     }
-    else if (pMapItem->mapDataType == MapDataType::MOVE_DIST)
+    
+    auto pMapItem = m_mapManager.getMapItem(&mapIndex);
+    if (pMapItem->mapDataType == MapDataType::MOVE_DIST)
     {
+        auto pActorSprite = findActorSprite(1);
+        
         // 移動対象を取得
-        auto pActorMapItem = m_mapManager.getActorMapItemById(1); // TODO: とりあえず1固定
+//        auto pActorMapItem = m_mapManager.getActorMapItemById(1); // TODO: とりあえず1固定
         // 移動可能範囲のリストを作成
-        std::list<MapIndex> moveList = m_mapManager.createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
+        std::list<MapIndex> moveList = m_mapManager.createActorFindDist(pActorSprite->getActorMapItem()->mapIndex, pActorSprite->getActorMapItem()->moveDist);
         // 移動可能範囲を表示
         addMapCursor(MapDataType::MOVE_DIST, moveList);
         // 移動経路の作成と表示
-        std::list<MapIndex> list = m_mapManager.createMovePointList(&pMapItem->mapIndex, pActorMapItem);
+        std::list<MapIndex> list = m_mapManager.createMovePointList(mapIndex, pActorSprite->getActorMapItem());
         addMapCursor(MapDataType::MOVE_STEP_DIST, list);
         
         // 移動
-        auto pActorSprite = findActorSprite(pActorMapItem->seqNo);
+        //auto pActorSprite = findActorSprite(pActorMapItem->seqNo);
         if (pActorSprite)
         {
             // 移動アニメーション作成。移動後にマップカーソルを初期化
-            auto pCallFunc = CallFunc::create([this](void) {
-                CCLOG("call func!!！");
-                clearAllMapCursor();
-                m_mapManager.clearCursor();
-                m_moveAnimation = false;
-            });
+
             int movePointSize = list.size();
             auto moveArray = Vector<FiniteTimeAction*>();
             for (auto mapIndex : list)
             {
+                CCLOG("moveArray = (%d, %d)", mapIndex.x, mapIndex.y);
                 auto pMoveTo = MoveTo::create(1.0 / movePointSize, indexToPoint(mapIndex));
                 moveArray.pushBack(pMoveTo);
             }
-            auto pMoveSeq = Sequence::create(moveArray);
-            auto pAnimation = Sequence::create(pMoveSeq, pCallFunc, NULL);
-            pActorSprite->runAction(pAnimation);
             
-            // マップ情報も更新する
-            m_mapManager.moveActor(pActorMapItem, &(pMapItem->mapIndex));
+            auto pMoveSeq = Sequence::create(moveArray);
+            MapIndex moveAfterIndex = pMapItem->mapIndex;
+            auto pAnimation = Sequence::create(pMoveSeq, CallFunc::create([this, pActorSprite, moveAfterIndex](void) {
+                CCLOG("call func!!！");
+                clearAllMapCursor();
+                m_mapManager.clearCursor();
+                
+                CCLOG("moveAfterIndex = (%d, %d)", moveAfterIndex.x, moveAfterIndex.y);
+                // マップ情報も更新する
+                m_mapManager.moveActor(pActorSprite->getActorMapItem(), moveAfterIndex);
+                CCLOG("moveActor = (%d, %d)", pActorSprite->getActorMapItem()->mapIndex.x, pActorSprite->getActorMapItem()->mapIndex.y);
+                m_moveAnimation = false;
+                
+            }), NULL);
+            pActorSprite->runAction(pAnimation);
         }
     }
     else
@@ -474,5 +509,13 @@ MapIndex SRPGMapLayer::touchPointToIndex(Point point)
     mapIndex.x = point.x / m_baseTileSize.width;
     mapIndex.y = point.y / m_baseTileSize.height;
     return mapIndex;
+}
+
+MapIndex SRPGMapLayer::mapIndexToTileIndex(MapIndex mapIndex)
+{
+    MapIndex tileIndex;
+    tileIndex.x = mapIndex.x;
+    tileIndex.y = m_baseMapSize.height - mapIndex.y - 1;
+    return tileIndex;
 }
 

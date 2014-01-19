@@ -117,29 +117,28 @@ bool RogueScene::init()
     // ---------------------
     // グリッド線を生成
     // ---------------------
-    auto draw = DrawNode::create();
-    draw->setPosition(Point::ZERO);
-//    draw->setOpacity(0.2f);
-    
-    // 線の太さと色
-    float lineSize = 1 * 0.5;
-    auto color = Color4F(1, 1, 1, 0.5f);
-    
-    // 縦線を引く
-    for (int x = 1; x < m_baseMapSize.width; x++)
-    {
-        float xPoint = x * m_baseTileSize.width;
-        draw->drawSegment(Point(xPoint, 0), Point(xPoint, m_baseContentSize.height), lineSize, color);
-    }
-    // 横線を引く
-    for (int y = 1; y < m_baseMapSize.height; y++)
-    {
-        float yPoint = y * m_baseTileSize.height;
-        draw->drawSegment(Point(0, yPoint), Point(m_baseContentSize.width, yPoint), lineSize, color);
-    }
-    
-    // マップに追加
-    pTiledMap->addChild(draw, RogueScene::TiledMapIndex::zGridLineIndex, RogueScene::TiledMapTag::kGridLineTag);
+//    auto draw = DrawNode::create();
+//    draw->setPosition(Point::ZERO);
+//    
+//    // 線の太さと色
+//    float lineSize = 1 * 0.5;
+//    auto color = Color4F(1, 1, 1, 0.5f);
+//    
+//    // 縦線を引く
+//    for (int x = 1; x < m_baseMapSize.width; x++)
+//    {
+//        float xPoint = x * m_baseTileSize.width;
+//        draw->drawSegment(Point(xPoint, 0), Point(xPoint, m_baseContentSize.height), lineSize, color);
+//    }
+//    // 横線を引く
+//    for (int y = 1; y < m_baseMapSize.height; y++)
+//    {
+//        float yPoint = y * m_baseTileSize.height;
+//        draw->drawSegment(Point(0, yPoint), Point(m_baseContentSize.width, yPoint), lineSize, color);
+//    }
+//    
+//    // マップに追加
+//    pTiledMap->addChild(draw, RogueScene::TiledMapIndex::zGridLineIndex, RogueScene::TiledMapTag::kGridLineTag);
 
     //-------------------------
     // ステータスバー？
@@ -155,23 +154,6 @@ bool RogueScene::init()
     statusLayer->addChild(sampleText);
     
     this->addChild(statusLayer, RogueScene::StatusBarLayerZOrder, RogueScene::kStatusBarTag);
-    
-    //    // 下のステータスバー2
-    //    auto pStatusLayer2 = LayerColor::create(Color4B::BLACK);
-    //    pStatusLayer2->setContentSize(Size(m_baseTileSize.width, m_baseTileSize.height));
-    //    pStatusLayer2->setPosition(Point(0, 0));
-    //
-    //    // アイコン表示するかな（ステータスバー２？）
-    //    auto pFaceSprite = Sprite::createWithSpriteFrame(SpriteFrame::create("actor_4_f.png", Rect(0, 0, 96, 96)));
-    //    float scale = 1.0f / 3.0f;
-    //    pFaceSprite->setScale(scale, scale);
-    //    //    pFaceSprite->setContentSize(pFaceSprite->getContentSize() * scale);
-    //    //    CCLOG("getContentSize (%f, %f) ", pFaceSprite->getContentSize().width, pFaceSprite->getContentSize().height);
-    //    //    pFaceSprite->setPosition(Point(pFaceSprite->getContentSize().width / 2, pFaceSprite->getContentSize().height / 2));
-    //    pFaceSprite->setPosition(Point(pFaceSprite->getContentSize().width * pFaceSprite->getScaleX() / 2, pFaceSprite->getContentSize().height * pFaceSprite->getScaleY() / 2));
-    //    pStatusLayer2->addChild(pFaceSprite);
-    //
-    //    this->addChild(pStatusLayer2, RogueScene::zStatusBar2Index, RogueScene::kStatusBar2Tag);
     
     //-------------------------
     // ゲームログ表示
@@ -288,28 +270,6 @@ bool RogueScene::init()
     // プレイヤーの位置表示用（同じく1/8サイズ）
     addMiniMapItem(actorSprite->getActorMapItem(), actorSprite->getTag());
     
-    // タッチカーソル表示
-    // TODO: miniMapLayerからとってきたbatchNodeなのでちょっと無理やり
-//    auto pBatchNode = getGridSpriteBatchNode();
-//    if (pBatchNode)
-//    {
-//        std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(actorSprite->getActorMapItem()->mapIndex);
-//        for (auto mapIndex : searchMapIndexList)
-//        {
-//            auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
-//            pSprite->setPosition(indexToPoint(mapIndex.x, mapIndex.y));
-//            
-//            pSprite->setColor(Color3B::ORANGE);
-//            pSprite->setOpacity(64);
-//            
-//            // 1.0秒でフェードイン、フェードアウトを繰り返すように設定
-//            Sequence* sequence = Sequence::create(FadeTo::create(0.5f, 64), FadeTo::create(0.5f, 0), NULL);
-//            RepeatForever* repeat = RepeatForever::create(sequence);
-//            pSprite->runAction(repeat);
-//            this->addChild(pSprite, RogueScene::ActionCursorZOrder, RogueScene::ActionCursorTag);
-//        }
-//    }
-    
     // プレイヤー位置の移動
     MapIndex playerRandMapIndex = getRandomMapIndex(false, true);
     MapIndex moveIndex = {
@@ -409,8 +369,8 @@ bool RogueScene::init()
     // -------------------------------
     
     auto pKeyUp = Sprite::create("ui/keypad.png");
-    auto pKeyUpPress = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    pKeyUpPress->setColor(Color3B::ORANGE);
+    auto pKeyUpPress = Sprite::create("ui/keypad_press.png");
+    pKeyUpPress->setColor(Color3B::GRAY);
     auto pMenuKeyUp = MenuItemSprite::create(pKeyUp, pKeyUpPress, [this](Object *pSender) {
         CCLOG("pMenuKeyUpが押された！");
         if (m_gameStatus == GameStatus::PLAYER_TURN)
@@ -425,8 +385,8 @@ bool RogueScene::init()
     pMenuKeyUp->setPosition(indexToPoint(1, 2));
     
     auto pKeyRight = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    auto pKeyRightPress = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    pKeyRightPress->setColor(Color3B::ORANGE);
+    auto pKeyRightPress = Sprite::createWithSpriteFrame(pKeyUpPress->getSpriteFrame());
+    pKeyRightPress->setColor(Color3B::GRAY);
     auto pMenuKeyRight = MenuItemSprite::create(pKeyRight, pKeyRightPress, [this](Object *pSender) {
         CCLOG("pMenuKeyRightが押された！");
         if (m_gameStatus == GameStatus::PLAYER_TURN)
@@ -442,8 +402,8 @@ bool RogueScene::init()
     pMenuKeyRight->setPosition(indexToPoint(2, 1));
     
     auto pKeyDown = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    auto pKeyDownPress = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    pKeyDownPress->setColor(Color3B::ORANGE);
+    auto pKeyDownPress = Sprite::createWithSpriteFrame(pKeyUpPress->getSpriteFrame());
+    pKeyDownPress->setColor(Color3B::GRAY);
     auto pMenuKeyDown = MenuItemSprite::create(pKeyDown, pKeyDownPress, [this](Object *pSender) {
         CCLOG("pMenuKeyDownが押された！");
         if (m_gameStatus == GameStatus::PLAYER_TURN)
@@ -459,8 +419,8 @@ bool RogueScene::init()
     pMenuKeyDown->setPosition(indexToPoint(1, 0));
     
     auto pKeyLeft = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    auto pKeyLeftPress = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    pKeyLeftPress->setColor(Color3B::ORANGE);
+    auto pKeyLeftPress = Sprite::createWithSpriteFrame(pKeyUpPress->getSpriteFrame());
+    pKeyLeftPress->setColor(Color3B::GRAY);
     auto pMenuKeyLeft = MenuItemSprite::create(pKeyLeft, pKeyLeftPress, [this](Object *pSender) {
         CCLOG("pMenuKeyLeftが押された！");
         if (m_gameStatus == GameStatus::PLAYER_TURN)
@@ -714,7 +674,7 @@ void RogueScene::enemyTurn()
                 // 移動リスト作成
                 if (targetMoveDistMapItem.mapDataType == MapDataType::MOVE_DIST)
                 {
-                    std::list<MapIndex> moveList = m_mapManager.createMovePointList(&targetMoveDistMapItem.mapIndex,
+                    std::list<MapIndex> moveList = m_mapManager.createMovePointList(targetMoveDistMapItem.mapIndex,
                                                                                     &enemyMapItem);
                     std::list<MapIndex>::iterator it = moveList.begin();
                     it++;
@@ -1081,7 +1041,7 @@ void RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapD
     auto actorMapItem = pActorSprite->getActorMapItem();
     moveMapIndex.x = actorMapItem->mapIndex.x + addMoveIndex.x;
     moveMapIndex.y = actorMapItem->mapIndex.y + addMoveIndex.y;
-    m_mapManager.moveActor(actorMapItem, &moveMapIndex);
+    m_mapManager.moveActor(actorMapItem, moveMapIndex);
     // actor情報も更新
     actorMapItem->mapIndex = moveMapIndex;
     
