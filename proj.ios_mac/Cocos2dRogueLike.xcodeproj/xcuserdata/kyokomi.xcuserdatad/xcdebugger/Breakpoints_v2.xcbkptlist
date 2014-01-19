@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/rogue/RogueScene.cpp"
-            timestampString = "411740293.467538"
+            timestampString = "411820463.385301"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "973"
-            endingLineNumber = "973"
+            startingLineNumber = "1013"
+            endingLineNumber = "1013"
             landmarkName = "RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapDataType, CallFunc* moveFinishedCallFunc)"
             landmarkType = "5">
          </BreakpointContent>

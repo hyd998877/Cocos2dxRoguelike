@@ -24,6 +24,7 @@ protected:
         INIT           = 0,
         PLAYER_TURN    = 10,
         PLAYER_ACTION  = 11,
+        PLAYER_NO_ACTION  = 12,
         ENEMY_TURN     = 20,
         ENEMY_ACTION   = 21,
         GAME_OVER      = 99,
@@ -95,6 +96,7 @@ protected:
 private:
     // ゲーム管理
     GameStatus m_gameStatus;
+    int m_noActionCount;
     int m_TurnCount;
     int m_enemyCount;
     void changeGameStatus(GameStatus gameStatus);

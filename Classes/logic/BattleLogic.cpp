@@ -18,7 +18,7 @@ int BattleLogic::exec(ActorSprite::ActorDto *from, ActorSprite::ActorDto *to)
     if (damage > to->hitPoint) {
         damage = to->hitPoint;
     }
-    // HPを更新しないほうがいい？
+    // TODO: HPを更新しないほうがいい？
     to->hitPoint -= damage;
     
     return damage;

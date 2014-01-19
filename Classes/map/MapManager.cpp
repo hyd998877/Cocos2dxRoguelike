@@ -224,8 +224,9 @@ void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
 void MapManager::addActor(ActorMapItem* actorMapItem)
 {
     m_mapObjectDataArray[actorMapItem->mapIndex.x][actorMapItem->mapIndex.y] = *actorMapItem;
-    
+#if 0
     DEBUG_LOG_MAP_ITEM_LAYER();
+#endif
 }
 
 /**
@@ -242,8 +243,9 @@ void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex* pMoveMapIndex)
     mapItem.mapIndex = beforeMapIndex;
     mapItem.moveDist = 0;
     m_mapObjectDataArray[beforeMapIndex.x][beforeMapIndex.y] = mapItem;
-    
+#if 0
     DEBUG_LOG_MAP_ITEM_LAYER();
+#endif
 }
 
 /**
@@ -252,8 +254,9 @@ void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex* pMoveMapIndex)
 void MapManager::addDropItem(DropMapItem* pDropMapItem)
 {
     m_mapDropItemDataArray[pDropMapItem->mapIndex.x][pDropMapItem->mapIndex.y] = *pDropMapItem;
-    
+#if 0
     DEBUG_LOG_MAP_ITEM_LAYER();
+#endif
 }
 
 /**
@@ -296,8 +299,9 @@ void MapManager::removeMapItem(MapItem* pRemoveMapItem)
         noneMapItem.itemId = 0;
         m_mapDropItemDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
     }
-    
+#if 0
     DEBUG_LOG_MAP_ITEM_LAYER();
+#endif
 }
 
 /**

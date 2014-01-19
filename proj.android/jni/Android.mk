@@ -8,6 +8,8 @@ LOCAL_MODULE_FILENAME := libcocos2dcpp
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
+                   ../../Classes/dao/MLevelDao.cpp \
+                   ../../Classes/data/MLevel.cpp \
                    ../../Classes/title/TitleScene.cpp \
                    ../../Classes/title/TitleSceneLoader.cpp \
                    ../../Classes/map/MapManager.cpp \
@@ -26,6 +28,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/rogue/RogueScene.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
+                   $(LOCAL_PATH)/../../Classes/dao \
+                   $(LOCAL_PATH)/../../Classes/data \
                    $(LOCAL_PATH)/../../Classes/title \
                    $(LOCAL_PATH)/../../Classes/world_map \
                    $(LOCAL_PATH)/../../Classes/quest \

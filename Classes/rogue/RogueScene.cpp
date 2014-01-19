@@ -21,6 +21,8 @@
 
 #include "TitleSceneLoader.h"
 
+#include "MLevelDao.h"
+
 USING_NS_CC;
 
 // プロトタイプ宣言
@@ -455,7 +457,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
         TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
         Director::getInstance()->replaceScene(trans);
     }
-    else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION)
+    else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
         && m_gameStatus == GameStatus::ENEMY_TURN)
     {
         // 敵のリポップ
@@ -498,6 +500,14 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
         // 敵のターン開始時
         enemyTurn();
     }
+    else if (m_gameStatus == GameStatus::PLAYER_ACTION)
+    {
+        m_noActionCount = 0;
+    }
+    else if (m_gameStatus == GameStatus::PLAYER_NO_ACTION)
+    {
+        m_noActionCount++;
+    }
     else if (m_gameStatus == GameStatus::PLAYER_TURN)
     {
         auto pPlayer = getPlayerActorSprite(1);
@@ -516,6 +526,16 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
             if (pPlayerDto->magicPoint > 0)
             {
                 pPlayerDto->magicPoint--;
+            }
+        }
+        // 無行動が4ターン続くとHPが回復
+        if (m_noActionCount == 4)
+        {
+            m_noActionCount = 0;
+            
+            if (pPlayerDto->hitPointLimit > pPlayerDto->hitPoint)
+            {
+                pPlayerDto->hitPoint++;
             }
         }
         refreshStatus();
@@ -689,6 +709,9 @@ void RogueScene::enemyTurn()
                     // 攻撃イベント
                     this->logMessage("%sの攻撃: %sに%dダメージ", pEnemyDto->name.c_str(), pPlayerDto->name.c_str(), damage);
                     
+                    // プレイヤーステータス更新と死亡判定
+                    this->refreshStatus();
+                    
                     pEnemySprite->getActorMapItem()->attackDone = true;
                     
                     checkEnmeyTurnEnd();
@@ -824,6 +847,19 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
             {
                 logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
                 
+                // 経験値更新
+                pPlayerDto->exp += pEnemyDto->exp;
+                if (MLevelDao::getInstance()->checkLevelUp(pPlayerDto->lv, pPlayerDto->exp))
+                {
+                    pPlayerDto->lv++;
+                    auto pMLevel = MLevelDao::getInstance()->selectById(pPlayerDto->lv);
+                    pPlayerDto->hitPointLimit += pMLevel->getGrowHitPoint();
+                    
+                    // TODO: レベルアップ演出（SE？）
+                    
+                    logMessage("%sはレベル%dになった。", pPlayerDto->name.c_str(), pPlayerDto->lv);
+                }
+                
                 // マップから消える
                 removeEnemyActorSprite(pEnemySprite);
             }
@@ -836,16 +872,17 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
     }
     else
     {
+        changeGameStatus(GameStatus::PLAYER_NO_ACTION);
+        
         // 障害物判定
         if (isTiledMapColisionLayer(touchPointMapIndex))
         {
             // TODO: ぶつかるSE再生
             logMessage("壁ドーン");
-        }
+            
+       }
         else
         {
-            changeGameStatus(GameStatus::PLAYER_ACTION);
-            
             // アイテムに重なったときの拾う処理
             auto pTouchPointMapItem = m_mapManager.getMapItem(&touchPointMapIndex);
             if (pTouchPointMapItem->mapDataType == MapDataType::MAP_ITEM)
@@ -927,6 +964,9 @@ MapIndex RogueScene::checkTouchEventIndex(MapIndex touchPointMapIndex)
     CCLOG("addMoveIndex %d,%d", addMoveIndex.x, addMoveIndex.y);
     return addMoveIndex;
 }
+
+#pragma mark
+#pragma mark map関連
 
 void RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapDataType, CallFunc* moveFinishedCallFunc)
 {
