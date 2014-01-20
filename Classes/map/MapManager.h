@@ -143,10 +143,10 @@ public:
     void removeMapItem(MapItem* pRemoveMapItem);
 //    void removeMapItem(MapItem removeMapItem);
     
-    ActorMapItem* getActorMapItem(MapIndex* pMapIndex);
-    MapItem* getMapItem(MapIndex* pMapIndex);
+    ActorMapItem* getActorMapItem(const MapIndex* pMapIndex);
+    MapItem* getMapItem(const MapIndex* pMapIndex);
     ActorMapItem* getActorMapItemById(int seqNo);
-    DropMapItem* getDropMapItem(MapIndex* pMapIndex);
+    DropMapItem* getDropMapItem(const MapIndex* pMapIndex);
     
     MoveDirectionType checkMoveDirectionType(MapIndex fromMapIndex, MapIndex toMapIndex);
     MapItem searchTargetMapItem(std::list<MapIndex> searchMapIndexList);

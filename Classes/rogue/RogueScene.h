@@ -99,6 +99,9 @@ private:
     int m_noActionCount;
     int m_TurnCount;
     int m_enemyCount;
+    bool m_isSppedUp;
+    
+    float getAnimationSpped();
     void changeGameStatus(GameStatus gameStatus);
     void enemyTurn();
     void checkEnmeyTurnEnd();
@@ -115,6 +118,7 @@ private:
     // タッチイベント系
     void touchEventExec(cocos2d::Point touchPoint);
     void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
+    void attack();
     
     MapIndex checkTouchEventIndex(MapIndex touchPointMapIndex);
     void moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapDataType, cocos2d::CallFunc* moveFinishedCallFunc);
@@ -123,6 +127,8 @@ private:
     
     // UI関連
     void logMessage(const char * pszFormat, ...);
+    Vector<MenuItem*> createKeypadMenuItemArray();
+    MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
     
     // アイテムリスト
     void showItemList(int showTextIndex);

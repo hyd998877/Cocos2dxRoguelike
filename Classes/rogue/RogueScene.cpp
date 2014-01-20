@@ -367,11 +367,38 @@ bool RogueScene::init()
     // -------------------------------
     // メニュー
     // -------------------------------
+    // keypad
+    auto keypadMenuArray = createKeypadMenuItemArray();
+    auto pMenu = Menu::createWithArray(keypadMenuArray);
+    pMenu->setPosition(Point::ZERO);
+    this->addChild(pMenu, RogueScene::MenuLayerZOrder, RogueScene::kMenuTag);
+
+    // ---------------------------------
+    // プレイヤーの先行
+    changeGameStatus(GameStatus::PLAYER_TURN);
     
-    auto pKeyUp = Sprite::create("ui/keypad.png");
-    auto pKeyUpPress = Sprite::create("ui/keypad_press.png");
-    pKeyUpPress->setColor(Color3B::GRAY);
-    auto pMenuKeyUp = MenuItemSprite::create(pKeyUp, pKeyUpPress, [this](Object *pSender) {
+    return true;
+}
+
+MenuItem* RogueScene::createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback)
+{
+    auto pKeypad = Sprite::createWithSpriteFrame(pBaseSpriteFrame);
+    auto pKeypadPress = Sprite::createWithSpriteFrame(pBasePressSpriteFrame);
+    
+    pKeypadPress->setColor(Color3B::GRAY);
+    auto pMenuKey = MenuItemSprite::create(pKeypad, pKeypadPress, callback);
+    pMenuKey->setOpacity(128);
+    return pMenuKey;
+}
+
+Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
+{
+    Vector<MenuItem*> resultArray;
+    
+    auto pKeyBase = Sprite::create("ui/keypad.png");
+    auto pKeyBasePress = Sprite::create("ui/keypad_press.png");
+    
+    auto pMenuKeyUp = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Object *pSender) {
         CCLOG("pMenuKeyUpが押された！");
         if (m_gameStatus == GameStatus::PLAYER_TURN)
         {
@@ -381,13 +408,10 @@ bool RogueScene::init()
             this->touchEventExec(this->indexToPoint(mapIndex.x, mapIndex.y + 1));
         }
     });
-    pMenuKeyUp->setOpacity(128);
     pMenuKeyUp->setPosition(indexToPoint(1, 2));
+    resultArray.pushBack(pMenuKeyUp);
     
-    auto pKeyRight = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    auto pKeyRightPress = Sprite::createWithSpriteFrame(pKeyUpPress->getSpriteFrame());
-    pKeyRightPress->setColor(Color3B::GRAY);
-    auto pMenuKeyRight = MenuItemSprite::create(pKeyRight, pKeyRightPress, [this](Object *pSender) {
+    auto pMenuKeyRight = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Object *pSender) {
         CCLOG("pMenuKeyRightが押された！");
         if (m_gameStatus == GameStatus::PLAYER_TURN)
         {
@@ -397,14 +421,11 @@ bool RogueScene::init()
             this->touchEventExec(this->indexToPoint(mapIndex.x + 1, mapIndex.y));
         }
     });
-    pMenuKeyRight->setOpacity(128);
     pMenuKeyRight->setRotation(90.0f);
     pMenuKeyRight->setPosition(indexToPoint(2, 1));
+    resultArray.pushBack(pMenuKeyRight);
     
-    auto pKeyDown = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    auto pKeyDownPress = Sprite::createWithSpriteFrame(pKeyUpPress->getSpriteFrame());
-    pKeyDownPress->setColor(Color3B::GRAY);
-    auto pMenuKeyDown = MenuItemSprite::create(pKeyDown, pKeyDownPress, [this](Object *pSender) {
+    auto pMenuKeyDown = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Object *pSender) {
         CCLOG("pMenuKeyDownが押された！");
         if (m_gameStatus == GameStatus::PLAYER_TURN)
         {
@@ -414,14 +435,11 @@ bool RogueScene::init()
             this->touchEventExec(this->indexToPoint(mapIndex.x, mapIndex.y - 1));
         }
     });
-    pMenuKeyDown->setOpacity(128);
     pMenuKeyDown->setRotation(180.0f);
     pMenuKeyDown->setPosition(indexToPoint(1, 0));
+    resultArray.pushBack(pMenuKeyDown);
     
-    auto pKeyLeft = Sprite::createWithSpriteFrame(pKeyUp->getSpriteFrame());
-    auto pKeyLeftPress = Sprite::createWithSpriteFrame(pKeyUpPress->getSpriteFrame());
-    pKeyLeftPress->setColor(Color3B::GRAY);
-    auto pMenuKeyLeft = MenuItemSprite::create(pKeyLeft, pKeyLeftPress, [this](Object *pSender) {
+    auto pMenuKeyLeft = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Object *pSender) {
         CCLOG("pMenuKeyLeftが押された！");
         if (m_gameStatus == GameStatus::PLAYER_TURN)
         {
@@ -431,34 +449,53 @@ bool RogueScene::init()
             this->touchEventExec(this->indexToPoint(mapIndex.x - 1, mapIndex.y));
         }
     });
-    pMenuKeyLeft->setOpacity(128);
     pMenuKeyLeft->setRotation(270.0f);
     pMenuKeyLeft->setPosition(indexToPoint(0, 1));
+    resultArray.pushBack(pMenuKeyLeft);
     
-    auto rect = Rect(0, 0, 300, 30);
-    auto capRect = Rect(0, 0, 300, 30);
-    auto pScale9Sprite1 = extension::Scale9Sprite::create("menu_button.png", rect, capRect);
-    pScale9Sprite1->setContentSize(Size(40, 20));
-    pScale9Sprite1->setOpacity(192);
-    auto pScale9Sprite2 = extension::Scale9Sprite::create("menu_button.png", rect, capRect);
-    pScale9Sprite2->setContentSize(Size(40, 20));
-    pScale9Sprite2->setOpacity(128);
-    
-    auto pMenuItem1 = MenuItemSprite::create(pScale9Sprite1, pScale9Sprite2, [this](Object *pSender) {
-        CCLOG("menuItem1が押された！");
-            showItemList(1);
+    auto a_button = Sprite::create("ui/a_button.png");
+    auto a_buttonPress = Sprite::create("ui/a_button_press.png");
+    a_buttonPress->setOpacity(128);
+    auto pA_MenuButton = MenuItemSprite::create(a_button, a_buttonPress, [this](Object* pSender) {
+        CCLOG("Aボタンが押された！");
+        if (m_gameStatus == GameStatus::PLAYER_TURN)
+        {
+            this->attack();
+        }
     });
-    pMenuItem1->setColor(Color3B::GREEN);
-    pMenuItem1->setPosition(Point(winSize.width - pMenuItem1->getContentSize().width / 2, pMenuItem1->getContentSize().height / 2));
-    auto pMenu = Menu::create(pMenuKeyUp, pMenuKeyRight, pMenuKeyDown, pMenuKeyLeft, pMenuItem1, NULL);
-    pMenu->setPosition(Point::ZERO);
-    this->addChild(pMenu, RogueScene::MenuLayerZOrder, RogueScene::kMenuTag);
-
-    // ---------------------------------
-    // プレイヤーの先行
-    changeGameStatus(GameStatus::PLAYER_TURN);
+    pA_MenuButton->setPosition(indexToPoint(12, 1));
+    resultArray.pushBack(pA_MenuButton);
     
-    return true;
+    auto b_button = Sprite::create("ui/b_button.png");
+    auto b_buttonPress = Sprite::create("ui/b_button_press.png");
+    b_buttonPress->setOpacity(128);
+    auto pB_MenuButton = MenuItemSprite::create(b_button, b_buttonPress, [this](Object* pSender) {
+        CCLOG("Bボタンが押された！");
+        // TODO: isSelectedで押し下げ中がとれるかも？
+    });
+    pB_MenuButton->setPosition(indexToPoint(11, 0));
+    resultArray.pushBack(pB_MenuButton);
+    
+    auto c_button = Sprite::create("ui/c_button.png");
+    auto c_buttonPress = Sprite::create("ui/c_button_press.png");
+    c_buttonPress->setOpacity(128);
+    auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Object* pSender) {
+        CCLOG("Cボタンが押された！");
+    });
+    pC_MenuButton->setPosition(indexToPoint(10, 1));
+    resultArray.pushBack(pC_MenuButton);
+    
+    auto d_button = Sprite::create("ui/d_button.png");
+    auto d_buttonPress = Sprite::create("ui/d_button_press.png");
+    d_buttonPress->setOpacity(128);
+    auto pD_MenuButton = MenuItemSprite::create(d_button, d_buttonPress, [this](Object* pSender) {
+        CCLOG("Dボタンが押された！");
+        showItemList(1);
+    });
+    pD_MenuButton->setPosition(indexToPoint(11, 2));
+    resultArray.pushBack(pD_MenuButton);
+    
+    return resultArray;
 }
 
 #pragma mark
@@ -567,6 +604,18 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
             }
         }
         refreshStatus();
+    }
+}
+
+float RogueScene::getAnimationSpped()
+{
+    if (m_isSppedUp)
+    {
+        return 0.0f;
+    }
+    else
+    {
+        return 0.2f;
     }
 }
 
@@ -810,6 +859,7 @@ void RogueScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event)
 {
     if (m_gameStatus == GameStatus::PLAYER_TURN)
     {
+        // keypadにしました。
 //        auto touchPoint = this->convertToWorldSpace(this->convertTouchToNodeSpace(touch));
 //
 //        // 行動判定
@@ -852,70 +902,74 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     // キャラの向きを変更
     auto pActorSprite = getPlayerActorSprite(1);
     pActorSprite->runMoveAction(addMoveIndex);
+    pActorSprite->getActorMapItem()->mapIndex.moveDictType = addMoveIndex.moveDictType;
     
     // 敵をタッチした
     auto pEnemyMapItem = m_mapManager.getActorMapItem(&touchPointMapIndex);
     if (pEnemyMapItem->mapDataType == MapDataType::ENEMY)
     {
-        changeGameStatus(GameStatus::PLAYER_ACTION);
+        // 向きだけ変えてターン経過しない
         
-        // 攻撃アニメーション
-        auto pMove1 = MoveTo::create(0.2f, pActorSprite->getPosition() + indexToPointNotTileSize(addMoveIndex));
-        auto pMove2 = MoveTo::create(0.2f, pActorSprite->getPosition());
-        
-        auto pEnemySprite = getEnemyActorSprite(pEnemyMapItem->seqNo);
-        
-        pActorSprite->runAction(Sequence::create(pMove1, pMove2,
-                                                 CallFunc::create([this, pActorSprite, pEnemySprite](void) {
-            auto pPlayerDto = pActorSprite->getActorDto();
-            auto pEnemyDto = pEnemySprite->getActorDto();
-            
-            int damage = BattleLogic::exec(pPlayerDto, pEnemyDto);
-            
-            // 攻撃イベント
-            logMessage("%sの攻撃: %sに%dのダメージ", pPlayerDto->name.c_str(), pEnemyDto->name.c_str(), damage);
-            
-            // 敵の死亡判定
-            if (pEnemyDto->hitPoint == 0)
-            {
-                logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
-                
-                // 経験値更新
-                pPlayerDto->exp += pEnemyDto->exp;
-                if (MLevelDao::getInstance()->checkLevelUp(pPlayerDto->lv, pPlayerDto->exp))
-                {
-                    pPlayerDto->lv++;
-                    auto pMLevel = MLevelDao::getInstance()->selectById(pPlayerDto->lv);
-                    pPlayerDto->hitPointLimit += pMLevel->getGrowHitPoint();
-                    
-                    // TODO: レベルアップ演出（SE？）
-                    
-                    logMessage("%sはレベル%dになった。", pPlayerDto->name.c_str(), pPlayerDto->lv);
-                }
-                
-                // マップから消える
-                removeEnemyActorSprite(pEnemySprite);
-            }
-            changeGameStatus(GameStatus::ENEMY_TURN);
-            
-        }), NULL));
-        
-        // コールバックまでgameStatusを更新はしない
-        return;
+//        changeGameStatus(GameStatus::PLAYER_ACTION);
+//        
+//        // 攻撃アニメーション
+//        auto pMove1 = MoveTo::create(0.2f, pActorSprite->getPosition() + indexToPointNotTileSize(addMoveIndex));
+//        auto pMove2 = MoveTo::create(0.2f, pActorSprite->getPosition());
+//        
+//        auto pEnemySprite = getEnemyActorSprite(pEnemyMapItem->seqNo);
+//        
+//        pActorSprite->runAction(Sequence::create(pMove1, pMove2,
+//                                                 CallFunc::create([this, pActorSprite, pEnemySprite](void) {
+//            auto pPlayerDto = pActorSprite->getActorDto();
+//            auto pEnemyDto = pEnemySprite->getActorDto();
+//            
+//            int damage = BattleLogic::exec(pPlayerDto, pEnemyDto);
+//            
+//            // 攻撃イベント
+//            logMessage("%sの攻撃: %sに%dのダメージ", pPlayerDto->name.c_str(), pEnemyDto->name.c_str(), damage);
+//            
+//            // 敵の死亡判定
+//            if (pEnemyDto->hitPoint == 0)
+//            {
+//                logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
+//                
+//                // 経験値更新
+//                pPlayerDto->exp += pEnemyDto->exp;
+//                if (MLevelDao::getInstance()->checkLevelUp(pPlayerDto->lv, pPlayerDto->exp))
+//                {
+//                    pPlayerDto->lv++;
+//                    auto pMLevel = MLevelDao::getInstance()->selectById(pPlayerDto->lv);
+//                    pPlayerDto->hitPointLimit += pMLevel->getGrowHitPoint();
+//                    
+//                    // TODO: レベルアップ演出（SE？）
+//                    
+//                    logMessage("%sはレベル%dになった。", pPlayerDto->name.c_str(), pPlayerDto->lv);
+//                }
+//                
+//                // マップから消える
+//                removeEnemyActorSprite(pEnemySprite);
+//            }
+//            changeGameStatus(GameStatus::ENEMY_TURN);
+//            
+//        }), NULL));
+//        
+//        // コールバックまでgameStatusを更新はしない
+//        return;
     }
     else
     {
-        changeGameStatus(GameStatus::PLAYER_NO_ACTION);
-        
         // 障害物判定
         if (isTiledMapColisionLayer(touchPointMapIndex))
         {
             // TODO: ぶつかるSE再生
-            logMessage("壁ドーン");
+            logMessage("壁ドーン SE再生");
             
-       }
+            // ターン経過なし
+        }
         else
         {
+            changeGameStatus(GameStatus::PLAYER_NO_ACTION);
+            
             // アイテムに重なったときの拾う処理
             auto pTouchPointMapItem = m_mapManager.getMapItem(&touchPointMapIndex);
             if (pTouchPointMapItem->mapDataType == MapDataType::MAP_ITEM)
@@ -946,15 +1000,96 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
             }));
             
             // コールバックまでgameStatusを更新はしない
-            return;
         }
     }
+}
+
+void RogueScene::attack()
+{
+    auto pActorSprite = getPlayerActorSprite(1);
     
-    // TODO: 会話
-        // 会話イベント
+    MapIndex addMapIndex = {0, 0, MoveDirectionType::MOVE_NONE};
+    MapIndex attackMapIndex = pActorSprite->getActorMapItem()->mapIndex;
+    if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_UP)
+    {
+        // 上
+        addMapIndex.y += 1;
+        attackMapIndex.y += 1;
+    }
+    else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_RIGHT)
+    {
+        // 右
+        addMapIndex.x += 1;
+        attackMapIndex.x += 1;
+    }
+    else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_LEFT)
+    {
+        // 左
+        addMapIndex.x -= 1;
+        attackMapIndex.x -= 1;
+    }
+    else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_DOWN)
+    {
+        // 下
+        addMapIndex.y -= 1;
+        attackMapIndex.y -= 1;
+    }
     
-    // ターン終了
-    changeGameStatus(GameStatus::ENEMY_TURN);
+    changeGameStatus(GameStatus::PLAYER_ACTION);
+    
+    // 攻撃アニメーション
+    auto pMove1 = MoveTo::create(0.2f, pActorSprite->getPosition() + indexToPointNotTileSize(addMapIndex.x, addMapIndex.y));
+    auto pMove2 = MoveTo::create(0.2f, pActorSprite->getPosition());
+
+    ActorSprite* pEnemySprite = NULL;
+    // 敵をタッチした
+    auto pEnemyMapItem = m_mapManager.getActorMapItem(&attackMapIndex);
+    if (pEnemyMapItem->mapDataType == MapDataType::ENEMY)
+    {
+        pEnemySprite = getEnemyActorSprite(pEnemyMapItem->seqNo);
+    }
+    else
+    {
+        // 空振り
+    }
+    
+    // アニメーション
+    pActorSprite->runAction(Sequence::create(pMove1, pMove2, CallFunc::create([this, pActorSprite, pEnemySprite](void) {
+        if (pEnemySprite)
+        {
+            auto pPlayerDto = pActorSprite->getActorDto();
+            auto pEnemyDto = pEnemySprite->getActorDto();
+            
+            int damage = BattleLogic::exec(pPlayerDto, pEnemyDto);
+            
+            // 攻撃イベント
+            logMessage("%sの攻撃: %sに%dのダメージ", pPlayerDto->name.c_str(), pEnemyDto->name.c_str(), damage);
+            
+            // 敵の死亡判定
+            if (pEnemyDto->hitPoint == 0)
+            {
+                logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
+                
+                // 経験値更新
+                pPlayerDto->exp += pEnemyDto->exp;
+                if (MLevelDao::getInstance()->checkLevelUp(pPlayerDto->lv, pPlayerDto->exp))
+                {
+                    pPlayerDto->lv++;
+                    auto pMLevel = MLevelDao::getInstance()->selectById(pPlayerDto->lv);
+                    pPlayerDto->hitPointLimit += pMLevel->getGrowHitPoint();
+                    
+                    // TODO: レベルアップ演出（SE？）
+                    
+                    logMessage("%sはレベル%dになった。", pPlayerDto->name.c_str(), pPlayerDto->lv);
+                }
+                
+                // マップから消える
+                removeEnemyActorSprite(pEnemySprite);
+            }
+        }
+        changeGameStatus(GameStatus::ENEMY_TURN);
+        
+    }), NULL));
 }
 
 MapIndex RogueScene::checkTouchEventIndex(MapIndex touchPointMapIndex)

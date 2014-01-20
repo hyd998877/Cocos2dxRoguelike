@@ -311,7 +311,7 @@ void MapManager::removeMapItem(MapItem* pRemoveMapItem)
  * カーソル、オブジェクト、ドロップアイテムの順番に探します。
  * @param pMapIndex 座標
  */
-MapItem* MapManager::getMapItem(MapIndex* pMapIndex)
+MapItem* MapManager::getMapItem(const MapIndex* pMapIndex)
 {
     if (m_mapCursorDataArray[pMapIndex->x][pMapIndex->y].mapDataType == MapDataType::NONE)
     {
@@ -325,7 +325,7 @@ MapItem* MapManager::getMapItem(MapIndex* pMapIndex)
     return &(m_mapCursorDataArray[pMapIndex->x][pMapIndex->y]);
 }
 
-ActorMapItem* MapManager::getActorMapItem(MapIndex* pMapIndex)
+ActorMapItem* MapManager::getActorMapItem(const MapIndex* pMapIndex)
 {
     return &(m_mapObjectDataArray[pMapIndex->x][pMapIndex->y]);
 }
@@ -348,7 +348,7 @@ ActorMapItem* MapManager::getActorMapItemById(int seqNo)
     return NULL;
 }
 
-DropMapItem* MapManager::getDropMapItem(MapIndex* pMapIndex)
+DropMapItem* MapManager::getDropMapItem(const MapIndex* pMapIndex)
 {
     return &(m_mapDropItemDataArray[pMapIndex->x][pMapIndex->y]);
 }
