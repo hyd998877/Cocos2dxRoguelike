@@ -371,8 +371,13 @@ bool RogueScene::init()
     auto keypadMenuArray = createKeypadMenuItemArray();
     auto pMenu = Menu::createWithArray(keypadMenuArray);
     pMenu->setPosition(Point::ZERO);
-    this->addChild(pMenu, RogueScene::MenuLayerZOrder, RogueScene::kMenuTag);
+    this->addChild(pMenu, RogueScene::MenuLayerZOrder, RogueScene::KeypadMenuTag);
 
+    auto buttondMenuArray = createButtonMenuItemArray();
+    auto pMenuButton = Menu::createWithArray(buttondMenuArray);
+    pMenuButton->setPosition(Point::ZERO);
+    this->addChild(pMenuButton, RogueScene::MenuLayerZOrder, RogueScene::ButtonMenuTag);
+    
     // ---------------------------------
     // プレイヤーの先行
     changeGameStatus(GameStatus::PLAYER_TURN);
@@ -452,6 +457,13 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     pMenuKeyLeft->setRotation(270.0f);
     pMenuKeyLeft->setPosition(indexToPoint(0, 1));
     resultArray.pushBack(pMenuKeyLeft);
+ 
+    return resultArray;
+}
+
+Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
+{
+    Vector<MenuItem*> resultArray;
     
     auto a_button = Sprite::create("ui/a_button.png");
     auto a_buttonPress = Sprite::create("ui/a_button_press.png");
@@ -464,6 +476,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
         }
     });
     pA_MenuButton->setPosition(indexToPoint(12, 1));
+    pA_MenuButton->setTag(RogueScene::A_ButtonMenuTag);
     resultArray.pushBack(pA_MenuButton);
     
     auto b_button = Sprite::create("ui/b_button.png");
@@ -471,9 +484,9 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     b_buttonPress->setOpacity(128);
     auto pB_MenuButton = MenuItemSprite::create(b_button, b_buttonPress, [this](Object* pSender) {
         CCLOG("Bボタンが押された！");
-        // TODO: isSelectedで押し下げ中がとれるかも？
     });
     pB_MenuButton->setPosition(indexToPoint(11, 0));
+    pB_MenuButton->setTag(RogueScene::B_ButtonMenuTag);
     resultArray.pushBack(pB_MenuButton);
     
     auto c_button = Sprite::create("ui/c_button.png");
@@ -483,6 +496,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
         CCLOG("Cボタンが押された！");
     });
     pC_MenuButton->setPosition(indexToPoint(10, 1));
+    pC_MenuButton->setTag(RogueScene::C_ButtonMenuTag);
     resultArray.pushBack(pC_MenuButton);
     
     auto d_button = Sprite::create("ui/d_button.png");
@@ -493,6 +507,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
         showItemList(1);
     });
     pD_MenuButton->setPosition(indexToPoint(11, 2));
+    pD_MenuButton->setTag(RogueScene::D_ButtonMenuTag);
     resultArray.pushBack(pD_MenuButton);
     
     return resultArray;
@@ -607,16 +622,19 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     }
 }
 
-float RogueScene::getAnimationSpped()
+float RogueScene::getAnimationSpeed()
 {
-    if (m_isSppedUp)
+    auto pMenu = getChildByTag(RogueScene::ButtonMenuTag);
+    if (pMenu)
     {
-        return 0.0f;
+        auto pB_ButtonMenuItem = static_cast<MenuItem*>(pMenu->getChildByTag(RogueScene::B_ButtonMenuTag));
+        if (pB_ButtonMenuItem && pB_ButtonMenuItem->isSelected())
+        {
+            return 0.0f;
+        }
     }
-    else
-    {
-        return 0.2f;
-    }
+    
+    return 0.2f;
 }
 
 MapIndex RogueScene::getRandomMapIndex(bool isColision, bool isActor)
@@ -773,8 +791,9 @@ void RogueScene::enemyTurn()
                 changeGameStatus(GameStatus::ENEMY_ACTION);
                 
                 // 攻撃アニメーション
-                auto pMove1 = MoveTo::create(0.2f, pEnemySprite->getPosition() + indexToPointNotTileSize(addMoveIndex));
-                auto pMove2 = MoveTo::create(0.2f, pEnemySprite->getPosition());
+                float speed = getAnimationSpeed();
+                auto pMove1 = MoveTo::create(speed, pEnemySprite->getPosition() + indexToPointNotTileSize(addMoveIndex));
+                auto pMove2 = MoveTo::create(speed, pEnemySprite->getPosition());
                 
                 pEnemySprite->runAction(Sequence::create(pMove1, pMove2,
                                                          CallFunc::create([this, pEnemySprite, pPlayerActorSprite]() {
@@ -1038,8 +1057,9 @@ void RogueScene::attack()
     changeGameStatus(GameStatus::PLAYER_ACTION);
     
     // 攻撃アニメーション
-    auto pMove1 = MoveTo::create(0.2f, pActorSprite->getPosition() + indexToPointNotTileSize(addMapIndex.x, addMapIndex.y));
-    auto pMove2 = MoveTo::create(0.2f, pActorSprite->getPosition());
+    float speed = getAnimationSpeed();
+    auto pMove1 = MoveTo::create(speed, pActorSprite->getPosition() + indexToPointNotTileSize(addMapIndex.x, addMapIndex.y));
+    auto pMove2 = MoveTo::create(speed, pActorSprite->getPosition());
 
     ActorSprite* pEnemySprite = NULL;
     // 敵をタッチした
@@ -1160,13 +1180,13 @@ void RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapD
     if (pActorSprite->getActorMapItem()->mapDataType == MapDataType::PLAYER)
     {
         // プレイヤーならマップが移動
-        pMoveRunAction = MoveTo::create(0.2, pMapLayer->getPosition() - addMovePoint);
+        pMoveRunAction = MoveTo::create(getAnimationSpeed(), pMapLayer->getPosition() - addMovePoint);
         pActionTargetNode = pMapLayer;
     }
     else
     {
         // モンスターは普通にモンスターが移動
-        pMoveRunAction = MoveTo::create(0.2, pActorSprite->getPosition() + addMovePoint);
+        pMoveRunAction = MoveTo::create(getAnimationSpeed(), pActorSprite->getPosition() + addMovePoint);
         pActionTargetNode = pActorSprite;
     }
 

@@ -60,7 +60,7 @@ protected:
         kStatusBar2Tag        = 200001,
         kGameLogTag           = 210000,
         kItemListTag          = 220000,
-        kMenuTag              = 300000,
+//        kMenuTag              = 300000,
 //        kModalTag             = 900000,
     };
     enum BaseMapLayerTag {
@@ -74,6 +74,12 @@ protected:
     };
     
     enum Tag {
+        KeypadMenuTag             = 300000,
+        ButtonMenuTag             = 310000,
+        A_ButtonMenuTag           = 310001,
+        B_ButtonMenuTag           = 310002,
+        C_ButtonMenuTag           = 310003,
+        D_ButtonMenuTag           = 310004,
         ModalLayerTag             = 900000,
     };
     
@@ -101,7 +107,7 @@ private:
     int m_enemyCount;
     bool m_isSppedUp;
     
-    float getAnimationSpped();
+    float getAnimationSpeed();
     void changeGameStatus(GameStatus gameStatus);
     void enemyTurn();
     void checkEnmeyTurnEnd();
@@ -128,6 +134,8 @@ private:
     // UI関連
     void logMessage(const char * pszFormat, ...);
     Vector<MenuItem*> createKeypadMenuItemArray();
+    Vector<MenuItem*> createButtonMenuItemArray();
+    
     MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
     
     // アイテムリスト
