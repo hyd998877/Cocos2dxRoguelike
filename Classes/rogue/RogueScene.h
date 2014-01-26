@@ -15,11 +15,13 @@
 #include "ActorSprite.h"
 #include "DropItemSprite.h"
 #include "ItemWindowLayer.h"
+#include "AlertDialogLayer.h"
+#include "ModalLayer.h"
 
 class RogueScene : public cocos2d::Layer
 {
 protected:
-    
+    // ゲームステート
     enum GameStatus {
         INIT           = 0,
         PLAYER_TURN    = 10,
@@ -29,20 +31,21 @@ protected:
         ENEMY_ACTION   = 21,
         GAME_OVER      = 99,
     };
-    // TiledMap（background, colision)
-        // TiledMapFront
-        // TiledMapEnemy
     
+    // 廃止というかkやめる
     enum TiledMapTag {
         kGridLineTag             = 1000,
         kTiledMapDropItemBaseTag = 10000, // + seqNo
+        kTiledMapObjectTag       = 15000,
         kTiledMapEnemyBaseTag    = 20000, // + seqNo
         kTiledMapFrontTag        = 30000,
     };
     
+    // 廃止というかzやめる
     enum TiledMapIndex {
         zGridLineIndex             = 1000,
         zTiledMapDropItemBaseIndex = 10000,
+        zTiledMapObjectIndex       = 15000,
         zTiledMapEnemyBaseIndex    = 20000,
         zTiledMapFrontIndex        = 30000,
     };
@@ -55,25 +58,25 @@ protected:
 //        kCursorMoveStepTag  = 9002,
 //        kCursorSelectedTag  = 9003,
 //        kActorBaseTag         = 100000,
-        kMiniMapTag           = 150000,
+//        kMiniMapTag           = 150000,
         kStatusBarTag         = 200000,
-        kStatusBar2Tag        = 200001,
+//        kStatusBar2Tag        = 200001,
         kGameLogTag           = 210000,
-        kItemListTag          = 220000,
+//        kItemListTag          = 220000,
 //        kMenuTag              = 300000,
 //        kModalTag             = 900000,
     };
-    enum BaseMapLayerTag {
-        ActorPlayerTag   = 100000,
-        ActionCursorTag  = 110000,
-    };
     
     // ミニマップ上のタグ
-    enum {
-        MiniMapLayerBatchNodeTag = 100,
+    enum MiniMapLayerTag {
+        MiniMapSimbolBatchNodeTag = 100,
     };
     
     enum Tag {
+        ActorPlayerTag            = 100000,
+        MiniMapLayerTag           = 150000,
+        ItemListWindowTag         = 220000,
+        CommonWindowTag           = 230000,
         KeypadMenuTag             = 300000,
         ButtonMenuTag             = 310000,
         A_ButtonMenuTag           = 310001,
@@ -94,12 +97,14 @@ protected:
         MiniMapLayerMapActorZOrder,
         StatusBarLayerZOrder,
         GameLogLayerZOrder,
-        ItemListLayerZOrder,
         MenuLayerZOrder,
+        ItemListLayerZOrder,
+        CommonWindowZOrder,
         ModalLayerZOrder,
     };
     
 private:
+    int m_questId;
     // ゲーム管理
     GameStatus m_gameStatus;
     int m_noActionCount;
@@ -111,6 +116,8 @@ private:
     void changeGameStatus(GameStatus gameStatus);
     void enemyTurn();
     void checkEnmeyTurnEnd();
+    
+    void changeScene(cocos2d::Scene* scene);
     
     // マップベース情報
     cocos2d::Size m_baseContentSize;
@@ -133,6 +140,7 @@ private:
     
     // UI関連
     void logMessage(const char * pszFormat, ...);
+    DrawNode* createGridDraw();
     Vector<MenuItem*> createKeypadMenuItemArray();
     Vector<MenuItem*> createButtonMenuItemArray();
     
@@ -142,6 +150,11 @@ private:
     void showItemList(int showTextIndex);
     void hideItemList();
     void refreshStatus();
+    
+    void showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback);
+//    void showCommonWindow(std::string title, std::string okText, std::string ngText);
+    AlertDialogLayer* getCommonWindow();
+    void hideCommonWindow();
     
     // tileSet関連
     bool tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, MapIndex mapIndex);
@@ -161,29 +174,26 @@ private:
     // MapIndexからtileIndexに変換
     MapIndex mapIndexToTileIndex(MapIndex mapIndex);
     
-    
     ActorSprite* getPlayerActorSprite(int seqNo);
     ActorSprite* getEnemyActorSprite(int seqNo);
-    
+    ModalLayer* getModalLayer();
     ItemWindowLayer* getItemWindowLayer();
     
     // ミニマップ関連
     void addMiniMapItem(MapItem* pMapItem, int baseSpriteTag);
     
     SpriteBatchNode* getGridSpriteBatchNode();
-//    // TODO: プレイヤー情報（あとで別の場所に持っていく）
-//    std::list<DropItemSprite::DropItemDto> m_playerItemList;
     
 public:
     RogueScene();
-    ~RogueScene();
+    virtual ~RogueScene();
     
-    virtual bool init();
+    // 初期化とか
+    virtual bool initWithQuestId(int questId);
     
-    static cocos2d::Scene* scene();
-    
-    CREATE_FUNC(RogueScene);
-    
+    static cocos2d::Scene* scene(int questId);
+    static RogueScene* createWithQuestId(int questId);
+        
     virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
     virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
     virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);

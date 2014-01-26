@@ -9,12 +9,9 @@
 
 #include "RogueScene.h"
 // ------------------------------
-#include "ActorSprite.h"
-#include "DropItemSprite.h"
+#include "CommonWindowUtil.h"
 
 #include "TableViewTestLayer.h"
-#include "ModalLayer.h"
-#include "ItemWindowLayer.h"
 
 #include "ItemLogic.h"
 #include "BattleLogic.h"
@@ -39,27 +36,47 @@ std::size_t f_r(const std::string& s, char c)
 
 RogueScene::RogueScene()
 :m_gameStatus(GameStatus::INIT),
+m_questId(0),
 m_TurnCount(0),
 m_enemyCount(0),
 m_baseMapSize(Size::ZERO),
 m_baseTileSize(Size::ZERO),
 m_baseContentSize(Size::ZERO)
 {
+    CCLOG("new rogueScene");
+    //this->getEventDispatcher()->removeAllEventListeners();
 }
 
 RogueScene::~RogueScene()
 {
+    CCLOG("death rogueScene");
 }
 
-Scene* RogueScene::scene()
+Scene* RogueScene::scene(int questId)
 {
     Scene *scene = Scene::create();
-    RogueScene *layer = RogueScene::create();
+    RogueScene *layer = RogueScene::createWithQuestId(questId);
     scene->addChild(layer);
     return scene;
 }
 
-bool RogueScene::init()
+RogueScene* RogueScene::createWithQuestId(int questId)
+{
+    auto *pRet = new RogueScene();
+    if (pRet && pRet->initWithQuestId(questId))
+    {
+        pRet->autorelease();
+        return pRet;
+    }
+    else
+    {
+        delete pRet;
+        pRet = NULL;
+        return NULL;
+    }
+}
+
+bool RogueScene::initWithQuestId(int questId)
 {
     // 1. super init first
     if ( !Layer::init() )
@@ -67,25 +84,34 @@ bool RogueScene::init()
         return false;
     }
     
+    m_questId = questId;
+    
     // 乱数
     srand((unsigned int)time(NULL));
     
     // TouchEvent settings
-    auto listener = EventListenerTouchOneByOne::create();
-    listener->setSwallowTouches(true);
-    
-    listener->onTouchBegan = CC_CALLBACK_2(RogueScene::onTouchBegan, this);
-    listener->onTouchMoved = CC_CALLBACK_2(RogueScene::onTouchMoved, this);
-    listener->onTouchEnded = CC_CALLBACK_2(RogueScene::onTouchEnded, this);
-    this->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
-    
+//    auto listener = EventListenerTouchOneByOne::create();
+//    listener->setSwallowTouches(true);
+//    
+//    listener->onTouchBegan = CC_CALLBACK_2(RogueScene::onTouchBegan, this);
+//    listener->onTouchMoved = CC_CALLBACK_2(RogueScene::onTouchMoved, this);
+//    listener->onTouchEnded = CC_CALLBACK_2(RogueScene::onTouchEnded, this);
+//    this->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
+
     auto winSize = Director::getInstance()->getWinSize();
     
     // ---------------------
     // タイルマップを生成
     // ---------------------
 //    auto pTiledMap = TMXTiledMap::create("tmx/desert.tmx");
-    auto pTiledMap = TMXTiledMap::create("tmx/quest_1.tmx");
+#if 1
+    // TODO: テスト用 まだクエスト2までしかない・・・
+    if (m_questId > 2)
+    {
+        m_questId = 1;
+    }
+#endif
+    auto pTiledMap = TMXTiledMap::create(StringUtils::format("tmx/quest_%d.tmx", m_questId));
     pTiledMap->setPosition(Point::ZERO);
     this->addChild(pTiledMap, RogueScene::TiledMapLayerZOrder, RogueScene::kTiledMapTag);
     
@@ -117,29 +143,12 @@ bool RogueScene::init()
     // ---------------------
     // グリッド線を生成
     // ---------------------
-//    auto draw = DrawNode::create();
-//    draw->setPosition(Point::ZERO);
-//    
-//    // 線の太さと色
-//    float lineSize = 1 * 0.5;
-//    auto color = Color4F(1, 1, 1, 0.5f);
-//    
-//    // 縦線を引く
-//    for (int x = 1; x < m_baseMapSize.width; x++)
-//    {
-//        float xPoint = x * m_baseTileSize.width;
-//        draw->drawSegment(Point(xPoint, 0), Point(xPoint, m_baseContentSize.height), lineSize, color);
-//    }
-//    // 横線を引く
-//    for (int y = 1; y < m_baseMapSize.height; y++)
-//    {
-//        float yPoint = y * m_baseTileSize.height;
-//        draw->drawSegment(Point(0, yPoint), Point(m_baseContentSize.width, yPoint), lineSize, color);
-//    }
-//    
-//    // マップに追加
-//    pTiledMap->addChild(draw, RogueScene::TiledMapIndex::zGridLineIndex, RogueScene::TiledMapTag::kGridLineTag);
-
+#if 0
+    auto pGrid = createGridDraw();
+    // マップに追加
+    pTiledMap->addChild(pGrid, RogueScene::TiledMapIndex::zGridLineIndex, RogueScene::TiledMapTag::kGridLineTag);
+#endif
+    
     //-------------------------
     // ステータスバー？
     //-------------------------
@@ -158,21 +167,16 @@ bool RogueScene::init()
     //-------------------------
     // ゲームログ表示
     //-------------------------
-    //    float startWidth = pFaceSprite->getContentSize().width * pFaceSprite->getScaleX();
-    auto pGameLogWaku = CREATE_WINDOW_WAKU();
-    pGameLogWaku->setPreferredSize(Size(winSize.width * 0.5, m_baseTileSize.height * 1.5));
-    pGameLogWaku->setPosition(pGameLogWaku->getPreferredSize().width / 2, pGameLogWaku->getPreferredSize().height / 2);
-    
     auto pGameLogLayer = LayerColor::create(Color4B(0, 0, 0, 192));
     pGameLogLayer->setContentSize(Size(winSize.width * 0.5, m_baseTileSize.height * 1.5));
     pGameLogLayer->setPosition(winSize.width / 2 - pGameLogLayer->getContentSize().width / 2, 0);
+    
+    CommonWindowUtil::attachWindowWaku(pGameLogLayer);
     
     int baseFontSize = 10;
     auto pLogTextLabel = LabelTTF::create("", GAME_FONT(baseFontSize), baseFontSize, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
     pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getFontSize() / 4));
     pGameLogLayer->addChild(pLogTextLabel);
-    
-    pGameLogLayer->addChild(pGameLogWaku);
     
     this->addChild(pGameLogLayer, RogueScene::GameLogLayerZOrder, RogueScene::kGameLogTag);
     
@@ -186,7 +190,7 @@ bool RogueScene::init()
                                       m_baseMapSize.height * m_baseTileSize.height / 8));
     // ステータスバーの下くらい
     miniMapLayer->setPosition(0, miniMapLayer->getPositionY() + winSize.height - miniMapLayer->getContentSize().height - statusLayer->getContentSize().height);
-    this->addChild(miniMapLayer, RogueScene::MiniMapLayerZOrder, RogueScene::kMiniMapTag);
+    this->addChild(miniMapLayer, RogueScene::MiniMapLayerZOrder, RogueScene::MiniMapLayerTag);
     
     // ------------------------
     // 障害物
@@ -363,6 +367,27 @@ bool RogueScene::init()
     
     MapIndex mapIndex4 = getRandomMapIndex(false, false);;
     tileSetDropMapItem(dropItemDto4, mapIndex4);
+
+    // -------------------------------
+    // 階段配置
+    // -------------------------------
+    
+    MapIndex kaidanIndex = getRandomMapIndex(false, false);
+    auto pKaidanSprite = Sprite::create("kaidan.png");
+    pKaidanSprite->setPosition(indexToPoint(kaidanIndex));
+    pTiledMap->addChild(pKaidanSprite, RogueScene::zTiledMapObjectIndex, RogueScene::kTiledMapObjectTag);
+    
+    // マップに追加
+    DropMapItem kaidanMapItem;
+    kaidanMapItem.seqNo = 1;
+    kaidanMapItem.mapIndex = kaidanIndex;
+    kaidanMapItem.moveDist = 0;
+    kaidanMapItem.attackDist = 0;
+    kaidanMapItem.mapDataType = MapDataType::KAIDAN;
+    m_mapManager.addDropItem(&kaidanMapItem);
+    
+    // ミニマップも更新
+    addMiniMapItem(&kaidanMapItem, RogueScene::kTiledMapObjectTag);
     
     // -------------------------------
     // メニュー
@@ -383,6 +408,31 @@ bool RogueScene::init()
     changeGameStatus(GameStatus::PLAYER_TURN);
     
     return true;
+}
+
+DrawNode* RogueScene::createGridDraw()
+{
+    auto draw = DrawNode::create();
+    draw->setPosition(Point::ZERO);
+
+    // 線の太さと色
+    float lineSize = 1 * 0.5;
+    auto color = Color4F(1, 1, 1, 0.5f);
+
+    // 縦線を引く
+    for (int x = 1; x < m_baseMapSize.width; x++)
+    {
+        float xPoint = x * m_baseTileSize.width;
+        draw->drawSegment(Point(xPoint, 0), Point(xPoint, m_baseContentSize.height), lineSize, color);
+    }
+    // 横線を引く
+    for (int y = 1; y < m_baseMapSize.height; y++)
+    {
+        float yPoint = y * m_baseTileSize.height;
+        draw->drawSegment(Point(0, yPoint), Point(m_baseContentSize.width, yPoint), lineSize, color);
+    }
+
+    return draw;
 }
 
 MenuItem* RogueScene::createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback)
@@ -494,6 +544,19 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
     c_buttonPress->setOpacity(128);
     auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Object* pSender) {
         CCLOG("Cボタンが押された！");
+        
+        this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Object* pSender){
+            // OK
+            this->hideCommonWindow();
+            
+            // 画面遷移
+            this->changeScene(RogueScene::scene(m_questId+1));
+            
+        }, [this](Object* pSender){
+            // NG
+            this->hideCommonWindow();
+        });
+        
     });
     pC_MenuButton->setPosition(indexToPoint(10, 1));
     pC_MenuButton->setTag(RogueScene::C_ButtonMenuTag);
@@ -524,18 +587,13 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     m_gameStatus = gameStatus;
     
     if (m_gameStatus == GameStatus::GAME_OVER)
-    {
-        // 次のsceneで残ってしまうのでここで始末する
-        this->getEventDispatcher()->removeAllEventListeners();
-        
+    {        
         // TODO: ゲームオーバーの演出
         
         // TODO: ゲームオーバー画面Scene？表示
         
         // TODO: とりあえずタイトルへ
-        Scene* scene = TitleSceneLoader::scene();
-        TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
-        Director::getInstance()->replaceScene(trans);
+        this->changeScene(TitleSceneLoader::scene());
     }
     else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
         && m_gameStatus == GameStatus::ENEMY_TURN)
@@ -620,6 +678,15 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
         }
         refreshStatus();
     }
+}
+
+void RogueScene::changeScene(Scene* scene)
+{
+    // TODO: とりあえず真っ黒のレイヤーを乗せる
+    this->addChild(LayerColor::create(Color4B::BLACK), 99999999, 99999999);
+    
+    auto trans = TransitionProgressOutIn::create(1, scene);
+    Director::getInstance()->replaceScene(trans);
 }
 
 float RogueScene::getAnimationSpeed()
@@ -928,52 +995,6 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     if (pEnemyMapItem->mapDataType == MapDataType::ENEMY)
     {
         // 向きだけ変えてターン経過しない
-        
-//        changeGameStatus(GameStatus::PLAYER_ACTION);
-//        
-//        // 攻撃アニメーション
-//        auto pMove1 = MoveTo::create(0.2f, pActorSprite->getPosition() + indexToPointNotTileSize(addMoveIndex));
-//        auto pMove2 = MoveTo::create(0.2f, pActorSprite->getPosition());
-//        
-//        auto pEnemySprite = getEnemyActorSprite(pEnemyMapItem->seqNo);
-//        
-//        pActorSprite->runAction(Sequence::create(pMove1, pMove2,
-//                                                 CallFunc::create([this, pActorSprite, pEnemySprite](void) {
-//            auto pPlayerDto = pActorSprite->getActorDto();
-//            auto pEnemyDto = pEnemySprite->getActorDto();
-//            
-//            int damage = BattleLogic::exec(pPlayerDto, pEnemyDto);
-//            
-//            // 攻撃イベント
-//            logMessage("%sの攻撃: %sに%dのダメージ", pPlayerDto->name.c_str(), pEnemyDto->name.c_str(), damage);
-//            
-//            // 敵の死亡判定
-//            if (pEnemyDto->hitPoint == 0)
-//            {
-//                logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
-//                
-//                // 経験値更新
-//                pPlayerDto->exp += pEnemyDto->exp;
-//                if (MLevelDao::getInstance()->checkLevelUp(pPlayerDto->lv, pPlayerDto->exp))
-//                {
-//                    pPlayerDto->lv++;
-//                    auto pMLevel = MLevelDao::getInstance()->selectById(pPlayerDto->lv);
-//                    pPlayerDto->hitPointLimit += pMLevel->getGrowHitPoint();
-//                    
-//                    // TODO: レベルアップ演出（SE？）
-//                    
-//                    logMessage("%sはレベル%dになった。", pPlayerDto->name.c_str(), pPlayerDto->lv);
-//                }
-//                
-//                // マップから消える
-//                removeEnemyActorSprite(pEnemySprite);
-//            }
-//            changeGameStatus(GameStatus::ENEMY_TURN);
-//            
-//        }), NULL));
-//        
-//        // コールバックまでgameStatusを更新はしない
-//        return;
     }
     else
     {
@@ -1011,6 +1032,28 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                 
                 // Map上から削除する
                 removeDropItemSprite(pDropItemLayer, pDropItemSprite);
+            }
+            else if (pTouchPointMapItem->mapDataType == MapDataType::KAIDAN)
+            {
+                // 階段SE
+                
+                // 階段下りる判定
+                
+                this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Object* pSender){
+                    // OK
+                    
+                    // 閉じる
+                    this->hideCommonWindow();
+                    
+                    // 画面遷移
+                    this->changeScene(RogueScene::scene(m_questId+1));
+                    
+                }, [this](Object* pSender){
+                    // NG
+                    
+                    // 閉じる
+                    this->hideCommonWindow();
+                });
             }
             
             // 移動処理
@@ -1201,13 +1244,16 @@ void RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapD
     actorMapItem->mapIndex = moveMapIndex;
     
     // ミニマップも更新
-    auto pMiniMapActorNode = getGridSpriteBatchNode()->getChildByTag(pActorSprite->getTag());
-    
-    float scale = 1.0f / 8.0f;
-    auto point = indexToPointNotTileSize(pActorSprite->getActorMapItem()->mapIndex) / 8;
-    pMiniMapActorNode->setPosition(point.x + pMiniMapActorNode->getContentSize().width / 2 * scale,
-                         point.y + pMiniMapActorNode->getContentSize().height / 2 * scale);
-    
+    auto pMiniMapLayer = getGridSpriteBatchNode();
+    if (pMiniMapLayer)
+    {
+        auto pMiniMapActorNode = pMiniMapLayer->getChildByTag(pActorSprite->getTag());
+        
+        float scale = 1.0f / 8.0f;
+        auto point = indexToPointNotTileSize(pActorSprite->getActorMapItem()->mapIndex) / 8;
+        pMiniMapActorNode->setPosition(point.x + pMiniMapActorNode->getContentSize().width / 2 * scale,
+                                       point.y + pMiniMapActorNode->getContentSize().height / 2 * scale);
+    }
     // move実行
     pActionTargetNode->runAction(Sequence::create(pMoveRunAction, moveFinishedCallFunc, NULL));
 }
@@ -1263,7 +1309,7 @@ void RogueScene::logMessage(const char * pszFormat, ...)
         return;
     }
     
-    auto pGameLogText = static_cast<LabelTTF*>(pGameLogNode->getChildren().at(0)); // TODO: 1子しかaddしてないから動く。ちゃんとしないと・・・
+    auto pGameLogText = static_cast<LabelTTF*>(pGameLogNode->getChildren().at(1)); // TODO: 1子しかaddしてないから動く。ちゃんとしないと・・・
     if (pGameLogText)
     {
         // TODO: 別クラスにしてログをlistで保持する。デフォルトの表示は1件だけで、center寄せ表示でいいかと
@@ -1304,19 +1350,10 @@ void RogueScene::showItemList(int showTextIndex)
     
     auto winSize = Director::getInstance()->getWinSize();
     
-    // モーダルレイヤー作成
-    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::ModalLayerTag));
-    if (pModalLayer)
-    {
-        pModalLayer->setVisible(true);
-    }
-    else
-    {
-        pModalLayer = ModalLayer::create();
-        this->addChild(pModalLayer, RogueScene::ModalLayerZOrder, RogueScene::ModalLayerTag);
-    }
+    auto pModalLayer = getModalLayer();
+    pModalLayer->setVisible(true);
     
-    auto pItemWindowLayer = static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(RogueScene::kItemListTag));
+    auto pItemWindowLayer = getItemWindowLayer();
     if (pItemWindowLayer)
     {
         pItemWindowLayer->reloadItemList();
@@ -1370,6 +1407,7 @@ void RogueScene::showItemList(int showTextIndex)
             // インベントリは閉じる
             this->hideItemList();
         });
+        
         pItemWindowLayer->setItemUseMenuCallback([this](Object* pSender, DropItemSprite::DropItemDto dropItemDto) {
             CCLOG("RogueScene::itemUseMenuCallback");
             
@@ -1386,6 +1424,7 @@ void RogueScene::showItemList(int showTextIndex)
             // ターン消費
             this->changeGameStatus(RogueScene::ENEMY_TURN);
         });
+        
         pItemWindowLayer->setItemEquipMenuCallback([this](Object* pSender, DropItemSprite::DropItemDto dropItemDto) {
             CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", dropItemDto.itemType);
             
@@ -1434,41 +1473,89 @@ void RogueScene::showItemList(int showTextIndex)
             // ターン消費
             this->changeGameStatus(RogueScene::ENEMY_TURN);
         });
-        pModalLayer->addChild(pItemWindowLayer, RogueScene::ItemListLayerZOrder, RogueScene::kItemListTag);
+        
+        pModalLayer->addChild(pItemWindowLayer, RogueScene::ItemListLayerZOrder, RogueScene::ItemListWindowTag);
+        
+        // 閉じるボタン
+        auto pCloseMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("とじる", GAME_FONT(10), 10), Size(12, 4), [this](Object *pSender) {
+            // 閉じる
+            this->hideItemList();
+        });
+        pCloseMenuItemLabel->setPosition(Point(pItemWindowLayer->getContentSize().width, pCloseMenuItemLabel->getPositionY() -  pCloseMenuItemLabel->getContentSize().height / 2));
+        
+        auto pMenu = Menu::create(pCloseMenuItemLabel, NULL);
+        pMenu->setPosition(Point::ZERO);
+        
+        pItemWindowLayer->addChild(pMenu);
     }
-    
-    auto rect = Rect(0, 0, 300, 30);
-    auto capRect = Rect(0, 0, 300, 30);
-    auto pScale9Sprite1 = extension::Scale9Sprite::create("menu_button.png", rect, capRect);
-    pScale9Sprite1->setColor(Color3B::RED);
-    pScale9Sprite1->setOpacity(192);
-    pScale9Sprite1->setContentSize(Size(40, 20));
-    auto pScale9Sprite2 = extension::Scale9Sprite::create("menu_button.png", rect, capRect);
-    pScale9Sprite2->setColor(Color3B::RED);
-    pScale9Sprite2->setOpacity(128);
-    pScale9Sprite2->setContentSize(Size(40, 20));
-    
-    auto pMenuItemSprite = MenuItemSprite::create(pScale9Sprite1, pScale9Sprite2, [this](Object* pSeneder) {
-        this->hideItemList();
-    });
-    pMenuItemSprite->setPosition(Point(winSize.width - pMenuItemSprite->getContentSize().width / 2, pMenuItemSprite->getContentSize().height / 2));
-    
-    auto pMenu = Menu::create(pMenuItemSprite, NULL);
-    pMenu->setPosition(Point::ZERO);
-    
-    pModalLayer->addChild(pMenu);
 }
 
 void RogueScene::hideItemList()
 {
     // モーダルレイヤー非表示にする
-    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::ModalLayerTag));
+    auto pItemWindow = getItemWindowLayer();
+    if (pItemWindow)
+    {
+        pItemWindow->setVisible(false);
+    }
+    
+    auto pModalLayer = getModalLayer();
     if (pModalLayer)
     {
         pModalLayer->setVisible(false);
     }
 }
 
+void RogueScene::showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback)
+{
+    auto winSize = Director::getInstance()->getWinSize();
+    
+    // モーダルレイヤー作成
+    auto pModalLayer = getModalLayer();
+    pModalLayer->setVisible(true);
+    
+    auto pCommonWindow = getCommonWindow();
+    if (pCommonWindow)
+    {
+        pCommonWindow->setVisible(true);
+    }
+    else
+    {
+        // アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
+        pCommonWindow = AlertDialogLayer::createWithContentSize(winSize * 0.5, titleText, "は　い", "いいえ");
+        pCommonWindow->setPosition(Point(winSize.width / 2 - pCommonWindow->getContentSize().width / 2,
+                                         winSize.height /2 - pCommonWindow->getContentSize().height / 2));
+        pModalLayer->addChild(pCommonWindow, RogueScene::CommonWindowZOrder, RogueScene::CommonWindowTag);
+    }
+    pCommonWindow->setTitleText(titleText);
+    pCommonWindow->setOkMenuItemCallback(okMenuItemCallback);
+    pCommonWindow->setNgMenuItemCallback(ngMenuItemCallback);
+}
+
+AlertDialogLayer* RogueScene::getCommonWindow()
+{
+    auto pModalLayer = getModalLayer();
+    return static_cast<AlertDialogLayer*>(pModalLayer->getChildByTag(RogueScene::CommonWindowTag));
+}
+
+void RogueScene::hideCommonWindow()
+{
+    auto pCommonWindow = getCommonWindow();
+    if (pCommonWindow)
+    {
+        pCommonWindow->setVisible(false);
+    }
+    
+    auto pModalLayer = getModalLayer();
+    if (pModalLayer)
+    {
+        pModalLayer->setVisible(false);
+    }
+}
+
+
+#pragma mark
+#pragma mark Tile関連
 
 bool RogueScene::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, MapIndex mapIndex)
 {
@@ -1568,15 +1655,19 @@ void RogueScene::removeDropItemSprite(Node* pRemoveParentNode, DropItemSprite* p
 
 SpriteBatchNode* RogueScene::getGridSpriteBatchNode()
 {
-    auto pMiniMapLayer = getChildByTag(RogueScene::kMiniMapTag);
-    auto pBatchNode = static_cast<SpriteBatchNode*>(pMiniMapLayer->getChildByTag(RogueScene::MiniMapLayerBatchNodeTag));
-    if (!pBatchNode)
+    auto pMiniMapLayer = getChildByTag(RogueScene::MiniMapLayerTag);
+    if (pMiniMapLayer)
     {
-        pBatchNode = SpriteBatchNode::create("grid32.png");
-        pBatchNode->setTag(RogueScene::MiniMapLayerBatchNodeTag);
-        pMiniMapLayer->addChild(pBatchNode);
+        auto pBatchNode = static_cast<SpriteBatchNode*>(pMiniMapLayer->getChildByTag(RogueScene::MiniMapSimbolBatchNodeTag));
+        if (!pBatchNode)
+        {
+            pBatchNode = SpriteBatchNode::create("grid32.png");
+            pBatchNode->setTag(RogueScene::MiniMapSimbolBatchNodeTag);
+            pMiniMapLayer->addChild(pBatchNode);
+        }
+        return pBatchNode;
     }
-    return pBatchNode;
+    return nullptr;
 }
 
 void RogueScene::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag)
@@ -1604,6 +1695,12 @@ void RogueScene::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag)
         spriteColor = Color3B(0, 0, 196);
         alpha = 128;
         index = RogueScene::MiniMapLayerMapNoneZOrder;
+    }
+    else if (pMapItem->mapDataType == MapDataType::KAIDAN)
+    {
+        spriteColor = Color3B::GREEN;
+        alpha = 128;
+        index = RogueScene::MiniMapLayerMapItemZOrder;
     }
     
     auto pBatchNode = getGridSpriteBatchNode();
@@ -1635,13 +1732,17 @@ void RogueScene::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag)
 void RogueScene::refreshStatus()
 {
     auto pStatusBarLayer = getChildByTag(RogueScene::kStatusBarTag);
+    if (!pStatusBarLayer)
+    {
+        return;
+    }
     auto pStatusText = pStatusBarLayer->getChildren().at(0); // TODO: とりあえず1要素なので。。。
     if (pStatusText)
     {
         // プレイヤー取得
         auto pPlayerSprite = getPlayerActorSprite(1);
         auto pPlayerDto = pPlayerSprite->getActorDto();
-        int floor = 1; // TODO: フロア情報
+        int floor = m_questId; // フロア情報（クエストID=フロア数でいい？)
         int gold = 0; // TODO: player情報
         // 作成
         auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G", floor, pPlayerDto->lv, pPlayerDto->hitPoint, pPlayerDto->hitPointLimit, pPlayerDto->magicPoint, pPlayerDto->magicPointLimit, gold);
@@ -1746,8 +1847,25 @@ ActorSprite* RogueScene::getEnemyActorSprite(int seqNo)
 
 ItemWindowLayer* RogueScene::getItemWindowLayer()
 {
-    auto pModalLayer = getChildByTag(RogueScene::ModalLayerTag);
-    return static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(RogueScene::kItemListTag));
+    auto pModalLayer = getModalLayer();
+    return static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(RogueScene::ItemListWindowTag));
+}
+
+ModalLayer* RogueScene::getModalLayer()
+{
+    // モーダルレイヤー作成
+    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::ModalLayerTag));
+    if (pModalLayer)
+    {
+        //pModalLayer->setVisible(true);
+    }
+    else
+    {
+        pModalLayer = ModalLayer::create();
+        this->addChild(pModalLayer, RogueScene::ModalLayerZOrder, RogueScene::ModalLayerTag);
+    }
+    
+    return pModalLayer;
 }
 
 #pragma mark

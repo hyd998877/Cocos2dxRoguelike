@@ -11,6 +11,11 @@
 
 USING_NS_CC;
 
+ModalLayer::~ModalLayer()
+{
+    
+}
+
 bool ModalLayer::init()
 {
     if (!LayerColor::init())
@@ -20,9 +25,10 @@ bool ModalLayer::init()
     
     // TouchEvent settings
     auto listener = EventListenerTouchOneByOne::create();
-    listener->setSwallowTouches(true);
+    //listener->setSwallowTouches(true);
     
     listener->onTouchBegan = CC_CALLBACK_2(ModalLayer::onTouchBegan, this);
+//    this->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
     // TODO: とりあえずデフォルトカラーはここで。あとで引数にする？

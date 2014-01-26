@@ -6,6 +6,7 @@
 //
 //
 #include "AppMacros.h"
+#include "CommonWindowUtil.h"
 
 #include "ItemWindowLayer.h"
 #include "TableViewTestLayer.h"
@@ -22,6 +23,11 @@ m_showItemDetailIdx(-1),
 m_itemDropMenuCallback(nullptr),
 m_itemUseMenuCallback(nullptr)
 {
+}
+
+ItemWindowLayer::~ItemWindowLayer()
+{
+    
 }
 
 ItemWindowLayer* ItemWindowLayer::createWithContentSize(Size contentSize)
@@ -83,9 +89,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
         // 表示indexを更新
         m_showItemDetailIdx = touchedIdx;
     });
-    auto pItemItemListWaku = CREATE_WINDOW_WAKU();
-    pItemItemListWaku->setPreferredSize(pItemListLayer->getContentSize());
-    pItemItemListWaku->setPosition(Point(pItemItemListWaku->getContentSize().width / 2, pItemItemListWaku->getContentSize().height / 2));
+    auto pItemItemListWaku = CommonWindowUtil::createWindowWaku(pItemListLayer);
     pItemListLayer->addChild(pItemItemListWaku);
     
     pItemListLayer->setTag(ItemWindowLayer::ItemTableLayerTag);
@@ -134,10 +138,12 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
     pItemDetailLabel->setTag(ItemWindowLayer::ItemDetailTag);
     pItemDetailLayer->addChild(pItemDetailLabel);
     // メニュー
-    pItemDetailLayer->addChild(initCreateMenu());
+    auto pMenu = initCreateMenu();
+    pMenu->setPositionX(pItemDetailLayer->getContentSize().width / 2);
+    pItemDetailLayer->addChild(pMenu);
     
     // 枠線
-    auto pItemDetailWaku = CREATE_WINDOW_WAKU();
+    auto pItemDetailWaku = CommonWindowUtil::createWindowWaku(pItemDetailLayer);
     pItemDetailWaku->setPreferredSize(pItemDetailLayer->getContentSize());
     pItemDetailWaku->setPosition(Point(pItemDetailWaku->getContentSize().width / 2, pItemDetailWaku->getContentSize().height / 2));
     pItemDetailLayer->addChild(pItemDetailWaku);
@@ -150,11 +156,10 @@ Menu* ItemWindowLayer::initCreateMenu()
 {
     // -----------------------------
     // メニューボタン
-    float addNextMenuPositonX = 4;
-    float addNextMenuPositonY = 4;
+    const Size WAKU_PADDING = Size(8, 4);
     
     // 捨てるボタン
-    auto pMenuItemDrop = ItemWindowLayer::createMenuItemSprite(Color3B::RED, [this](Object* pSeneder) {
+    auto pMenuItemDrop = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("すてる", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
         // hoge
         CCLOG("item drop menu pressed");
         if (m_showItemDetailIdx < 0)
@@ -172,13 +177,11 @@ Menu* ItemWindowLayer::initCreateMenu()
             m_itemDropMenuCallback(pSeneder, dropItemDto);
         }
     });
-    pMenuItemDrop->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX , pMenuItemDrop->getContentSize().height / 2 + addNextMenuPositonY));
-    addNextMenuPositonX += pMenuItemDrop->getContentSize().width + 4;
-    addNextMenuPositonY += 0;
+    
     pMenuItemDrop->setTag(ItemWindowLayer::ItemDetailMenuDropTag);
     
     // 使用ボタン
-    auto pMenuItemUse = ItemWindowLayer::createMenuItemSprite(Color3B::GRAY, [this](Object* pSeneder) {
+    auto pMenuItemUse = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("つかう", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
         // hoge
         CCLOG("item use menu pressed");
         if (m_showItemDetailIdx < 0)
@@ -196,13 +199,10 @@ Menu* ItemWindowLayer::initCreateMenu()
             m_itemUseMenuCallback(pSeneder, dropItemDto);
         }
     });
-    pMenuItemUse->setPosition(Point(pMenuItemDrop->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemUse->getContentSize().height / 2 + addNextMenuPositonY));
-    addNextMenuPositonX += pMenuItemUse->getContentSize().width + 4;
-    addNextMenuPositonY += 0;
     pMenuItemUse->setTag(ItemWindowLayer::ItemDetailMenuUseTag);
     
     // 装備（する/はずす）ボタン
-    auto pMenuItemEquip = ItemWindowLayer::createMenuItemSprite(Color3B::BLUE, [this](Object* pSeneder) {
+    auto pMenuItemEquip = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("そうび", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
         CCLOG("item equip menu pressed");
         if (m_showItemDetailIdx < 0)
         {
@@ -219,14 +219,12 @@ Menu* ItemWindowLayer::initCreateMenu()
             m_itemEquipMenuCallback(pSeneder, dropItemDto);
         }
     });
-    pMenuItemEquip->setPosition(Point(pMenuItemUse->getContentSize().width / 2 + addNextMenuPositonX, pMenuItemEquip->getContentSize().height / 2 + addNextMenuPositonY));
-    addNextMenuPositonX += pMenuItemEquip->getContentSize().width + 4;
-    addNextMenuPositonY += 0;
     pMenuItemEquip->setTag(ItemWindowLayer::ItemDetailMenuEquipTag);
     
     auto pMenu = Menu::create(pMenuItemDrop, pMenuItemUse, pMenuItemEquip, NULL);
     pMenu->setTag(ItemWindowLayer::ItemDetailMenuTag);
-    pMenu->setPosition(Point::ZERO);
+    pMenu->setPosition(Point(0, pMenuItemDrop->getContentSize().height));
+    pMenu->alignItemsHorizontallyWithPadding(4);
     
     return pMenu;
 }
@@ -262,7 +260,11 @@ void ItemWindowLayer::reloadItemList()
         std::list<TableViewTestLayer::TableLayout> itemNameList;
         for (DropItemSprite::DropItemDto dropItem : m_itemDtoList)
         {
-            TableViewTestLayer::TableLayout layout = {DropItemSprite::createItemImageFileName(dropItem.imageResId), dropItem.name};
+            TableViewTestLayer::TableLayout layout = {
+                DropItemSprite::createItemImageFileName(dropItem.imageResId),
+                dropItem.name,
+                dropItem.isEquip ? Color3B::BLUE : Color3B::WHITE // 装備中は青文字
+            };
             itemNameList.push_back(layout);
         }
         pItemTabelLayer->makeItemList(itemNameList);

@@ -25,6 +25,7 @@ bool DropItemSprite::initWithDropItemDto(DropItemDto dropItemDto)
     m_dropItemDto = dropItemDto;
     
     auto spriteFileName = DropItemSprite::createItemImageFileName(m_dropItemDto.imageResId);
+    CCLOG("initWithDropItemDto = %s", spriteFileName.c_str());
     if (!Sprite::initWithFile(spriteFileName))
     {
         return false;

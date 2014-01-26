@@ -58,6 +58,8 @@
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
+		CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */; };
+		CE81F79618940AA900A8162B /* kaidan.png in Resources */ = {isa = PBXBuildFile; fileRef = CE81F79518940AA900A8162B /* kaidan.png */; };
 		CE9297C0188BCC9700568EE1 /* MLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9297BE188BCC9700568EE1 /* MLevel.cpp */; };
 		CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */; };
 		CE93B444188156C700825FD1 /* AccountData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B412188156C700825FD1 /* AccountData.cpp */; };
@@ -105,6 +107,7 @@
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
 		CE93B4C9188156FC00825FD1 /* TitleScene.ccbi in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AE188156FC00825FD1 /* TitleScene.ccbi */; };
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
+		CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
@@ -328,6 +331,9 @@
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
+		CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
+		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
+		CE81F79518940AA900A8162B /* kaidan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kaidan.png; sourceTree = "<group>"; };
 		CE9297BE188BCC9700568EE1 /* MLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevel.cpp; sourceTree = "<group>"; };
 		CE9297BF188BCC9700568EE1 /* MLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevel.h; sourceTree = "<group>"; };
 		CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevelDao.cpp; sourceTree = "<group>"; };
@@ -398,6 +404,8 @@
 		CE93B4AD188156FC00825FD1 /* menu_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_button.png; sourceTree = "<group>"; };
 		CE93B4AE188156FC00825FD1 /* TitleScene.ccbi */ = {isa = PBXFileReference; lastKnownFileType = file; path = TitleScene.ccbi; sourceTree = "<group>"; };
 		CE93B4AF188156FC00825FD1 /* tmx */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tmx; sourceTree = "<group>"; };
+		CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonWindowUtil.cpp; sourceTree = "<group>"; };
+		CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -606,6 +614,7 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CE81F79518940AA900A8162B /* kaidan.png */,
 				CE0D522A188A507F00ECB309 /* icon_set */,
 				CEB1A5E61881895A00D26BAE /* ui */,
 				CE93B4A4188156FC00825FD1 /* fonts */,
@@ -751,6 +760,8 @@
 			children = (
 				CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */,
 				CE93B433188156C700825FD1 /* ItemWindowLayer.h */,
+				CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */,
+				CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */,
 				CE93B434188156C700825FD1 /* LabelSprite.cpp */,
 				CE93B435188156C700825FD1 /* LabelSprite.h */,
 				CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */,
@@ -758,6 +769,8 @@
 				CE93B438188156C700825FD1 /* ModalLayer.cpp */,
 				CE93B439188156C700825FD1 /* ModalLayer.h */,
 				CE93B43A188156C700825FD1 /* table */,
+				CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */,
+				CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */,
 			);
 			name = ui;
 			path = ../Classes/ui;
@@ -1000,6 +1013,7 @@
 				CE93B494188156EC00825FD1 /* actor_4_f.png in Resources */,
 				CE0D522B188A507F00ECB309 /* icon_set in Resources */,
 				CE93B4C5188156FC00825FD1 /* japan_map001.png in Resources */,
+				CE81F79618940AA900A8162B /* kaidan.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				CE93B4BC188156FC00825FD1 /* btn-test-1.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
@@ -1054,6 +1068,7 @@
 				CE93B451188156C700825FD1 /* MenuItemSelectLabelSprite.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				CE93B454188156C700825FD1 /* TableViewTestLayer.cpp in Sources */,
+				CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */,
 				CE93B444188156C700825FD1 /* AccountData.cpp in Sources */,
 				CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
@@ -1061,6 +1076,7 @@
 				CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */,
 				CE93B453188156C700825FD1 /* CustomTableViewCell.cpp in Sources */,
 				CE93B452188156C700825FD1 /* ModalLayer.cpp in Sources */,
+				CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				CE93B448188156C700825FD1 /* ItemLogic.cpp in Sources */,
 				CE93B44A188156C700825FD1 /* SRPGMapLayer.cpp in Sources */,

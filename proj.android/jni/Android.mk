@@ -8,6 +8,7 @@ LOCAL_MODULE_FILENAME := libcocos2dcpp
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
+                   ../../Classes/ui/CommonWindowUtil.cpp \
                    ../../Classes/dao/MLevelDao.cpp \
                    ../../Classes/data/MLevel.cpp \
                    ../../Classes/title/TitleScene.cpp \
@@ -21,6 +22,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/ui/table/TableViewTestLayer.cpp \
                    ../../Classes/ui/ModalLayer.cpp \
                    ../../Classes/ui/ItemWindowLayer.cpp \
+                   ../../Classes/ui/AlertDialogLayer.cpp \
                    ../../Classes/quest/SRPGScene.cpp \
                    ../../Classes/quest/SRPGMapLayer.cpp \
                    ../../Classes/logic/BattleLogic.cpp \
@@ -32,11 +34,11 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
                    $(LOCAL_PATH)/../../Classes/data \
                    $(LOCAL_PATH)/../../Classes/title \
                    $(LOCAL_PATH)/../../Classes/world_map \
+                   $(LOCAL_PATH)/../../Classes/ui \
                    $(LOCAL_PATH)/../../Classes/quest \
                    $(LOCAL_PATH)/../../Classes/actor \
                    $(LOCAL_PATH)/../../Classes/logic \
                    $(LOCAL_PATH)/../../Classes/game_object \
-                   $(LOCAL_PATH)/../../Classes/ui \
                    $(LOCAL_PATH)/../../Classes/ui/table \
                    $(LOCAL_PATH)/../../Classes/map \
                    $(LOCAL_PATH)/../../Classes/rogue

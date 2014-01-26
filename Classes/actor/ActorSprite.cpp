@@ -26,6 +26,7 @@ bool ActorSprite::initWithActorDto(ActorDto pActorDto)
     
     // ActorのSpriteFrameのplistをキャッシュ
     auto spriteFramePlistName = StringUtils::format("actor_%d.plist", m_actorDto.playerId);
+    CCLOG("initWithActorDto = %s", spriteFramePlistName.c_str());
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile(spriteFramePlistName);
     
     // Spriteを生成

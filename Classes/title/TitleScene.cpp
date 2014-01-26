@@ -18,6 +18,7 @@ TitleScene::TitleScene()
 TitleScene::~TitleScene()
 {
     // デストラクタ
+    this->removeAllChildrenWithCleanup(true);
 //    CC_SAFE_RELEASE(mStartConrolButton);
 //    CC_SAFE_RELEASE(mBg2);
 //    CC_SAFE_RELEASE(mBg3);

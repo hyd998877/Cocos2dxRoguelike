@@ -45,7 +45,7 @@ static std::string GAME_FONT(int fontSize)
 }
 
 // 共通ウィンドウ枠
-#define CREATE_WINDOW_WAKU() extension::Scale9Sprite::create("ui/dot_waku.png", Rect(0, 0, 16, 16), Rect(3, 3, 10, 10));
+//#define CREATE_WINDOW_WAKU() extension::Scale9Sprite::create("ui/dot_waku.png", Rect(0, 0, 16, 16), Rect(3, 3, 10, 10));
 
 // マルチレゾリューション対応
 #define HOGE() Director::getInstance()->setOpenGLView(eglView); \

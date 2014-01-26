@@ -171,6 +171,8 @@ bool MapManager::chkMove(int mapPointX, int mapPointY, int dist)
     MapIndex mapIndex = {mapPointX, mapPointY, MoveDirectionType::MOVE_NONE};
     MapItem* mapItem = getMapItem(&mapIndex);
     if (mapItem->mapDataType == MapDataType::NONE ||
+        mapItem->mapDataType == MapDataType::MAP_ITEM ||
+        mapItem->mapDataType == MapDataType::KAIDAN ||
         (mapItem->mapDataType == MapDataType::MOVE_DIST && mapItem->moveDist < dist))
     {
         return true;
@@ -197,6 +199,8 @@ void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
     // 未設定 or 移動オブジェクトで移動力が上の場合
     MapItem mapItem = m_mapCursorDataArray[mapPointX][mapPointY];
     if (mapItem.mapDataType == MapDataType::NONE ||
+        mapItem.mapDataType == MapDataType::MAP_ITEM ||
+        mapItem.mapDataType == MapDataType::KAIDAN ||
         (mapItem.mapDataType == MapDataType::MOVE_DIST && mapItem.moveDist < dist))
     {
         MapIndex mapIndex;

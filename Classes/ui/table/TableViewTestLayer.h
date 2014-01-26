@@ -24,6 +24,7 @@ public:
     typedef struct _TableLayout {
         std::string imageFileName;
         std::string labelText;
+        cocos2d::Color3B textColor;
     } TableLayout;
     
     // 一覧タップ時のコールバック

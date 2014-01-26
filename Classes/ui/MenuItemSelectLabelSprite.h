@@ -14,7 +14,7 @@
 
 class MenuItemSelectLabelSprite : public cocos2d::MenuItemSprite
 {
-public:
+public:    
     virtual bool initWithLabelSprite(const std::string& pszFileName, const std::string& string, const std::string& fontName, float fontSize, cocos2d::Color3B normalColor, cocos2d::Color3B selectedColor, cocos2d::Color3B disabledColor, const cocos2d::ccMenuCallback& callback);
     
     static MenuItemSelectLabelSprite* createWithLabelSprite(const std::string& pszFileName, const std::string& string, const std::string& fontName, float fontSize, cocos2d::Color3B normalColor, cocos2d::Color3B selectedColor, cocos2d::Color3B disabledColor, const cocos2d::ccMenuCallback& callback);

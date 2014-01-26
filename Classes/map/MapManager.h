@@ -21,6 +21,7 @@ enum MapDataType {
     PLAYER      = 4,
     ENEMY       = 5,
     OBSTACLE    = 6,
+    KAIDAN      = 7,
     MOVE_STEP_DIST = 10, // 移動経路
     SELECTED_DIST  = 11, // 選択位置
 };

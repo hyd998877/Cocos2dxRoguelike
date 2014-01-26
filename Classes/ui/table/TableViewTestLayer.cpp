@@ -134,14 +134,14 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx)
         // 本文テキスト
         int baseFontSize = 10;
         
-        LabelTTF* textLabel = LabelTTF::create(tableItem.labelText, GAME_FONT(baseFontSize), baseFontSize);
-        textLabel->setColor(Color3B::WHITE);
-        textLabel->setPosition(Point(baseFontSize + pItemImageSprite->getContentSize().width + textLabel->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
-        textLabel->setTag(TableViewTestLayer::ItemTextLabelTag);
+        LabelTTF* pTextLabel = LabelTTF::create(tableItem.labelText, GAME_FONT(baseFontSize), baseFontSize);
+        pTextLabel->setColor(tableItem.textColor);
+        pTextLabel->setPosition(Point(baseFontSize + pItemImageSprite->getContentSize().width + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
+        pTextLabel->setTag(TableViewTestLayer::ItemTextLabelTag);
 
-        textLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
-        textLabel->setHorizontalAlignment(TextHAlignment::LEFT);
-        pTextLayer->addChild(textLabel);
+        pTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
+        pTextLabel->setHorizontalAlignment(TextHAlignment::LEFT);
+        pTextLayer->addChild(pTextLabel);
         
         cell->addChild(pTextLayer);
     }
@@ -155,6 +155,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx)
         LabelTTF* pTextLabel = static_cast<LabelTTF*>(pTextLayer->getChildByTag(TableViewTestLayer::ItemTextLabelTag));
         pTextLabel->setString(tableItem.labelText);
         pTextLabel->setPosition(Point(pTextLabel->getFontSize() + pItemImageSprite->getContentSize().width + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
+        pTextLabel->setColor(tableItem.textColor);
     }
 
     return cell;

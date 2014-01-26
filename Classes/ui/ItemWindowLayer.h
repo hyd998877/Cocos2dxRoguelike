@@ -27,6 +27,7 @@ protected:
     };
 public:
     ItemWindowLayer();
+    ~ItemWindowLayer();
     
     virtual bool initWithContentSize(cocos2d::Size contentSize);
     static ItemWindowLayer* createWithContentSize(cocos2d::Size contentSize);

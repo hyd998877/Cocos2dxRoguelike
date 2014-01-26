@@ -14,6 +14,12 @@
 class ModalLayer : public cocos2d::LayerColor
 {
 public:
+    ModalLayer()
+    {
+        
+    }
+    ~ModalLayer();
+    
     virtual bool init();
 //    void menuCloseCallback(cocos2d::Object* pSender);
 	virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event);

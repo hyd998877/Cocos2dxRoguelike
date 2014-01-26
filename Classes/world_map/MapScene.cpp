@@ -19,6 +19,7 @@ MapScene::MapScene()
 MapScene::~MapScene()
 {
     // デストラクタ
+    this->removeAllChildrenWithCleanup(true);
 }
 
 bool MapScene::init()
@@ -72,7 +73,7 @@ void MapScene::tappedMenuItem2(Object * pTarget)
 void MapScene::tappedMenuItem3(Object * pTarget)
 {
     CCLOG("tappedMenuItem3");
-    auto scene = RogueScene::scene();
+    auto scene = RogueScene::scene(1);
     auto trans = TransitionProgressOutIn::create(1, scene);
     Director::getInstance()->replaceScene(trans);
 }
