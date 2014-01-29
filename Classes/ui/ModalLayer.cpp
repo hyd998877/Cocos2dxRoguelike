@@ -25,7 +25,7 @@ bool ModalLayer::init()
     
     // TouchEvent settings
     auto listener = EventListenerTouchOneByOne::create();
-    //listener->setSwallowTouches(true);
+    listener->setSwallowTouches(true);
     
     listener->onTouchBegan = CC_CALLBACK_2(ModalLayer::onTouchBegan, this);
 //    this->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
@@ -40,11 +40,14 @@ bool ModalLayer::init()
 
 bool ModalLayer::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event)
 {
-    CCLOG("modal onTouchBegan");
+    CCLOG("modal onTouchBegan visible = %d", this->isVisible());
     if (this->isVisible())
     {
+        // モーダル以降のイベントを強制停止する
+        unused_event->stopPropagation();
         return true;
     }
+    
     return false;
 }
 

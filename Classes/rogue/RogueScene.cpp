@@ -42,6 +42,7 @@ m_enemyCount(0),
 m_baseMapSize(Size::ZERO),
 m_baseTileSize(Size::ZERO),
 m_baseContentSize(Size::ZERO)
+, m_listener(nullptr)
 {
     CCLOG("new rogueScene");
     //this->getEventDispatcher()->removeAllEventListeners();
@@ -50,6 +51,7 @@ m_baseContentSize(Size::ZERO)
 RogueScene::~RogueScene()
 {
     CCLOG("death rogueScene");
+    this->getEventDispatcher()->removeEventListener(m_listener);
 }
 
 Scene* RogueScene::scene(int questId)
@@ -90,14 +92,27 @@ bool RogueScene::initWithQuestId(int questId)
     srand((unsigned int)time(NULL));
     
     // TouchEvent settings
-//    auto listener = EventListenerTouchOneByOne::create();
-//    listener->setSwallowTouches(true);
-//    
-//    listener->onTouchBegan = CC_CALLBACK_2(RogueScene::onTouchBegan, this);
-//    listener->onTouchMoved = CC_CALLBACK_2(RogueScene::onTouchMoved, this);
-//    listener->onTouchEnded = CC_CALLBACK_2(RogueScene::onTouchEnded, this);
-//    this->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
+    auto listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
+    listener->setSwallowTouches(true);
+    
+    listener->onTouchBegan = CC_CALLBACK_2(RogueScene::onTouchBegan, this);
+    listener->onTouchMoved = CC_CALLBACK_2(RogueScene::onTouchMoved, this);
+    listener->onTouchEnded = CC_CALLBACK_2(RogueScene::onTouchEnded, this);
 
+    // こういう書き方もできる
+//    listener->onTouchBegan = [this](Touch* touch, Event* event) -> bool {
+//        return true;
+//    };
+//    listener->onTouchMoved = [this](Touch* touch, Event* event) {
+//        
+//    };
+//    listener->onTouchEnded = [this](Touch* touch, Event* event) {
+//        
+//    };
+    
+    this->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
+    m_listener = listener;
+    
     auto winSize = Director::getInstance()->getWinSize();
     
     // ---------------------
@@ -392,6 +407,7 @@ bool RogueScene::initWithQuestId(int questId)
     // -------------------------------
     // メニュー
     // -------------------------------
+    
     // keypad
     auto keypadMenuArray = createKeypadMenuItemArray();
     auto pMenu = Menu::createWithArray(keypadMenuArray);

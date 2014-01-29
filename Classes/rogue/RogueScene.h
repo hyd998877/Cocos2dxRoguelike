@@ -103,6 +103,8 @@ protected:
         ModalLayerZOrder,
     };
     
+    cocos2d::EventListener* m_listener;
+    
 private:
     int m_questId;
     // ゲーム管理
