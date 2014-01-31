@@ -1310,13 +1310,13 @@ bool RogueScene::isMapLayerOver(MapIndex touchPointMapIndex)
 
 void RogueScene::logMessage(const char * pszFormat, ...)
 {
-    char szBuf[kMaxLogLen+1] = {0};
     va_list ap;
     va_start(ap, pszFormat);
-    vsnprintf(szBuf, kMaxLogLen, pszFormat, ap);
+    char buf[RogueScene::MAX_LOG_LENGTH];
+    vsnprintf(buf, RogueScene::MAX_LOG_LENGTH-3, pszFormat, ap);
     va_end(ap);
     
-    CCLOG("logMessage: %s", szBuf);
+    CCLOG("logMessage: %s", buf);
     
     auto pGameLogNode = getChildByTag(RogueScene::kGameLogTag);
     // とりあえず子要素がないなら無理
@@ -1329,7 +1329,7 @@ void RogueScene::logMessage(const char * pszFormat, ...)
     if (pGameLogText)
     {
         // TODO: 別クラスにしてログをlistで保持する。デフォルトの表示は1件だけで、center寄せ表示でいいかと
-        auto pMessage = String::create(szBuf);
+        auto pMessage = String::create(buf);
         
         pMessage->append("\n");
 

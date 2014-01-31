@@ -20,6 +20,7 @@
 
 class RogueScene : public cocos2d::Layer
 {
+    static const int MAX_LOG_LENGTH = 16*1024;
 protected:
     // ゲームステート
     enum GameStatus {
