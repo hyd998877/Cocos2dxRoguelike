@@ -13,4 +13,36 @@
    eJzNVosRgjAMDcswAvN0A91AV7FOAEygTuA5gZtYDnLmQtKkFe7M3TuOpuTzkrQ0AND8OYaEu4DB0Fuwvke9hTGhhbX0RF8j9PtDwlHRe+LrBPs3mPN8LO+XhAhz3tPzytYjW6fxnRLOP8TnEW5vNNZ5flxQb9Vdi6+HL1cR1v2EftEP6mv7gfr1xqfx/czsp7wOhn3aF1o9tH7S5muy8xb88Xpa8+XtF6++tl+9+ef4k/pJ61seXyB2aT234qeUD6tefH4R2jyVxvcikPxb9drrvKLx0ThL7ZWe37X15TxuXS9ajz3PU5RSPnL93Bp6SXidtHp5+cjdf92ix/2B6fk79W+dC975tkTaL8XljU/jIyh6z/1H581C7r6rkdL7rxaYH/Jh/VNL/9eR7UM+Pigl2VA=
   </data>
  </layer>
+ <objectgroup name="floor" width="40" height="20">
+  <object name="floor_1" type="Object" x="32" y="32" width="224" height="224">
+   <properties>
+    <property name="1" value=""/>
+   </properties>
+  </object>
+  <object name="floor_2" type="Object" x="32" y="288" width="352" height="320">
+   <properties>
+    <property name="2" value=""/>
+   </properties>
+  </object>
+  <object name="floor_3" type="Object" x="416" y="160" width="224" height="224">
+   <properties>
+    <property name="3" value=""/>
+   </properties>
+  </object>
+  <object name="floor_4" type="Object" x="672" y="480" width="224" height="160">
+   <properties>
+    <property name="4" value=""/>
+   </properties>
+  </object>
+  <object name="floor_5" type="Object" x="800" y="32" width="224" height="256">
+   <properties>
+    <property name="5" value=""/>
+   </properties>
+  </object>
+  <object name="floor_6" type="Object" x="1056" y="416" width="224" height="224">
+   <properties>
+    <property name="6" value=""/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

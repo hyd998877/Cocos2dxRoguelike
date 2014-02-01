@@ -480,6 +480,7 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CEA155B5189D2C68004298DF /* util */,
 				CE9297C2188BCE7100568EE1 /* dao */,
 				CE9297BD188BCC5B00568EE1 /* data */,
 				CE93B411188156C700825FD1 /* account */,
@@ -797,6 +798,14 @@
 			);
 			name = world_map;
 			path = ../Classes/world_map;
+			sourceTree = "<group>";
+		};
+		CEA155B5189D2C68004298DF /* util */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = util;
+			path = ../Classes/util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

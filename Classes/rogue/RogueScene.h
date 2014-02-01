@@ -40,15 +40,19 @@ protected:
         kTiledMapObjectTag       = 15000,
         kTiledMapEnemyBaseTag    = 20000, // + seqNo
         kTiledMapFrontTag        = 30000,
+        FloorLayerTag            = 40000,
+        FloorMaskLayerTag        = 40001,
     };
     
     // 廃止というかzやめる
     enum TiledMapIndex {
-        zGridLineIndex             = 1000,
-        zTiledMapDropItemBaseIndex = 10000,
-        zTiledMapObjectIndex       = 15000,
-        zTiledMapEnemyBaseIndex    = 20000,
-        zTiledMapFrontIndex        = 30000,
+        zGridLineIndex = 1,
+        zTiledMapDropItemBaseIndex,
+        zTiledMapObjectIndex,
+        zTiledMapEnemyBaseIndex,
+        zTiledMapFrontIndex,
+        FloorLayerZOrder,
+        FloorMaskLayerZOrder,
     };
     
     // 廃止予定
@@ -75,6 +79,8 @@ protected:
     
     enum Tag {
         ActorPlayerTag            = 100000,
+        RogueLayerTag             = 110000,
+        RogueMaskLayerTag         = 110001,
         MiniMapLayerTag           = 150000,
         ItemListWindowTag         = 220000,
         CommonWindowTag           = 230000,
@@ -89,6 +95,8 @@ protected:
     
     enum ZOrder {
         TiledMapLayerZOrder = 1,
+        RogueZOrder,
+        RogueMaskZOrder,
         ActorBaseZOrder,
         ActorPlayerZOrder,
         ActionCursorZOrder,

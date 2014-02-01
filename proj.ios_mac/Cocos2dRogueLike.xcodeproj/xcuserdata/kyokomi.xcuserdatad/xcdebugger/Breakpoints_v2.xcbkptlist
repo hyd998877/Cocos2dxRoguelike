@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/rogue/RogueScene.cpp"
-            timestampString = "412730205.638251"
+            timestampString = "412957532.543724"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1252"
-            endingLineNumber = "1252"
+            startingLineNumber = "1318"
+            endingLineNumber = "1318"
             landmarkName = "RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapDataType, CallFunc* moveFinishedCallFunc)"
             landmarkType = "5">
          </BreakpointContent>
@@ -102,7 +102,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../cocos2d/cocos/2d/CCEventDispatcher.cpp"
@@ -111,7 +111,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "612"
             endingLineNumber = "612"
-            landmarkName = "EventDispatcher::dispatchTouchEvent(EventTouch* event)"
+            landmarkName = "EventDispatcher::dispatchEvent(Event* event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -127,14 +127,14 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "567"
             endingLineNumber = "567"
-            landmarkName = "EventDispatcher::dispatchEvent(Event* event)"
+            landmarkName = "EventDispatcher::dispatchEventToListeners(EventListenerVector* listeners, std::function&lt;bool(EventListener*)&gt; onEvent)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../cocos2d/cocos/2d/CCEventDispatcher.cpp"
@@ -143,14 +143,14 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "638"
             endingLineNumber = "638"
-            landmarkName = "EventDispatcher::dispatchTouchEvent(EventTouch* event)"
+            landmarkName = "EventDispatcher::dispatchCustomEvent(const std::string &amp;eventName, void *optionalUserData)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../cocos2d/cocos/2d/CCEventDispatcher.cpp"
@@ -160,6 +160,22 @@
             startingLineNumber = "644"
             endingLineNumber = "644"
             landmarkName = "EventDispatcher::dispatchTouchEvent(EventTouch* event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Classes/rogue/RogueScene.cpp"
+            timestampString = "412952840.300753"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "RogueScene::initWithQuestId(int questId)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

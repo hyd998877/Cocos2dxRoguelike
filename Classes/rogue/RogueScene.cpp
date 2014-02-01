@@ -126,7 +126,9 @@ bool RogueScene::initWithQuestId(int questId)
         m_questId = 1;
     }
 #endif
-    auto pTiledMap = TMXTiledMap::create(StringUtils::format("tmx/quest_%d.tmx", m_questId));
+//    auto pTiledMap = TMXTiledMap::create(StringUtils::format("tmx/quest_%d.tmx", m_questId));
+    auto pTiledMap = TMXTiledMap::create(StringUtils::format("tmx/quest_%d_2.tmx", 2));
+
     pTiledMap->setPosition(Point::ZERO);
     this->addChild(pTiledMap, RogueScene::TiledMapLayerZOrder, RogueScene::kTiledMapTag);
     
@@ -422,6 +424,71 @@ bool RogueScene::initWithQuestId(int questId)
     // ---------------------------------
     // プレイヤーの先行
     changeGameStatus(GameStatus::PLAYER_TURN);
+    
+    //----------------------------------
+    // プレイヤーの周り以外暗くする
+    auto mask = DrawNode::create();
+    mask->drawDot(actorSprite->getPosition(), m_baseTileSize.width * 3.0f / 2.0f, Color4F::WHITE);
+//    auto mask = LayerColor::create(Color4B(255,255,255,255));
+//    mask->setContentSize(m_baseTileSize * 3);
+//    mask->setPosition(Point(actorSprite->getPosition().x - mask->getContentSize().width / 2, actorSprite->getPosition().y - mask->getContentSize().height / 2));
+
+    
+    auto pRogueLayer = LayerColor::create(Color4B(0,0,0,128));
+    pRogueLayer->setContentSize(winSize);
+    pRogueLayer->setPosition(Point(winSize.width / 2 - pRogueLayer->getContentSize().width / 2, winSize.height / 2 - pRogueLayer->getContentSize().height / 2));
+
+    
+    this->addChild(pRogueLayer, RogueScene::RogueZOrder, RogueScene::RogueLayerTag);
+    this->addChild(mask, RogueScene::RogueMaskZOrder, RogueScene::RogueMaskLayerTag);
+    
+    BlendFunc blend;
+    blend.src = GL_DST_COLOR;
+    blend.dst = GL_ONE;
+    
+    mask->setBlendFunc(blend);
+    
+    
+//    for (auto& child : pTiledMap->getChildren())
+//    {
+//        TMXLayer* layer = dynamic_cast<TMXLayer*>(child);
+//        if(layer)
+//        {
+//            if(layer->getLayerName().compare("background") == 0 || layer->getLayerName().compare("colision") == 0)
+//            {
+//                continue;
+//            }
+//            auto pTile = layer->getTileAt(indexToPoint(actorSprite->getActorMapItem()->mapIndex));
+//            if (pTile)
+//            {
+//                // このフロアを明るくする
+//                layer->getProperty("x");
+//                layer->getProperty("y");
+//                layer->getProperty("width");
+//                layer->getProperty("height");
+//                break;
+//            }
+//        }
+//    }
+//    
+//    // フロアの明かり
+//    auto floorMask = LayerColor::create(Color4B(255,255,255,0));
+//    floorMask->setContentSize(m_baseTileSize * 3);
+//    Point floorMaskPoint = indexToPoint(actorSprite->getActorMapItem()->mapIndex);
+//    
+//    floorMask->setPosition(Point(floorMaskPoint.x - floorMask->getContentSize().width / 2, floorMaskPoint.y - floorMask->getContentSize().height / 2));
+//    
+//    auto pFloorRogueLayer = LayerColor::create(Color4B(0,0,0,128));
+//    pFloorRogueLayer->setContentSize(pTiledMap->getContentSize());
+//    pFloorRogueLayer->setPosition(Point(pTiledMap->getContentSize().width / 2 - pFloorRogueLayer->getContentSize().width / 2, pTiledMap->getContentSize().height / 2 - pFloorRogueLayer->getContentSize().height / 2));
+//    
+//    pTiledMap->addChild(pFloorRogueLayer, RogueScene::FloorLayerZOrder, RogueScene::FloorLayerTag);
+//    pTiledMap->addChild(floorMask, RogueScene::FloorMaskLayerZOrder, RogueScene::FloorMaskLayerTag);
+//    
+//    BlendFunc blendFloor;
+//    blendFloor.src = GL_DST_COLOR;
+//    blendFloor.dst = GL_ONE;
+//    floorMask->setBlendFunc(blendFloor);
     
     return true;
 }
