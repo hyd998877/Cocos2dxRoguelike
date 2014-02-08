@@ -14,13 +14,24 @@
   </data>
  </layer>
  <layer name="floor_6" width="40" height="20">
+  <properties>
+   <property name="height" value="7"/>
+   <property name="no" value="6"/>
+   <property name="width" value="7"/>
+   <property name="x" value="33"/>
+   <property name="y" value="13"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2AUjIJRMApGwSgYfCAADx4MYNR9lIFR91EGhrL7ALkzD1E=
   </data>
  </layer>
  <layer name="floor_5" width="40" height="20">
   <properties>
+   <property name="height" value="5"/>
    <property name="no" value="5"/>
+   <property name="width" value="7"/>
+   <property name="x" value="21"/>
+   <property name="y" value="15"/>
   </properties>
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2AUjIJRMApGwSgYBYMdBODBgwGMuo8yMJLcBwB1cArx
@@ -28,7 +39,11 @@
  </layer>
  <layer name="floor_4" width="40" height="20">
   <properties>
+   <property name="height" value="10"/>
    <property name="no" value="4"/>
+   <property name="width" value="11"/>
+   <property name="x" value="1"/>
+   <property name="y" value="9"/>
   </properties>
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2AUjIJRMFhBAAl41H2j7ht136j7Rt036r6hAACBeCJh
@@ -36,7 +51,11 @@
  </layer>
  <layer name="floor_3" width="40" height="20">
   <properties>
+   <property name="height" value="8"/>
    <property name="no" value="3"/>
+   <property name="width" value="7"/>
+   <property name="x" value="25"/>
+   <property name="y" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
    eJztzrEJAAAIBDFHdP9p3MDmQSwSuP6q6KUP/GX8Zfxlvv8BwLUB9e8RgQ==
@@ -44,7 +63,11 @@
  </layer>
  <layer name="floor_2" width="40" height="20">
   <properties>
+   <property name="height" value="7"/>
    <property name="no" value="2"/>
+   <property name="width" value="7"/>
+   <property name="x" value="13"/>
+   <property name="y" value="5"/>
   </properties>
   <data encoding="base64" compression="zlib">
    eJztzqENAAAIBDFGZP9p2ADzCESbnL8q4FIvfeAv4y/jD4ABFwEPUQ==
@@ -52,7 +75,11 @@
  </layer>
  <layer name="floor_1" width="40" height="20">
   <properties>
+   <property name="height" value="7"/>
    <property name="no" value="1"/>
+   <property name="width" value="7"/>
+   <property name="x" value="1"/>
+   <property name="y" value="1"/>
   </properties>
   <data encoding="base64" compression="zlib">
    eJxjYBj8IAAPHgxg1H2UgVH3UQZG3TcKRsEoGAWjYBSMgqEEAEBoD1E=
