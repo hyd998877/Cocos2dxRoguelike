@@ -37,7 +37,7 @@ protected:
     enum TiledMapTag {
         kGridLineTag             = 1000,
         kTiledMapDropItemBaseTag = 10000, // + seqNo
-        kTiledMapObjectTag       = 15000,
+        kTiledMapObjectTag       = 15000, // 階段専用
         kTiledMapEnemyBaseTag    = 20000, // + seqNo
         
         TiledMapFrontLayerTag          = 40000,

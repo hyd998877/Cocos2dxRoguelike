@@ -81,6 +81,9 @@ private:
     std::vector<std::vector<DropMapItem>> m_mapDropItemDataArray;
     // マップオブジェクトデータ（キャラ、障害物）
     std::vector<std::vector<ActorMapItem>> m_mapObjectDataArray;
+    // マッピングデータ
+    std::vector<std::vector<bool>> m_mappingArray;
+    
     // マップ移動カーソルリスト
     std::list<MapIndex> m_mapMoveCursorList;
     // マップ移動経路リスト
@@ -155,6 +158,9 @@ public:
     std::list<ActorMapItem> findEnemyMapItem();
     
     static std::list<MapIndex> createRelatedMapIndexList(MapIndex baseMapIndex);
+    
+    void addMapping(const MapIndex& mapIndex);
+    const std::vector<std::vector<bool>> getMappingData();
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__MapManager__) */

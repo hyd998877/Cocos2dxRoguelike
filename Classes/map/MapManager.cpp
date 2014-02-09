@@ -23,6 +23,17 @@ void MapManager::init(int top, int bottom, int left, int right)
     clearMapItemArray(&m_mapObjectDataArray);
     clearMapItemArray(&m_mapDropItemDataArray);
 
+    m_mappingArray.clear();
+    for (int x = 0; x < m_right; x++)
+    {
+        std::vector<bool> mapItemArray;
+        for (int y = 0; y < m_bottom; y++)
+        {
+            mapItemArray.push_back(false);
+        }
+        m_mappingArray.push_back(mapItemArray);
+    }
+    
     m_mapMovePointList.clear();
 }
 
@@ -309,6 +320,17 @@ void MapManager::removeMapItem(MapItem* pRemoveMapItem)
     DEBUG_LOG_MAP_ITEM_LAYER();
 #endif
 }
+
+void MapManager::addMapping(const MapIndex& mapIndex)
+{
+    m_mappingArray[mapIndex.x][mapIndex.y] = true;
+}
+
+const std::vector<std::vector<bool>> MapManager::getMappingData()
+{
+    return m_mappingArray;
+}
+
 
 /**
  * 指定座標のMapItemを取得します。

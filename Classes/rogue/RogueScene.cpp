@@ -227,8 +227,17 @@ bool RogueScene::initWithQuestId(int questId)
             else
             {
                 // ミニマップ更新
-                addMiniMapItem(m_mapManager.getMapItem(&tileMapIndex), -1);
+                int tag = 10000 * x + 100 * y;
+                addMiniMapItem(m_mapManager.getMapItem(&tileMapIndex), tag);
             }
+        }
+    }
+    auto pGridBatchNode = getGridSpriteBatchNode();
+    for (auto pNode : pGridBatchNode->getChildren())
+    {
+        if (pNode->getLocalZOrder() == RogueScene::MiniMapLayerMapNoneZOrder)
+        {
+            pNode->setVisible(false);
         }
     }
     
@@ -1839,7 +1848,7 @@ void RogueScene::tiledMapLighting()
             pActorSprite->getActorMapItem()->mapIndex.y - 1,
             MoveDirectionType::MOVE_NONE
         };
-        Point actorRectMinMapPoint = indexToPoint(actorRectMinMapIndex);
+        Point actorRectMinMapPoint = indexToPointNotTileSize(actorRectMinMapIndex);
         // プレイヤー周辺３＊３にする
         floorInfoIndexRect = Rect(actorRectMinMapPoint.x,
                                   actorRectMinMapPoint.y,
@@ -1853,6 +1862,29 @@ void RogueScene::tiledMapLighting()
         showFloorLighting(floorInfoIndexRect);
     }
     
+    MapIndex minMapIndex = pointToIndex(Point(floorInfoIndexRect.getMinX() + m_baseTileSize.width / 2, floorInfoIndexRect.getMinY() + m_baseTileSize.height / 2));
+    MapIndex maxMapIndex = pointToIndex(Point(floorInfoIndexRect.getMaxX() + m_baseTileSize.width / 2, floorInfoIndexRect.getMaxY()+ m_baseTileSize.height / 2));
+    
+    // マッピング更新
+    auto pBatchNode = getGridSpriteBatchNode();
+    auto mappingData = m_mapManager.getMappingData();
+    for (int x = minMapIndex.x; x < maxMapIndex.x; x++)
+    {
+        for (int y = minMapIndex.y; y < maxMapIndex.y; y++)
+        {
+            MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
+            auto tileMapIndex = mapIndexToTileIndex(mapIndex);
+            // TODO: タグが強引すぎる・・・
+            int tag = 10000 * tileMapIndex.x + 100 * tileMapIndex.y;
+            auto pNode = pBatchNode->getChildByTag(tag);
+            if (pNode)
+            {
+                m_mapManager.addMapping(tileMapIndex);
+                pNode->setVisible(true);
+            }
+        }
+    }
+    
     // マップ情報も更新
     tiledMapItemLighting(floorInfoIndexRect);
 }
@@ -1864,7 +1896,7 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect)
     // 今いる部屋以外見えなくする
     auto pTiledMapLayer = getChildByTag(RogueScene::kTiledMapTag);
     
-    // アイテムと階段
+    // アイテム
     auto pDropItemMapLayer = pTiledMapLayer->getChildByTag(RogueScene::kTiledMapDropItemBaseTag);
     if (pDropItemMapLayer)
     {
@@ -1883,6 +1915,23 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect)
             }
         }
     }
+    //階段
+    auto pKaidan = pTiledMapLayer->getChildByTag(RogueScene::kTiledMapObjectTag);
+    if (pKaidan)
+    {
+        bool isContains = floorInfoIndexRect.containsPoint(pKaidan->getPosition());
+        pKaidan->setVisible(isContains);
+        
+        if (pBatchNode)
+        {
+            auto pMiniKaidanNode = pBatchNode->getChildByTag(pKaidan->getTag());
+            if (pMiniKaidanNode)
+            {
+                pMiniKaidanNode->setVisible(isContains);
+            }
+        }
+    }
+    
     // 敵
     auto pEnemyMapLayer = pTiledMapLayer->getChildByTag(RogueScene::kTiledMapEnemyBaseTag);
     if (pEnemyMapLayer)
@@ -1923,11 +1972,13 @@ Rect RogueScene::getTileMapFloorInfo()
             auto pTile = layer->getTileAt(Point(tiledIndex.x, tiledIndex.y));
             if (pTile)
             {
-                Point floorMaskPoint = indexToPoint(mapIndexToTileIndex(layer->getProperty("x").asInt(), layer->getProperty("y").asInt()));
-                Size floorMaskSize = Size(layer->getProperty("width").asFloat() * m_baseTileSize.width, layer->getProperty("height").asFloat() * m_baseTileSize.width);
+                MapIndex tileMapIndex = mapIndexToTileIndex(layer->getProperty("x").asInt(), layer->getProperty("y").asInt());
+                // TODO: メタデータでyが上から設定されているので逆転している あとindexなので1足してる
+                tileMapIndex.y = tileMapIndex.y - layer->getProperty("height").asInt() + 1;
+                Point floorMaskPoint = indexToPoint(tileMapIndex);
+                Size floorMaskSize = Size(layer->getProperty("width").asInt() * m_baseTileSize.width, layer->getProperty("height").asInt() * m_baseTileSize.height);
                 CCLOG("x[%f] y[%f] w[%f] h[%f]", floorMaskPoint.x, floorMaskPoint.y, floorMaskSize.width, floorMaskSize.height);
-                
-                return Rect(floorMaskPoint.x, floorMaskPoint.y - floorMaskSize.height, floorMaskSize.width, floorMaskSize.height);
+                return Rect(floorMaskPoint.x - m_baseTileSize.width / 2, floorMaskPoint.y - m_baseTileSize.height / 2, floorMaskSize.width, floorMaskSize.height);
             }
         }
     }
@@ -2007,7 +2058,7 @@ void RogueScene::showFloorLighting(const Rect floorInfoIndexRect)
         }
         
         pFloorMask->setContentSize(floorInfoIndexRect.size);
-        pFloorMask->setPosition(Point(floorInfoIndexRect.getMinX() - m_baseTileSize.width / 2, floorInfoIndexRect.getMinY() + m_baseTileSize.height / 2));
+        pFloorMask->setPosition(Point(floorInfoIndexRect.getMinX(), floorInfoIndexRect.getMinY()));
         
         BlendFunc blendFloor;
         blendFloor.src = GL_DST_COLOR;
