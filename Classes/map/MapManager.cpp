@@ -486,6 +486,7 @@ std::list<MapIndex> MapManager::createRelatedMapIndexList(MapIndex baseMapIndex)
 
 void MapManager::DEBUG_LOG_MAP_ITEM_LAYER()
 {
+#if 0
     std::string buffer;
 	for (int y = m_bottom - 1; y >= 0; y--)
     {
@@ -512,6 +513,7 @@ void MapManager::DEBUG_LOG_MAP_ITEM_LAYER()
 		}
         printf("%s\n", buffer.c_str());
 	}
+#endif
 }
 
 std::string MapManager::logOutString(MapItem mapItem)

@@ -39,9 +39,10 @@ protected:
         kTiledMapDropItemBaseTag = 10000, // + seqNo
         kTiledMapObjectTag       = 15000,
         kTiledMapEnemyBaseTag    = 20000, // + seqNo
-        kTiledMapFrontTag        = 30000,
-        FloorLayerTag            = 40000,
-        FloorMaskLayerTag        = 40001,
+        
+        TiledMapFrontLayerTag          = 40000,
+        FloorLayerTag                  = 40001,
+        FloorMaskLayerTag              = 40002,
     };
     
     // 廃止というかzやめる
@@ -50,9 +51,9 @@ protected:
         zTiledMapDropItemBaseIndex,
         zTiledMapObjectIndex,
         zTiledMapEnemyBaseIndex,
-        zTiledMapFrontIndex,
+        TiledMapFrontZOrder,
         FloorLayerZOrder,
-        FloorMaskLayerZOrder,
+        FloorMaskLayerZOrder
     };
     
     // 廃止予定
@@ -80,7 +81,7 @@ protected:
     enum Tag {
         ActorPlayerTag            = 100000,
         RogueLayerTag             = 110000,
-        RogueMaskLayerTag         = 110001,
+//        RogueMaskLayerTag         = 110001,
         MiniMapLayerTag           = 150000,
         ItemListWindowTag         = 220000,
         CommonWindowTag           = 230000,
@@ -183,6 +184,7 @@ private:
     MapIndex pointToIndex(cocos2d::Point point);
     MapIndex touchPointToIndex(cocos2d::Point point);
     // MapIndexからtileIndexに変換
+    MapIndex mapIndexToTileIndex(int mapIndex_x, int mapIndex_y);
     MapIndex mapIndexToTileIndex(MapIndex mapIndex);
     
     ActorSprite* getPlayerActorSprite(int seqNo);
@@ -192,6 +194,14 @@ private:
     
     // ミニマップ関連
     void addMiniMapItem(MapItem* pMapItem, int baseSpriteTag);
+    
+    // 照明
+    void tiledMapLighting();
+    Rect getTileMapFloorInfo();
+    void showPlayerLighting();
+    void hidePlayerLighting();
+    void showFloorLighting(const Rect floorInfoIndexRect);
+    void hideFloorLighting();
     
     SpriteBatchNode* getGridSpriteBatchNode();
     
