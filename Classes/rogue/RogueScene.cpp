@@ -45,7 +45,6 @@ m_baseContentSize(Size::ZERO)
 , m_listener(nullptr)
 {
     CCLOG("new rogueScene");
-    //this->getEventDispatcher()->removeAllEventListeners();
 }
 
 RogueScene::~RogueScene()
@@ -437,63 +436,9 @@ bool RogueScene::initWithQuestId(int questId)
     changeGameStatus(GameStatus::PLAYER_TURN);
     
     //----------------------------------
-    // プレイヤーの周り以外暗くする
-//    auto mask = DrawNode::create();
-//    mask->drawDot(actorSprite->getPosition(), m_baseTileSize.width * 3.0f / 2.0f, Color4F::WHITE);
-//    this->addChild(mask, RogueScene::RogueMaskZOrder, RogueScene::RogueMaskLayerTag);
-//    
-//    BlendFunc blend;
-//    blend.src = GL_DST_COLOR;
-//    blend.dst = GL_ONE;
-//    
-//    mask->setBlendFunc(blend);
-
     // 照明
     tiledMapLighting();
     
-//    for (auto& child : pTiledMap->getChildren())
-//    {
-//        TMXLayer* layer = dynamic_cast<TMXLayer*>(child);
-//        if(layer)
-//        {
-//            if(layer->getLayerName().compare("background") == 0 || layer->getLayerName().compare("colision") == 0)
-//            {
-//                continue;
-//            }
-//            
-//            MapIndex tiledIndex = mapIndexToTileIndex(actorSprite->getActorMapItem()->mapIndex);
-//            auto pTile = layer->getTileAt(Point(tiledIndex.x, tiledIndex.y));
-//            if (pTile)
-//            {
-//                // このフロアを明るくする
-//                MapIndex floorMapIndex = {
-//                    layer->getProperty("x").asInt(),
-//                    layer->getProperty("y").asInt(),
-//                    MoveDirectionType::MOVE_NONE
-//                };
-//                Size floorIndexSize = Size(layer->getProperty("width").asFloat(), layer->getProperty("height").asFloat());
-//                
-//                CCLOG("x[%d] y[%d] w[%f] h[%f]", floorMapIndex.x, floorMapIndex.y, floorIndexSize.width, floorIndexSize.height);
-//                
-//                // フロアの明かり
-////                showFloorLighting(floorMapIndex, floorIndexSize);
-//                
-////                auto floorMask = LayerColor::create(Color4B(255,255,255,0));
-////                floorMask->setContentSize(Size(m_baseTileSize.width * floor_width, m_baseTileSize.height * floor_height));
-////                Point floorMaskPoint = indexToPoint(mapIndexToTileIndex(floorMapIndex));
-////
-////                floorMask->setPosition(Point(floorMaskPoint.x - m_baseTileSize.width / 2, floorMaskPoint.y - floorMask->getContentSize().height + m_baseTileSize.height / 2));
-////
-////                pFrontLayer->addChild(floorMask, RogueScene::FloorMaskLayerZOrder, RogueScene::FloorMaskLayerTag);
-////                
-////                BlendFunc blendFloor;
-////                blendFloor.src = GL_DST_COLOR;
-////                blendFloor.dst = GL_ONE;
-////                floorMask->setBlendFunc(blendFloor);
-//                break;
-//            }
-//        }
-//    }
     return true;
 }
 
@@ -685,43 +630,6 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
         && m_gameStatus == GameStatus::ENEMY_TURN)
     {
-        // 敵のリポップ
-        
-        // ランダムなタイミングでランダムに湧く
-        int rand = GetRandom(1, 10); // 1%
-        if (rand == 1)
-        {
-            MapIndex rePopIndex = getRandomMapIndex(false, true);
-            
-            // TODO: 敵データは仮
-            ActorSprite::ActorDto enemyDto;
-            enemyDto.name = "スライム";
-            enemyDto.faceImgId = 0;
-            enemyDto.imageResId = 1011;
-            // 基本
-            enemyDto.attackRange = 1; // 未使用
-            enemyDto.movePoint = 10; // 索敵範囲
-            enemyDto.playerId = 901;
-            // 攻守
-            enemyDto.attackPoint = 2;
-            enemyDto.defencePoint = 0;
-            // 経験値
-            enemyDto.exp = 2;
-            enemyDto.nextExp = 10;
-            // HP
-            enemyDto.hitPoint = 10;
-            enemyDto.hitPointLimit = 10;
-            enemyDto.lv = 1;
-            // 満腹度？精神力？
-            enemyDto.magicPoint = 100;
-            enemyDto.magicPointLimit = 100;
-            // 装備
-            enemyDto.equip = ActorSprite::createEquipDto();
-            
-            rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
-            tileSetEnemyActorMapItem(enemyDto, rePopIndex);
-        }
-        
         // 敵のターン開始時
         enemyTurn();
     }
@@ -763,8 +671,49 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
                 pPlayerDto->hitPoint++;
             }
         }
-        refreshStatus();
+        
+        // 敵のリポップ
+        
+        // ランダムなタイミングでランダムに湧く
+        int rand = GetRandom(1, 10); // 1%
+        if (rand == 1)
+        {
+            MapIndex rePopIndex = getRandomMapIndex(false, true);
+            
+            // TODO: 敵データは仮
+            ActorSprite::ActorDto enemyDto;
+            enemyDto.name = "スライム";
+            enemyDto.faceImgId = 0;
+            enemyDto.imageResId = 1011;
+            // 基本
+            enemyDto.attackRange = 1; // 未使用
+            enemyDto.movePoint = 10; // 索敵範囲
+            enemyDto.playerId = 901;
+            // 攻守
+            enemyDto.attackPoint = 2;
+            enemyDto.defencePoint = 0;
+            // 経験値
+            enemyDto.exp = 2;
+            enemyDto.nextExp = 10;
+            // HP
+            enemyDto.hitPoint = 10;
+            enemyDto.hitPointLimit = 10;
+            enemyDto.lv = 1;
+            // 満腹度？精神力？
+            enemyDto.magicPoint = 100;
+            enemyDto.magicPointLimit = 100;
+            // 装備
+            enemyDto.equip = ActorSprite::createEquipDto();
+            
+            rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
+            tileSetEnemyActorMapItem(enemyDto, rePopIndex);
+        }
     }
+    
+    // プレイステータス更新
+    refreshStatus();
+    // 照明情報更新
+    tiledMapLighting();
 }
 
 void RogueScene::changeScene(Scene* scene)
@@ -1146,8 +1095,6 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
             // 移動処理
             moveMap(addMoveIndex, pActorSprite->getActorMapItem()->seqNo, pActorSprite->getActorMapItem()->mapDataType, CallFunc::create([this](void) {
                 
-                // 照明
-                tiledMapLighting();
                 // ターンエンド
                 changeGameStatus(GameStatus::ENEMY_TURN);
             }));
@@ -1881,13 +1828,79 @@ void RogueScene::tiledMapLighting()
     Rect floorInfoIndexRect = getTileMapFloorInfo();
     if (floorInfoIndexRect.equals(Rect::ZERO))
     {
+        // 視野をプレイヤー周辺に更新
         hideFloorLighting();
         showPlayerLighting();
+        
+        // プレイヤー周辺以外見えなくする（8方向）
+        auto pActorSprite = getPlayerActorSprite(1);
+        MapIndex actorRectMinMapIndex = {
+            pActorSprite->getActorMapItem()->mapIndex.x - 1,
+            pActorSprite->getActorMapItem()->mapIndex.y - 1,
+            MoveDirectionType::MOVE_NONE
+        };
+        Point actorRectMinMapPoint = indexToPoint(actorRectMinMapIndex);
+        // プレイヤー周辺３＊３にする
+        floorInfoIndexRect = Rect(actorRectMinMapPoint.x,
+                                  actorRectMinMapPoint.y,
+                                  m_baseTileSize.width * 3,
+                                  m_baseTileSize.width * 3);
     }
     else
     {
+        // 視野を部屋に更新
         hidePlayerLighting();
         showFloorLighting(floorInfoIndexRect);
+    }
+    
+    // マップ情報も更新
+    tiledMapItemLighting(floorInfoIndexRect);
+}
+
+void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect)
+{
+    auto pBatchNode = getGridSpriteBatchNode();
+    
+    // 今いる部屋以外見えなくする
+    auto pTiledMapLayer = getChildByTag(RogueScene::kTiledMapTag);
+    
+    // アイテムと階段
+    auto pDropItemMapLayer = pTiledMapLayer->getChildByTag(RogueScene::kTiledMapDropItemBaseTag);
+    if (pDropItemMapLayer)
+    {
+        for (auto pDropItemNode : pDropItemMapLayer->getChildren())
+        {
+            bool isContains = floorInfoIndexRect.containsPoint(pDropItemNode->getPosition());
+            pDropItemNode->setVisible(isContains);
+            
+            if (pBatchNode)
+            {
+                auto pMiniDropItemNode = pBatchNode->getChildByTag(pDropItemNode->getTag());
+                if (pMiniDropItemNode)
+                {
+                    pMiniDropItemNode->setVisible(isContains);
+                }
+            }
+        }
+    }
+    // 敵
+    auto pEnemyMapLayer = pTiledMapLayer->getChildByTag(RogueScene::kTiledMapEnemyBaseTag);
+    if (pEnemyMapLayer)
+    {
+        for (auto pEnemyNode : pEnemyMapLayer->getChildren())
+        {
+            bool isContains = floorInfoIndexRect.containsPoint(pEnemyNode->getPosition());
+            pEnemyNode->setVisible(isContains);
+            
+            if (pBatchNode)
+            {
+                auto pMiniEnemyNode = pBatchNode->getChildByTag(pEnemyNode->getTag());
+                if (pMiniEnemyNode)
+                {
+                    pMiniEnemyNode->setVisible(isContains);
+                }
+            }
+        }
     }
 }
 
@@ -1914,7 +1927,7 @@ Rect RogueScene::getTileMapFloorInfo()
                 Size floorMaskSize = Size(layer->getProperty("width").asFloat() * m_baseTileSize.width, layer->getProperty("height").asFloat() * m_baseTileSize.width);
                 CCLOG("x[%f] y[%f] w[%f] h[%f]", floorMaskPoint.x, floorMaskPoint.y, floorMaskSize.width, floorMaskSize.height);
                 
-                return Rect(floorMaskPoint.x, floorMaskPoint.y, floorMaskSize.width, floorMaskSize.height);
+                return Rect(floorMaskPoint.x, floorMaskPoint.y - floorMaskSize.height, floorMaskSize.width, floorMaskSize.height);
             }
         }
     }
@@ -1994,7 +2007,7 @@ void RogueScene::showFloorLighting(const Rect floorInfoIndexRect)
         }
         
         pFloorMask->setContentSize(floorInfoIndexRect.size);
-        pFloorMask->setPosition(Point(floorInfoIndexRect.getMinX() - m_baseTileSize.width / 2, floorInfoIndexRect.getMinY() + m_baseTileSize.height / 2 - floorInfoIndexRect.size.height));
+        pFloorMask->setPosition(Point(floorInfoIndexRect.getMinX() - m_baseTileSize.width / 2, floorInfoIndexRect.getMinY() + m_baseTileSize.height / 2));
         
         BlendFunc blendFloor;
         blendFloor.src = GL_DST_COLOR;

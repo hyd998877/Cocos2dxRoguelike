@@ -448,6 +448,9 @@ std::list<ActorMapItem> MapManager::findEnemyMapItem()
 #pragma mark
 #pragma mark staticメソッド
 
+/**
+ * 指定したMapIndexの周辺MapIndexのListを作成して返却します。
+ */
 std::list<MapIndex> MapManager::createRelatedMapIndexList(MapIndex baseMapIndex)
 {
     std::list<MapIndex> relatedMapIndexList;

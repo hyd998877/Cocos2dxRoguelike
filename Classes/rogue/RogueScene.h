@@ -202,6 +202,7 @@ private:
     void hidePlayerLighting();
     void showFloorLighting(const Rect floorInfoIndexRect);
     void hideFloorLighting();
+    void tiledMapItemLighting(const Rect& floorInfoIndexRect);
     
     SpriteBatchNode* getGridSpriteBatchNode();
     
