@@ -288,7 +288,8 @@ bool RogueScene::initWithQuestId(int questId)
     ActorMapItem actorMapItem;
     actorMapItem.mapDataType = MapDataType::PLAYER;
     // 画面の中心（固定）
-    actorMapItem.mapIndex = pointToIndex(Point(winSize.width/2, winSize.height/2));
+    MapIndex playerRandMapIndex = getRandomMapIndex(false, true);
+    actorMapItem.mapIndex = playerRandMapIndex;
     actorMapItem.seqNo = 1;
     actorMapItem.moveDist = actorDto.movePoint;
     actorMapItem.attackDist = actorDto.attackRange;
@@ -296,28 +297,31 @@ bool RogueScene::initWithQuestId(int questId)
     actorMapItem.attackDone = false;
     
     auto actorSprite = ActorSprite::createWithActorDto(actorDto);
-    actorSprite->setPosition(indexToPoint(actorMapItem.mapIndex));
+    MapIndex baseActorIndex = pointToIndex(Point(winSize.width/2, winSize.height/2));
+    actorSprite->setPosition(indexToPoint(baseActorIndex));
     actorSprite->setActorMapItem(actorMapItem);
     actorSprite->runBottomAction();
     // プレイヤーは画面中心にくるのでmapLayerに追加しない
     this->addChild(actorSprite, RogueScene::ActorPlayerZOrder, (RogueScene::ActorPlayerTag + actorMapItem.seqNo));
-    
+
     // マップに追加
     m_mapManager.addActor(actorSprite->getActorMapItem());
-    
+
     refreshStatus();
     
     // プレイヤーの位置表示用（同じく1/8サイズ）
     addMiniMapItem(actorSprite->getActorMapItem(), actorSprite->getTag());
     
-    // プレイヤー位置の移動
-    MapIndex playerRandMapIndex = getRandomMapIndex(false, true);
+    // プレイヤー位置にマップを移動
     MapIndex moveIndex = {
-        playerRandMapIndex.x - actorMapItem.mapIndex.x,
-        playerRandMapIndex.y - actorMapItem.mapIndex.y,
+        playerRandMapIndex.x - baseActorIndex.x,
+        playerRandMapIndex.y - baseActorIndex.y,
         actorMapItem.mapIndex.moveDictType
     };
-    moveMap(moveIndex, actorMapItem.seqNo, MapDataType::PLAYER, NULL);
+    // 移動する距離をPointに変換
+    auto addMovePoint = Point(m_baseTileSize.width * moveIndex.x, m_baseTileSize.height * moveIndex.y);
+    // 移動
+    pTiledMap->runAction(MoveTo::create(0.0f, pTiledMap->getPosition() - addMovePoint));
     
     // ---------------------
     // 敵キャラ生成
@@ -1834,62 +1838,39 @@ void RogueScene::refreshStatus()
 #pragma mark 照明
 void RogueScene::tiledMapLighting()
 {
+    // プレイヤー周辺３＊３はかならず更新
+    Rect floorInfoPlayerIndexRect = createPlayerRect(1);
+    refreshAutoMapping(floorInfoPlayerIndexRect);
+    // プレイヤー視野でマップをリフレッシュする
+    tiledMapItemLighting(floorInfoPlayerIndexRect, true);
+    
     Rect floorInfoIndexRect = getTileMapFloorInfo();
     if (floorInfoIndexRect.equals(Rect::ZERO))
     {
         // 視野をプレイヤー周辺に更新
         hideFloorLighting();
         showPlayerLighting();
-        
-        // プレイヤー周辺以外見えなくする（8方向）
-        auto pActorSprite = getPlayerActorSprite(1);
-        MapIndex actorRectMinMapIndex = {
-            pActorSprite->getActorMapItem()->mapIndex.x - 1,
-            pActorSprite->getActorMapItem()->mapIndex.y - 1,
-            MoveDirectionType::MOVE_NONE
-        };
-        Point actorRectMinMapPoint = indexToPointNotTileSize(actorRectMinMapIndex);
-        // プレイヤー周辺３＊３にする
-        floorInfoIndexRect = Rect(actorRectMinMapPoint.x,
-                                  actorRectMinMapPoint.y,
-                                  m_baseTileSize.width * 3,
-                                  m_baseTileSize.width * 3);
     }
     else
     {
         // 視野を部屋に更新
         hidePlayerLighting();
         showFloorLighting(floorInfoIndexRect);
+        // マッピング更新
+        refreshAutoMapping(floorInfoIndexRect);
+        
+        // マップ情報も更新
+        tiledMapItemLighting(floorInfoIndexRect, false);
     }
-    
-    MapIndex minMapIndex = pointToIndex(Point(floorInfoIndexRect.getMinX() + m_baseTileSize.width / 2, floorInfoIndexRect.getMinY() + m_baseTileSize.height / 2));
-    MapIndex maxMapIndex = pointToIndex(Point(floorInfoIndexRect.getMaxX() + m_baseTileSize.width / 2, floorInfoIndexRect.getMaxY()+ m_baseTileSize.height / 2));
-    
-    // マッピング更新
-    auto pBatchNode = getGridSpriteBatchNode();
-    auto mappingData = m_mapManager.getMappingData();
-    for (int x = minMapIndex.x; x < maxMapIndex.x; x++)
-    {
-        for (int y = minMapIndex.y; y < maxMapIndex.y; y++)
-        {
-            MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
-            auto tileMapIndex = mapIndexToTileIndex(mapIndex);
-            // TODO: タグが強引すぎる・・・
-            int tag = 10000 * tileMapIndex.x + 100 * tileMapIndex.y;
-            auto pNode = pBatchNode->getChildByTag(tag);
-            if (pNode)
-            {
-                m_mapManager.addMapping(tileMapIndex);
-                pNode->setVisible(true);
-            }
-        }
-    }
-    
-    // マップ情報も更新
-    tiledMapItemLighting(floorInfoIndexRect);
 }
 
-void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect)
+/**
+ * タイルマップ上のマップアイテムを視野確認を更新。（ミニマップも）
+ *
+ * @param floorInfoIndexRect 表示する領域
+ * @param isRefresh true : 表示をリフレッシュ / false : 表示中を非表示にはしない
+ */
+void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRefresh)
 {
     auto pBatchNode = getGridSpriteBatchNode();
     
@@ -1903,14 +1884,17 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect)
         for (auto pDropItemNode : pDropItemMapLayer->getChildren())
         {
             bool isContains = floorInfoIndexRect.containsPoint(pDropItemNode->getPosition());
-            pDropItemNode->setVisible(isContains);
-            
-            if (pBatchNode)
+            if (isRefresh || isContains)
             {
-                auto pMiniDropItemNode = pBatchNode->getChildByTag(pDropItemNode->getTag());
-                if (pMiniDropItemNode)
+                pDropItemNode->setVisible(isContains);
+                
+                if (pBatchNode)
                 {
-                    pMiniDropItemNode->setVisible(isContains);
+                    auto pMiniDropItemNode = pBatchNode->getChildByTag(pDropItemNode->getTag());
+                    if (pMiniDropItemNode)
+                    {
+                        pMiniDropItemNode->setVisible(isContains);
+                    }
                 }
             }
         }
@@ -1920,14 +1904,17 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect)
     if (pKaidan)
     {
         bool isContains = floorInfoIndexRect.containsPoint(pKaidan->getPosition());
-        pKaidan->setVisible(isContains);
-        
-        if (pBatchNode)
+        if (isRefresh || isContains)
         {
-            auto pMiniKaidanNode = pBatchNode->getChildByTag(pKaidan->getTag());
-            if (pMiniKaidanNode)
+            pKaidan->setVisible(isContains);
+            
+            if (pBatchNode)
             {
-                pMiniKaidanNode->setVisible(isContains);
+                auto pMiniKaidanNode = pBatchNode->getChildByTag(pKaidan->getTag());
+                if (pMiniKaidanNode)
+                {
+                    pMiniKaidanNode->setVisible(isContains);
+                }
             }
         }
     }
@@ -1939,14 +1926,17 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect)
         for (auto pEnemyNode : pEnemyMapLayer->getChildren())
         {
             bool isContains = floorInfoIndexRect.containsPoint(pEnemyNode->getPosition());
-            pEnemyNode->setVisible(isContains);
-            
-            if (pBatchNode)
+            if (isRefresh || isContains)
             {
-                auto pMiniEnemyNode = pBatchNode->getChildByTag(pEnemyNode->getTag());
-                if (pMiniEnemyNode)
+                pEnemyNode->setVisible(isContains);
+                
+                if (pBatchNode)
                 {
-                    pMiniEnemyNode->setVisible(isContains);
+                    auto pMiniEnemyNode = pBatchNode->getChildByTag(pEnemyNode->getTag());
+                    if (pMiniEnemyNode)
+                    {
+                        pMiniEnemyNode->setVisible(isContains);
+                    }
                 }
             }
         }
@@ -2049,21 +2039,67 @@ void RogueScene::showFloorLighting(const Rect floorInfoIndexRect)
             pFrontLayer->addChild(pFloorLayer, RogueScene::FloorLayerZOrder, RogueScene::FloorLayerTag);
         }
 
+        // 部屋の明かり
         auto pFloorMask = dynamic_cast<LayerColor*>(pFrontLayer->getChildByTag(RogueScene::FloorMaskLayerTag));
         if (!pFloorMask)
         {
-            // フロアの明かり
             pFloorMask = LayerColor::create(Color4B(255,255,255,0));
             pFrontLayer->addChild(pFloorMask, RogueScene::FloorMaskLayerZOrder, RogueScene::FloorMaskLayerTag);
         }
-        
         pFloorMask->setContentSize(floorInfoIndexRect.size);
         pFloorMask->setPosition(Point(floorInfoIndexRect.getMinX(), floorInfoIndexRect.getMinY()));
         
         BlendFunc blendFloor;
         blendFloor.src = GL_DST_COLOR;
         blendFloor.dst = GL_ONE;
+        
         pFloorMask->setBlendFunc(blendFloor);
+
+        // プレイヤー周辺の明かり
+        auto pPlayerMask = dynamic_cast<LayerColor*>(pFloorMask->getChildByTag(RogueScene::FloorMaskPlayerLayerTag));
+        if (!pPlayerMask)
+        {
+            pPlayerMask = LayerColor::create(Color4B(255,255,255,0));
+            pFloorMask->addChild(pPlayerMask, RogueScene::FloorMaskLayerZOrder, RogueScene::FloorMaskPlayerLayerTag);
+        }
+        // プレイヤー前方のみ
+        Rect playerRect = createPlayerRect(1); // プレイヤー周辺3*3
+        if (playerRect.getMinX() < floorInfoIndexRect.getMinX())
+        {
+            // 左
+            pPlayerMask->setContentSize(Size(playerRect.size.width / 3, playerRect.size.height));
+            pPlayerMask->setPosition(Point(playerRect.getMinX(), playerRect.getMinY()) - pFloorMask->getPosition());
+            pPlayerMask->setBlendFunc(blendFloor);
+            pPlayerMask->setVisible(true);
+        }
+        else if (playerRect.getMinY() < floorInfoIndexRect.getMinY())
+        {
+            // 下
+            pPlayerMask->setContentSize(Size(playerRect.size.width, playerRect.size.height / 3));
+            pPlayerMask->setPosition(Point(playerRect.getMinX(), playerRect.getMinY()) - pFloorMask->getPosition());
+            pPlayerMask->setBlendFunc(blendFloor);
+            pPlayerMask->setVisible(true);
+        }
+        else if (playerRect.getMaxX() > floorInfoIndexRect.getMaxX())
+        {
+            // 右
+            pPlayerMask->setContentSize(Size(playerRect.size.width / 3, playerRect.size.height));
+            pPlayerMask->setPosition(Point(playerRect.getMaxX() - pPlayerMask->getContentSize().width, playerRect.getMinY()) - pFloorMask->getPosition());
+            pPlayerMask->setBlendFunc(blendFloor);
+            pPlayerMask->setVisible(true);
+        }
+        else if (playerRect.getMaxY() > floorInfoIndexRect.getMaxY())
+        {
+            // 上
+            pPlayerMask->setContentSize(Size(playerRect.size.width, playerRect.size.height / 3));
+            pPlayerMask->setPosition(Point(playerRect.getMinX(), playerRect.getMaxY() - pPlayerMask->getContentSize().height) - pFloorMask->getPosition());
+            pPlayerMask->setBlendFunc(blendFloor);
+            pPlayerMask->setVisible(true);
+        }
+        else
+        {
+            pPlayerMask->setVisible(false);
+        }
     }
 }
 
@@ -2074,6 +2110,46 @@ void RogueScene::hideFloorLighting()
     if (pFrontLayer)
     {
         pFrontLayer->setVisible(false);
+    }
+}
+
+Rect RogueScene::createPlayerRect(int rectSize)
+{
+    auto pActorSprite = getPlayerActorSprite(1);
+    MapIndex actorRectMinMapIndex = {
+        pActorSprite->getActorMapItem()->mapIndex.x - rectSize,
+        pActorSprite->getActorMapItem()->mapIndex.y - rectSize,
+        MoveDirectionType::MOVE_NONE
+    };
+    Point actorRectMinMapPoint = indexToPointNotTileSize(actorRectMinMapIndex);
+    // プレイヤー周辺のrectを作成
+    return Rect(actorRectMinMapPoint.x, actorRectMinMapPoint.y,
+                m_baseTileSize.width * (rectSize * 2 + 1),
+                m_baseTileSize.width * (rectSize * 2 + 1));
+}
+
+void RogueScene::refreshAutoMapping(const Rect& floorInfoIndexRect)
+{
+    MapIndex minMapIndex = pointToIndex(Point(floorInfoIndexRect.getMinX() + m_baseTileSize.width / 2, floorInfoIndexRect.getMinY() + m_baseTileSize.height / 2));
+    MapIndex maxMapIndex = pointToIndex(Point(floorInfoIndexRect.getMaxX() + m_baseTileSize.width / 2, floorInfoIndexRect.getMaxY()+ m_baseTileSize.height / 2));
+    
+    auto pBatchNode = getGridSpriteBatchNode();
+    auto mappingData = m_mapManager.getMappingData();
+    for (int x = minMapIndex.x; x < maxMapIndex.x; x++)
+    {
+        for (int y = minMapIndex.y; y < maxMapIndex.y; y++)
+        {
+            MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
+            auto tileMapIndex = mapIndexToTileIndex(mapIndex);
+            // TODO: タグが強引すぎる・・・
+            int tag = 10000 * tileMapIndex.x + 100 * tileMapIndex.y;
+            auto pNode = pBatchNode->getChildByTag(tag);
+            if (pNode)
+            {
+                m_mapManager.addMapping(tileMapIndex);
+                pNode->setVisible(true);
+            }
+        }
     }
 }
 

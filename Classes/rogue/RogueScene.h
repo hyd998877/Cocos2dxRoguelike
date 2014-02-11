@@ -43,6 +43,7 @@ protected:
         TiledMapFrontLayerTag          = 40000,
         FloorLayerTag                  = 40001,
         FloorMaskLayerTag              = 40002,
+        FloorMaskPlayerLayerTag        = 40003,
     };
     
     // 廃止というかzやめる
@@ -53,7 +54,8 @@ protected:
         zTiledMapEnemyBaseIndex,
         TiledMapFrontZOrder,
         FloorLayerZOrder,
-        FloorMaskLayerZOrder
+        FloorMaskLayerZOrder,
+//        FloorMaskPlayerLayerZOrder
     };
     
     // 廃止予定
@@ -202,9 +204,12 @@ private:
     void hidePlayerLighting();
     void showFloorLighting(const Rect floorInfoIndexRect);
     void hideFloorLighting();
-    void tiledMapItemLighting(const Rect& floorInfoIndexRect);
+    void tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRefresh);
+    Rect createPlayerRect(int rectSize);
+    void refreshAutoMapping(const Rect& floorInfoIndexRect);
     
     SpriteBatchNode* getGridSpriteBatchNode();
+    
     
 public:
     RogueScene();

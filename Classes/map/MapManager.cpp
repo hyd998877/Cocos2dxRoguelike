@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 
-#define DEBUG_LOG_MAP_ITEM_LAYER_FLG 1
+#define DEBUG_LOG_MAP_ITEM_LAYER_FLG 0
 
 void MapManager::init(int top, int bottom, int left, int right)
 {
@@ -195,7 +195,10 @@ bool MapManager::chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataTyp
 {
     MapIndex mapIndex = {mapPointX, mapPointY, MoveDirectionType::MOVE_NONE};
     MapItem* mapItem = getMapItem(&mapIndex);
-    if (mapItem && mapItem->moveDist == dist && mapItem->mapDataType != ignoreMapDataType)
+    if (mapItem->mapDataType == MapDataType::OBSTACLE) {
+        return false;
+    }
+    if (mapItem->moveDist == dist && mapItem->mapDataType != ignoreMapDataType)
     {
         return true;
     }
@@ -241,9 +244,7 @@ void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
 void MapManager::addActor(ActorMapItem* actorMapItem)
 {
     m_mapObjectDataArray[actorMapItem->mapIndex.x][actorMapItem->mapIndex.y] = *actorMapItem;
-#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     DEBUG_LOG_MAP_ITEM_LAYER();
-#endif
 }
 
 /**
@@ -260,9 +261,7 @@ void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex moveMapIndex)
     mapItem.mapIndex = beforeMapIndex;
     mapItem.moveDist = 0;
     m_mapObjectDataArray[beforeMapIndex.x][beforeMapIndex.y] = mapItem;
-#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     DEBUG_LOG_MAP_ITEM_LAYER();
-#endif
 }
 
 /**
@@ -271,9 +270,7 @@ void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex moveMapIndex)
 void MapManager::addDropItem(DropMapItem* pDropMapItem)
 {
     m_mapDropItemDataArray[pDropMapItem->mapIndex.x][pDropMapItem->mapIndex.y] = *pDropMapItem;
-#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     DEBUG_LOG_MAP_ITEM_LAYER();
-#endif
 }
 
 /**
@@ -316,9 +313,7 @@ void MapManager::removeMapItem(MapItem* pRemoveMapItem)
         noneMapItem.itemId = 0;
         m_mapDropItemDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
     }
-#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     DEBUG_LOG_MAP_ITEM_LAYER();
-#endif
 }
 
 void MapManager::addMapping(const MapIndex& mapIndex)
@@ -511,7 +506,7 @@ std::list<MapIndex> MapManager::createRelatedMapIndexList(MapIndex baseMapIndex)
 
 void MapManager::DEBUG_LOG_MAP_ITEM_LAYER()
 {
-#if 0
+#if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     std::string buffer;
 	for (int y = m_bottom - 1; y >= 0; y--)
     {
@@ -557,7 +552,7 @@ std::string MapManager::logOutString(MapItem mapItem)
 	}
     else if (mapItem.mapDataType == MapDataType::OBSTACLE)
     {
-		return ("O");
+		return ("■");
 	}
     else if (mapItem.mapDataType == MapDataType::PLAYER)
     {
