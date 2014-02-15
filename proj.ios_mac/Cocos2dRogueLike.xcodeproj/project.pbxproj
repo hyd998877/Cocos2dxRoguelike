@@ -58,7 +58,6 @@
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
-		CE2F8A3E18AF28E5001B457C /* json in Resources */ = {isa = PBXBuildFile; fileRef = CE2F8A3C18AF28E5001B457C /* json */; };
 		CE2F8A3F18AF28E5001B457C /* novel in Resources */ = {isa = PBXBuildFile; fileRef = CE2F8A3D18AF28E5001B457C /* novel */; };
 		CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */; };
 		CE7F54B418AF0AFD00BFD0DC /* NovelScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE7F54B218AF0AFD00BFD0DC /* NovelScene.cpp */; };
@@ -334,7 +333,6 @@
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
-		CE2F8A3C18AF28E5001B457C /* json */ = {isa = PBXFileReference; lastKnownFileType = folder; path = json; sourceTree = "<group>"; };
 		CE2F8A3D18AF28E5001B457C /* novel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = novel; sourceTree = "<group>"; };
 		CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
 		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
@@ -623,7 +621,6 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				CE2F8A3C18AF28E5001B457C /* json */,
 				CE2F8A3D18AF28E5001B457C /* novel */,
 				CE81F79518940AA900A8162B /* kaidan.png */,
 				CE0D522A188A507F00ECB309 /* icon_set */,
@@ -1047,7 +1044,6 @@
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				CE93B4BC188156FC00825FD1 /* btn-test-1.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
-				CE2F8A3E18AF28E5001B457C /* json in Resources */,
 				CE93B4B3188156FC00825FD1 /* actor_901.png in Resources */,
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,

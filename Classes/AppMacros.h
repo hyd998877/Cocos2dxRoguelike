@@ -14,14 +14,12 @@
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #define MISAKI_FONT "fonts/misaki_gothic.ttf"
+#define PIXEL_MPLUS_10_FONT "fonts/PixelMplus10-Regular.ttf"
+#define PIXEL_MPLUS_12_FONT "fonts/PixelMplus12-Regular.ttf"
 #else
 #define MISAKI_FONT "MisakiGothic"
-#endif
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-#define PIXEL_MPLUS_10_FONT "fonts/PixelMplus10-Regular.ttf"
-#else
 #define PIXEL_MPLUS_10_FONT "PixelMplus10-Regular"
+#define PIXEL_MPLUS_12_FONT "PixelMplus12-Regular"
 #endif
 
 typedef struct tagResource
@@ -41,6 +39,7 @@ static std::string GAME_FONT(int fontSize)
 {
     if (fontSize % 8 == 0) return MISAKI_FONT;
     else if (fontSize % 10 == 0) return PIXEL_MPLUS_10_FONT;
+    else if (fontSize % 12 == 0) return PIXEL_MPLUS_12_FONT;
     else return "";
 }
 

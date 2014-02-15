@@ -15,13 +15,6 @@
 
 #include "CommonWindowUtil.h"
 
-#include "cocos2d.h"
-#include "spine/Json.h"
-//#include "AudioUtil.h"
-#include "cocos-ext.h"
-
-//#include "Json.h"
-
 using namespace std;
 using namespace cocos2d;
 using namespace extension;
@@ -32,7 +25,6 @@ m_isMenuSelect(false),
 m_isShowTextLog(false),
 m_novelJson(NULL),
 m_novelTextEndCallback(nullptr)
-//m_novelJsonFile(NULL)
 {
     
 }
@@ -47,17 +39,14 @@ NovelScene::~NovelScene()
 void NovelScene::initNovelJson(int sceneNo, int novelIndex)
 {
     // jsonファイル読み込み
-    auto novelJsonFileData = FileUtils::getInstance()->getDataFromFile(StringUtils::format("json/scene_%03d.json", sceneNo));
-//    CCLOG("Data is : %s\n",novelJsonFileData.getBytes());
-//    unsigned long size = novelJsonFileData.getSize();
-//    CCLOG("Size: %lu\n\n", size);
-    
+    auto novelJsonFileData = FileUtils::getInstance()->getDataFromFile(StringUtils::format("novel/json/scene_%03d.json", sceneNo));
     Json* json = Json_create((char *)novelJsonFileData.getBytes());
     m_novelJson = Json_getItem(json, "novel");
+    novelJsonFileData.clear();
     if (novelIndex == 0) {
         return;
     }
-
+    
     // TODO: 中断機能も一旦外す
 //    int arrayCount = m_novelJson->size;
 //    for (int i = 0; i < arrayCount; i++) {
@@ -135,18 +124,22 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     // -----------------------------
     
     // 本文
-    int fontSize = 14;
+    int fontSize = 13;
     LayerColor * textLayer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), winSize.width, winSize.height * 0.25);
     textLayer->setPosition(Point::ZERO);
     this->addChild(textLayer, kZOrder_TextLayer, kTag_TextLayer);
 
     // test
     std::string string = StringUtils::format("w = %f.1 h = %f.1 f = %d", winSize.width, winSize.height, fontSize);
+    CCLOG("init %s", string.c_str());
     
     // 本文テキスト
-    LabelTTF* textLabel = LabelTTF::create(string, GAME_FONT(fontSize), fontSize);
+    LabelTTF* textLabel = LabelTTF::create("", GAME_FONT(fontSize), fontSize);
+    textLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
+    textLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
+    
     textLabel->setColor(Color3B::WHITE);
-    textLabel->setPosition(Point(fontSize + textLabel->getContentSize().width / 2, textLayer->getContentSize().height - fontSize));
+    textLabel->setPosition(Point(fontSize / 2 + textLabel->getContentSize().width / 2, textLayer->getContentSize().height - textLabel->getContentSize().height / 2 - fontSize / 2));
 
     textLayer->addChild(textLabel, kZOrder_TextLayer, kTag_TextLayer_textLabel);
     
@@ -157,9 +150,11 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     nameTextLayer->setPosition(Point(textLayer->getPositionX(), textLayer->getPositionY() + textLayer->getContentSize().height + nameTextLayer->getContentSize().height * 0.05));
     this->addChild(nameTextLayer, kZOrder_TextLayer, kTag_TextLayer_name);
     // 名前テキスト
-    LabelTTF* nameTextLabel = LabelTTF::create("SYSTEM", GAME_FONT(fontSize), fontSize);
-    nameTextLabel->setColor(Color3B::GREEN);
-    nameTextLabel->setPosition(Point(fontSize + nameTextLabel->getContentSize().width / 2, nameTextLayer->getContentSize().height / 2));
+    LabelTTF* nameTextLabel = LabelTTF::create("", GAME_FONT(fontSize), fontSize);
+    nameTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
+    nameTextLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
+//    nameTextLabel->setColor(Color3B::GREEN);
+    nameTextLabel->setPosition(Point(fontSize / 2 + nameTextLabel->getContentSize().width / 2, nameTextLayer->getContentSize().height - nameTextLabel->getContentSize().height / 2 - fontSize / 2));
     nameTextLayer->addChild(nameTextLabel, kZOrder_TextLayer, kTag_TextLayer_nameTextLabel);
     
     CommonWindowUtil::attachWindowWaku(nameTextLayer);
@@ -227,7 +222,7 @@ void NovelScene::dispText(string text)
         // テキストをすすめる
         LabelTTF* pTextLabel = (LabelTTF*) pTextLayer->getChildByTag(kTag_TextLayer_textLabel);
         pTextLabel->setString(text.c_str());
-        pTextLabel->setPosition(Point(pTextLabel->getFontSize() + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height - pTextLabel->getFontSize()));
+        pTextLabel->setPosition(Point(pTextLabel->getFontSize() / 2 + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height - pTextLabel->getContentSize().height / 2 - pTextLabel->getFontSize() / 2));
     }
 }
 
@@ -239,6 +234,7 @@ void NovelScene::dispName(string name)
         // テキストをすすめる
         LabelTTF* nameTextLabel = (LabelTTF*) pLayer->getChildByTag(kTag_TextLayer_nameTextLabel);
         nameTextLabel->setString(name.c_str());
+        nameTextLabel->setPosition(Point(nameTextLabel->getFontSize() / 2 + nameTextLabel->getContentSize().width / 2, pLayer->getContentSize().height / 2));
     }
 }
 
@@ -342,23 +338,23 @@ void NovelScene::makeSelectSpriteButton(const string& str1, int next1Id, const s
     {
         pMenu->setVisible(true);
         MenuItemSelectLabelSprite* menuSprite1 = (MenuItemSelectLabelSprite*) pMenu->getChildByTag(kTag_MenuSelect1);
-        menuSprite1->setNovelText(str1.c_str());
+        menuSprite1->setNovelText(str1);
         
         MenuItemSelectLabelSprite* menuSprite2 = (MenuItemSelectLabelSprite*) pMenu->getChildByTag(kTag_MenuSelect2);
-        menuSprite2->setNovelText(str2.c_str());
+        menuSprite2->setNovelText(str2);
     }
     else
     {
         // 選択肢1
         const int FONT_SIZE = 14;
-        MenuItemSelectLabelSprite* menuSprite1 = MenuItemSelectLabelSprite::createWithLabelSprite("menu_button.png", str1.c_str(), GAME_FONT(FONT_SIZE), FONT_SIZE, Color3B::RED, Color3B::BLUE, Color3B::RED, [this](Object *pSender) {
+        MenuItemSelectLabelSprite* menuSprite1 = MenuItemSelectLabelSprite::createWithLabelSprite("menu_button.png", str1, GAME_FONT(FONT_SIZE), FONT_SIZE, Color3B::RED, Color3B::BLUE, Color3B::RED, [this](Object *pSender) {
             this->menuSelectCallback(pSender);
         });
         menuSprite1->setPosition(Point(winSize.width * 0.5, winSize.height * 0.55));
         menuSprite1->setTag(kTag_MenuSelect1);
         menuSprite1->setZOrder(kZOrder_MenuSelect);
         // 選択肢2
-        MenuItemSelectLabelSprite* menuSprite2 = MenuItemSelectLabelSprite::createWithLabelSprite("menu_button.png", str2.c_str(), GAME_FONT(FONT_SIZE), FONT_SIZE, Color3B::BLACK, Color3B::BLUE, Color3B::RED, [this](Object *pSender) {
+        MenuItemSelectLabelSprite* menuSprite2 = MenuItemSelectLabelSprite::createWithLabelSprite("menu_button.png", str2, GAME_FONT(FONT_SIZE), FONT_SIZE, Color3B::BLACK, Color3B::BLUE, Color3B::RED, [this](Object *pSender) {
             this->menuSelectCallback(pSender);
         });
         menuSprite2->setPosition(Point(winSize.width * 0.5, winSize.height * 0.45));

@@ -18,6 +18,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/world_map/MapSceneLoader.cpp \
                    ../../Classes/actor/ActorSprite.cpp \
                    ../../Classes/game_object/DropItemSprite.cpp \
+                   ../../Classes/ui/LabelSprite.cpp \
+                   ../../Classes/ui/MenuItemSelectLabelSprite.cpp \
                    ../../Classes/ui/table/CustomTableViewCell.cpp \
                    ../../Classes/ui/table/TableViewTestLayer.cpp \
                    ../../Classes/ui/ModalLayer.cpp \
@@ -27,6 +29,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/quest/SRPGMapLayer.cpp \
                    ../../Classes/logic/BattleLogic.cpp \
                    ../../Classes/logic/ItemLogic.cpp \
+                   ../../Classes/novel/NovelScene.cpp \
                    ../../Classes/rogue/RogueScene.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
@@ -41,18 +44,21 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
                    $(LOCAL_PATH)/../../Classes/game_object \
                    $(LOCAL_PATH)/../../Classes/ui/table \
                    $(LOCAL_PATH)/../../Classes/map \
+                   $(LOCAL_PATH)/../../Classes/novel \
                    $(LOCAL_PATH)/../../Classes/rogue
 
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosbuilder_static
+LOCAL_WHOLE_STATIC_LIBRARIES += spine_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_extension_static
-
 
 include $(BUILD_SHARED_LIBRARY)
 
 $(call import-module,extensions)
 $(call import-module,editor-support/cocosbuilder)
+$(call import-module,editor-support/spine)
 $(call import-module,2d)
 $(call import-module,audio/android)
+

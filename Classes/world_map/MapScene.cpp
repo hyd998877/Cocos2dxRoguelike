@@ -80,8 +80,13 @@ void MapScene::tappedMenuItem2(Object * pTarget)
 void MapScene::tappedMenuItem3(Object * pTarget)
 {
     CCLOG("tappedMenuItem3");
-    auto scene = RogueScene::scene(1);
-    auto trans = TransitionProgressOutIn::create(1, scene);
+    Scene* scene = NovelScene::scene(2, 0, [this]() {
+        CCLOG("novel2 end");
+        auto scene = RogueScene::scene(1);
+        auto trans = TransitionProgressOutIn::create(1, scene);
+        Director::getInstance()->replaceScene(trans);
+    });
+    TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
     Director::getInstance()->replaceScene(trans);
 }
 
