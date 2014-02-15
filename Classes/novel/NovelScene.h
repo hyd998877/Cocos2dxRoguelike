@@ -18,18 +18,30 @@ using namespace extension;
 
 class NovelScene : public cocos2d::Layer
 {
-    void initNovelJson(int sceneNo, int novelIndex);
+    // コールバック
+    typedef std::function<void()> NovelTextEndCallback;
+private:
     
-    /** 選択肢表示中フラグ */
-    bool isMenuSelect;
-    /** バックログ表示中フラグ */
-    bool isShowTextLog;
+    // --------------- 変数 -------------------
+    
+    /** 選択肢表示中フラグ */ // TODO: Modalレイヤーつかいたいね
+    bool m_isMenuSelect;
+    /** バックログ表示中フラグ */ // TODO: Modalレイヤー使いたいね
+    bool m_isShowTextLog;
     
     /** ノベル情報Json */
     Json* m_novelJson;
-    
     /** ノベルテキスト送りインデックス */
     int m_textIndex;
+    /** ノベルパート終了時のコールバック */
+    NovelTextEndCallback m_novelTextEndCallback;
+
+    // --------------- 関数 -------------------
+    
+    /** 初期処理 */
+    void initNovelJson(int sceneNo, int novelIndex);
+    /** ノベルパート終了 */
+    void endNovel();
     
     /** 次のテキストを処理 */
     void nextNovelJson();
@@ -55,6 +67,7 @@ class NovelScene : public cocos2d::Layer
     void logMenuSelectCallback(Object *pSender);
     void showTextLog(int showTextIndex);
     void hideTextLog();
+    
 protected:
     
     enum kTag
@@ -105,22 +118,14 @@ public:
     NovelScene();
     ~NovelScene();
     
-    virtual bool init();
-    bool init(int sceneNo, int novelIndex);
-    static cocos2d::Scene* scene(int sceneNo, int novelIndex);
-    static NovelScene* create(int sceneNo, int novelIndex);
-    
-    CREATE_FUNC(NovelScene);
+    bool init(int sceneNo, int novelIndex, const NovelTextEndCallback& callback);
+    static cocos2d::Scene* scene(int sceneNo, int novelIndex, const NovelTextEndCallback& callback);
+    static NovelScene* create(int sceneNo, int novelIndex, const NovelTextEndCallback& callback);
     
     virtual bool onTouchBegan(Touch *touch, Event *unused_event);
     //virtual void onTouchMoved(Touch *touch, Event *unused_event);
     virtual void onTouchEnded(Touch *touch, Event *unused_event);
     //virtual void onTouchCancelled(Touch *touch, Event *unused_event);
-    
-//    virtual bool ccTouchBegan(Touch *pTouch, Event *pEvent);
-//    virtual void ccTouchMoved(Touch *pTouch, Event *pEvent);
-//    virtual void ccTouchEnded(Touch *pTouch, Event *pEvent);
-//    virtual void ccTouchCancelled(Touch *pTouch, Event *pEvent);
 };
 
 #endif /* defined(__NovelGame__NovelScene__) */

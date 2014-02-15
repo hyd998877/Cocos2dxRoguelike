@@ -28,9 +28,10 @@ using namespace extension;
 
 NovelScene::NovelScene()
 :m_textIndex(0),
-isMenuSelect(false),
-isShowTextLog(false),
-m_novelJson(NULL)
+m_isMenuSelect(false),
+m_isShowTextLog(false),
+m_novelJson(NULL),
+m_novelTextEndCallback(nullptr)
 //m_novelJsonFile(NULL)
 {
     
@@ -38,56 +39,58 @@ m_novelJson(NULL)
 
 NovelScene::~NovelScene()
 {
+    CCLOG("dispose!!!!");
     Json_dispose(m_novelJson);
+    m_novelTextEndCallback = nullptr;
 }
 
 void NovelScene::initNovelJson(int sceneNo, int novelIndex)
 {
-    std::string inputJsonFileName = StringUtils::format("json/scene_%03d.json", sceneNo);
     // jsonファイル読み込み
-    auto novelJsonFileData = FileUtils::getInstance()->getDataFromFile(inputJsonFileName);
-    CCLOG("Data is : %s",novelJsonFileData.getBytes());
-    unsigned long size = novelJsonFileData.getSize();
-    CCLOG("Size: %lu\n\n", size);
+    auto novelJsonFileData = FileUtils::getInstance()->getDataFromFile(StringUtils::format("json/scene_%03d.json", sceneNo));
+//    CCLOG("Data is : %s\n",novelJsonFileData.getBytes());
+//    unsigned long size = novelJsonFileData.getSize();
+//    CCLOG("Size: %lu\n\n", size);
     
     Json* json = Json_create((char *)novelJsonFileData.getBytes());
     m_novelJson = Json_getItem(json, "novel");
     if (novelIndex == 0) {
         return;
     }
-    
-    int arrayCount = m_novelJson->size;
-    for (int i = 0; i < arrayCount; i++) {
-        Json* item = m_novelJson->next;
-        
-        if (i >= novelIndex) {
-            continue;
-        }
-        
-        int textType = Json_getItem(item, "type")->valueInt;
-        if (textType == kSelectItem)
-        {
-            i++;
-            continue;
-        }
-        m_textIndex = i;
-        nextNovelJson();
-    }
+
+    // TODO: 中断機能も一旦外す
+//    int arrayCount = m_novelJson->size;
+//    for (int i = 0; i < arrayCount; i++) {
+//        Json* item = m_novelJson->next;
+//        
+//        if (i >= novelIndex) {
+//            continue;
+//        }
+//        
+//        int textType = Json_getItem(item, "type")->valueInt;
+//        if (textType == kSelectItem)
+//        {
+//            i++;
+//            continue;
+//        }
+//        m_textIndex = i;
+//        nextNovelJson();
+//    }
 }
 
-Scene* NovelScene::scene(int sceneNo, int novelIndex)
+Scene* NovelScene::scene(int sceneNo, int novelIndex, const NovelTextEndCallback& callback)
 {
     Scene* scene = Scene::create();
-    NovelScene* layer = NovelScene::create(sceneNo, novelIndex);
+    NovelScene* layer = NovelScene::create(sceneNo, novelIndex, callback);
     scene->addChild(layer);
     
     return scene;
 }
 
-NovelScene* NovelScene::create(int sceneNo, int novelIndex)
+NovelScene* NovelScene::create(int sceneNo, int novelIndex, const NovelTextEndCallback& callback)
 {
     NovelScene *pRet = new NovelScene();
-    if (pRet && pRet->init(sceneNo, novelIndex))
+    if (pRet && pRet->init(sceneNo, novelIndex, callback))
     {
         pRet->autorelease();
         return pRet;
@@ -100,24 +103,18 @@ NovelScene* NovelScene::create(int sceneNo, int novelIndex)
     }
 }
 
-bool NovelScene::init()
-{
-    return init(1, 0);
-}
-
-bool NovelScene::init(int sceneNo, int novelIndex)
+bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& callback)
 {
     if (!Layer::init())
     {
         return false;
     }
+    m_novelTextEndCallback = callback;
     
-    // BGM再生
+    // TODO: BGM再生
 //    AudioUtil::playBGM("audio/tutorial_bgm1.mp3");
     
     // シングルタップイベントを受け付ける
-//    this->setTouchEnabled(true);
-//    this->setTouchMode(kCCTouchesOneByOne);
     auto listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
     listener->setSwallowTouches(true);
     
@@ -168,21 +165,18 @@ bool NovelScene::init(int sceneNo, int novelIndex)
     CommonWindowUtil::attachWindowWaku(nameTextLayer);
     
     // -----------------------------
-    // TODO: キャラ顔画像表示
-    
-    // -----------------------------
     // ログ表示用ボタン配置
-    
-    LabelTTF* logButtonLabel = LabelTTF::create("Log", GAME_FONT(fontSize), fontSize);
-    MenuItemLabel* logButtonMenuItem = MenuItemLabel::create(logButtonLabel, [this](Object *pSender) {
-        this->logMenuSelectCallback(pSender);
-    });
-    
-    logButtonMenuItem->setPosition(Point(winSize.width * 0.95, logButtonMenuItem->getContentSize().height));
-    
-    Menu* pMenu = Menu::create(logButtonMenuItem, NULL);
-    pMenu->setPosition(Point::ZERO);
-    this->addChild(pMenu, kZOrder_MenuItem, kTag_MenuItem_log);
+    // TODO: ログ機能はとりあえず外しました
+//    LabelTTF* logButtonLabel = LabelTTF::create("Log", GAME_FONT(fontSize), fontSize);
+//    MenuItemLabel* logButtonMenuItem = MenuItemLabel::create(logButtonLabel, [this](Object *pSender) {
+//        this->logMenuSelectCallback(pSender);
+//    });
+//    
+//    logButtonMenuItem->setPosition(Point(winSize.width * 0.95, logButtonMenuItem->getContentSize().height));
+//    
+//    Menu* pMenu = Menu::create(logButtonMenuItem, NULL);
+//    pMenu->setPosition(Point::ZERO);
+//    this->addChild(pMenu, kZOrder_MenuItem, kTag_MenuItem_log);
 
     // -----------------------------
     // json読み込み
@@ -200,7 +194,7 @@ bool NovelScene::onTouchBegan(Touch *pTouch, Event *pEvent)
 {
     CCLOG("%s", "------ ccTouchBegan ------");
     // 選択肢とバックログ表示中は何もしない
-    if (isMenuSelect || isShowTextLog)
+    if (m_isMenuSelect || m_isShowTextLog)
     {
         return false;
     }
@@ -253,6 +247,13 @@ void NovelScene::nextNovelJson()
     int novelSize = m_novelJson->size;
     Json* item = nullptr;
     CCLOG("index = %d (%d)", m_textIndex, novelSize);
+    // 終了判定
+    if (m_textIndex == novelSize)
+    {
+        endNovel();
+        return;
+    }
+    
     for (int i = 0; i < novelSize; i++)
     {
         if (item == nullptr)
@@ -264,7 +265,6 @@ void NovelScene::nextNovelJson()
             item = item->next;
         }
         
-        //CCLOG("type = %d", Json_getItem(item, "type")->valueInt);
         if (i < m_textIndex)
         {
             continue;
@@ -274,7 +274,7 @@ void NovelScene::nextNovelJson()
         if (textType == kSelectItem)
         {
             // 選択肢表示
-            isMenuSelect = true;
+            m_isMenuSelect = true;
             makeSelectSpriteButton(Json_getItem(item, "select1")->valueString, Json_getItem(item, "next1Id")->valueInt,
                                    Json_getItem(item, "select2")->valueString, Json_getItem(item, "next2Id")->valueInt);
         }
@@ -320,8 +320,13 @@ void NovelScene::changeBackgroundAnimation(const string& imgFilePath)
     
     FadeOut* fadeOut = FadeOut::create(0.5);
     FadeIn* fadeIn = FadeIn::create(0.5);
-    auto pActionSeq = Sequence::create(fadeOut, CallFunc::create([this, pBackground, imgFilePath]() {
-        Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(imgFilePath);
+    
+    Texture2D *texture = Director::getInstance()->getTextureCache()->getTextureForKey(imgFilePath);
+    if (!texture)
+    {
+        texture = Director::getInstance()->getTextureCache()->addImage(imgFilePath);
+    }
+    auto pActionSeq = Sequence::create(fadeOut, CallFunc::create([this, pBackground, texture]() {
         pBackground->setTexture(texture);
     }), fadeIn, NULL);
     
@@ -370,7 +375,7 @@ void NovelScene::makeSelectSpriteButton(const string& str1, int next1Id, const s
 
 void NovelScene::menuSelectCallback(cocos2d::Object *pSender)
 {
-    if (isShowTextLog)
+    if (m_isShowTextLog)
     {
         return;
     }
@@ -378,17 +383,12 @@ void NovelScene::menuSelectCallback(cocos2d::Object *pSender)
 //    AudioUtil::playBtnSE();
     
     this->getChildByTag(kTag_MenuSelect)->setVisible(false);
-    isMenuSelect = false;
+    m_isMenuSelect = false;
 
     MenuItemSelectLabelSprite* menuItem = (MenuItemSelectLabelSprite*) pSender;
     dispText(menuItem->m_labelText);
     
     m_textIndex++;
-//    if (menuItem->m_nextId > 0)
-//    {
-//        m_textIndex = menuItem->m_nextId - 1;
-//        CCLOG("index set = %d", m_textIndex);
-//    }
 }
 
 
@@ -440,7 +440,7 @@ void NovelScene::removeActorImage(int dict)
     Sprite* actor = (Sprite*) this->getChildByTag(dictTag);
     if (actor)
     {
-        actor->removeFromParent();
+        actor->removeFromParentAndCleanup(true);
     }
 }
 
@@ -458,7 +458,7 @@ void NovelScene::logMenuSelectCallback(cocos2d::Object *pSender)
 {
 //    AudioUtil::playBtnSE();
     
-    if (isShowTextLog)
+    if (m_isShowTextLog)
     {
         hideTextLog();
     }
@@ -470,6 +470,7 @@ void NovelScene::logMenuSelectCallback(cocos2d::Object *pSender)
 
 void NovelScene::showTextLog(int showTextIndex)
 {
+    // TODO: バックログ機能はとりあえずなしで
 //    if (showTextIndex <= 0)
 //    {
 //        return;
@@ -510,6 +511,15 @@ void NovelScene::hideTextLog()
         logLayer->setVisible(false);
     }
     
-    isShowTextLog = false;
+    m_isShowTextLog = false;
+}
+
+void NovelScene::endNovel()
+{
+    // コールバックよんで終わり
+    if (m_novelTextEndCallback)
+    {
+        m_novelTextEndCallback();
+    }
 }
 
