@@ -1,0 +1,16 @@
+{
+    "novel":
+    [
+     {"type": 3, "imgPath": "novel/actor4_novel_s.png", "dict": 1},
+     {"type": 1, "text": "次のテキストが来るまで処理します。", "name": "ジニー"},
+     {"type": 4, "dict": 1},
+     {"type": 3, "imgPath": "novel/actor4_novel_s.png", "dict": 3},
+     {"type": 1, "text": "ノベルゲームのようなテキスト送りです。", "name": "ジニー"},
+     {"type": 1, "text": "ログ表示機能も必要ですね。", "name": "ジニー"},
+     {"type": 1, "text": "あと画面揺れとかホワイトアウトもできれば。", "name": "ジニー"},
+     {"type": 5, "text": "背景を変えてみる", "imgPath": "novel/017-MineTown01.jpg", "name": "ジニー"},
+     {"type": 1, "text": "とりあえずこんなもんかな。", "name": "ジニー"},
+     {"type": 3, "imgPath": "novel/actor4_novel_s.png", "dict": 1},
+     {"type": 1, "text": "以上。", "name": "ジニー"}
+    ]
+}

@@ -7,9 +7,11 @@
 //
 
 #include "MapScene.h"
+
 #include "SRPGScene.h"
 #include "TitleSceneLoader.h"
 #include "RogueScene.h"
+#include "NovelScene.h"
 
 MapScene::MapScene()
 {
@@ -57,7 +59,7 @@ Control::Handler MapScene::onResolveCCBCCControlSelector(cocos2d::Object *pTarge
 void MapScene::tappedMenuItem1(Object * pTarget)
 {
     CCLOG("tappedMenuItem1");
-    Scene* scene = TitleSceneLoader::scene();
+    Scene* scene = NovelScene::scene(1, 0);
     TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
     Director::getInstance()->replaceScene(trans);
 }

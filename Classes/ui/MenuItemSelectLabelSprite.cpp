@@ -52,12 +52,12 @@ bool MenuItemSelectLabelSprite::initWithLabelSprite(const std::string& pszFileNa
     return true;
 }
 
-void MenuItemSelectLabelSprite::setNovelText(const char *string)
+void MenuItemSelectLabelSprite::setNovelText(const std::string& string)
 {
     m_labelText = string;
-    ((LabelSprite*) this->getNormalImage())->setLabelText(string);
-    ((LabelSprite*) this->getSelectedImage())->setLabelText(string);
-    ((LabelSprite*) this->getDisabledImage())->setLabelText(string);
+    ((LabelSprite*) this->getNormalImage())->setLabelText(string.c_str());
+    ((LabelSprite*) this->getSelectedImage())->setLabelText(string.c_str());
+    ((LabelSprite*) this->getDisabledImage())->setLabelText(string.c_str());
 }
 
 

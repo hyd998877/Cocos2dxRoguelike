@@ -19,7 +19,7 @@ public:
     
     static MenuItemSelectLabelSprite* createWithLabelSprite(const std::string& pszFileName, const std::string& string, const std::string& fontName, float fontSize, cocos2d::Color3B normalColor, cocos2d::Color3B selectedColor, cocos2d::Color3B disabledColor, const cocos2d::ccMenuCallback& callback);
     
-    void setNovelText(const char *string);
+    void setNovelText(const std::string& string);
     
     std::string m_labelText;
 };
