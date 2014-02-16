@@ -1,0 +1,88 @@
+{
+    "srpgquest":
+    {
+        "M_WEAPON":
+        {
+            "row":
+            [
+                {
+                    "WEAPON_ID": 1,
+                    "WEAPON_IMAGE_ID": 10774,
+                    "WEAPON_NAME": "レイピア",
+             "WEAPON_DETAIL": "一般的な剣です。",
+                    "ATTACK_POINT": 2
+                },
+                {
+                    "WEAPON_ID": 2,
+                    "WEAPON_IMAGE_ID": 10786,
+                    "WEAPON_NAME": "アイアンソード",
+             "WEAPON_DETAIL": "アイアンで作られた剣です。",
+                    "ATTACK_POINT": 4
+                },
+                {
+                    "WEAPON_ID": 3,
+                    "WEAPON_IMAGE_ID": 10780,
+                    "WEAPON_NAME": "シミター",
+             "WEAPON_DETAIL": "曲刀です。",
+                    "ATTACK_POINT": 5
+                },
+                {
+                    "WEAPON_ID": 4,
+                    "WEAPON_IMAGE_ID": 10790,
+                    "WEAPON_NAME": "宝剣",
+             "WEAPON_DETAIL": "金で飾った宝物の剣です。",
+                    "ATTACK_POINT": 6
+                },
+                {
+                    "WEAPON_ID": 5,
+                    "WEAPON_IMAGE_ID": 10778,
+                    "WEAPON_NAME": "鉄の棒",
+             "WEAPON_DETAIL": "鉄の棒です。当たると痛い。",
+                    "ATTACK_POINT": 8
+                },
+                {
+                    "WEAPON_ID": 6,
+                    "WEAPON_IMAGE_ID": 10768,
+                    "WEAPON_NAME": "ダマスカスの剣",
+             "WEAPON_DETAIL": "ダマスカスで作られた剣です。",
+                    "ATTACK_POINT": 9
+                },
+                {
+                    "WEAPON_ID": 7,
+                    "WEAPON_IMAGE_ID": 10787,
+                    "WEAPON_NAME": "ミスリルソード",
+             "WEAPON_DETAIL": "ミスリルで作られた剣です。",
+                    "ATTACK_POINT": 10
+                },
+                {
+                    "WEAPON_ID": 8,
+                    "WEAPON_IMAGE_ID": 10848,
+                    "WEAPON_NAME": "チェーンソー",
+             "WEAPON_DETAIL": "切れないものはないです。",
+                    "ATTACK_POINT": 14
+                },
+                {
+                    "WEAPON_ID": 9,
+                    "WEAPON_IMAGE_ID": 10788,
+                    "WEAPON_NAME": "グラム",
+             "WEAPON_DETAIL": "重さの単位ではありません。",
+                    "ATTACK_POINT": 15
+                },
+                {
+                    "WEAPON_ID": 10,
+                    "WEAPON_IMAGE_ID": 10841,
+                    "WEAPON_NAME": "デスサイズ",
+             "WEAPON_DETAIL": "厨二全開！！",
+                    "ATTACK_POINT": 19
+                },
+                {
+                    "WEAPON_ID": 11,
+                    "WEAPON_IMAGE_ID": 10772,
+                    "WEAPON_NAME": "レーヴァテイン",
+             "WEAPON_DETAIL": "最強の魔剣です。",
+                    "ATTACK_POINT": 24
+                }
+            ]
+        }
+    }
+}

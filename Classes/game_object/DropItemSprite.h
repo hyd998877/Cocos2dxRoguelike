@@ -48,7 +48,8 @@ public:
     
     static std::string createItemImageFileName(int itemResId)
     {
-        return cocos2d::StringUtils::format("icon_set/item_%d.png", itemResId);
+        // TODO: ほんとうはMImageDao使うんだが。。。とりあえず10000引く
+        return cocos2d::StringUtils::format("icon_set/item_%d.png", itemResId % 10000);
     }
     
     // コンストラクタ、デストラクタ

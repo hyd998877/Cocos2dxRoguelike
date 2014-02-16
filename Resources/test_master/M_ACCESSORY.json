@@ -1,0 +1,85 @@
+{
+  "srpgquest": {
+    "M_ACCESSORY": {
+      "row": [
+        {
+          "ACCESSORY_ID": "1",
+          "ACCESSORY_IMAGE_ID": "11040",
+          "ACCESSORY_NAME": "木の盾",
+          "DEFENSE_POINT": "2",
+          "APPEND_TYPE": "NULL",
+          "APPEND_VALUE": "NULL",
+          "ADD_DATE": "2014-02-16 15:08:42",
+          "UPD_DATE": "0000-00-00 00:00:00",
+          "DEL_FLG": "0"
+        },
+        {
+          "ACCESSORY_ID": "2",
+          "ACCESSORY_IMAGE_ID": "11041",
+          "ACCESSORY_NAME": "スパイクシールド",
+          "DEFENSE_POINT": "4",
+          "APPEND_TYPE": "NULL",
+          "APPEND_VALUE": "NULL",
+          "ADD_DATE": "2014-02-16 15:14:21",
+          "UPD_DATE": "0000-00-00 00:00:00",
+          "DEL_FLG": "0"
+        },
+        {
+          "ACCESSORY_ID": "3",
+          "ACCESSORY_IMAGE_ID": "11042",
+          "ACCESSORY_NAME": "鉄の盾",
+          "DEFENSE_POINT": "6",
+          "APPEND_TYPE": "NULL",
+          "APPEND_VALUE": "NULL",
+          "ADD_DATE": "2014-02-16 15:09:41",
+          "UPD_DATE": "0000-00-00 00:00:00",
+          "DEL_FLG": "0"
+        },
+        {
+          "ACCESSORY_ID": "4",
+          "ACCESSORY_IMAGE_ID": "11043",
+          "ACCESSORY_NAME": "クリスタルシールド",
+          "DEFENSE_POINT": "10",
+          "APPEND_TYPE": "NULL",
+          "APPEND_VALUE": "NULL",
+          "ADD_DATE": "2014-02-16 15:10:42",
+          "UPD_DATE": "0000-00-00 00:00:00",
+          "DEL_FLG": "0"
+        },
+        {
+          "ACCESSORY_ID": "5",
+          "ACCESSORY_IMAGE_ID": "11045",
+          "ACCESSORY_NAME": "シャハルの盾",
+          "DEFENSE_POINT": "12",
+          "APPEND_TYPE": "NULL",
+          "APPEND_VALUE": "NULL",
+          "ADD_DATE": "2014-02-16 15:12:35",
+          "UPD_DATE": "0000-00-00 00:00:00",
+          "DEL_FLG": "0"
+        },
+        {
+          "ACCESSORY_ID": "6",
+          "ACCESSORY_IMAGE_ID": "11044",
+          "ACCESSORY_NAME": "アテナの盾",
+          "DEFENSE_POINT": "15",
+          "APPEND_TYPE": "NULL",
+          "APPEND_VALUE": "NULL",
+          "ADD_DATE": "2014-02-16 15:14:05",
+          "UPD_DATE": "0000-00-00 00:00:00",
+          "DEL_FLG": "0"
+        },
+        {
+          "ACCESSORY_ID": "7",
+          "ACCESSORY_IMAGE_ID": "11046",
+          "ACCESSORY_NAME": "アイギスの盾",
+          "DEFENSE_POINT": "18",
+          "APPEND_TYPE": "NULL",
+          "APPEND_VALUE": "NULL",
+          "ADD_DATE": "2014-02-16 15:14:08",
+          "UPD_DATE": "0000-00-00 00:00:00",
+          "DEL_FLG": "0"
+        }
+      ]
+    }
+  }
+}

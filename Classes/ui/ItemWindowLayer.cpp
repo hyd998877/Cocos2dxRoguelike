@@ -12,6 +12,8 @@
 #include "TableViewTestLayer.h"
 #include "DropItemSprite.h"
 
+#include "MWeaponDao.h"
+
 USING_NS_CC;
 
 #define ITEM_LAYER_NAME_DEFAULT "左のリストを選択すると\nここにアイテム名が\n表示されます"
@@ -320,15 +322,23 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
             }
             else
             {
-                // TODO: とりあえず
-                if (pDropItemDto->itemId == 1)
-                    pItemDetailLabel->setString("HPが少し回復します。");
-                else if (pDropItemDto->itemId == 2)
-                    pItemDetailLabel->setString("満腹度が少し回復します。");
-                else if (pDropItemDto->itemId == 3)
-                    pItemDetailLabel->setString("よくある剣です。");
-                else if (pDropItemDto->itemId == 4)
-                    pItemDetailLabel->setString("よくある盾です。");
+                if (pDropItemDto->itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
+                {
+                    MWeapon weapon = MWeaponDao::getInstance()->selectById(pDropItemDto->itemId);
+                    pItemDetailLabel->setString(weapon.getWeaponDetail());
+                }
+                else
+                {
+                    // TODO: とりあえず
+                    if (pDropItemDto->itemId == 1)
+                        pItemDetailLabel->setString("HPが少し回復します。");
+                    else if (pDropItemDto->itemId == 2)
+                        pItemDetailLabel->setString("満腹度が少し回復します。");
+                    else if (pDropItemDto->itemId == 3)
+                        pItemDetailLabel->setString("よくある剣です。");
+                    else if (pDropItemDto->itemId == 4)
+                        pItemDetailLabel->setString("よくある盾です。");
+                }
             }
         }
         // menu

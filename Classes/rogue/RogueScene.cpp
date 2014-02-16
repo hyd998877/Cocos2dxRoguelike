@@ -19,6 +19,7 @@
 #include "TitleSceneLoader.h"
 
 #include "MLevelDao.h"
+#include "MWeaponDao.h"
 
 USING_NS_CC;
 
@@ -386,19 +387,24 @@ bool RogueScene::initWithQuestId(int questId)
     MapIndex mapIndex2 = getRandomMapIndex(false, false);;
     tileSetDropMapItem(dropItemDto2, mapIndex2);
 
-    DropItemSprite::DropItemDto dropItemDto3;
-    dropItemDto3.objectId = 3;
-    dropItemDto3.itemId = 3; // weaponId
-    dropItemDto3.itemType = DropItemSprite::ItemType::EQUIP_WEAPON;
-    dropItemDto3.imageResId = 816;
-    dropItemDto3.name = "木の剣";
-    dropItemDto3.isEquip = false;
-    
-    MapIndex mapIndex3 = getRandomMapIndex(false, false);;
-    tileSetDropMapItem(dropItemDto3, mapIndex3);
+    for (int i = 0; i < 11; i++)
+    {
+//        MWeapon* mWeapon = MWeaponDao::getInstance()->selectById();
+        MWeapon mWeapon = MWeaponDao::getInstance()->selectById(i + 1);
+        DropItemSprite::DropItemDto dropItemDto3;
+        dropItemDto3.objectId = 3 + i;
+        dropItemDto3.itemId = mWeapon.getWeaponId(); // weaponId
+        dropItemDto3.itemType = DropItemSprite::ItemType::EQUIP_WEAPON;
+        dropItemDto3.imageResId = mWeapon.getWeaponImageId();
+        dropItemDto3.name = mWeapon.getWeaponName();
+        dropItemDto3.isEquip = false;
+        
+        MapIndex mapIndex3 = getRandomMapIndex(false, false);;
+        tileSetDropMapItem(dropItemDto3, mapIndex3);
+    }
 
     DropItemSprite::DropItemDto dropItemDto4;
-    dropItemDto4.objectId = 4;
+    dropItemDto4.objectId = 4 + 11;
     dropItemDto4.itemId = 4; // accessoryId
     dropItemDto4.itemType = DropItemSprite::ItemType::EQUIP_ACCESSORY;
     dropItemDto4.imageResId = 1040;
