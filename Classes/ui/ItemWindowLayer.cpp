@@ -13,6 +13,8 @@
 #include "DropItemSprite.h"
 
 #include "MWeaponDao.h"
+#include "MAccessoryDao.h"
+#include "MUseItemDao.h"
 
 USING_NS_CC;
 
@@ -243,12 +245,23 @@ DropItemSprite::DropItemDto ItemWindowLayer::findItem(int itemListIndex)
         auto dropItemDto = (DropItemSprite::DropItemDto) *it;
         return dropItemDto;
     }
-    return {0, 0, DropItemSprite::ItemType::NONE, 0, "", false};
+    return {0, 0, MUseItem::ItemType::NONE, 0, "", false};
 }
 
 void ItemWindowLayer::addItemList(DropItemSprite::DropItemDto dropItemDto)
 {
     m_itemDtoList.push_back(dropItemDto);
+}
+void ItemWindowLayer::setItemEquip(int objectId, bool isEquip)
+{
+    for (DropItemSprite::DropItemDto& itemDto : m_itemDtoList)
+    {
+        if (itemDto.objectId == objectId)
+        {
+            // TODO: とりあえず装備だけ
+            itemDto.isEquip = isEquip;
+        }
+    }
 }
 
 void ItemWindowLayer::reloadItemList()
@@ -265,7 +278,7 @@ void ItemWindowLayer::reloadItemList()
             TableViewTestLayer::TableLayout layout = {
                 DropItemSprite::createItemImageFileName(dropItem.imageResId),
                 dropItem.name,
-                dropItem.isEquip ? Color3B::BLUE : Color3B::WHITE // 装備中は青文字
+                dropItem.isEquip ? Color3B::YELLOW : Color3B::WHITE // 装備中は青文字
             };
             itemNameList.push_back(layout);
         }
@@ -322,22 +335,20 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
             }
             else
             {
-                if (pDropItemDto->itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
+                if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON)
                 {
                     MWeapon weapon = MWeaponDao::getInstance()->selectById(pDropItemDto->itemId);
                     pItemDetailLabel->setString(weapon.getWeaponDetail());
                 }
-                else
+                else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
                 {
-                    // TODO: とりあえず
-                    if (pDropItemDto->itemId == 1)
-                        pItemDetailLabel->setString("HPが少し回復します。");
-                    else if (pDropItemDto->itemId == 2)
-                        pItemDetailLabel->setString("満腹度が少し回復します。");
-                    else if (pDropItemDto->itemId == 3)
-                        pItemDetailLabel->setString("よくある剣です。");
-                    else if (pDropItemDto->itemId == 4)
-                        pItemDetailLabel->setString("よくある盾です。");
+                    MAccessory accessory = MAccessoryDao::getInstance()->selectById(pDropItemDto->itemId);
+                    pItemDetailLabel->setString(accessory.getAccessoryDetail());
+                }
+                else if (pDropItemDto->itemType != MUseItem::ItemType::NONE)
+                {
+                    MUseItem useItem = MUseItemDao::getInstance()->selectById(pDropItemDto->itemId);
+                    pItemDetailLabel->setString(useItem.getUseItemDetail());
                 }
             }
         }
@@ -350,13 +361,13 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
             auto pMenuEquip = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuEquipTag));
             
             // 未指定
-            if (pDropItemDto->itemType == DropItemSprite::ItemType::NONE)
+            if (pDropItemDto->itemType == MUseItem::ItemType::NONE)
             {
                 pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
                 pMenuDrop->setEnabled(false);pMenuDrop->setVisible(false);
                 pMenuEquip->setEnabled(false);pMenuEquip->setVisible(false);
             }
-            else if (pDropItemDto->itemType == DropItemSprite::ItemType::EQUIP_WEAPON || pDropItemDto->itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
+            else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON || pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
             {
                 // 装備可能・置く
                 pMenuUse->setEnabled(false);pMenuUse->setVisible(false);

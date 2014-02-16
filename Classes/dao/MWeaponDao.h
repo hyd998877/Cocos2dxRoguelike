@@ -20,8 +20,7 @@ public:
     // シングルトン
     static MWeaponDao* getInstance();
     
-//    MWeapon* selectById(int weaponId);
-    const MWeapon selectById(int weaponId);
+    const MWeapon selectById(int weaponId) const;
     
     MWeaponDao()
     :m_weaponList(std::list<MWeapon>())

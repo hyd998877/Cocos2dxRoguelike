@@ -7,6 +7,7 @@
 //
 
 #include "ItemLogic.h"
+#include "MUseItemDao.h"
 
 USING_NS_CC;
 
@@ -15,57 +16,30 @@ USING_NS_CC;
 // message
 std::string ItemLogic::use(int itemId, ActorSprite::ActorDto* pUseActorDto)
 {
-    std::string itemName;
-    // ItemType
-    DropItemSprite::ItemType itemType;
-    // value
-    int value;
-    
-    // imageId 10064 imageResId 64
-    if (itemId == 1)
-    {
-        // TODO: とりあえず
-        itemName = "ポーション";
-        // ItemType
-        itemType = DropItemSprite::ItemType::HP_RECOVER_VALUE;
-        // value
-        value = 10;
-    }
-    else if (itemId == 2)
-    {
-        // TODO: とりあえず
-        itemName = "ぶどう";
-        // ItemType
-        itemType = DropItemSprite::ItemType::MP_RECOVER_VALUE;
-        // value
-        value = 30;
-    }
+    MUseItem mUseItem = MUseItemDao::getInstance()->selectById(itemId);
     
     // 実行結果値
-    int execValue = value;
+    int execValue = mUseItem.getUseItemParam();
     
-    if (itemType == DropItemSprite::ItemType::HP_RECOVER_VALUE)
+    if (mUseItem.getUseItemType() == MUseItem::ItemType::HP_RECOVER_VALUE)
     {
-        if (pUseActorDto->hitPoint + value > pUseActorDto->hitPointLimit)
+        if (pUseActorDto->hitPoint + mUseItem.getUseItemParam() > pUseActorDto->hitPointLimit)
         {
             execValue = pUseActorDto->hitPointLimit - pUseActorDto->hitPoint;
         }
         pUseActorDto->hitPoint += execValue;
         
-        auto pStr = String::createWithFormat("%sをつかってHPが%d回復した。", itemName.c_str(), execValue);
-        return pStr->getCString();
+        return StringUtils::format("%sをつかってHPが%d回復した。", mUseItem.getUseItemName().c_str(), execValue);
     }
-    else if (itemType == DropItemSprite::ItemType::MP_RECOVER_VALUE)
+    else if (mUseItem.getUseItemType() == MUseItem::ItemType::MP_RECOVER_VALUE)
     {
-        if (pUseActorDto->magicPoint + value > pUseActorDto->magicPointLimit)
+        if (pUseActorDto->magicPoint + mUseItem.getUseItemParam() > pUseActorDto->magicPointLimit)
         {
             execValue = pUseActorDto->magicPointLimit - pUseActorDto->magicPoint;
         }
         pUseActorDto->magicPoint += execValue;
         
-        auto pStr = String::createWithFormat("%sを食べて満腹度が%d回復した。", itemName.c_str(), execValue);
-        return pStr->getCString();
+        return StringUtils::format("%sを食べて満腹度が%d回復した。", mUseItem.getUseItemName().c_str(), execValue);
     }
-    
     return "";
 }

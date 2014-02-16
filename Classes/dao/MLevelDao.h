@@ -21,7 +21,7 @@ public:
     static MLevelDao* getInstance();
     
     bool checkLevelUp(int lv, int exp);
-    MLevel* selectById(int lv);
+    const MLevel selectById(int lv);
     
     MLevelDao()
     :m_levelList(std::list<MLevel>())

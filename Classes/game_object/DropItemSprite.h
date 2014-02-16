@@ -11,21 +11,13 @@
 
 #include "cocos2d.h"
 #include "MapManager.h"
+#include "MUseItem.h"
 
 USING_NS_CC;
 
 class DropItemSprite : public cocos2d::Sprite
 {
 public:
-    enum ItemType {
-        NONE               = 0,
-        EQUIP_WEAPON       = 1,
-        EQUIP_ACCESSORY    = 2,
-        HP_RECOVER_VALUE   = 100,
-        HP_RECOVER_PERCENT = 101,
-        MP_RECOVER_VALUE   = 200,
-        MP_RECOVER_PERCENT = 201,
-    };
     
     typedef struct _DropItemDto {
         /** すべてのアイテムで一意な値 */
@@ -35,7 +27,7 @@ public:
         
         // 以下は、itemIdから引けるはず？
         /** アイテムタイプ */
-        ItemType itemType;
+        MUseItem::ItemType itemType;
         /** アイテムイメージのID. */
         int imageResId;
         /** アイテム名. */

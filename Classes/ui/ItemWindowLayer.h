@@ -35,6 +35,7 @@ public:
     Menu* initCreateMenu();
     DropItemSprite::DropItemDto findItem(int itemListIndex);
     void addItemList(DropItemSprite::DropItemDto dropItemDto);
+    void setItemEquip(int objectId, bool isEquip);
     void reloadItemList();
     
     static MenuItemSprite* createMenuItemSprite(Color3B color, const ccMenuCallback& callback);

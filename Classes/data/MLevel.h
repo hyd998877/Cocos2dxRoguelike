@@ -14,11 +14,16 @@
 class MLevel
 {
 public:
-    MLevel(int levelId, int exp, int growHitPoint);
+    MLevel(int levelId, int exp, int growHitPoint)
+    {
+        _levelId = levelId;
+        _exp = exp;
+        _growHitPoint = growHitPoint;
+    };
     
-    int getLevelId();
-    int getExp();
-    int getGrowHitPoint();
+    const int getLevelId() const { return _levelId; }
+    const int getExp() const { return _exp; }
+    const int getGrowHitPoint() const { return _growHitPoint; }
     
 private:
     // 一意なlevelのID

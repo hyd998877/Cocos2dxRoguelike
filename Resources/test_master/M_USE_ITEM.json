@@ -3,70 +3,52 @@
     "M_USE_ITEM": {
       "row": [
         {
-          "USE_ITEM_ID": "1",
-          "USE_ITEM_IMAGE_ID": "10064",
-          "USE_ITEM_TYPE": "1",
+          "USE_ITEM_ID": 1,
+          "USE_ITEM_IMAGE_ID": 10641,
+          "USE_ITEM_TYPE": 100,
           "USE_ITEM_NAME": "ポーション[小]",
           "USE_ITEM_DETAIL": "体力が少し回復します。",
-          "USE_ITEM_PARAM": "15",
-          "ADD_DATE": "2014-02-16 08:59:52",
-          "UPD_DATE": "0000-00-00 00:00:00",
-          "DEL_FLG": "0"
+          "USE_ITEM_PARAM": 15
         },
         {
-          "USE_ITEM_ID": "2",
-          "USE_ITEM_IMAGE_ID": "10064",
-          "USE_ITEM_TYPE": "1",
+          "USE_ITEM_ID": 2,
+          "USE_ITEM_IMAGE_ID": 10641,
+          "USE_ITEM_TYPE": 100,
           "USE_ITEM_NAME": "ポーション[中]",
           "USE_ITEM_DETAIL": "体力が回復します。",
-          "USE_ITEM_PARAM": "50",
-          "ADD_DATE": "2014-02-16 08:59:57",
-          "UPD_DATE": "0000-00-00 00:00:00",
-          "DEL_FLG": "0"
+          "USE_ITEM_PARAM": 50
         },
         {
-          "USE_ITEM_ID": "3",
-          "USE_ITEM_IMAGE_ID": "10064",
-          "USE_ITEM_TYPE": "1",
+          "USE_ITEM_ID": 3,
+          "USE_ITEM_IMAGE_ID": 10641,
+          "USE_ITEM_TYPE": 100,
           "USE_ITEM_NAME": "ポーション[大]",
           "USE_ITEM_DETAIL": "体力がかなり回復します。",
-          "USE_ITEM_PARAM": "100",
-          "ADD_DATE": "2014-02-16 09:00:00",
-          "UPD_DATE": "0000-00-00 00:00:00",
-          "DEL_FLG": "0"
+          "USE_ITEM_PARAM": 100
         },
         {
-          "USE_ITEM_ID": "4",
-          "USE_ITEM_IMAGE_ID": "10064",
-          "USE_ITEM_TYPE": "1",
-          "USE_ITEM_NAME": "ポーション[小]",
-          "USE_ITEM_DETAIL": "体力が少し回復します。",
-          "USE_ITEM_PARAM": "15",
-          "ADD_DATE": "2014-02-16 08:59:52",
-          "UPD_DATE": "0000-00-00 00:00:00",
-          "DEL_FLG": "0"
+          "USE_ITEM_ID": 4,
+          "USE_ITEM_IMAGE_ID": 10645,
+          "USE_ITEM_TYPE": 200,
+          "USE_ITEM_NAME": "エーテル[小]",
+          "USE_ITEM_DETAIL": "疲労が少し回復します。",
+          "USE_ITEM_PARAM": 15
         },
         {
-          "USE_ITEM_ID": "5",
-          "USE_ITEM_IMAGE_ID": "10064",
-          "USE_ITEM_TYPE": "1",
-          "USE_ITEM_NAME": "ポーション[小]",
-          "USE_ITEM_DETAIL": "体力が少し回復します。",
-          "USE_ITEM_PARAM": "15",
-          "ADD_DATE": "2014-02-16 08:59:52",
-          "UPD_DATE": "0000-00-00 00:00:00",
-          "DEL_FLG": "0"
+          "USE_ITEM_ID": 5,
+          "USE_ITEM_IMAGE_ID": 10645,
+          "USE_ITEM_TYPE": 200,
+          "USE_ITEM_NAME": "エーテル[中]",
+          "USE_ITEM_DETAIL": "疲労が回復します。",
+          "USE_ITEM_PARAM": 50
         },
         {
-          "USE_ITEM_ID": "6",
-          "USE_ITEM_IMAGE_ID": "10064",
-          "USE_ITEM_TYPE": "1",
-          "USE_ITEM_NAME": "ポーション[小]",
-          "USE_ITEM_DETAIL": "体力が少し回復します。",
-          "USE_ITEM_PARAM": "15",
-          "ADD_DATE": "2014-02-16 08:59:52",
-          "UPD_DATE": "0000-00-00 00:00:00",
-          "DEL_FLG": "0"
+          "USE_ITEM_ID": 6,
+          "USE_ITEM_IMAGE_ID": 10645,
+          "USE_ITEM_TYPE": 200,
+          "USE_ITEM_NAME": "エーテル[大]",
+          "USE_ITEM_DETAIL": "疲労が少し回復します。",
+          "USE_ITEM_PARAM": 100
         }
       ]
     }

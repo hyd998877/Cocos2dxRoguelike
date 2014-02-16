@@ -10,9 +10,9 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
                    ../../Classes/ui/CommonWindowUtil.cpp \
                    ../../Classes/dao/MLevelDao.cpp \
-                   ../../Classes/data/MLevel.cpp \
                    ../../Classes/dao/MWeaponDao.cpp \
-                   ../../Classes/data/MWeapon.cpp \
+                   ../../Classes/dao/MAccessoryDao.cpp \
+                   ../../Classes/dao/MUseItemDao.cpp \
                    ../../Classes/title/TitleScene.cpp \
                    ../../Classes/title/TitleSceneLoader.cpp \
                    ../../Classes/map/MapManager.cpp \

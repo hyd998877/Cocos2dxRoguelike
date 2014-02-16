@@ -59,12 +59,16 @@
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
 		CE2F8A3F18AF28E5001B457C /* novel in Resources */ = {isa = PBXBuildFile; fileRef = CE2F8A3D18AF28E5001B457C /* novel */; };
+		CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6418B0E92D006C4B13 /* MUseItemDao.cpp */; };
+		CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */; };
 		CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */; };
 		CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */; };
 		CE73FB2218B0A073009273D0 /* MWeapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB2018B0A073009273D0 /* MWeapon.cpp */; };
 		CE73FB2418B0A3F1009273D0 /* test_master in Resources */ = {isa = PBXBuildFile; fileRef = CE73FB2318B0A3F1009273D0 /* test_master */; };
 		CE7F54B418AF0AFD00BFD0DC /* NovelScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE7F54B218AF0AFD00BFD0DC /* NovelScene.cpp */; };
 		CE81F79618940AA900A8162B /* kaidan.png in Resources */ = {isa = PBXBuildFile; fileRef = CE81F79518940AA900A8162B /* kaidan.png */; };
+		CE890F1B18B0E26A0088A9BC /* MUseItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE890F1918B0E26A0088A9BC /* MUseItem.cpp */; };
+		CE890F2718B0E2A60088A9BC /* MAccessory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE890F2518B0E2A60088A9BC /* MAccessory.cpp */; };
 		CE9297C0188BCC9700568EE1 /* MLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9297BE188BCC9700568EE1 /* MLevel.cpp */; };
 		CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */; };
 		CE93B444188156C700825FD1 /* AccountData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B412188156C700825FD1 /* AccountData.cpp */; };
@@ -337,6 +341,10 @@
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
 		CE2F8A3D18AF28E5001B457C /* novel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = novel; sourceTree = "<group>"; };
+		CE33EF6418B0E92D006C4B13 /* MUseItemDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItemDao.cpp; sourceTree = "<group>"; };
+		CE33EF6518B0E92D006C4B13 /* MUseItemDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItemDao.h; sourceTree = "<group>"; };
+		CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessoryDao.cpp; sourceTree = "<group>"; };
+		CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessoryDao.h; sourceTree = "<group>"; };
 		CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
 		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
 		CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeaponDao.cpp; sourceTree = "<group>"; };
@@ -347,6 +355,10 @@
 		CE7F54B218AF0AFD00BFD0DC /* NovelScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NovelScene.cpp; sourceTree = "<group>"; };
 		CE7F54B318AF0AFD00BFD0DC /* NovelScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NovelScene.h; sourceTree = "<group>"; };
 		CE81F79518940AA900A8162B /* kaidan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kaidan.png; sourceTree = "<group>"; };
+		CE890F1918B0E26A0088A9BC /* MUseItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItem.cpp; sourceTree = "<group>"; };
+		CE890F1A18B0E26A0088A9BC /* MUseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItem.h; sourceTree = "<group>"; };
+		CE890F2518B0E2A60088A9BC /* MAccessory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessory.cpp; sourceTree = "<group>"; };
+		CE890F2618B0E2A60088A9BC /* MAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessory.h; sourceTree = "<group>"; };
 		CE9297BE188BCC9700568EE1 /* MLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevel.cpp; sourceTree = "<group>"; };
 		CE9297BF188BCC9700568EE1 /* MLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevel.h; sourceTree = "<group>"; };
 		CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevelDao.cpp; sourceTree = "<group>"; };
@@ -682,6 +694,10 @@
 				CE9297BF188BCC9700568EE1 /* MLevel.h */,
 				CE73FB2018B0A073009273D0 /* MWeapon.cpp */,
 				CE73FB2118B0A073009273D0 /* MWeapon.h */,
+				CE890F1918B0E26A0088A9BC /* MUseItem.cpp */,
+				CE890F1A18B0E26A0088A9BC /* MUseItem.h */,
+				CE890F2518B0E2A60088A9BC /* MAccessory.cpp */,
+				CE890F2618B0E2A60088A9BC /* MAccessory.h */,
 			);
 			name = data;
 			path = ../Classes/data;
@@ -694,6 +710,10 @@
 				CE9297C4188BCE7A00568EE1 /* MLevelDao.h */,
 				CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */,
 				CE73FB1E18B0A064009273D0 /* MWeaponDao.h */,
+				CE33EF6418B0E92D006C4B13 /* MUseItemDao.cpp */,
+				CE33EF6518B0E92D006C4B13 /* MUseItemDao.h */,
+				CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */,
+				CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */,
 			);
 			name = dao;
 			path = ../Classes/dao;
@@ -1102,6 +1122,7 @@
 				CE93B44C188156C700825FD1 /* RogueScene.cpp in Sources */,
 				CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */,
 				CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */,
+				CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */,
 				CE93B44B188156C700825FD1 /* SRPGScene.cpp in Sources */,
 				CE93B450188156C700825FD1 /* LabelSprite.cpp in Sources */,
 				CE93B456188156C700825FD1 /* MapSceneLoader.cpp in Sources */,
@@ -1115,13 +1136,16 @@
 				CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				CE93B44E188156C700825FD1 /* TitleSceneLoader.cpp in Sources */,
+				CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */,
 				CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */,
 				CE93B453188156C700825FD1 /* CustomTableViewCell.cpp in Sources */,
 				CE7F54B418AF0AFD00BFD0DC /* NovelScene.cpp in Sources */,
 				CE93B452188156C700825FD1 /* ModalLayer.cpp in Sources */,
+				CE890F2718B0E2A60088A9BC /* MAccessory.cpp in Sources */,
 				CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				CE73FB2218B0A073009273D0 /* MWeapon.cpp in Sources */,
+				CE890F1B18B0E26A0088A9BC /* MUseItem.cpp in Sources */,
 				CE93B448188156C700825FD1 /* ItemLogic.cpp in Sources */,
 				CE93B44A188156C700825FD1 /* SRPGMapLayer.cpp in Sources */,
 				CE93B44D188156C700825FD1 /* TitleScene.cpp in Sources */,

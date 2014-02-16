@@ -59,7 +59,7 @@ void MWeaponDao::init()
     Json_dispose(json);
 }
 
-const MWeapon MWeaponDao::selectById(int weaponId)
+const MWeapon MWeaponDao::selectById(int weaponId) const
 {
     for (MWeapon weapon : m_weaponList)
     {

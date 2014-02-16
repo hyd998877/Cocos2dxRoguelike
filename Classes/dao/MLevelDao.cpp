@@ -36,30 +36,24 @@ void MLevelDao::init()
 bool MLevelDao::checkLevelUp(int lv, int exp)
 {
     auto mLevel = selectById(lv + 1);
-    if (mLevel && exp >= mLevel->getExp())
+    if (exp >= mLevel.getExp())
     {
         return true;
     }
     return false;
 }
 
-MLevel* MLevelDao::selectById(int lv)
+const MLevel MLevelDao::selectById(int lv)
 {
-    MLevel *pRet = NULL;
     for (MLevel mLevel : m_levelList)
     {
         if (mLevel.getLevelId() == lv)
         {
-            pRet = &mLevel;
-            break;
+            return mLevel;
         }
     }
     // hitしなければ最後のlevel
-    if (!pRet)
-    {
-        pRet = &(*m_levelList.end());
-    }
-    return pRet;
+    return (*m_levelList.end());
 }
 
 

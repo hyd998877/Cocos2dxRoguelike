@@ -20,6 +20,8 @@
 
 #include "MLevelDao.h"
 #include "MWeaponDao.h"
+#include "MUseItemDao.h"
+#include "MAccessoryDao.h"
 
 USING_NS_CC;
 
@@ -365,55 +367,58 @@ bool RogueScene::initWithQuestId(int questId)
     //-------------------------
     // アイテム配置
     //-------------------------
-    DropItemSprite::DropItemDto dropItemDto;
-    dropItemDto.objectId = 1; // 単純に連番でいい
-    dropItemDto.itemId = 1;
-    dropItemDto.itemType = DropItemSprite::ItemType::HP_RECOVER_VALUE;
-    dropItemDto.imageResId = 641;
-    dropItemDto.name = "ポーション";
-    dropItemDto.isEquip = false;
-    
-    MapIndex mapIndex = getRandomMapIndex(false, false);
-    tileSetDropMapItem(dropItemDto, mapIndex);
+    int objectCount = 0;
+    for (int i = 0; i < 6; i++)
+    {
+        MUseItem mUseItem = MUseItemDao::getInstance()->selectById(i + 1);
+        DropItemSprite::DropItemDto dropItemDto;
+        dropItemDto.objectId = objectCount + i + 1; // 単純に連番でいい
+        dropItemDto.itemId = mUseItem.getUseItemId();
+        dropItemDto.itemType = mUseItem.getUseItemType();
+        dropItemDto.imageResId = mUseItem.getUseItemImageId();
+        dropItemDto.name = mUseItem.getUseItemName();
+        dropItemDto.isEquip = false;
+        
+        MapIndex mapIndex = getRandomMapIndex(false, false);
+        tileSetDropMapItem(dropItemDto, mapIndex);
 
-    DropItemSprite::DropItemDto dropItemDto2;
-    dropItemDto2.objectId = 2;
-    dropItemDto2.itemId = 2;
-    dropItemDto2.itemType = DropItemSprite::ItemType::MP_RECOVER_VALUE;
-    dropItemDto2.imageResId = 645;
-    dropItemDto2.name = "エーテル";
-    dropItemDto2.isEquip = false;
-    
-    MapIndex mapIndex2 = getRandomMapIndex(false, false);;
-    tileSetDropMapItem(dropItemDto2, mapIndex2);
+        objectCount++;
+    }
 
     for (int i = 0; i < 11; i++)
     {
-//        MWeapon* mWeapon = MWeaponDao::getInstance()->selectById();
         MWeapon mWeapon = MWeaponDao::getInstance()->selectById(i + 1);
         DropItemSprite::DropItemDto dropItemDto3;
-        dropItemDto3.objectId = 3 + i;
+        dropItemDto3.objectId = objectCount + i + 1;
         dropItemDto3.itemId = mWeapon.getWeaponId(); // weaponId
-        dropItemDto3.itemType = DropItemSprite::ItemType::EQUIP_WEAPON;
+        dropItemDto3.itemType = MUseItem::ItemType::EQUIP_WEAPON;
         dropItemDto3.imageResId = mWeapon.getWeaponImageId();
         dropItemDto3.name = mWeapon.getWeaponName();
         dropItemDto3.isEquip = false;
         
         MapIndex mapIndex3 = getRandomMapIndex(false, false);;
         tileSetDropMapItem(dropItemDto3, mapIndex3);
+        
+        objectCount++;
     }
-
-    DropItemSprite::DropItemDto dropItemDto4;
-    dropItemDto4.objectId = 4 + 11;
-    dropItemDto4.itemId = 4; // accessoryId
-    dropItemDto4.itemType = DropItemSprite::ItemType::EQUIP_ACCESSORY;
-    dropItemDto4.imageResId = 1040;
-    dropItemDto4.name = "木の盾";
-    dropItemDto4.isEquip = false;
+    for (int i = 0; i < 7; i++)
+    {
+        MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(i + 1);
+        
+        DropItemSprite::DropItemDto dropItemDto4;
+        dropItemDto4.objectId = objectCount + i + 1;
+        dropItemDto4.itemId = mAccessory.getAccessoryId();
+        dropItemDto4.itemType = MUseItem::ItemType::EQUIP_ACCESSORY;
+        dropItemDto4.imageResId = mAccessory.getAccessoryImageId();
+        dropItemDto4.name = mAccessory.getAccessoryName();
+        dropItemDto4.isEquip = false;
+        
+        MapIndex mapIndex4 = getRandomMapIndex(false, false);;
+        tileSetDropMapItem(dropItemDto4, mapIndex4);
+        
+        objectCount++;
+    }
     
-    MapIndex mapIndex4 = getRandomMapIndex(false, false);;
-    tileSetDropMapItem(dropItemDto4, mapIndex4);
-
     // -------------------------------
     // 階段配置
     // -------------------------------
@@ -1195,8 +1200,8 @@ void RogueScene::attack()
                 if (MLevelDao::getInstance()->checkLevelUp(pPlayerDto->lv, pPlayerDto->exp))
                 {
                     pPlayerDto->lv++;
-                    auto pMLevel = MLevelDao::getInstance()->selectById(pPlayerDto->lv);
-                    pPlayerDto->hitPointLimit += pMLevel->getGrowHitPoint();
+                    auto mLevel = MLevelDao::getInstance()->selectById(pPlayerDto->lv);
+                    pPlayerDto->hitPointLimit += mLevel.getGrowHitPoint();
                     
                     // TODO: レベルアップ演出（SE？）
                     
@@ -1441,11 +1446,11 @@ void RogueScene::showItemList(int showTextIndex)
                 {
                     dropItemDto.isEquip = false;
                     
-                    if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
+                    if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_WEAPON)
                     {
                         pPlayerSprite->equipReleaseWeapon();
                     }
-                    else if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
+                    else if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
                     {
                         pPlayerSprite->equipReleaseAccessory();
                     }
@@ -1482,15 +1487,17 @@ void RogueScene::showItemList(int showTextIndex)
             this->changeGameStatus(RogueScene::ENEMY_TURN);
         });
         
-        pItemWindowLayer->setItemEquipMenuCallback([this](Object* pSender, DropItemSprite::DropItemDto dropItemDto) {
+        pItemWindowLayer->setItemEquipMenuCallback([this, pItemWindowLayer](Object* pSender, DropItemSprite::DropItemDto dropItemDto) {
             CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", dropItemDto.itemType);
             
             auto pPlayerSprite = getPlayerActorSprite(1);
             
             if (dropItemDto.isEquip)
             {
-                if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
+                if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_WEAPON)
                 {
+                    // 解除
+                    pItemWindowLayer->setItemEquip(pPlayerSprite->getActorDto()->equip.weaponObjectId, false);
                     // 武器装備
                     pPlayerSprite->getActorDto()->equip.weaponObjectId = dropItemDto.objectId;
                     pPlayerSprite->getActorDto()->equip.weaponId       = dropItemDto.itemId;
@@ -1498,8 +1505,10 @@ void RogueScene::showItemList(int showTextIndex)
                     pPlayerSprite->getActorDto()->equip.weaponName     = dropItemDto.name;
                     pPlayerSprite->getActorDto()->equip.weaponStr      = 5; // TODO: valueはマスタから実はnameも取りたい・・・
                 }
-                else if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
+                else if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
                 {
+                    // 解除
+                    pItemWindowLayer->setItemEquip(pPlayerSprite->getActorDto()->equip.accessoryObjectId, false);
                     // 防具装備
                     pPlayerSprite->getActorDto()->equip.accessoryObjectId = dropItemDto.objectId;
                     pPlayerSprite->getActorDto()->equip.accessoryId       = dropItemDto.itemId;
@@ -1511,12 +1520,12 @@ void RogueScene::showItemList(int showTextIndex)
             }
             else
             {
-                if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_WEAPON)
+                if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_WEAPON)
                 {
                     // 武器解除
                     pPlayerSprite->equipReleaseWeapon();
                 }
-                else if (dropItemDto.itemType == DropItemSprite::ItemType::EQUIP_ACCESSORY)
+                else if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
                 {
                     // 防具装備
                     pPlayerSprite->equipReleaseAccessory();
