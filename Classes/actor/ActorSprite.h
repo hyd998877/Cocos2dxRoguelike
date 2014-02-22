@@ -77,8 +77,10 @@ public:
     ~ActorSprite();
     
     // 初期化とか
-    virtual bool initWithActorDto(ActorDto actorDto);
+    bool initWithActorDto(ActorDto actorDto);
+    bool initWithActorDto(ActorDto actorDto, int typeId);
     static ActorSprite* createWithActorDto(ActorDto actorDto);
+    static ActorSprite* createWithActorDto(ActorDto actorDto, int typeId);
     
     void setActorMapItem(ActorMapItem actorMapItem);
     ActorMapItem* getActorMapItem();
@@ -102,12 +104,14 @@ public:
 private:
     ActorMapItem m_actorMapItem;
     ActorDto m_actorDto;
+    int m_nowTypeId;
     
     FiniteTimeAction* createBottomActorAnimate();
     FiniteTimeAction* createLeftActorAnimate();
     FiniteTimeAction* createRightActorAnimate();
     FiniteTimeAction* createTopActorAnimate();
     FiniteTimeAction* createActorAnimate(int actorId, std::string frameName);
+    FiniteTimeAction* createActorAnimate(int actorId, int typeId, std::string frameName);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ActorSprite__) */

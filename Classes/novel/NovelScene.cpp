@@ -436,6 +436,7 @@ void NovelScene::removeActorImage(int dict)
     Sprite* actor = (Sprite*) this->getChildByTag(dictTag);
     if (actor)
     {
+        actor->setVisible(false);
         actor->removeFromParentAndCleanup(true);
     }
 }

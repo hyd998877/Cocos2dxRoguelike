@@ -36,6 +36,17 @@ public:
         // status
         bool isEquip;
         
+        static bool const compare_dropItem_equip(const _DropItemDto& o1, const _DropItemDto& o2)
+        {
+            if (o1.isEquip)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     } DropItemDto;
     
     static std::string createItemImageFileName(int itemResId)

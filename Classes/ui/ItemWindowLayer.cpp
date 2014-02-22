@@ -272,6 +272,14 @@ void ItemWindowLayer::reloadItemList()
     auto pItemTabelLayer = static_cast<TableViewTestLayer*>(getChildByTag(ItemWindowLayer::ItemTableLayerTag));
     if (pItemTabelLayer)
     {
+        // ソート
+        m_itemDtoList.sort(DropItemSprite::DropItemDto::compare_dropItem_equip);
+//        std::sort(m_itemDtoList.begin(), m_itemDtoList.end(), DropItemSprite::DropItemDto::compare_dropItem_equip);
+        
+//        std::sort(m_itemDtoList.begin(), m_itemDtoList.end(), [this](const DropItemSprite::DropItemDto& o1, const DropItemSprite::DropItemDto& o2) {
+//            
+//        });
+        
         std::list<TableViewTestLayer::TableLayout> itemNameList;
         for (DropItemSprite::DropItemDto dropItem : m_itemDtoList)
         {

@@ -1,10 +1,12 @@
 {
     "novel":
     [
-        {"id":  1, "type": 3, "imgPath": "novel/actor4_novel_s.png", "dict": 1},
+        {"id":  1, "type": 3, "imgPath": "novel/actor4_novel_s_0.png", "dict": 1},
         {"id":  2, "type": 1, "text": "開発中のローグライクゲームよ。", "name": "ジニー"},
         {"id":  5, "type": 1, "text": "基本操作は十字キーと４ボタンになるわ。\nただし、メニュー等はタッチ操作だから混乱しないでね。", "name": "ジニー"},
         {"id":  6, "type": 1, "text": "階段の位置やドロップアイテムの位置が完全にランダムだから、\n通路に落ちていることもあるわ。見逃さないでね。", "name": "ジニー"},
+        {"id":  7, "type": 4, "dict": 1},
+        {"id":  8, "type": 3, "imgPath": "novel/actor4_novel_s_6.png", "dict": 1},
         {"id": 11, "type": 1, "text": "以上。よろしくね。", "name": "ジニー"}
     ]
 }

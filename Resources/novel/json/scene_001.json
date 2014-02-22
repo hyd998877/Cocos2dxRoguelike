@@ -1,16 +1,16 @@
 {
     "novel":
     [
-        {"id":  1, "type": 3, "imgPath": "novel/actor4_novel_s.png", "dict": 1},
+        {"id":  1, "type": 3, "imgPath": "novel/actor4_novel_s_0.png", "dict": 1},
         {"id":  2, "type": 1, "text": "次のテキストが来るまで処理します。", "name": "ジニー"},
         {"id":  3, "type": 4, "dict": 1},
-        {"id":  4, "type": 3, "imgPath": "novel/actor4_novel_s.png", "dict": 3},
+        {"id":  4, "type": 3, "imgPath": "novel/actor33_novel_s_0.png", "dict": 3},
         {"id":  5, "type": 1, "text": "ノベルゲームのようなテキスト送りです。", "name": "ジニー"},
         {"id":  6, "type": 1, "text": "ログ表示機能も必要ですね。", "name": "ジニー"},
         {"id":  7, "type": 1, "text": "あと画面揺れとかホワイトアウトもできれば。", "name": "ジニー"},
         {"id":  8, "type": 5, "text": "背景を変えてみる", "imgPath": "novel/017-MineTown01.jpg", "name": "ジニー"},
         {"id":  9, "type": 1, "text": "とりあえずこんなもんかな。", "name": "ジニー"},
-        {"id": 10, "type": 3, "imgPath": "novel/actor4_novel_s.png", "dict": 1},
+        {"id": 10, "type": 3, "imgPath": "novel/actor4_novel_s_6.png", "dict": 1},
         {"id": 11, "type": 1, "text": "以上。", "name": "ジニー"}
     ]
 }

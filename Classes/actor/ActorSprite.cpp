@@ -20,17 +20,23 @@ ActorSprite::~ActorSprite()
     
 }
 
-bool ActorSprite::initWithActorDto(ActorDto pActorDto)
+bool ActorSprite::initWithActorDto(ActorDto actorDto)
 {
-    m_actorDto = pActorDto;
+    return initWithActorDto(actorDto, 0);
+}
+
+bool ActorSprite::initWithActorDto(ActorDto actorDto, int typeId)
+{
+    m_actorDto = actorDto;
+    m_nowTypeId = typeId;
     
     // ActorのSpriteFrameのplistをキャッシュ
-    auto spriteFramePlistName = StringUtils::format("actor_%d.plist", m_actorDto.playerId);
+    auto spriteFramePlistName = StringUtils::format("actor/%d/actor_%d_%d.plist", m_actorDto.playerId, m_actorDto.playerId, typeId);
     CCLOG("initWithActorDto = %s", spriteFramePlistName.c_str());
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile(spriteFramePlistName);
     
     // Spriteを生成
-    auto spriteFrameName = StringUtils::format("actor_%d_%s_%d.jpg", m_actorDto.playerId, "bottom", 1);
+    auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.playerId, typeId, "bottom", 1);
     if ( !Sprite::initWithSpriteFrameName(spriteFrameName) )
     {
         return false;
@@ -39,10 +45,26 @@ bool ActorSprite::initWithActorDto(ActorDto pActorDto)
     return true;
 }
 
-ActorSprite* ActorSprite::createWithActorDto(ActorDto pActorDto)
+ActorSprite* ActorSprite::createWithActorDto(ActorDto actorDto)
 {
     auto *pRet = new ActorSprite();
-    if (pRet && pRet->initWithActorDto(pActorDto))
+    if (pRet && pRet->initWithActorDto(actorDto))
+    {
+        pRet->autorelease();
+        return pRet;
+    }
+    else
+    {
+        delete pRet;
+        pRet = NULL;
+        return NULL;
+    }
+}
+
+ActorSprite* ActorSprite::createWithActorDto(ActorDto actorDto, int typeId)
+{
+    auto *pRet = new ActorSprite();
+    if (pRet && pRet->initWithActorDto(actorDto, typeId))
     {
         pRet->autorelease();
         return pRet;
@@ -191,13 +213,18 @@ FiniteTimeAction* ActorSprite::createTopActorAnimate()
 
 FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, std::string frameName)
 {
+    return createActorAnimate(actorId, m_nowTypeId, frameName);
+}
+
+FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, int typeId, std::string frameName)
+{
     auto pAnimation = Animation::create();
-    auto startSpriteFrameName = StringUtils::format("actor_%d_%s_%d.jpg", actorId, frameName.c_str(), 2);
+    auto startSpriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", actorId, typeId, frameName.c_str(), 2);
     auto pStartFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName(startSpriteFrameName);
     pAnimation->addSpriteFrame(pStartFrame);
     for (int i = 0; i < 3; i++)
     {
-        auto spriteFrameName = StringUtils::format("actor_%d_%s_%d.jpg", actorId, frameName.c_str(), (i + 1));
+        auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", actorId, typeId, frameName.c_str(), (i + 1));
         auto pFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName);
         pAnimation->addSpriteFrame(pFrame);
     }
@@ -228,6 +255,37 @@ ActorSprite::ActorEquipDto ActorSprite::createEquipDto()
 ActorSprite::ActorDto ActorSprite::createDto()
 {
     ActorSprite::ActorDto actorDto;
+    /** プレイヤーを一意に識別するID. */
+    actorDto.playerId = 0;
+    /** キャライメージのID. */
+    actorDto.imageResId = 0;
+    /** 顔画像のデフォルトID. */
+    actorDto.faceImgId = 0;
+    /** キャラ名. */
+    actorDto.name = "";
+    /** 攻撃力. */
+    actorDto.attackPoint = 0;
+    /** 防御力. */
+    actorDto.defencePoint = 0;
+    /** レベル. */
+    actorDto.lv = 0;
+    /** 経験値. */
+    actorDto.exp = 0;
+    /** 次のレベルまでの経験値 */
+    actorDto.nextExp = 0;
+    /** HP. */
+    actorDto.hitPoint = 0;
+    /** HP最大値. */
+    actorDto.hitPointLimit = 0;
+    /** MP. */
+    actorDto.magicPoint = 0;
+    /** MP最大値. */
+    actorDto.magicPointLimit = 0;
+    /** 移動力(ステータス表示用). */
+    actorDto.movePoint = 0;
+    /** 攻撃範囲(ステータス表示用). */
+    actorDto.attackRange = 0;
+    /** 装備. */
     actorDto.equip = ActorSprite::createEquipDto();
     return actorDto;
 }
