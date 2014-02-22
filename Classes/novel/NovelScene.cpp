@@ -267,31 +267,43 @@ void NovelScene::nextNovelJson()
         }
         
         int textType = Json_getItem(item, "type")->valueInt;
-        if (textType == kSelectItem)
+        if (textType == NovelType::SelectItem)
         {
             // 選択肢表示
             m_isMenuSelect = true;
             makeSelectSpriteButton(Json_getItem(item, "select1")->valueString, Json_getItem(item, "next1Id")->valueInt,
                                    Json_getItem(item, "select2")->valueString, Json_getItem(item, "next2Id")->valueInt);
         }
-        else if (textType == kActorImageShow)
+        else if (textType == NovelType::ActorImageShow)
         {
             // アクター生成と表示
             int dict = Json_getItem(item, "dict")->valueInt;
             string imgFilePath = Json_getItem(item, "imgPath")->valueString;
             makeActorImage(imgFilePath.c_str(), dict);
         }
-        else if (textType == kActorImageHide)
+        else if (textType == NovelType::ActorImageHide)
         {
             // 表示中のアクターを消去
             int dict = Json_getItem(item, "dict")->valueInt;
             removeActorImage(dict);
         }
-        else if (textType == kBackgroundShow)
+        else if (textType == NovelType::BackgroundShow)
         {
             // 背景切替
             string imgFilePath = Json_getItem(item, "imgPath")->valueString;
             changeBackgroundAnimation(imgFilePath);
+        }
+        else if(textType == NovelType::ActorImageShadeShow)
+        {
+            // 影設定
+            int dict = Json_getItem(item, "dict")->valueInt;
+            shadeActorImage(dict);
+        }
+        else if(textType == NovelType::ActorImageShadeHide)
+        {
+            // 影解除
+            int dict = Json_getItem(item, "dict")->valueInt;
+            resetShadeActorImage(dict);
         }
 
         m_textIndex++;
@@ -412,7 +424,7 @@ void NovelScene::makeActorImage(const char* imageFilePath, int dict)
     }
     else if (dictTag == kTag_ActorDictCenter)
     {
-        // TODO: センターあとで
+        point = Point(winSize.width / 4 + actor->boundingBox().size.width * 0.5, actor->boundingBox().size.height * 0.5);
         
         // leftとrightを暗くする
         shadeActorImage(kTag_ActorDictLeft-kTag_ActorDict);
@@ -448,6 +460,16 @@ void NovelScene::shadeActorImage(int dict)
     if (actor)
     {
         actor->setColor(Color3B(100, 100, 100));
+    }
+}
+
+void NovelScene::resetShadeActorImage(int dict)
+{
+    int dictTag = dict + kTag_ActorDict;
+    Sprite* actor = (Sprite*) this->getChildByTag(dictTag);
+    if (actor)
+    {
+        actor->setColor(Color3B::WHITE);
     }
 }
 

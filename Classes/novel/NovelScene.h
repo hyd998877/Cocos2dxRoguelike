@@ -59,6 +59,7 @@ private:
     void makeActorImage(const char* imageFilePath, int dict);
     void removeActorImage(int dict);
     void shadeActorImage(int dict);
+    void resetShadeActorImage(int dict);
     
     void changeBackgroundAnimation(const string& imgFilePath);
 //    FiniteTimeAction* changeBackgroundAnimation(const string&  imgFilePath);
@@ -105,13 +106,15 @@ protected:
         kZOrder_MenuItem,
     };
     
-    enum kNovelType
+    enum NovelType
     {
-        kTextType = 1,
-        kSelectItem = 2,
-        kActorImageShow = 3,
-        kActorImageHide = 4,
-        kBackgroundShow = 5,
+        TextType            = 1, // テキスト表示
+        SelectItem          = 2, // 選択肢表示
+        ActorImageShow      = 3, // 立ち絵画像表示
+        ActorImageHide      = 4, // 立ち絵画像非表示
+        BackgroundShow      = 5, // 背景表示
+        ActorImageShadeShow = 6, // 立ち絵影表示
+        ActorImageShadeHide = 7, // 立ち絵影非表示
     };
     
 public:

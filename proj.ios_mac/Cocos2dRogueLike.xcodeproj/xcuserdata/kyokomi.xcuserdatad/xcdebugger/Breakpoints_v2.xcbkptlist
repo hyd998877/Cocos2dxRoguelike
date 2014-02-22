@@ -378,11 +378,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/novel/NovelScene.cpp"
-            timestampString = "414625090.320722"
+            timestampString = "414767631.725273"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "436"
-            endingLineNumber = "436"
+            startingLineNumber = "448"
+            endingLineNumber = "448"
             landmarkName = "NovelScene::removeActorImage(int dict)"
             landmarkType = "5">
          </BreakpointContent>
