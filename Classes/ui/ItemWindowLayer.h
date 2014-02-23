@@ -38,8 +38,6 @@ public:
     void setItemEquip(int objectId, bool isEquip);
     void reloadItemList();
     
-    static MenuItemSprite* createMenuItemSprite(Color3B color, const ccMenuCallback& callback);
-    
     typedef std::function<void(Object*, DropItemSprite::DropItemDto)> ItemWindowMenuCallback;
     void setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback);
     void setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback);

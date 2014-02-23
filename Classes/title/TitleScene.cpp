@@ -8,6 +8,7 @@
 
 #include "TitleScene.h"
 #include "MapSceneLoader.h"
+#include "MypageScene.h"
 
 TitleScene::TitleScene()
 //:mStartConrolButton(NULL)
@@ -80,7 +81,11 @@ Control::Handler TitleScene::onResolveCCBCCControlSelector(cocos2d::Object *pTar
 void TitleScene::tappedStartButton(Object * pTarget, Control::EventType pControlEventType)
 {
     CCLOG("tappedStartButton eventType = %d", pControlEventType);
-    Scene* scene = MapSceneLoader::scene();
+//    Scene* scene = MapSceneLoader::scene();
+//    TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
+//    Director::getInstance()->replaceScene(trans);
+
+    Scene* scene = MypageScene::scene();
     TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
     Director::getInstance()->replaceScene(trans);
 }

@@ -6,38 +6,16 @@ LOCAL_MODULE := cocos2dcpp_shared
 
 LOCAL_MODULE_FILENAME := libcocos2dcpp
 
-LOCAL_SRC_FILES := hellocpp/main.cpp \
-                   ../../Classes/AppDelegate.cpp \
-                   ../../Classes/ui/CommonWindowUtil.cpp \
-                   ../../Classes/dao/MLevelDao.cpp \
-                   ../../Classes/dao/MWeaponDao.cpp \
-                   ../../Classes/dao/MAccessoryDao.cpp \
-                   ../../Classes/dao/MUseItemDao.cpp \
-                   ../../Classes/title/TitleScene.cpp \
-                   ../../Classes/title/TitleSceneLoader.cpp \
-                   ../../Classes/map/MapManager.cpp \
-                   ../../Classes/world_map/MapScene.cpp \
-                   ../../Classes/world_map/MapSceneLoader.cpp \
-                   ../../Classes/actor/ActorSprite.cpp \
-                   ../../Classes/game_object/DropItemSprite.cpp \
-                   ../../Classes/ui/LabelSprite.cpp \
-                   ../../Classes/ui/MenuItemSelectLabelSprite.cpp \
-                   ../../Classes/ui/table/CustomTableViewCell.cpp \
-                   ../../Classes/ui/table/TableViewTestLayer.cpp \
-                   ../../Classes/ui/ModalLayer.cpp \
-                   ../../Classes/ui/ItemWindowLayer.cpp \
-                   ../../Classes/ui/AlertDialogLayer.cpp \
-                   ../../Classes/quest/SRPGScene.cpp \
-                   ../../Classes/quest/SRPGMapLayer.cpp \
-                   ../../Classes/logic/BattleLogic.cpp \
-                   ../../Classes/logic/ItemLogic.cpp \
-                   ../../Classes/novel/NovelScene.cpp \
-                   ../../Classes/rogue/RogueScene.cpp
+CPP_FILES := $(shell find $(LOCAL_PATH)/../../Classes -name *.cpp)
+LOCAL_SRC_FILES := roguelike/main.cpp 
+LOCAL_SRC_FILES += $(CPP_FILES:$(LOCAL_PATH)/%=%)
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
                    $(LOCAL_PATH)/../../Classes/dao \
                    $(LOCAL_PATH)/../../Classes/data \
                    $(LOCAL_PATH)/../../Classes/title \
+                   $(LOCAL_PATH)/../../Classes/battle \
+                   $(LOCAL_PATH)/../../Classes/mypage \
                    $(LOCAL_PATH)/../../Classes/world_map \
                    $(LOCAL_PATH)/../../Classes/ui \
                    $(LOCAL_PATH)/../../Classes/quest \

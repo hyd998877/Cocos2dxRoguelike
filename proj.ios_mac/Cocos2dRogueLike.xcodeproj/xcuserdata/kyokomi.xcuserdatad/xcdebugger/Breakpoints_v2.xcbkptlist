@@ -134,11 +134,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/ui/ItemWindowLayer.cpp"
-            timestampString = "414627040.929564"
+            timestampString = "414842657.129439"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "340"
-            endingLineNumber = "340"
+            startingLineNumber = "335"
+            endingLineNumber = "335"
             landmarkName = "ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)"
             landmarkType = "5">
             <Locations>
@@ -244,11 +244,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/ui/ItemWindowLayer.cpp"
-            timestampString = "414627040.929564"
+            timestampString = "414842657.129439"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "346"
-            endingLineNumber = "346"
+            startingLineNumber = "341"
+            endingLineNumber = "341"
             landmarkName = "ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)"
             landmarkType = "5">
          </BreakpointContent>
@@ -410,11 +410,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/game_object/DropItemSprite.h"
-            timestampString = "414627855.739002"
+            timestampString = "414842657.129439"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41">
+            startingLineNumber = "42"
+            endingLineNumber = "42">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

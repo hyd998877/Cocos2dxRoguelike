@@ -1,13 +1,13 @@
 //
-//  BattleSecne.h
+//  BattleScene.h
 //  Cocos2dRogueLike
 //
 //  Created by kyokomi on 2014/02/22.
 //
 //
 
-#ifndef __Cocos2dRogueLike__BattleSecne__
-#define __Cocos2dRogueLike__BattleSecne__
+#ifndef __Cocos2dRogueLike__BattleScene__
+#define __Cocos2dRogueLike__BattleScene__
 
 #include "cocos2d.h"
 
@@ -32,4 +32,4 @@ public:
 };
 
 
-#endif /* defined(__Cocos2dRogueLike__BattleSecne__) */
+#endif /* defined(__Cocos2dRogueLike__BattleScene__) */

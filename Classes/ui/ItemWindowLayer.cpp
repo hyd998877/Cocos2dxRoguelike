@@ -274,11 +274,6 @@ void ItemWindowLayer::reloadItemList()
     {
         // ソート
         m_itemDtoList.sort(DropItemSprite::DropItemDto::compare_dropItem_equip);
-//        std::sort(m_itemDtoList.begin(), m_itemDtoList.end(), DropItemSprite::DropItemDto::compare_dropItem_equip);
-        
-//        std::sort(m_itemDtoList.begin(), m_itemDtoList.end(), [this](const DropItemSprite::DropItemDto& o1, const DropItemSprite::DropItemDto& o2) {
-//            
-//        });
         
         std::list<TableViewTestLayer::TableLayout> itemNameList;
         for (DropItemSprite::DropItemDto dropItem : m_itemDtoList)
@@ -409,23 +404,3 @@ void ItemWindowLayer::setItemEquipMenuCallback(const ItemWindowMenuCallback& ite
     m_itemEquipMenuCallback = itemEquipMenuCallback;
 }
 
-#pragma mardk
-#pragma mardk static
-
-MenuItemSprite* ItemWindowLayer::createMenuItemSprite(Color3B color, const ccMenuCallback& callback)
-{
-    auto rect = Rect(0, 0, 300, 30);
-    auto capRect = Rect(0, 0, 300, 30);
-    
-    auto pSprite1 = extension::Scale9Sprite::create("menu_button.png", rect, capRect);
-    pSprite1->setColor(color);
-    pSprite1->setOpacity(192);
-    pSprite1->setContentSize(Size(40, 20));
-    auto pSprite2 = extension::Scale9Sprite::create("menu_button.png", rect, capRect);
-    pSprite2->setColor(color);
-    pSprite2->setOpacity(128);
-    pSprite2->setContentSize(Size(40, 20));
-    
-    // 使用ボタン
-    return MenuItemSprite::create(pSprite1, pSprite2, callback);
-}

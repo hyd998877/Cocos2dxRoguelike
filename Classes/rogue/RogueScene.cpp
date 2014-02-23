@@ -140,7 +140,6 @@ bool RogueScene::initWithQuestId(int questId)
     
     m_mapManager.init(0, (int)m_baseMapSize.height, 0, (int)m_baseMapSize.width);
 
-    // 使ってなかった
     // フロントレイヤー
     auto pFrontLayer = Layer::create();
     pTiledMap->addChild(pFrontLayer,

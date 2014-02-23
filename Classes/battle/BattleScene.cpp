@@ -1,12 +1,12 @@
 //
-//  BattleSecne.cpp
+//  BattleScene.cpp
 //  Cocos2dRogueLike
 //
 //  Created by kyokomi on 2014/02/22.
 //
 //
 
-#include "BattleSecne.h"
+#include "BattleScene.h"
 
 #include "ActorSprite.h"
 

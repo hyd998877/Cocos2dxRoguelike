@@ -12,7 +12,7 @@
 #include "TitleSceneLoader.h"
 #include "RogueScene.h"
 #include "NovelScene.h"
-#include "BattleSecne.h"
+#include "BattleScene.h"
 
 
 MapScene::MapScene()

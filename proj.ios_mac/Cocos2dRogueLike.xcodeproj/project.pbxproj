@@ -62,6 +62,7 @@
 		CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6418B0E92D006C4B13 /* MUseItemDao.cpp */; };
 		CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */; };
 		CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */; };
+		CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */; };
 		CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */; };
 		CE73FB2218B0A073009273D0 /* MWeapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB2018B0A073009273D0 /* MWeapon.cpp */; };
 		CE73FB2418B0A3F1009273D0 /* test_master in Resources */ = {isa = PBXBuildFile; fileRef = CE73FB2318B0A3F1009273D0 /* test_master */; };
@@ -116,7 +117,7 @@
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
 		CECE37AD18B9A08C0086C8A0 /* bg in Resources */ = {isa = PBXBuildFile; fileRef = CECE37AC18B9A08C0086C8A0 /* bg */; };
 		CECE37B518B9A6EA0086C8A0 /* battle in Resources */ = {isa = PBXBuildFile; fileRef = CECE37B418B9A6EA0086C8A0 /* battle */; };
-		CEF46A6618B8741300F887CA /* BattleSecne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEF46A6418B8741300F887CA /* BattleSecne.cpp */; };
+		CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEF46A6418B8741300F887CA /* BattleScene.cpp */; };
 		CEF46A6818B87A0200F887CA /* actor in Resources */ = {isa = PBXBuildFile; fileRef = CEF46A6718B87A0200F887CA /* actor */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
@@ -347,6 +348,8 @@
 		CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessoryDao.h; sourceTree = "<group>"; };
 		CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
 		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
+		CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageScene.cpp; sourceTree = "<group>"; };
+		CE68D3E418B9F9D0006CCA37 /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
 		CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeaponDao.cpp; sourceTree = "<group>"; };
 		CE73FB1E18B0A064009273D0 /* MWeaponDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeaponDao.h; sourceTree = "<group>"; };
 		CE73FB2018B0A073009273D0 /* MWeapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeapon.cpp; sourceTree = "<group>"; };
@@ -430,8 +433,8 @@
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
 		CECE37AC18B9A08C0086C8A0 /* bg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bg; sourceTree = "<group>"; };
 		CECE37B418B9A6EA0086C8A0 /* battle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = battle; sourceTree = "<group>"; };
-		CEF46A6418B8741300F887CA /* BattleSecne.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleSecne.cpp; sourceTree = "<group>"; };
-		CEF46A6518B8741300F887CA /* BattleSecne.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleSecne.h; sourceTree = "<group>"; };
+		CEF46A6418B8741300F887CA /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScene.cpp; sourceTree = "<group>"; };
+		CEF46A6518B8741300F887CA /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
 		CEF46A6718B87A0200F887CA /* actor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = actor; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -506,6 +509,7 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CE68D3DC18B9F9BB006CCA37 /* mypage */,
 				CEF46A6318B8740500F887CA /* battle */,
 				CE7F54B118AF0AFC00BFD0DC /* novel */,
 				CEA155B5189D2C68004298DF /* util */,
@@ -676,6 +680,16 @@
 			);
 			name = Resources;
 			path = ../Resources;
+			sourceTree = "<group>";
+		};
+		CE68D3DC18B9F9BB006CCA37 /* mypage */ = {
+			isa = PBXGroup;
+			children = (
+				CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */,
+				CE68D3E418B9F9D0006CCA37 /* MypageScene.h */,
+			);
+			name = mypage;
+			path = ../Classes/mypage;
 			sourceTree = "<group>";
 		};
 		CE7F54B118AF0AFC00BFD0DC /* novel */ = {
@@ -862,8 +876,8 @@
 		CEF46A6318B8740500F887CA /* battle */ = {
 			isa = PBXGroup;
 			children = (
-				CEF46A6418B8741300F887CA /* BattleSecne.cpp */,
-				CEF46A6518B8741300F887CA /* BattleSecne.h */,
+				CEF46A6418B8741300F887CA /* BattleScene.cpp */,
+				CEF46A6518B8741300F887CA /* BattleScene.h */,
 			);
 			name = battle;
 			path = ../Classes/battle;
@@ -1148,7 +1162,7 @@
 				CE93B447188156C700825FD1 /* BattleLogic.cpp in Sources */,
 				CE93B44C188156C700825FD1 /* RogueScene.cpp in Sources */,
 				CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */,
-				CEF46A6618B8741300F887CA /* BattleSecne.cpp in Sources */,
+				CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */,
 				CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */,
 				CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */,
 				CE93B44B188156C700825FD1 /* SRPGScene.cpp in Sources */,
@@ -1163,6 +1177,7 @@
 				CE93B444188156C700825FD1 /* AccountData.cpp in Sources */,
 				CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
+				CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */,
 				CE93B44E188156C700825FD1 /* TitleSceneLoader.cpp in Sources */,
 				CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */,
 				CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */,

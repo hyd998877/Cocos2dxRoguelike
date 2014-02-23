@@ -36,9 +36,14 @@ public:
         // status
         bool isEquip;
         
+        // 装備優先 武器優先
         static bool const compare_dropItem_equip(const _DropItemDto& o1, const _DropItemDto& o2)
         {
-            if (o1.isEquip)
+            if (o1.isEquip && !o2.isEquip)
+            {
+                return true;
+            }
+            else if (o1.isEquip && o2.isEquip && o1.itemType == MUseItem::ItemType::EQUIP_WEAPON)
             {
                 return true;
             }
