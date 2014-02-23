@@ -79,6 +79,8 @@ public:
     // 初期化とか
     bool initWithActorDto(ActorDto actorDto);
     bool initWithActorDto(ActorDto actorDto, int typeId);
+    void changeSpriteFrame(int typeId);
+    void changeSpriteFrame(int typeId, std::string frameName);
     static ActorSprite* createWithActorDto(ActorDto actorDto);
     static ActorSprite* createWithActorDto(ActorDto actorDto, int typeId);
     

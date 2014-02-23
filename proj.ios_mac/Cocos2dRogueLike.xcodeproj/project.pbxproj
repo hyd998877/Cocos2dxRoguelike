@@ -114,6 +114,8 @@
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
 		CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
+		CECE37AD18B9A08C0086C8A0 /* bg in Resources */ = {isa = PBXBuildFile; fileRef = CECE37AC18B9A08C0086C8A0 /* bg */; };
+		CECE37B518B9A6EA0086C8A0 /* battle in Resources */ = {isa = PBXBuildFile; fileRef = CECE37B418B9A6EA0086C8A0 /* battle */; };
 		CEF46A6618B8741300F887CA /* BattleSecne.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEF46A6418B8741300F887CA /* BattleSecne.cpp */; };
 		CEF46A6818B87A0200F887CA /* actor in Resources */ = {isa = PBXBuildFile; fileRef = CEF46A6718B87A0200F887CA /* actor */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
@@ -426,6 +428,8 @@
 		CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonWindowUtil.cpp; sourceTree = "<group>"; };
 		CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
+		CECE37AC18B9A08C0086C8A0 /* bg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bg; sourceTree = "<group>"; };
+		CECE37B418B9A6EA0086C8A0 /* battle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = battle; sourceTree = "<group>"; };
 		CEF46A6418B8741300F887CA /* BattleSecne.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleSecne.cpp; sourceTree = "<group>"; };
 		CEF46A6518B8741300F887CA /* BattleSecne.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleSecne.h; sourceTree = "<group>"; };
 		CEF46A6718B87A0200F887CA /* actor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = actor; sourceTree = "<group>"; };
@@ -639,6 +643,8 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CECE37B418B9A6EA0086C8A0 /* battle */,
+				CECE37AC18B9A08C0086C8A0 /* bg */,
 				CEF46A6718B87A0200F887CA /* actor */,
 				CE73FB2318B0A3F1009273D0 /* test_master */,
 				CE2F8A3D18AF28E5001B457C /* novel */,
@@ -1068,6 +1074,7 @@
 				CE73FB2418B0A3F1009273D0 /* test_master in Resources */,
 				CE93B4BE188156FC00825FD1 /* fileLookup.plist in Resources */,
 				CEB1A5E71881895A00D26BAE /* ui in Resources */,
+				CECE37B518B9A6EA0086C8A0 /* battle in Resources */,
 				CE93B4B9188156FC00825FD1 /* btn-b-1.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				CE93B4B7188156FC00825FD1 /* btn-a-2.png in Resources */,
@@ -1076,6 +1083,7 @@
 				CE93B4C7188156FC00825FD1 /* MapScene.ccbi in Resources */,
 				CE93B4BD188156FC00825FD1 /* btn-test-2.png in Resources */,
 				CE93B4B4188156FC00825FD1 /* bg_jan.jpg in Resources */,
+				CECE37AD18B9A08C0086C8A0 /* bg in Resources */,
 				CE93B494188156EC00825FD1 /* actor_4_f.png in Resources */,
 				CE0D522B188A507F00ECB309 /* icon_set in Resources */,
 				CE93B4C5188156FC00825FD1 /* japan_map001.png in Resources */,

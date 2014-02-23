@@ -45,6 +45,32 @@ bool ActorSprite::initWithActorDto(ActorDto actorDto, int typeId)
     return true;
 }
 
+void ActorSprite::changeSpriteFrame(int typeId)
+{
+    changeSpriteFrame(typeId, "bottom");
+}
+
+void ActorSprite::changeSpriteFrame(int typeId, std::string frameName)
+{
+    if (m_nowTypeId != typeId)
+    {
+        m_nowTypeId = typeId;
+        
+        // ActorのSpriteFrameのplistをキャッシュ
+        auto spriteFramePlistName = StringUtils::format("actor/%d/actor_%d_%d.plist",
+                                                        m_actorDto.playerId, m_actorDto.playerId, typeId);
+        CCLOG("changeSpriteFrame = %s", spriteFramePlistName.c_str());
+        if (!SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFramePlistName))
+        {
+            SpriteFrameCache::getInstance()->addSpriteFramesWithFile(spriteFramePlistName);
+        }
+    }
+    auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.playerId, typeId, frameName.c_str(), 1);
+    CCLOG("changeSpriteFrame spriteFrameName = %s", spriteFrameName.c_str());
+    auto spriteFrame = Sprite::createWithSpriteFrameName(spriteFrameName);
+    this->setTexture(spriteFrame->getTexture());
+}
+
 ActorSprite* ActorSprite::createWithActorDto(ActorDto actorDto)
 {
     auto *pRet = new ActorSprite();
