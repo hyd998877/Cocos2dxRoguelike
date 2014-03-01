@@ -14,17 +14,17 @@
 USING_NS_CC;
 
 // シングルトン
-static MWeaponDao *s_instance = nullptr;
+static MWeaponDao *s_m_weapon_dao_instance = nullptr;
 
 MWeaponDao* MWeaponDao::getInstance()
 {
-    if (!s_instance)
+    if (!s_m_weapon_dao_instance)
     {
-        s_instance = new MWeaponDao();
-        s_instance->init();
+        s_m_weapon_dao_instance = new MWeaponDao();
+        s_m_weapon_dao_instance->init();
     }
     
-    return s_instance;
+    return s_m_weapon_dao_instance;
 }
 
 void MWeaponDao::init()
@@ -74,5 +74,5 @@ const MWeapon MWeaponDao::selectById(int weaponId) const
 
 MWeaponDao::~MWeaponDao()
 {
-    s_instance = nullptr;
+    s_m_weapon_dao_instance = nullptr;
 }

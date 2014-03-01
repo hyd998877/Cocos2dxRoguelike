@@ -20,25 +20,41 @@
 
 class RogueScene : public cocos2d::Layer
 {
-    static const int MAX_LOG_LENGTH = 16*1024;
-protected:
+public:
     // ゲームステート
     enum GameStatus {
-        INIT           = 0,
-        PLAYER_TURN    = 10,
-        PLAYER_ACTION  = 11,
+        INIT              = 0,
+        PLAYER_TURN       = 10,
+        PLAYER_ACTION     = 11,
         PLAYER_NO_ACTION  = 12,
-        ENEMY_TURN     = 20,
-        ENEMY_ACTION   = 21,
-        GAME_OVER      = 99,
+        ENEMY_TURN        = 20,
+        ENEMY_ACTION      = 21,
+        GAME_OVER         = 99,
     };
     
-    // 廃止というかkやめる
+    typedef struct _RoguePlayData {
+        // クエストID
+        int quest_id;
+        // フロアID
+        int floor_id;
+        // ゲーム状態
+        RogueScene::GameStatus game_status;
+        // 未行動カウント(足踏み自動回復とかの）
+        int no_action_count;
+        // ターン数
+        int turn_count;
+        // 敵出現数（トータル）
+        int enemy_count;
+    } RoguePlayData;
+    
+protected:
+    
+    static const int MAX_LOG_LENGTH = 16*1024;
+    
     enum TiledMapTag {
-        kGridLineTag             = 1000,
-        kTiledMapDropItemBaseTag = 10000, // + seqNo
-        kTiledMapObjectTag       = 15000, // 階段専用
-        kTiledMapEnemyBaseTag    = 20000, // + seqNo
+        TiledMapDropItemBaseTag = 10000, // + seqNo
+        TiledMapObjectTag       = 15000, // 階段専用
+        TiledMapEnemyBaseTag    = 20000, // + seqNo
         
         TiledMapFrontLayerTag          = 40000,
         FloorLayerTag                  = 40001,
@@ -46,33 +62,13 @@ protected:
         FloorMaskPlayerLayerTag        = 40003,
     };
     
-    // 廃止というかzやめる
     enum TiledMapIndex {
-        zGridLineIndex = 1,
-        zTiledMapDropItemBaseIndex,
-        zTiledMapObjectIndex,
-        zTiledMapEnemyBaseIndex,
+        TiledMapDropItemBaseZOrder,
+        TiledMapObjectZOrder,
+        TiledMapEnemyBaseZOrder,
         TiledMapFrontZOrder,
         FloorLayerZOrder,
         FloorMaskLayerZOrder,
-//        FloorMaskPlayerLayerZOrder
-    };
-    
-    // 廃止予定
-    enum _Tag {
-        kTiledMapTag          = 1,
-//        kCursorBaseTag      = 9000,
-//        kCursorMoveFindTag  = 9001,
-//        kCursorMoveStepTag  = 9002,
-//        kCursorSelectedTag  = 9003,
-//        kActorBaseTag         = 100000,
-//        kMiniMapTag           = 150000,
-        kStatusBarTag         = 200000,
-//        kStatusBar2Tag        = 200001,
-        kGameLogTag           = 210000,
-//        kItemListTag          = 220000,
-//        kMenuTag              = 300000,
-//        kModalTag             = 900000,
     };
     
     // ミニマップ上のタグ
@@ -81,10 +77,13 @@ protected:
     };
     
     enum Tag {
+        TiledMapLayerTag          =      1,
+        GridLineTag               =    100,
         ActorPlayerTag            = 100000,
         RogueLayerTag             = 110000,
-//        RogueMaskLayerTag         = 110001,
         MiniMapLayerTag           = 150000,
+        StatusBarLayerTag         = 200000,
+        GameLogLayerTag           = 210000,
         ItemListWindowTag         = 220000,
         CommonWindowTag           = 230000,
         KeypadMenuTag             = 300000,
@@ -98,8 +97,9 @@ protected:
     
     enum ZOrder {
         TiledMapLayerZOrder = 1,
-        RogueZOrder,
-        RogueMaskZOrder,
+        GridLineZOrder,
+        RogueZOrder,               // 明る部分
+        RogueMaskZOrder,           // 暗い部分
         ActorBaseZOrder,
         ActorPlayerZOrder,
         ActionCursorZOrder,
@@ -115,17 +115,19 @@ protected:
         ModalLayerZOrder,
     };
     
-    cocos2d::EventListener* m_listener;
-    
 private:
-    int m_questId;
-    // ゲーム管理
-    GameStatus m_gameStatus;
-    int m_noActionCount;
-    int m_TurnCount;
-    int m_enemyCount;
-    bool m_isSppedUp;
+    // ゲーム管理 save
+    RoguePlayData rogue_play_data_;
     
+    // マップベース情報 （フロアIDから取れるのでsave不要）
+    cocos2d::Size base_content_size_;
+    cocos2d::Size base_map_size_;
+    cocos2d::Size base_tile_size_;
+    
+    // Bダッシュ中フラグ
+    bool m_isSppedUp;
+
+private:
     float getAnimationSpeed();
     void changeGameStatus(GameStatus gameStatus);
     void enemyTurn();
@@ -133,13 +135,8 @@ private:
     
     void changeScene(cocos2d::Scene* scene);
     
-    // マップベース情報
-    cocos2d::Size m_baseContentSize;
-    cocos2d::Size m_baseMapSize;
-    cocos2d::Size m_baseTileSize;
-
     // マップ制御
-    MapManager m_mapManager;
+    MapManager m_mapManager; // TODO: シングルトンにしないとな あと再構築に必要なデータを取得するメソッド
     MapIndex getRandomMapIndex(bool isColision, bool isActor);
     
     // タッチイベント系
@@ -166,7 +163,6 @@ private:
     void refreshStatus();
     
     void showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback);
-//    void showCommonWindow(std::string title, std::string okText, std::string ngText);
     AlertDialogLayer* getCommonWindow();
     void hideCommonWindow();
     
@@ -209,7 +205,6 @@ private:
     void refreshAutoMapping(const Rect& floorInfoIndexRect);
     
     SpriteBatchNode* getGridSpriteBatchNode();
-    
     
 public:
     RogueScene();

@@ -14,17 +14,17 @@
 USING_NS_CC;
 
 // シングルトン
-static MUseItemDao *s_instance = nullptr;
+static MUseItemDao *s_m_user_item_dao_instance = nullptr;
 
 MUseItemDao* MUseItemDao::getInstance()
 {
-    if (!s_instance)
+    if (!s_m_user_item_dao_instance)
     {
-        s_instance = new MUseItemDao();
-        s_instance->init();
+        s_m_user_item_dao_instance = new MUseItemDao();
+        s_m_user_item_dao_instance->init();
     }
     
-    return s_instance;
+    return s_m_user_item_dao_instance;
 }
 
 void MUseItemDao::init()
@@ -77,5 +77,5 @@ const MUseItem MUseItemDao::selectById(int useItemId) const
 
 MUseItemDao::~MUseItemDao()
 {
-    s_instance = nullptr;
+    s_m_user_item_dao_instance = nullptr;
 }

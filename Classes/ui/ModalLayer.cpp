@@ -28,7 +28,6 @@ bool ModalLayer::init()
     listener->setSwallowTouches(true);
     
     listener->onTouchBegan = CC_CALLBACK_2(ModalLayer::onTouchBegan, this);
-//    this->getEventDispatcher()->addEventListenerWithFixedPriority(listener, 1);
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
     // TODO: とりあえずデフォルトカラーはここで。あとで引数にする？
@@ -44,7 +43,6 @@ bool ModalLayer::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_even
     if (this->isVisible())
     {
         // モーダル以降のイベントを強制停止する
-        unused_event->stopPropagation();
         return true;
     }
     

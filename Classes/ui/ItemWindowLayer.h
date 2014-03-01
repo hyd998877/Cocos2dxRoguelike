@@ -42,8 +42,11 @@ public:
     void setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback);
     void setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback);
     void setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback);
+    
+    std::list<DropItemSprite::DropItemDto> getItemList() { return m_itemDtoList; }
 private:
     int m_showItemDetailIdx;
+    // TODO: ユーザーデータから持ってくるようにする
     std::list<DropItemSprite::DropItemDto> m_itemDtoList;
     ItemWindowMenuCallback m_itemUseMenuCallback;
     ItemWindowMenuCallback m_itemDropMenuCallback;

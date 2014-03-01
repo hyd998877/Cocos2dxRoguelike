@@ -14,17 +14,17 @@
 USING_NS_CC;
 
 // シングルトン
-static MAccessoryDao *s_instance = nullptr;
+static MAccessoryDao *s_m_accessory_dao_instance = nullptr;
 
 MAccessoryDao* MAccessoryDao::getInstance()
 {
-    if (!s_instance)
+    if (!s_m_accessory_dao_instance)
     {
-        s_instance = new MAccessoryDao();
-        s_instance->init();
+        s_m_accessory_dao_instance = new MAccessoryDao();
+        s_m_accessory_dao_instance->init();
     }
     
-    return s_instance;
+    return s_m_accessory_dao_instance;
 }
 
 void MAccessoryDao::init()
@@ -74,5 +74,5 @@ const MAccessory MAccessoryDao::selectById(int accessoryId) const
 
 MAccessoryDao::~MAccessoryDao()
 {
-    s_instance = nullptr;
+    s_m_accessory_dao_instance = nullptr;
 }

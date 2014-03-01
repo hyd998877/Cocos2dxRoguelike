@@ -9,17 +9,17 @@
 #include "MLevelDao.h"
 
 // シングルトン
-static MLevelDao *s_instance = nullptr;
+static MLevelDao *s_m_level_dao_instance = nullptr;
 
 MLevelDao* MLevelDao::getInstance()
 {
-    if (!s_instance)
+    if (!s_m_level_dao_instance)
     {
-        s_instance = new MLevelDao();
-        s_instance->init();
+        s_m_level_dao_instance = new MLevelDao();
+        s_m_level_dao_instance->init();
     }
     
-    return s_instance;
+    return s_m_level_dao_instance;
 }
 
 void MLevelDao::init()
@@ -59,5 +59,5 @@ const MLevel MLevelDao::selectById(int lv)
 
 MLevelDao::~MLevelDao()
 {
-    s_instance = nullptr;
+    s_m_level_dao_instance = nullptr;
 }
