@@ -15,6 +15,9 @@
 #include "BattleScene.h"
 #include "SRPGScene.h"
 
+#include "AccountData.h"
+
+
 MypageScene::MypageScene()
 {
 }
@@ -112,8 +115,7 @@ void MypageScene::initGlobalMenu()
         comment_label->setString("まだ未実装です！");
         comment_label->getChildren().at(0)->setPosition(comment_label->getContentSize().width / 2, comment_label->getContentSize().height / 2);
         
-        // TODO: (kyokomi)テスト用にデータクリア
-        UserDefault::getInstance()->destroyInstance();
+        AccountData::getInstance()->reset();
     });
     
     auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("の　べ　る", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {

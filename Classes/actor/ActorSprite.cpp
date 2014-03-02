@@ -8,8 +8,6 @@
 
 #include "ActorSprite.h"
 
-using namespace cocos2d;
-
 ActorSprite::ActorSprite()
 {
     
@@ -278,6 +276,31 @@ ActorSprite::ActorEquipDto ActorSprite::createEquipDto()
     return equipDto;
 }
 
+ActorSprite::ActorEquipDto ActorSprite::createEquipDto(std::string data_string)
+{
+    std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
+    int index = 0;
+
+    if (data_string_array.size() != 10) {
+        return createEquipDto();
+    }
+    
+    ActorSprite::ActorEquipDto equipDto;
+    
+    equipDto.weaponObjectId    = atoi(data_string_array[index].c_str()); index++;
+    equipDto.weaponId          = atoi(data_string_array[index].c_str()); index++;
+    equipDto.weaponName        = data_string_array[index];
+    equipDto.weaponImgResId    = atoi(data_string_array[index].c_str()); index++;
+    equipDto.weaponStr         = atoi(data_string_array[index].c_str()); index++;
+
+    equipDto.accessoryObjectId = atoi(data_string_array[index].c_str()); index++;
+    equipDto.accessoryId       = atoi(data_string_array[index].c_str()); index++;
+    equipDto.accessoryName     = data_string_array[index];
+    equipDto.accessoryImgResId = atoi(data_string_array[index].c_str()); index++;
+    equipDto.accessoryDef      = atoi(data_string_array[index].c_str()); index++;
+    return equipDto;
+}
+
 ActorSprite::ActorDto ActorSprite::createDto()
 {
     ActorSprite::ActorDto actorDto;
@@ -314,4 +337,33 @@ ActorSprite::ActorDto ActorSprite::createDto()
     /** 装備. */
     actorDto.equip = ActorSprite::createEquipDto();
     return actorDto;
+}
+
+ActorSprite::ActorDto ActorSprite::createActorDto(std::string data_string)
+{
+    std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
+    int index = 0;
+    
+    if (data_string_array.size() != 15) {
+        return createDto();
+    }
+    
+    ActorSprite::ActorDto actor_dto;
+    
+    actor_dto.playerId        = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.imageResId      = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.faceImgId       = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.name            = data_string_array[index];            index++;
+    actor_dto.attackPoint     = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.defencePoint    = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.lv              = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.exp             = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.nextExp         = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.hitPoint        = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.hitPointLimit   = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.magicPoint      = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.magicPointLimit = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.movePoint       = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.attackRange     = atoi(data_string_array[index].c_str()); index++;
+    return actor_dto;
 }

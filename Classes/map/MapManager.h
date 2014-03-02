@@ -74,11 +74,16 @@ typedef struct _DropMapItem : public MapItem {
 class MapManager
 {
 public:
-    typedef struct _MapData {
+    typedef struct _MapDataSetting {
         int top;
         int bottom;
         int left;
         int right;
+    } MapDataSetting;
+    
+    typedef struct _MapData {
+        
+        MapDataSetting map_data_setting;
         
         // マップカーソル一時データ
         std::vector<std::vector<MapItem>> map_cursor_data_array;
@@ -104,10 +109,6 @@ private:
     MapData map_data_;
     
 public:
-    MapManager();
-    ~MapManager();
-    
-    void init();
     void initMapping(int top, int bottom, int left, int right);
     
     std::list<MapIndex> createActorFindDist(MapIndex mapIndex, int dist);
@@ -132,18 +133,34 @@ public:
     
     void addMapping(const MapIndex& mapIndex);
     const std::vector<std::vector<bool>> getMappingData();
+   
+    const MapData& getMapData() const { return map_data_; }
     
 private:
+    MapManager();
+    ~MapManager();
+    
+    void init();
+    
+    bool vaildateInit()
+    {
+        if (map_data_.map_data_setting.bottom == 0 && map_data_.map_data_setting.left == 0 && map_data_.map_data_setting.right == 0 && map_data_.map_data_setting.top == 0)
+        {
+            return false;
+        }
+        
+        return true;
+    }
     
     // 2次元配列をTYPEので初期化します
     template <typename TYPE>
     void clearMapItemArray(std::vector<std::vector<TYPE>> *pMapItemArray)
     {
         pMapItemArray->clear();
-        for (int x = 0; x < map_data_.right; x++)
+        for (int x = 0; x < map_data_.map_data_setting.right; x++)
         {
             std::vector<TYPE> mapItemArray;
-            for (int y = 0; y < map_data_.bottom; y++)
+            for (int y = 0; y < map_data_.map_data_setting.bottom; y++)
             {
                 TYPE noneMapItem = createNoneMapItem<TYPE>(x, y);
                 mapItemArray.push_back(noneMapItem);
@@ -157,10 +174,10 @@ private:
     void clearArray(std::vector<std::vector<TYPE>> *pArray, TYPE value)
     {
         pArray->clear();
-        for (int x = 0; x < map_data_.right; x++)
+        for (int x = 0; x < map_data_.map_data_setting.right; x++)
         {
             std::vector<TYPE> temp_array;
-            for (int y = 0; y < map_data_.bottom; y++)
+            for (int y = 0; y < map_data_.map_data_setting.bottom; y++)
             {
                 temp_array.push_back(value);
             }

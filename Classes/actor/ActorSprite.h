@@ -10,7 +10,9 @@
 #define __Cocos2dxSRPGQuest__ActorSprite__
 
 #include "cocos2d.h"
+
 #include "MapManager.h"
+#include "StringUtil.h"
 
 USING_NS_CC;
 
@@ -31,6 +33,7 @@ public:
         std::string accessoryName;
         int accessoryImgResId;
         int accessoryDef;
+        
     } ActorEquipDto;
     
     // TODO: classにして値変更のデリゲートメソッド作るべき？
@@ -100,8 +103,47 @@ public:
     void runRightAction();
     void runTopAction();
     
-    static ActorEquipDto createEquipDto();    
+    static ActorEquipDto createEquipDto();
+    static ActorEquipDto createEquipDto(std::string data_string);
     static ActorDto createDto();
+    static ActorDto createActorDto(std::string data_string);
+    
+    static std::string actorEquipToString(const ActorEquipDto& data)
+    {
+        return StringUtils::format("%d,%d,%s,%d,%d,%d,%d,%s,%d,%d",
+                                   data.weaponObjectId,
+                                   data.weaponId,
+                                   data.weaponName.c_str(),
+                                   data.weaponImgResId,
+                                   data.weaponStr,
+                                   data.accessoryObjectId,
+                                   data.accessoryId,
+                                   data.accessoryName.c_str(),
+                                   data.accessoryImgResId,
+                                   data.accessoryDef
+                                   );
+    }
+    
+    static std::string actorToString(const ActorDto& data)
+    {
+        return StringUtils::format("%d,%d,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+                                   data.playerId,
+                                   data.imageResId,
+                                   data.faceImgId,
+                                   data.name.c_str(),
+                                   data.attackPoint,
+                                   data.defencePoint,
+                                   data.lv,
+                                   data.exp,
+                                   data.nextExp,
+                                   data.hitPoint,
+                                   data.hitPointLimit,
+                                   data.magicPoint,
+                                   data.magicPointLimit,
+                                   data.movePoint,
+                                   data.attackRange
+                                   );
+    }
     
 private:
     ActorMapItem m_actorMapItem;

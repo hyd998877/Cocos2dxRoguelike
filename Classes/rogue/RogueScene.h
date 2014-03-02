@@ -45,13 +45,43 @@ public:
         int turn_count;
         // 敵出現数（トータル）
         int enemy_count;
+        
     } RoguePlayData;
+    
+    static RoguePlayData createRoguePlayData(std::string data_string)
+    {
+        std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
+        if (data_string_array.size() != 6) {
+            return {0, 0, GameStatus::INIT, 0, 0, 0};
+        }
+        
+        int index = 0;
+        RoguePlayData data;
+        data.quest_id = atoi(data_string_array[index].c_str()); index++;
+        data.floor_id = atoi(data_string_array[index].c_str()); index++;
+        data.game_status = static_cast<GameStatus>(atoi(data_string_array[index].c_str())); index++;
+        data.no_action_count = atoi(data_string_array[index].c_str()); index++;
+        data.turn_count = atoi(data_string_array[index].c_str()); index++;
+        data.enemy_count = atoi(data_string_array[index].c_str()); index++;
+        return data;
+    }
+    
+    static std::string const roguePlayDataToString(const RoguePlayData& data)
+    {
+        return StringUtils::format("%d,%d,%d,%d,%d,%d",
+                                   data.quest_id,
+                                   data.floor_id,
+                                   data.game_status,
+                                   data.no_action_count,
+                                   data.turn_count,
+                                   data.enemy_count);
+    }
     
 protected:
     
     static const int MAX_LOG_LENGTH = 16*1024;
     
-    enum TiledMapTag {
+    enum TiledMapTags {
         TiledMapDropItemBaseTag = 10000, // + seqNo
         TiledMapObjectTag       = 15000, // 階段専用
         TiledMapEnemyBaseTag    = 20000, // + seqNo
@@ -62,7 +92,7 @@ protected:
         FloorMaskPlayerLayerTag        = 40003,
     };
     
-    enum TiledMapIndex {
+    enum TiledMapIndexs {
         TiledMapDropItemBaseZOrder,
         TiledMapObjectZOrder,
         TiledMapEnemyBaseZOrder,
@@ -72,11 +102,11 @@ protected:
     };
     
     // ミニマップ上のタグ
-    enum MiniMapLayerTag {
+    enum MiniMapLayerTags {
         MiniMapSimbolBatchNodeTag = 100,
     };
     
-    enum Tag {
+    enum Tags {
         TiledMapLayerTag          =      1,
         GridLineTag               =    100,
         ActorPlayerTag            = 100000,
@@ -95,7 +125,7 @@ protected:
         ModalLayerTag             = 900000,
     };
     
-    enum ZOrder {
+    enum ZOrders {
         TiledMapLayerZOrder = 1,
         GridLineZOrder,
         RogueZOrder,               // 明る部分

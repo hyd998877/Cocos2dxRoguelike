@@ -3,6 +3,7 @@
 #include "extensions/cocos-ext.h"
 
 #include "TitleSceneLoader.h"
+#include "MypageScene.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -43,8 +44,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
 //    Scene *pScene = GameScene::scene();
-    auto *pScene = TitleSceneLoader::scene();
-
+//    auto *pScene = TitleSceneLoader::scene();
+    auto *pScene = MypageScene::scene();
+    
     // run
     director->runWithScene(pScene);
 

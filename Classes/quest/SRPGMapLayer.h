@@ -76,9 +76,6 @@ public:
 private:
     bool m_moveAnimation;
 
-    // マップ制御
-    MapManager m_mapManager;
-    
     // マップベース情報
     Size m_baseContentSize;
     Size m_baseMapSize;

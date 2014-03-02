@@ -9,6 +9,7 @@
 #include "MapManager.h"
 #include <iostream>
 #include <string>
+#include <cassert>
 
 #define DEBUG_LOG_MAP_ITEM_LAYER_FLG 0
 
@@ -21,6 +22,12 @@ MapManager::MapManager()
 
 MapManager::~MapManager()
 {
+    map_data_.map_cursor_data_array.clear();
+    map_data_.map_drop_item_data_array.clear();
+    map_data_.map_object_data_array.clear();
+    map_data_.mapping_array.clear();
+    map_data_.map_move_cursor_list.clear();
+    map_data_.map_move_point_list.clear();
 }
 
 MapManager* MapManager::getInstance()
@@ -41,26 +48,19 @@ void MapManager::init()
 
 void MapManager::initMapping(int top, int bottom, int left, int right)
 {
-    map_data_.top = top;
-    map_data_.bottom = bottom;
-    map_data_.left = left;
-    map_data_.right = right;
+    map_data_.map_data_setting.top = top;
+    map_data_.map_data_setting.bottom = bottom;
+    map_data_.map_data_setting.left = left;
+    map_data_.map_data_setting.right = right;
+    
+    assert(vaildateInit());
     
     clearCursor();
     clearMapItemArray(&map_data_.map_object_data_array);
     clearMapItemArray(&map_data_.map_drop_item_data_array);
 
     clearArray(&map_data_.mapping_array, false);
-//    map_data_.mapping_array.clear();
-//    for (int x = 0; x < map_data_.right; x++)
-//    {
-//        std::vector<bool> mapItemArray;
-//        for (int y = 0; y < map_data_.bottom; y++)
-//        {
-//            mapItemArray.push_back(false);
-//        }
-//        map_data_.mapping_array.push_back(mapItemArray);
-//    }
+    
     map_data_.map_move_point_list.clear();
 }
 
@@ -71,6 +71,8 @@ void MapManager::initMapping(int top, int bottom, int left, int right)
  */
 std::list<MapIndex> MapManager::createActorFindDist(MapIndex mapIndex, int dist)
 {
+    assert(vaildateInit());
+    
     // カーソル情報を初期化
     clearCursor();
     
@@ -83,6 +85,8 @@ std::list<MapIndex> MapManager::createActorFindDist(MapIndex mapIndex, int dist)
 
 void MapManager::clearCursor()
 {
+    assert(vaildateInit());
+    
     clearMapItemArray(&map_data_.map_cursor_data_array);
     map_data_.map_move_cursor_list.clear();
 }
@@ -92,6 +96,8 @@ void MapManager::clearCursor()
  */
 std::list<MapIndex> MapManager::createMovePointList(MapIndex moveFromMapIndex, MapItem* moveToMapItem)
 {
+    assert(vaildateInit());
+    
     // 経路情報を初期化
     map_data_.map_move_point_list.clear();
     
@@ -117,6 +123,8 @@ std::list<MapIndex> MapManager::createMovePointList(MapIndex moveFromMapIndex, M
 
 MoveDirectionType MapManager::checkMoveDirectionType(MapIndex fromMapIndex, MapIndex toMapIndex)
 {
+    assert(vaildateInit());
+    
     int moveX = fromMapIndex.x - toMapIndex.x;
     int moveY = fromMapIndex.y - toMapIndex.y;
     
@@ -145,6 +153,8 @@ MoveDirectionType MapManager::checkMoveDirectionType(MapIndex fromMapIndex, MapI
  */
 MapItem MapManager::searchTargetMapItem(std::list<MapIndex> searchMapIndexList)
 {
+    assert(vaildateInit());
+    
     MapItem targetMoveDistMapItem = {
         MapDataType::NONE,
         {0, 0, MoveDirectionType::MOVE_NONE},
@@ -171,6 +181,8 @@ MapItem MapManager::searchTargetMapItem(std::list<MapIndex> searchMapIndexList)
  */
 void MapManager::findDist(int x, int y, int dist, bool first)
 {
+    assert(vaildateInit());
+    
     // 初期位置は移動対象外とする制御
     if (!first)
     {
@@ -183,22 +195,22 @@ void MapManager::findDist(int x, int y, int dist, bool first)
     }
     
     // 上にいけるか?
-    if (y > map_data_.top && chkMove(x, y - 1, dist))
+    if (y > map_data_.map_data_setting.top && chkMove(x, y - 1, dist))
     {
         findDist(x, y - 1, dist - 1, false);
     }
     // 下にいけるか?
-    if (y < (map_data_.bottom - 1) && chkMove(x, y + 1, dist))
+    if (y < (map_data_.map_data_setting.bottom - 1) && chkMove(x, y + 1, dist))
     {
         findDist(x, y + 1, dist - 1, false);
     }
     // 左にいけるか?
-    if (x > map_data_.left && chkMove(x - 1, y, dist))
+    if (x > map_data_.map_data_setting.left && chkMove(x - 1, y, dist))
     {
         findDist(x - 1, y, dist - 1, false);
     }
     // 右にいけるか?
-    if (x < (map_data_.right - 1) && chkMove(x + 1, y, dist))
+    if (x < (map_data_.map_data_setting.right - 1) && chkMove(x + 1, y, dist))
     {
         findDist(x + 1, y, dist - 1, false);
     }
@@ -206,6 +218,8 @@ void MapManager::findDist(int x, int y, int dist, bool first)
 
 bool MapManager::chkMove(int mapPointX, int mapPointY, int dist)
 {
+    assert(vaildateInit());
+    
     MapIndex mapIndex = {mapPointX, mapPointY, MoveDirectionType::MOVE_NONE};
     MapItem* mapItem = getMapItem(&mapIndex);
     if (mapItem->mapDataType == MapDataType::NONE ||
@@ -220,6 +234,8 @@ bool MapManager::chkMove(int mapPointX, int mapPointY, int dist)
 
 bool MapManager::chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataType ignoreMapDataType)
 {
+    assert(vaildateInit());
+    
     MapIndex mapIndex = {mapPointX, mapPointY, MoveDirectionType::MOVE_NONE};
     MapItem* mapItem = getMapItem(&mapIndex);
     if (mapItem->mapDataType == MapDataType::OBSTACLE) {
@@ -237,6 +253,8 @@ bool MapManager::chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataTyp
  */
 void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
 {
+    assert(vaildateInit());
+    
     // 未設定 or 移動オブジェクトで移動力が上の場合
     MapItem mapItem = map_data_.map_cursor_data_array[mapPointX][mapPointY];
     if (mapItem.mapDataType == MapDataType::NONE ||
@@ -270,6 +288,8 @@ void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
  */
 void MapManager::addActor(ActorMapItem* actorMapItem)
 {
+    assert(vaildateInit());
+    
     map_data_.map_object_data_array[actorMapItem->mapIndex.x][actorMapItem->mapIndex.y] = *actorMapItem;
     DEBUG_LOG_MAP_ITEM_LAYER();
 }
@@ -279,6 +299,8 @@ void MapManager::addActor(ActorMapItem* actorMapItem)
  */
 void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex moveMapIndex)
 {
+    assert(vaildateInit());
+    
     MapIndex beforeMapIndex = pActorMapItem->mapIndex;
     pActorMapItem->mapIndex = moveMapIndex;
     map_data_.map_object_data_array[moveMapIndex.x][moveMapIndex.y] = *pActorMapItem;
@@ -296,6 +318,8 @@ void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex moveMapIndex)
  */
 void MapManager::addDropItem(DropMapItem* pDropMapItem)
 {
+    assert(vaildateInit());
+    
     map_data_.map_drop_item_data_array[pDropMapItem->mapIndex.x][pDropMapItem->mapIndex.y] = *pDropMapItem;
     DEBUG_LOG_MAP_ITEM_LAYER();
 }
@@ -305,6 +329,8 @@ void MapManager::addDropItem(DropMapItem* pDropMapItem)
  */
 void MapManager::addObstacle(MapIndex* pMapIndex)
 {
+    assert(vaildateInit());
+    
     // TODO: とりあえずactorと同じにする。。。大丈夫か？
     ActorMapItem mapItem = createNoneMapItem<ActorMapItem>(pMapIndex->x, pMapIndex->y);
     mapItem.mapDataType = MapDataType::OBSTACLE;
@@ -320,6 +346,8 @@ void MapManager::addObstacle(MapIndex* pMapIndex)
  */
 void MapManager::removeMapItem(MapItem* pRemoveMapItem)
 {
+    assert(vaildateInit());
+    
     if (map_data_.map_cursor_data_array[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y].mapDataType == pRemoveMapItem->mapDataType)
     {
         MapItem noneMapItem = createNoneMapItem<MapItem>(pRemoveMapItem->mapIndex.x, pRemoveMapItem->mapIndex.y);
@@ -345,11 +373,15 @@ void MapManager::removeMapItem(MapItem* pRemoveMapItem)
 
 void MapManager::addMapping(const MapIndex& mapIndex)
 {
+    assert(vaildateInit());
+    
     map_data_.mapping_array[mapIndex.x][mapIndex.y] = true;
 }
 
 const std::vector<std::vector<bool>> MapManager::getMappingData()
 {
+    assert(vaildateInit());
+    
     return map_data_.mapping_array;
 }
 
@@ -361,6 +393,8 @@ const std::vector<std::vector<bool>> MapManager::getMappingData()
  */
 MapItem* MapManager::getMapItem(const MapIndex* pMapIndex)
 {
+    assert(vaildateInit());
+    
     if (map_data_.map_cursor_data_array[pMapIndex->x][pMapIndex->y].mapDataType == MapDataType::NONE)
     {
         auto pActorMapItem = getActorMapItem(pMapIndex);
@@ -375,11 +409,15 @@ MapItem* MapManager::getMapItem(const MapIndex* pMapIndex)
 
 ActorMapItem* MapManager::getActorMapItem(const MapIndex* pMapIndex)
 {
+    assert(vaildateInit());
+    
     return &(map_data_.map_object_data_array[pMapIndex->x][pMapIndex->y]);
 }
 
 ActorMapItem* MapManager::getActorMapItemById(int seqNo)
 {
+    assert(vaildateInit());
+    
     int xCount = map_data_.map_object_data_array.size();
     for (int x = 0; x < xCount; x++)
     {
@@ -398,6 +436,8 @@ ActorMapItem* MapManager::getActorMapItemById(int seqNo)
 
 DropMapItem* MapManager::getDropMapItem(const MapIndex* pMapIndex)
 {
+    assert(vaildateInit());
+    
     return &(map_data_.map_drop_item_data_array[pMapIndex->x][pMapIndex->y]);
 }
 
@@ -412,6 +452,8 @@ DropMapItem* MapManager::getDropMapItem(const MapIndex* pMapIndex)
  */
 void MapManager::findMovePointList(int moveX, int moveY, int moveDist, MapItem* moveToMapItem)
 {
+    assert(vaildateInit());
+    
     // 自軍キャラでなければ通過不可能とする除外Type
     MapDataType ignoreDataType = MapDataType::NONE;
     if (moveToMapItem->mapDataType == MapDataType::PLAYER)
@@ -439,28 +481,28 @@ void MapManager::findMovePointList(int moveX, int moveY, int moveDist, MapItem* 
         moveDist++;
         
         // 上か
-        if (moveY > map_data_.top && chkMovePoint(moveX, moveY - 1, moveDist, ignoreDataType))
+        if (moveY > map_data_.map_data_setting.top && chkMovePoint(moveX, moveY - 1, moveDist, ignoreDataType))
         {
             findMovePointList(moveX, moveY - 1, moveDist, moveToMapItem);
             MapIndex movePointIndex = {moveX, moveY - 1, MoveDirectionType::MOVE_UP};
             map_data_.map_move_point_list.push_back(movePointIndex);
         }
         // 下か？
-        else if (moveY < (map_data_.bottom -1) && chkMovePoint(moveX, moveY + 1, moveDist, ignoreDataType))
+        else if (moveY < (map_data_.map_data_setting.bottom -1) && chkMovePoint(moveX, moveY + 1, moveDist, ignoreDataType))
         {
             findMovePointList(moveX, moveY + 1, moveDist, moveToMapItem);
             MapIndex movePointIndex = {moveX, moveY + 1, MoveDirectionType::MOVE_DOWN};
             map_data_.map_move_point_list.push_back(movePointIndex);
         }
         // 左か?
-        else if (moveX > map_data_.left && chkMovePoint(moveX - 1, moveY, moveDist, ignoreDataType))
+        else if (moveX > map_data_.map_data_setting.left && chkMovePoint(moveX - 1, moveY, moveDist, ignoreDataType))
         {
             findMovePointList(moveX - 1, moveY, moveDist, moveToMapItem);
             MapIndex movePointIndex = {moveX - 1, moveY, MoveDirectionType::MOVE_RIGHT};
             map_data_.map_move_point_list.push_back(movePointIndex);
         }
         // 右にいけるか?
-        else if (moveX < (map_data_.right - 1) && chkMovePoint(moveX + 1, moveY, moveDist, ignoreDataType))
+        else if (moveX < (map_data_.map_data_setting.right - 1) && chkMovePoint(moveX + 1, moveY, moveDist, ignoreDataType))
         {
             findMovePointList(moveX + 1, moveY, moveDist, moveToMapItem);
             MapIndex movePointIndex = {moveX + 1, moveY, MoveDirectionType::MOVE_LEFT};
@@ -471,6 +513,8 @@ void MapManager::findMovePointList(int moveX, int moveY, int moveDist, MapItem* 
 
 std::list<ActorMapItem> MapManager::findEnemyMapItem()
 {
+    assert(vaildateInit());
+    
     std::list<ActorMapItem> enemyMapItem;
     //enemyMapItem.clear();
     
@@ -533,6 +577,8 @@ std::list<MapIndex> MapManager::createRelatedMapIndexList(MapIndex baseMapIndex)
 
 void MapManager::DEBUG_LOG_MAP_ITEM_LAYER()
 {
+    assert(vaildateInit());
+    
 #if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     std::string buffer;
 	for (int y = m_bottom - 1; y >= 0; y--)
@@ -565,6 +611,8 @@ void MapManager::DEBUG_LOG_MAP_ITEM_LAYER()
 
 std::string MapManager::logOutString(MapItem mapItem)
 {
+    assert(vaildateInit());
+    
 	if (mapItem.mapDataType == MapDataType::NONE)
     {
 		return "";

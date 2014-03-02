@@ -87,6 +87,8 @@ bool RogueScene::initWithQuestId(int questId)
     // 乱数初期化
     srand((unsigned int)time(NULL));
 
+    AccountData::getInstance()->reset();
+    
     rogue_play_data_.quest_id = questId;
     
     // TouchEvent settings
@@ -119,20 +121,20 @@ bool RogueScene::initWithQuestId(int questId)
     // フロントレイヤー
     auto pFrontLayer = Layer::create();
     pTiledMap->addChild(pFrontLayer,
-                        TiledMapIndex::TiledMapFrontZOrder,
-                        TiledMapTag::TiledMapFrontLayerTag);
+                        TiledMapIndexs::TiledMapFrontZOrder,
+                        TiledMapTags::TiledMapFrontLayerTag);
     
     // エネミーレイヤー
     auto pEnemyLayer = Layer::create();
     pTiledMap->addChild(pEnemyLayer,
-                        TiledMapIndex::TiledMapEnemyBaseZOrder,
-                        TiledMapTag::TiledMapEnemyBaseTag);
+                        TiledMapIndexs::TiledMapEnemyBaseZOrder,
+                        TiledMapTags::TiledMapEnemyBaseTag);
     
     // ドロップアイテムレイヤー
     auto pDropItemLayer = Layer::create();
     pTiledMap->addChild(pDropItemLayer,
-                        TiledMapIndex::TiledMapDropItemBaseZOrder,
-                        TiledMapTag::TiledMapDropItemBaseTag);
+                        TiledMapIndexs::TiledMapDropItemBaseZOrder,
+                        TiledMapTags::TiledMapDropItemBaseTag);
     
     // ---------------------
     // グリッド線を生成
@@ -141,7 +143,7 @@ bool RogueScene::initWithQuestId(int questId)
 #if 0
     auto pGrid = createGridDraw();
     // マップに追加
-    pTiledMap->addChild(pGrid, RogueScene::TiledMapIndex::zGridLineIndex, RogueScene::TiledMapLayerTag::kGridLineTag);
+    pTiledMap->addChild(pGrid, RogueScene::TiledMapIndexs::zGridLineIndex, RogueScene::TiledMapLayerTag::kGridLineTag);
 #endif
     
     //-------------------------
@@ -214,7 +216,7 @@ bool RogueScene::initWithQuestId(int questId)
     auto pGridBatchNode = getGridSpriteBatchNode();
     for (auto pNode : pGridBatchNode->getChildren())
     {
-        if (pNode->getLocalZOrder() == RogueScene::MiniMapLayerMapNoneZOrder)
+        if (pNode->getZOrder() == RogueScene::MiniMapLayerMapNoneZOrder)
         {
             pNode->setVisible(false);
         }
@@ -402,7 +404,7 @@ bool RogueScene::initWithQuestId(int questId)
     MapIndex kaidanIndex = getRandomMapIndex(false, false);
     auto pKaidanSprite = Sprite::create("kaidan.png");
     pKaidanSprite->setPosition(indexToPoint(kaidanIndex));
-    pTiledMap->addChild(pKaidanSprite, TiledMapIndex::TiledMapObjectZOrder, TiledMapTag::TiledMapObjectTag);
+    pTiledMap->addChild(pKaidanSprite, TiledMapIndexs::TiledMapObjectZOrder, TiledMapTags::TiledMapObjectTag);
     
     // マップに追加
     DropMapItem kaidanMapItem;
@@ -414,7 +416,7 @@ bool RogueScene::initWithQuestId(int questId)
     MapManager::getInstance()->addDropItem(&kaidanMapItem);
     
     // ミニマップも更新
-    addMiniMapItem(&kaidanMapItem, TiledMapTag::TiledMapObjectTag);
+    addMiniMapItem(&kaidanMapItem, TiledMapTags::TiledMapObjectTag);
     
     // -------------------------------
     // メニュー
@@ -647,6 +649,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
         // TODO: (kyokomi)全部毎回セーブしてるけど、変更だけにする？
         AccountData::getInstance()->player_actor_ = *(pPlayer->getActorDto());
         AccountData::getInstance()->rogue_play_data_ =  rogue_play_data_;
+//        AccountData::getInstance()->rogue_play_map_data_ =  MapManager::getInstance()->getMapData();
         AccountData::getInstance()->item_list_ = getItemWindowLayer()->getItemList();
         AccountData::getInstance()->save();
         
@@ -1057,8 +1060,8 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                 // TODO: 拾うSE再生
                 
                 // itemを取得
-                auto pDropItemLayer = getChildByTag(RogueScene::TiledMapLayerTag)->getChildByTag(TiledMapTag::TiledMapDropItemBaseTag);
-                auto pDropItemSprite = static_cast<DropItemSprite*>(pDropItemLayer->getChildByTag(TiledMapTag::TiledMapDropItemBaseTag + pDropMapItem->seqNo));
+                auto pDropItemLayer = getChildByTag(RogueScene::TiledMapLayerTag)->getChildByTag(TiledMapTags::TiledMapDropItemBaseTag);
+                auto pDropItemSprite = static_cast<DropItemSprite*>(pDropItemLayer->getChildByTag(TiledMapTags::TiledMapDropItemBaseTag + pDropMapItem->seqNo));
                 
                 // メッセージログ
                 auto pDropItemDto = pDropItemSprite->getDropItemDto();
@@ -1608,7 +1611,7 @@ bool RogueScene::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, M
         return false;
     }
     auto pTileMapLayer = getChildByTag(RogueScene::TiledMapLayerTag);
-    auto pEnemyLayer = pTileMapLayer->getChildByTag(TiledMapTag::TiledMapEnemyBaseTag);
+    auto pEnemyLayer = pTileMapLayer->getChildByTag(TiledMapTags::TiledMapEnemyBaseTag);
     // 出現数のカウントをseqNoにする
     long enemyCount = rogue_play_data_.enemy_count;
     rogue_play_data_.enemy_count++;
@@ -1626,7 +1629,7 @@ bool RogueScene::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, M
     enemySprite->setPosition(indexToPoint(enemyMapItem.mapIndex));
     enemySprite->setActorMapItem(enemyMapItem);
     enemySprite->runBottomAction();
-    pEnemyLayer->addChild(enemySprite, TiledMapIndex::TiledMapEnemyBaseZOrder, (TiledMapTag::TiledMapEnemyBaseTag + enemyMapItem.seqNo));
+    pEnemyLayer->addChild(enemySprite, TiledMapIndexs::TiledMapEnemyBaseZOrder, (TiledMapTags::TiledMapEnemyBaseTag + enemyMapItem.seqNo));
     
     // マップに追加
     MapManager::getInstance()->addActor(enemySprite->getActorMapItem());
@@ -1639,7 +1642,7 @@ bool RogueScene::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, M
 
 void RogueScene::removeEnemyActorSprite(ActorSprite* pEnemySprite)
 {
-    auto pEnemyMapLayer = getChildByTag(RogueScene::TiledMapLayerTag)->getChildByTag(TiledMapTag::TiledMapEnemyBaseTag);
+    auto pEnemyMapLayer = getChildByTag(RogueScene::TiledMapLayerTag)->getChildByTag(TiledMapTags::TiledMapEnemyBaseTag);
     
     // mapManagerから消す
     MapManager::getInstance()->removeMapItem(pEnemySprite->getActorMapItem());
@@ -1660,7 +1663,7 @@ bool RogueScene::tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, Map
     }
     
     auto pTileMapLayer = getChildByTag(RogueScene::TiledMapLayerTag);
-    auto pDropItemLayer = pTileMapLayer->getChildByTag(TiledMapTag::TiledMapDropItemBaseTag);
+    auto pDropItemLayer = pTileMapLayer->getChildByTag(TiledMapTags::TiledMapDropItemBaseTag);
     
     DropMapItem dropMapItem;
     // 一意になるようにする x * 100 + y（100マスないからいけるはず）
@@ -1673,7 +1676,7 @@ bool RogueScene::tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, Map
     auto pDropItemSprite = DropItemSprite::createWithDropItemDto(dropItemDto);
     pDropItemSprite->setDropMapItem(dropMapItem);
     pDropItemSprite->setPosition(indexToPoint(dropMapItem.mapIndex));
-    pDropItemLayer->addChild(pDropItemSprite, TiledMapIndex::TiledMapDropItemBaseZOrder, TiledMapTag::TiledMapDropItemBaseTag + dropMapItem.seqNo);
+    pDropItemLayer->addChild(pDropItemSprite, TiledMapIndexs::TiledMapDropItemBaseZOrder, TiledMapTags::TiledMapDropItemBaseTag + dropMapItem.seqNo);
     
     // マップに追加
     MapManager::getInstance()->addDropItem(pDropItemSprite->getDropMapItem());
@@ -1701,11 +1704,11 @@ SpriteBatchNode* RogueScene::getGridSpriteBatchNode()
     auto pMiniMapLayer = getChildByTag(RogueScene::MiniMapLayerTag);
     if (pMiniMapLayer)
     {
-        auto pBatchNode = static_cast<SpriteBatchNode*>(pMiniMapLayer->getChildByTag(MiniMapLayerTag::MiniMapSimbolBatchNodeTag));
+        auto pBatchNode = static_cast<SpriteBatchNode*>(pMiniMapLayer->getChildByTag(MiniMapLayerTags::MiniMapSimbolBatchNodeTag));
         if (!pBatchNode)
         {
             pBatchNode = SpriteBatchNode::create("grid32.png");
-            pBatchNode->setTag(MiniMapLayerTag::MiniMapSimbolBatchNodeTag);
+            pBatchNode->setTag(MiniMapLayerTags::MiniMapSimbolBatchNodeTag);
             pMiniMapLayer->addChild(pBatchNode);
         }
         return pBatchNode;
@@ -1871,7 +1874,7 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRef
     auto pTiledMapLayer = getChildByTag(RogueScene::TiledMapLayerTag);
     
     // アイテム
-    auto pDropItemMapLayer = pTiledMapLayer->getChildByTag(TiledMapTag::TiledMapDropItemBaseTag);
+    auto pDropItemMapLayer = pTiledMapLayer->getChildByTag(TiledMapTags::TiledMapDropItemBaseTag);
     if (pDropItemMapLayer)
     {
         for (auto pDropItemNode : pDropItemMapLayer->getChildren())
@@ -1893,7 +1896,7 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRef
         }
     }
     //階段
-    auto pKaidan = pTiledMapLayer->getChildByTag(TiledMapTag::TiledMapObjectTag);
+    auto pKaidan = pTiledMapLayer->getChildByTag(TiledMapTags::TiledMapObjectTag);
     if (pKaidan)
     {
         bool isContains = floorInfoIndexRect.containsPoint(pKaidan->getPosition());
@@ -1913,7 +1916,7 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRef
     }
     
     // 敵
-    auto pEnemyMapLayer = pTiledMapLayer->getChildByTag(TiledMapTag::TiledMapEnemyBaseTag);
+    auto pEnemyMapLayer = pTiledMapLayer->getChildByTag(TiledMapTags::TiledMapEnemyBaseTag);
     if (pEnemyMapLayer)
     {
         for (auto pEnemyNode : pEnemyMapLayer->getChildren())
@@ -1986,11 +1989,11 @@ void RogueScene::showPlayerLighting()
         auto pRogueLayer = LayerColor::create(Color4B(0,0,0,128));
         pRogueLayer->setContentSize(winSize);
         pRogueLayer->setPosition(Point::ZERO);
-        pRogueLayer->setLocalZOrder(RogueScene::RogueZOrder);
+        pRogueLayer->setZOrder(RogueScene::RogueZOrder);
         pFrontLayer->addChild(pRogueLayer);
         
         auto pMask = DrawNode::create();
-        pMask->setLocalZOrder(RogueScene::RogueMaskZOrder);
+        pMask->setZOrder(RogueScene::RogueMaskZOrder);
         pFrontLayer->addChild(pMask);
         
         auto pActorSprite = getPlayerActorSprite(1);
@@ -2016,28 +2019,28 @@ void RogueScene::hidePlayerLighting()
 void RogueScene::showFloorLighting(const Rect floorInfoIndexRect)
 {
     auto pTileMapLayer = getChildByTag(RogueScene::TiledMapLayerTag);
-    auto pFrontLayer = pTileMapLayer->getChildByTag(TiledMapTag::TiledMapFrontLayerTag);
+    auto pFrontLayer = pTileMapLayer->getChildByTag(TiledMapTags::TiledMapFrontLayerTag);
     if (pFrontLayer)
     {
         pFrontLayer->setVisible(true);
         
         // フロントレイヤーにマップを暗くするやつを設定
-        auto pFloorLayer = dynamic_cast<LayerColor*>(pFrontLayer->getChildByTag(TiledMapTag::FloorLayerTag));
+        auto pFloorLayer = dynamic_cast<LayerColor*>(pFrontLayer->getChildByTag(TiledMapTags::FloorLayerTag));
         if (!pFloorLayer)
         {
             pFloorLayer = LayerColor::create(Color4B(0,0,0,128));
             pFloorLayer->setContentSize(pTileMapLayer->getContentSize());
             pFloorLayer->setPosition(Point::ZERO);
             
-            pFrontLayer->addChild(pFloorLayer, TiledMapIndex::FloorLayerZOrder, TiledMapTag::FloorLayerTag);
+            pFrontLayer->addChild(pFloorLayer, TiledMapIndexs::FloorLayerZOrder, TiledMapTags::FloorLayerTag);
         }
 
         // 部屋の明かり
-        auto pFloorMask = dynamic_cast<LayerColor*>(pFrontLayer->getChildByTag(TiledMapTag::FloorMaskLayerTag));
+        auto pFloorMask = dynamic_cast<LayerColor*>(pFrontLayer->getChildByTag(TiledMapTags::FloorMaskLayerTag));
         if (!pFloorMask)
         {
             pFloorMask = LayerColor::create(Color4B(255,255,255,0));
-            pFrontLayer->addChild(pFloorMask, TiledMapIndex::FloorMaskLayerZOrder, TiledMapTag::FloorMaskLayerTag);
+            pFrontLayer->addChild(pFloorMask, TiledMapIndexs::FloorMaskLayerZOrder, TiledMapTags::FloorMaskLayerTag);
         }
         pFloorMask->setContentSize(floorInfoIndexRect.size);
         pFloorMask->setPosition(Point(floorInfoIndexRect.getMinX(), floorInfoIndexRect.getMinY()));
@@ -2049,11 +2052,11 @@ void RogueScene::showFloorLighting(const Rect floorInfoIndexRect)
         pFloorMask->setBlendFunc(blendFloor);
 
         // プレイヤー周辺の明かり
-        auto pPlayerMask = dynamic_cast<LayerColor*>(pFloorMask->getChildByTag(TiledMapTag::FloorMaskPlayerLayerTag));
+        auto pPlayerMask = dynamic_cast<LayerColor*>(pFloorMask->getChildByTag(TiledMapTags::FloorMaskPlayerLayerTag));
         if (!pPlayerMask)
         {
             pPlayerMask = LayerColor::create(Color4B(255,255,255,0));
-            pFloorMask->addChild(pPlayerMask, TiledMapIndex::FloorMaskLayerZOrder, TiledMapTag::FloorMaskPlayerLayerTag);
+            pFloorMask->addChild(pPlayerMask, TiledMapIndexs::FloorMaskLayerZOrder, TiledMapTags::FloorMaskPlayerLayerTag);
         }
         // プレイヤー前方のみ
         Rect playerRect = createPlayerRect(1); // プレイヤー周辺3*3
@@ -2099,7 +2102,7 @@ void RogueScene::showFloorLighting(const Rect floorInfoIndexRect)
 void RogueScene::hideFloorLighting()
 {
     auto pTileMapLayer = getChildByTag(RogueScene::TiledMapLayerTag);
-    auto pFrontLayer = pTileMapLayer->getChildByTag(TiledMapTag::TiledMapFrontLayerTag);
+    auto pFrontLayer = pTileMapLayer->getChildByTag(TiledMapTags::TiledMapFrontLayerTag);
     if (pFrontLayer)
     {
         pFrontLayer->setVisible(false);
@@ -2208,8 +2211,8 @@ ActorSprite* RogueScene::getPlayerActorSprite(int seqNo)
 
 ActorSprite* RogueScene::getEnemyActorSprite(int seqNo)
 {
-    auto pEnemyMapLayer = getChildByTag(RogueScene::TiledMapLayerTag)->getChildByTag(TiledMapTag::TiledMapEnemyBaseTag);
-    return static_cast<ActorSprite*>(pEnemyMapLayer->getChildByTag(TiledMapTag::TiledMapEnemyBaseTag + seqNo));
+    auto pEnemyMapLayer = getChildByTag(RogueScene::TiledMapLayerTag)->getChildByTag(TiledMapTags::TiledMapEnemyBaseTag);
+    return static_cast<ActorSprite*>(pEnemyMapLayer->getChildByTag(TiledMapTags::TiledMapEnemyBaseTag + seqNo));
 }
 
 ItemWindowLayer* RogueScene::getItemWindowLayer()
