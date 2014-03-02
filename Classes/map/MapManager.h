@@ -71,70 +71,44 @@ typedef struct _DropMapItem : public MapItem {
 
 #define MAP_INDEX_DIFF(mapIndexA, mapIndexB) (mapIndexA.x == mapIndexB.x && mapIndexA.y == mapIndexB.y)
 
-
 class MapManager
 {
+public:
+    typedef struct _MapData {
+        int top;
+        int bottom;
+        int left;
+        int right;
+        
+        // マップカーソル一時データ
+        std::vector<std::vector<MapItem>> map_cursor_data_array;
+        // マップオブジェクトデータ（ドロップアイテム等）
+        std::vector<std::vector<DropMapItem>> map_drop_item_data_array;
+        // マップオブジェクトデータ（キャラ、障害物）
+        std::vector<std::vector<ActorMapItem>> map_object_data_array;
+        // マッピングデータ
+        std::vector<std::vector<bool>> mapping_array;
+        
+        // マップ移動カーソルリスト
+        std::list<MapIndex> map_move_cursor_list;
+        // マップ移動経路リスト
+        std::list<MapIndex> map_move_point_list;
+    } MapData;
+    
+    // シングルトン
+    static MapManager* getInstance();
+    static std::list<MapIndex> createRelatedMapIndexList(MapIndex baseMapIndex);
+    
 private:
-    // マップカーソル一時データ
-    std::vector<std::vector<MapItem>> m_mapCursorDataArray;
-    // マップオブジェクトデータ（ドロップアイテム等）
-    std::vector<std::vector<DropMapItem>> m_mapDropItemDataArray;
-    // マップオブジェクトデータ（キャラ、障害物）
-    std::vector<std::vector<ActorMapItem>> m_mapObjectDataArray;
-    // マッピングデータ
-    std::vector<std::vector<bool>> m_mappingArray;
-    
-    // マップ移動カーソルリスト
-    std::list<MapIndex> m_mapMoveCursorList;
-    // マップ移動経路リスト
-    std::list<MapIndex> m_mapMovePointList;
-    
-    int m_top;
-    int m_bottom;
-    int m_left;
-    int m_right;
-    
-    //void clearMapItemArray(std::vector<std::vector<MapItem>> *pMapItemArray);
-    //void clearActorMapItemArray(std::vector<std::vector<ActorMapItem>> *pActorMapItemArray);
-  
-    template <typename TYPE>
-    void clearMapItemArray(std::vector<std::vector<TYPE>> *pMapItemArray)
-    {
-        pMapItemArray->clear();
-        for (int x = 0; x < m_right; x++)
-        {
-            std::vector<TYPE> mapItemArray;
-            for (int y = 0; y < m_bottom; y++)
-            {
-                TYPE noneMapItem = createNoneMapItem<TYPE>(x, y);
-                mapItemArray.push_back(noneMapItem);
-            }
-            pMapItemArray->push_back(mapItemArray);
-        }
-    }
-    template <typename TYPE>
-    TYPE createNoneMapItem(int x, int y)
-    {
-        TYPE mapItem;
-        mapItem.mapDataType = MapDataType::NONE;
-        mapItem.mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
-        mapItem.moveDist = 0;
-        mapItem.attackDist = 0;
-        return mapItem;
-    }
-    void findDist(int x, int y, int dist, bool first);
-    void findMovePointList(int moveX, int moveY, int moveDist, MapItem* moveToMapItem);
-    bool chkMove(int mapPointX, int mapPointY, int dist);
-    bool chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataType ignoreMapDataType);
-    void addDistCursor(int mapPointX, int mapPointY, int dist);
-    
-    std::string logOutString(MapItem mapItem);
+    // マップデータ save
+    MapData map_data_;
     
 public:
+    MapManager();
+    ~MapManager();
     
-    void DEBUG_LOG_MAP_ITEM_LAYER(); // デバッグ用のマップログ出力
-    
-    void init(int top, int bottom, int left, int right);
+    void init();
+    void initMapping(int top, int bottom, int left, int right);
     
     std::list<MapIndex> createActorFindDist(MapIndex mapIndex, int dist);
     std::list<MapIndex> createMovePointList(MapIndex moveFromMapIndex, MapItem* moveToMapItem);
@@ -145,7 +119,6 @@ public:
     void addDropItem(DropMapItem* pDropMapItem);
     void addObstacle(MapIndex* pMapIndex);
     void removeMapItem(MapItem* pRemoveMapItem);
-//    void removeMapItem(MapItem removeMapItem);
     
     ActorMapItem* getActorMapItem(const MapIndex* pMapIndex);
     MapItem* getMapItem(const MapIndex* pMapIndex);
@@ -157,10 +130,64 @@ public:
     
     std::list<ActorMapItem> findEnemyMapItem();
     
-    static std::list<MapIndex> createRelatedMapIndexList(MapIndex baseMapIndex);
-    
     void addMapping(const MapIndex& mapIndex);
     const std::vector<std::vector<bool>> getMappingData();
+    
+private:
+    
+    // 2次元配列をTYPEので初期化します
+    template <typename TYPE>
+    void clearMapItemArray(std::vector<std::vector<TYPE>> *pMapItemArray)
+    {
+        pMapItemArray->clear();
+        for (int x = 0; x < map_data_.right; x++)
+        {
+            std::vector<TYPE> mapItemArray;
+            for (int y = 0; y < map_data_.bottom; y++)
+            {
+                TYPE noneMapItem = createNoneMapItem<TYPE>(x, y);
+                mapItemArray.push_back(noneMapItem);
+            }
+            pMapItemArray->push_back(mapItemArray);
+        }
+    }
+    
+    // 2次元配列をTYPEのvalue値で初期化します
+    template <typename TYPE>
+    void clearArray(std::vector<std::vector<TYPE>> *pArray, TYPE value)
+    {
+        pArray->clear();
+        for (int x = 0; x < map_data_.right; x++)
+        {
+            std::vector<TYPE> temp_array;
+            for (int y = 0; y < map_data_.bottom; y++)
+            {
+                temp_array.push_back(value);
+            }
+            pArray->push_back(temp_array);
+        }
+    }
+    
+    // MapItemの初期データを作ります
+    template <typename TYPE>
+    TYPE createNoneMapItem(int x, int y)
+    {
+        TYPE mapItem;
+        mapItem.mapDataType = MapDataType::NONE;
+        mapItem.mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
+        mapItem.moveDist = 0;
+        mapItem.attackDist = 0;
+        return mapItem;
+    }
+    
+    void findDist(int x, int y, int dist, bool first);
+    void findMovePointList(int moveX, int moveY, int moveDist, MapItem* moveToMapItem);
+    bool chkMove(int mapPointX, int mapPointY, int dist);
+    bool chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataType ignoreMapDataType);
+    void addDistCursor(int mapPointX, int mapPointY, int dist);
+    
+    std::string logOutString(MapItem mapItem);
+    void DEBUG_LOG_MAP_ITEM_LAYER(); // デバッグ用のマップログ出力
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__MapManager__) */

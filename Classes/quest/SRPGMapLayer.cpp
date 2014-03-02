@@ -46,7 +46,7 @@ bool SRPGMapLayer::init()
     m_baseContentSize = pTiledMap->getContentSize();
     
     // マップマネージャを生成
-    m_mapManager.init(0, (int)m_baseMapSize.height, 0, (int)m_baseMapSize.width);
+    MapManager::getInstance()->initMapping(0, (int)m_baseMapSize.height, 0, (int)m_baseMapSize.width);
     
     // 障害物をmapManagerに適応する
     auto pColisionLayer = pTiledMap->getLayer("colision");
@@ -58,12 +58,12 @@ bool SRPGMapLayer::init()
             auto tileMapIndex = mapIndexToTileIndex(mapIndex);
             if (pColisionLayer->getTileAt(Point(x, y)))
             {
-                m_mapManager.addObstacle(&tileMapIndex);
+                MapManager::getInstance()->addObstacle(&tileMapIndex);
             }
 //            else
 //            {
 //                // ミニマップ更新
-//                addMiniMapItem(m_mapManager.getMapItem(&tileMapIndex), -1);
+//                addMiniMapItem(MapManager::getInstance()->getMapItem(&tileMapIndex), -1);
 //            }
         }
     }
@@ -102,7 +102,7 @@ bool SRPGMapLayer::init()
     ActorMapItem* pActorMapItem = addActor(MapDataType::PLAYER, 1, 5, 5, actorDto);
     
     // 移動可能範囲のリストを作成
-    std::list<MapIndex> moveList = m_mapManager.createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
+    std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
     // 移動可能範囲を表示
     addMapCursor(MapDataType::MOVE_DIST, moveList);
     
@@ -263,7 +263,7 @@ ActorMapItem* SRPGMapLayer::addActor(MapDataType pMapDataType, int pSeqNo, int p
     actorMapItem.attackDone = false;
     pActorSprite->setActorMapItem(actorMapItem);
     
-    m_mapManager.addActor(pActorSprite->getActorMapItem());
+    MapManager::getInstance()->addActor(pActorSprite->getActorMapItem());
     
     return pActorSprite->getActorMapItem();
 //    mMapItemManager.setObject(mapPointX, mapPointY, playerMapItem);
@@ -339,13 +339,13 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
 {
     // グリッド選択
     CCLOG("executeMapIndex mapIdx x = %d y = %d grid selected", mapIndex.x, mapIndex.y);
-    auto pActorMapItem = m_mapManager.getActorMapItem(&mapIndex);
+    auto pActorMapItem = MapManager::getInstance()->getActorMapItem(&mapIndex);
     CCLOG("mapDataType = %d", pActorMapItem->mapDataType);
     if (pActorMapItem->mapDataType == MapDataType::PLAYER)
     {
-        auto pActorMapItem = m_mapManager.getActorMapItem(&mapIndex);
+        auto pActorMapItem = MapManager::getInstance()->getActorMapItem(&mapIndex);
         // 移動可能範囲のリストを作成
-        std::list<MapIndex> moveList = m_mapManager.createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
+        std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
         // 移動可能範囲を表示
         addMapCursor(MapDataType::MOVE_DIST, moveList);
         
@@ -354,19 +354,19 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
         return;
     }
     
-    auto pMapItem = m_mapManager.getMapItem(&mapIndex);
+    auto pMapItem = MapManager::getInstance()->getMapItem(&mapIndex);
     if (pMapItem->mapDataType == MapDataType::MOVE_DIST)
     {
         auto pActorSprite = findActorSprite(1);
         
         // 移動対象を取得
-//        auto pActorMapItem = m_mapManager.getActorMapItemById(1); // TODO: とりあえず1固定
+//        auto pActorMapItem = MapManager::getInstance()->getActorMapItemById(1); // TODO: とりあえず1固定
         // 移動可能範囲のリストを作成
-        std::list<MapIndex> moveList = m_mapManager.createActorFindDist(pActorSprite->getActorMapItem()->mapIndex, pActorSprite->getActorMapItem()->moveDist);
+        std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorSprite->getActorMapItem()->mapIndex, pActorSprite->getActorMapItem()->moveDist);
         // 移動可能範囲を表示
         addMapCursor(MapDataType::MOVE_DIST, moveList);
         // 移動経路の作成と表示
-        std::list<MapIndex> list = m_mapManager.createMovePointList(mapIndex, pActorSprite->getActorMapItem());
+        std::list<MapIndex> list = MapManager::getInstance()->createMovePointList(mapIndex, pActorSprite->getActorMapItem());
         addMapCursor(MapDataType::MOVE_STEP_DIST, list);
         
         // 移動
@@ -389,11 +389,11 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
             auto pAnimation = Sequence::create(pMoveSeq, CallFunc::create([this, pActorSprite, moveAfterIndex](void) {
                 CCLOG("call func!!！");
                 clearAllMapCursor();
-                m_mapManager.clearCursor();
+                MapManager::getInstance()->clearCursor();
                 
                 CCLOG("moveAfterIndex = (%d, %d)", moveAfterIndex.x, moveAfterIndex.y);
                 // マップ情報も更新する
-                m_mapManager.moveActor(pActorSprite->getActorMapItem(), moveAfterIndex);
+                MapManager::getInstance()->moveActor(pActorSprite->getActorMapItem(), moveAfterIndex);
                 CCLOG("moveActor = (%d, %d)", pActorSprite->getActorMapItem()->mapIndex.x, pActorSprite->getActorMapItem()->mapIndex.y);
                 m_moveAnimation = false;
                 

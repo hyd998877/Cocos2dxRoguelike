@@ -124,9 +124,6 @@ private:
     cocos2d::Size base_map_size_;
     cocos2d::Size base_tile_size_;
     
-    // Bダッシュ中フラグ
-    bool m_isSppedUp;
-
 private:
     float getAnimationSpeed();
     void changeGameStatus(GameStatus gameStatus);
@@ -136,7 +133,7 @@ private:
     void changeScene(cocos2d::Scene* scene);
     
     // マップ制御
-    MapManager m_mapManager; // TODO: シングルトンにしないとな あと再構築に必要なデータを取得するメソッド
+//    MapManager m_mapManager; // TODO: シングルトンにしないとな あと再構築に必要なデータを取得するメソッド
     MapIndex getRandomMapIndex(bool isColision, bool isActor);
     
     // タッチイベント系

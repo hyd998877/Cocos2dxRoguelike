@@ -12,29 +12,56 @@
 
 #define DEBUG_LOG_MAP_ITEM_LAYER_FLG 0
 
-void MapManager::init(int top, int bottom, int left, int right)
-{
-    m_top = top;
-    m_bottom = bottom;
-    m_left = left;
-    m_right = right;
-    
-    clearCursor();
-    clearMapItemArray(&m_mapObjectDataArray);
-    clearMapItemArray(&m_mapDropItemDataArray);
+static MapManager *s_map_manager_instance;
 
-    m_mappingArray.clear();
-    for (int x = 0; x < m_right; x++)
+MapManager::MapManager()
+:map_data_()
+{
+}
+
+MapManager::~MapManager()
+{
+}
+
+MapManager* MapManager::getInstance()
+{
+    if (!s_map_manager_instance)
     {
-        std::vector<bool> mapItemArray;
-        for (int y = 0; y < m_bottom; y++)
-        {
-            mapItemArray.push_back(false);
-        }
-        m_mappingArray.push_back(mapItemArray);
+        s_map_manager_instance = new MapManager();
+        s_map_manager_instance->init();
     }
     
-    m_mapMovePointList.clear();
+    return s_map_manager_instance;
+}
+
+void MapManager::init()
+{
+    
+}
+
+void MapManager::initMapping(int top, int bottom, int left, int right)
+{
+    map_data_.top = top;
+    map_data_.bottom = bottom;
+    map_data_.left = left;
+    map_data_.right = right;
+    
+    clearCursor();
+    clearMapItemArray(&map_data_.map_object_data_array);
+    clearMapItemArray(&map_data_.map_drop_item_data_array);
+
+    clearArray(&map_data_.mapping_array, false);
+//    map_data_.mapping_array.clear();
+//    for (int x = 0; x < map_data_.right; x++)
+//    {
+//        std::vector<bool> mapItemArray;
+//        for (int y = 0; y < map_data_.bottom; y++)
+//        {
+//            mapItemArray.push_back(false);
+//        }
+//        map_data_.mapping_array.push_back(mapItemArray);
+//    }
+    map_data_.map_move_point_list.clear();
 }
 
 /**
@@ -51,13 +78,13 @@ std::list<MapIndex> MapManager::createActorFindDist(MapIndex mapIndex, int dist)
     findDist(mapIndex.x, mapIndex.y, dist, true);
     
     // cursorListを作成
-    return m_mapMoveCursorList;
+    return map_data_.map_move_cursor_list;
 }
 
 void MapManager::clearCursor()
 {
-    clearMapItemArray(&m_mapCursorDataArray);
-    m_mapMoveCursorList.clear();
+    clearMapItemArray(&map_data_.map_cursor_data_array);
+    map_data_.map_move_cursor_list.clear();
 }
 
 /**
@@ -66,7 +93,7 @@ void MapManager::clearCursor()
 std::list<MapIndex> MapManager::createMovePointList(MapIndex moveFromMapIndex, MapItem* moveToMapItem)
 {
     // 経路情報を初期化
-    m_mapMovePointList.clear();
+    map_data_.map_move_point_list.clear();
     
     // 移動先を取得
     MapItem* moveFromMapItem = getMapItem(&moveFromMapIndex);
@@ -79,13 +106,13 @@ std::list<MapIndex> MapManager::createMovePointList(MapIndex moveFromMapIndex, M
     // 目的地を最終到達点として最後に追加（ただしカーソル情報なので移動の向きをここで指定する）
     MapIndex moveEndMapIndex = moveFromMapIndex;
     
-    MoveDirectionType moveDict = checkMoveDirectionType(moveEndMapIndex, m_mapMovePointList.back());
+    MoveDirectionType moveDict = checkMoveDirectionType(moveEndMapIndex, map_data_.map_move_point_list.back());
     moveEndMapIndex.moveDictType = moveDict;
     
-    m_mapMovePointList.push_back(moveEndMapIndex);
+    map_data_.map_move_point_list.push_back(moveEndMapIndex);
     
     // movePointListを返却
-    return m_mapMovePointList;
+    return map_data_.map_move_point_list;
 }
 
 MoveDirectionType MapManager::checkMoveDirectionType(MapIndex fromMapIndex, MapIndex toMapIndex)
@@ -156,22 +183,22 @@ void MapManager::findDist(int x, int y, int dist, bool first)
     }
     
     // 上にいけるか?
-    if (y > m_top && chkMove(x, y - 1, dist))
+    if (y > map_data_.top && chkMove(x, y - 1, dist))
     {
         findDist(x, y - 1, dist - 1, false);
     }
     // 下にいけるか?
-    if (y < (m_bottom - 1) && chkMove(x, y + 1, dist))
+    if (y < (map_data_.bottom - 1) && chkMove(x, y + 1, dist))
     {
         findDist(x, y + 1, dist - 1, false);
     }
     // 左にいけるか?
-    if (x > m_left && chkMove(x - 1, y, dist))
+    if (x > map_data_.left && chkMove(x - 1, y, dist))
     {
         findDist(x - 1, y, dist - 1, false);
     }
     // 右にいけるか?
-    if (x < (m_right - 1) && chkMove(x + 1, y, dist))
+    if (x < (map_data_.right - 1) && chkMove(x + 1, y, dist))
     {
         findDist(x + 1, y, dist - 1, false);
     }
@@ -211,7 +238,7 @@ bool MapManager::chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataTyp
 void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
 {
     // 未設定 or 移動オブジェクトで移動力が上の場合
-    MapItem mapItem = m_mapCursorDataArray[mapPointX][mapPointY];
+    MapItem mapItem = map_data_.map_cursor_data_array[mapPointX][mapPointY];
     if (mapItem.mapDataType == MapDataType::NONE ||
         mapItem.mapDataType == MapDataType::MAP_ITEM ||
         mapItem.mapDataType == MapDataType::KAIDAN ||
@@ -228,12 +255,12 @@ void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
         cursorItem.moveDist  = dist;
         cursorItem.attackDist = 0;
         cursorItem.mapIndex = mapIndex;
-        m_mapCursorDataArray[mapPointX][mapPointY] = cursorItem;
+        map_data_.map_cursor_data_array[mapPointX][mapPointY] = cursorItem;
         
         // 描画用のリスト
         if (mapItem.mapDataType == MapDataType::NONE)
         {
-            m_mapMoveCursorList.push_back(mapIndex);
+            map_data_.map_move_cursor_list.push_back(mapIndex);
         }
     }
 }
@@ -243,7 +270,7 @@ void MapManager::addDistCursor(int mapPointX, int mapPointY, int dist)
  */
 void MapManager::addActor(ActorMapItem* actorMapItem)
 {
-    m_mapObjectDataArray[actorMapItem->mapIndex.x][actorMapItem->mapIndex.y] = *actorMapItem;
+    map_data_.map_object_data_array[actorMapItem->mapIndex.x][actorMapItem->mapIndex.y] = *actorMapItem;
     DEBUG_LOG_MAP_ITEM_LAYER();
 }
 
@@ -254,13 +281,13 @@ void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex moveMapIndex)
 {
     MapIndex beforeMapIndex = pActorMapItem->mapIndex;
     pActorMapItem->mapIndex = moveMapIndex;
-    m_mapObjectDataArray[moveMapIndex.x][moveMapIndex.y] = *pActorMapItem;
+    map_data_.map_object_data_array[moveMapIndex.x][moveMapIndex.y] = *pActorMapItem;
     
     ActorMapItem mapItem;
     mapItem.mapDataType = MapDataType::NONE;
     mapItem.mapIndex = beforeMapIndex;
     mapItem.moveDist = 0;
-    m_mapObjectDataArray[beforeMapIndex.x][beforeMapIndex.y] = mapItem;
+    map_data_.map_object_data_array[beforeMapIndex.x][beforeMapIndex.y] = mapItem;
     DEBUG_LOG_MAP_ITEM_LAYER();
 }
 
@@ -269,7 +296,7 @@ void MapManager::moveActor(ActorMapItem* pActorMapItem, MapIndex moveMapIndex)
  */
 void MapManager::addDropItem(DropMapItem* pDropMapItem)
 {
-    m_mapDropItemDataArray[pDropMapItem->mapIndex.x][pDropMapItem->mapIndex.y] = *pDropMapItem;
+    map_data_.map_drop_item_data_array[pDropMapItem->mapIndex.x][pDropMapItem->mapIndex.y] = *pDropMapItem;
     DEBUG_LOG_MAP_ITEM_LAYER();
 }
 
@@ -285,7 +312,7 @@ void MapManager::addObstacle(MapIndex* pMapIndex)
     mapItem.moveDone = false;
     mapItem.attackDone = false;
     
-    m_mapObjectDataArray[pMapIndex->x][pMapIndex->y] = mapItem;
+    map_data_.map_object_data_array[pMapIndex->x][pMapIndex->y] = mapItem;
 }
 
 /**
@@ -293,37 +320,37 @@ void MapManager::addObstacle(MapIndex* pMapIndex)
  */
 void MapManager::removeMapItem(MapItem* pRemoveMapItem)
 {
-    if (m_mapCursorDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y].mapDataType == pRemoveMapItem->mapDataType)
+    if (map_data_.map_cursor_data_array[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y].mapDataType == pRemoveMapItem->mapDataType)
     {
         MapItem noneMapItem = createNoneMapItem<MapItem>(pRemoveMapItem->mapIndex.x, pRemoveMapItem->mapIndex.y);
-        m_mapCursorDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
+        map_data_.map_cursor_data_array[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
     }
-    else if (m_mapObjectDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y].mapDataType == pRemoveMapItem->mapDataType)
+    else if (map_data_.map_object_data_array[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y].mapDataType == pRemoveMapItem->mapDataType)
     {
         ActorMapItem noneMapItem = createNoneMapItem<ActorMapItem>(pRemoveMapItem->mapIndex.x, pRemoveMapItem->mapIndex.y);
         noneMapItem.seqNo = 0;
         noneMapItem.moveDone = false;
         noneMapItem.attackDone = false;
-        m_mapObjectDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
+        map_data_.map_object_data_array[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
     }
-    else if (m_mapDropItemDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y].mapDataType == pRemoveMapItem->mapDataType)
+    else if (map_data_.map_drop_item_data_array[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y].mapDataType == pRemoveMapItem->mapDataType)
     {
         DropMapItem noneMapItem = createNoneMapItem<DropMapItem>(pRemoveMapItem->mapIndex.x, pRemoveMapItem->mapIndex.y);
         noneMapItem.seqNo = 0;
         noneMapItem.itemId = 0;
-        m_mapDropItemDataArray[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
+        map_data_.map_drop_item_data_array[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
     }
     DEBUG_LOG_MAP_ITEM_LAYER();
 }
 
 void MapManager::addMapping(const MapIndex& mapIndex)
 {
-    m_mappingArray[mapIndex.x][mapIndex.y] = true;
+    map_data_.mapping_array[mapIndex.x][mapIndex.y] = true;
 }
 
 const std::vector<std::vector<bool>> MapManager::getMappingData()
 {
-    return m_mappingArray;
+    return map_data_.mapping_array;
 }
 
 
@@ -334,35 +361,35 @@ const std::vector<std::vector<bool>> MapManager::getMappingData()
  */
 MapItem* MapManager::getMapItem(const MapIndex* pMapIndex)
 {
-    if (m_mapCursorDataArray[pMapIndex->x][pMapIndex->y].mapDataType == MapDataType::NONE)
+    if (map_data_.map_cursor_data_array[pMapIndex->x][pMapIndex->y].mapDataType == MapDataType::NONE)
     {
         auto pActorMapItem = getActorMapItem(pMapIndex);
         if (pActorMapItem->mapDataType == MapDataType::NONE)
         {
-           return &(m_mapDropItemDataArray[pMapIndex->x][pMapIndex->y]);
+           return &(map_data_.map_drop_item_data_array[pMapIndex->x][pMapIndex->y]);
         }
         return pActorMapItem;
     }
-    return &(m_mapCursorDataArray[pMapIndex->x][pMapIndex->y]);
+    return &(map_data_.map_cursor_data_array[pMapIndex->x][pMapIndex->y]);
 }
 
 ActorMapItem* MapManager::getActorMapItem(const MapIndex* pMapIndex)
 {
-    return &(m_mapObjectDataArray[pMapIndex->x][pMapIndex->y]);
+    return &(map_data_.map_object_data_array[pMapIndex->x][pMapIndex->y]);
 }
 
 ActorMapItem* MapManager::getActorMapItemById(int seqNo)
 {
-    int xCount = m_mapObjectDataArray.size();
+    int xCount = map_data_.map_object_data_array.size();
     for (int x = 0; x < xCount; x++)
     {
-        int yCount = m_mapObjectDataArray[x].size();
+        int yCount = map_data_.map_object_data_array[x].size();
         for (int y = 0; y < yCount; y++)
         {
-            if (m_mapObjectDataArray[x][y].mapDataType == MapDataType::PLAYER &&
-                m_mapObjectDataArray[x][y].seqNo == seqNo)
+            if (map_data_.map_object_data_array[x][y].mapDataType == MapDataType::PLAYER &&
+                map_data_.map_object_data_array[x][y].seqNo == seqNo)
             {
-                return &(m_mapObjectDataArray[x][y]);
+                return &(map_data_.map_object_data_array[x][y]);
             }
         }
     }
@@ -371,7 +398,7 @@ ActorMapItem* MapManager::getActorMapItemById(int seqNo)
 
 DropMapItem* MapManager::getDropMapItem(const MapIndex* pMapIndex)
 {
-    return &(m_mapDropItemDataArray[pMapIndex->x][pMapIndex->y]);
+    return &(map_data_.map_drop_item_data_array[pMapIndex->x][pMapIndex->y]);
 }
 
 /**
@@ -412,32 +439,32 @@ void MapManager::findMovePointList(int moveX, int moveY, int moveDist, MapItem* 
         moveDist++;
         
         // 上か
-        if (moveY > m_top && chkMovePoint(moveX, moveY - 1, moveDist, ignoreDataType))
+        if (moveY > map_data_.top && chkMovePoint(moveX, moveY - 1, moveDist, ignoreDataType))
         {
             findMovePointList(moveX, moveY - 1, moveDist, moveToMapItem);
             MapIndex movePointIndex = {moveX, moveY - 1, MoveDirectionType::MOVE_UP};
-            m_mapMovePointList.push_back(movePointIndex);
+            map_data_.map_move_point_list.push_back(movePointIndex);
         }
         // 下か？
-        else if (moveY < (m_bottom -1) && chkMovePoint(moveX, moveY + 1, moveDist, ignoreDataType))
+        else if (moveY < (map_data_.bottom -1) && chkMovePoint(moveX, moveY + 1, moveDist, ignoreDataType))
         {
             findMovePointList(moveX, moveY + 1, moveDist, moveToMapItem);
             MapIndex movePointIndex = {moveX, moveY + 1, MoveDirectionType::MOVE_DOWN};
-            m_mapMovePointList.push_back(movePointIndex);
+            map_data_.map_move_point_list.push_back(movePointIndex);
         }
         // 左か?
-        else if (moveX > m_left && chkMovePoint(moveX - 1, moveY, moveDist, ignoreDataType))
+        else if (moveX > map_data_.left && chkMovePoint(moveX - 1, moveY, moveDist, ignoreDataType))
         {
             findMovePointList(moveX - 1, moveY, moveDist, moveToMapItem);
             MapIndex movePointIndex = {moveX - 1, moveY, MoveDirectionType::MOVE_RIGHT};
-            m_mapMovePointList.push_back(movePointIndex);
+            map_data_.map_move_point_list.push_back(movePointIndex);
         }
         // 右にいけるか?
-        else if (moveX < (m_right - 1) && chkMovePoint(moveX + 1, moveY, moveDist, ignoreDataType))
+        else if (moveX < (map_data_.right - 1) && chkMovePoint(moveX + 1, moveY, moveDist, ignoreDataType))
         {
             findMovePointList(moveX + 1, moveY, moveDist, moveToMapItem);
             MapIndex movePointIndex = {moveX + 1, moveY, MoveDirectionType::MOVE_LEFT};
-            m_mapMovePointList.push_back(movePointIndex);
+            map_data_.map_move_point_list.push_back(movePointIndex);
         }
     }
 }
@@ -447,15 +474,15 @@ std::list<ActorMapItem> MapManager::findEnemyMapItem()
     std::list<ActorMapItem> enemyMapItem;
     //enemyMapItem.clear();
     
-    int xCount = m_mapObjectDataArray.size();
+    int xCount = map_data_.map_object_data_array.size();
     for (int x = 0; x < xCount; x++)
     {
-        int yCount = m_mapObjectDataArray[x].size();
+        int yCount = map_data_.map_object_data_array[x].size();
         for (int y = 0; y < yCount; y++)
         {
-            if (m_mapObjectDataArray[x][y].mapDataType == MapDataType::ENEMY)
+            if (map_data_.map_object_data_array[x][y].mapDataType == MapDataType::ENEMY)
             {
-                enemyMapItem.push_back(m_mapObjectDataArray[x][y]);
+                enemyMapItem.push_back(map_data_.map_object_data_array[x][y]);
             }
         }
     }
@@ -514,9 +541,9 @@ void MapManager::DEBUG_LOG_MAP_ITEM_LAYER()
 		for (int x = 0; x < m_right; x++)
         {
             std::string outPutStr = "-";
-            std::string dropItemLayerStr = logOutString(m_mapDropItemDataArray[x][y]);
-			std::string objectLayerStr = logOutString(m_mapObjectDataArray[x][y]);
-			std::string cursorLayerStr = logOutString(m_mapCursorDataArray[x][y]);
+            std::string dropItemLayerStr = logOutString(map_data_.map_drop_item_data_array[x][y]);
+			std::string objectLayerStr = logOutString(map_data_.map_object_data_array[x][y]);
+			std::string cursorLayerStr = logOutString(map_data_.map_cursor_data_array[x][y]);
 			if (dropItemLayerStr != "")
             {
                 outPutStr = dropItemLayerStr;
