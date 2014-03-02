@@ -87,9 +87,45 @@ bool RogueScene::initWithQuestId(int questId)
     // 乱数初期化
     srand((unsigned int)time(NULL));
 
-    AccountData::getInstance()->reset();
+    // データロード
+    AccountData::getInstance()->load();
     
-    rogue_play_data_.quest_id = questId;
+    ActorSprite::ActorDto actorDto;
+    // 不一致の場合初期化
+    if (AccountData::getInstance()->rogue_play_data_.quest_id != questId)
+    {
+        AccountData::getInstance()->reset();
+        rogue_play_data_.quest_id = questId;
+        
+        actorDto.name = "ジニー";
+        actorDto.faceImgId = 0;
+        actorDto.imageResId = 1015;
+        // 基本
+        actorDto.attackRange = 1;
+        actorDto.movePoint = 5;
+        actorDto.playerId = 4;
+        // 攻守
+        actorDto.attackPoint = 5;
+        actorDto.defencePoint = 1;
+        // 経験値
+        actorDto.exp = 0;
+        actorDto.nextExp = 10;
+        // HP
+        actorDto.hitPoint = 15;
+        actorDto.hitPointLimit = 15;
+        actorDto.lv = 1;
+        // 満腹度？精神力？
+        actorDto.magicPoint = 100;
+        actorDto.magicPointLimit = 100;
+        // 装備
+        actorDto.equip = ActorSprite::createEquipDto();
+    }
+    else
+    {
+        // ロード処理
+        rogue_play_data_ = AccountData::getInstance()->rogue_play_data_;
+        actorDto = AccountData::getInstance()->player_actor_;
+    }
     
     // TouchEvent settings
     auto listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
@@ -238,34 +274,12 @@ bool RogueScene::initWithQuestId(int questId)
     // ------------------------
     showItemList(1);
     hideItemList();
+    // TODO: アイテム引き継ぎ
+    getItemWindowLayer()->setItemList(AccountData::getInstance()->item_list_);
     
     // ---------------------
     // プレイヤー生成
     // ---------------------
-    ActorSprite::ActorDto actorDto;
-    actorDto.name = "ジニー";
-    actorDto.faceImgId = 0;
-    actorDto.imageResId = 1015;
-    // 基本
-    actorDto.attackRange = 1;
-    actorDto.movePoint = 5;
-    actorDto.playerId = 4;
-    // 攻守
-    actorDto.attackPoint = 5;
-    actorDto.defencePoint = 1;
-    // 経験値
-    actorDto.exp = 0;
-    actorDto.nextExp = 10;
-    // HP
-    actorDto.hitPoint = 15;
-    actorDto.hitPointLimit = 15;
-    actorDto.lv = 1;
-    // 満腹度？精神力？
-    actorDto.magicPoint = 100;
-    actorDto.magicPointLimit = 100;
-    // 装備
-    actorDto.equip = ActorSprite::createEquipDto();
-    
     ActorMapItem actorMapItem;
     actorMapItem.mapDataType = MapDataType::PLAYER;
     // 画面の中心（固定）
@@ -646,12 +660,6 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     else if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
     {
         auto pPlayer = getPlayerActorSprite(1);
-        // TODO: (kyokomi)全部毎回セーブしてるけど、変更だけにする？
-        AccountData::getInstance()->player_actor_ = *(pPlayer->getActorDto());
-        AccountData::getInstance()->rogue_play_data_ =  rogue_play_data_;
-//        AccountData::getInstance()->rogue_play_map_data_ =  MapManager::getInstance()->getMapData();
-        AccountData::getInstance()->item_list_ = getItemWindowLayer()->getItemList();
-        AccountData::getInstance()->save();
         
         // カーソルはクリアする
         MapManager::getInstance()->clearCursor();
@@ -1079,14 +1087,23 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                 
                 // 階段下りる判定
                 
-                this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Object* pSender){
+                this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this, pActorSprite](Object* pSender){
                     // OK
                     
                     // 閉じる
                     this->hideCommonWindow();
                     
+                    // save
+                    rogue_play_data_.quest_id += 1;
+                    
+                    AccountData::getInstance()->player_actor_ = *(pActorSprite->getActorDto());
+                    AccountData::getInstance()->rogue_play_data_ =  rogue_play_data_;
+                    // TODO: アイテムリスト暫定
+                    AccountData::getInstance()->item_list_ = getItemWindowLayer()->getItemList();
+                    AccountData::getInstance()->save();
+                    
                     // 画面遷移
-                    this->changeScene(RogueScene::scene(rogue_play_data_.quest_id + 1));
+                    this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
                     
                 }, [this](Object* pSender){
                     // NG

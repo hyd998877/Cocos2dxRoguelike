@@ -14,6 +14,8 @@
 
 class ItemWindowLayer : public cocos2d::LayerColor
 {
+public:
+    typedef std::function<void(Object*, DropItemSprite::DropItemDto)> ItemWindowMenuCallback;
 protected:
     enum tag {
         ItemTableLayerTag  = 10000,
@@ -25,6 +27,13 @@ protected:
         ItemDetailMenuDropTag  = 30002,
         ItemDetailMenuEquipTag = 30003,
     };
+private:
+    int m_showItemDetailIdx;
+    // TODO: ユーザーデータから持ってくるようにする
+    std::list<DropItemSprite::DropItemDto> m_itemDtoList;
+    ItemWindowMenuCallback m_itemUseMenuCallback;
+    ItemWindowMenuCallback m_itemDropMenuCallback;
+    ItemWindowMenuCallback m_itemEquipMenuCallback;
 public:
     ItemWindowLayer();
     ~ItemWindowLayer();
@@ -38,20 +47,13 @@ public:
     void setItemEquip(int objectId, bool isEquip);
     void reloadItemList();
     
-    typedef std::function<void(Object*, DropItemSprite::DropItemDto)> ItemWindowMenuCallback;
     void setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback);
     void setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback);
     void setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback);
     
+    void setItemList(std::list<DropItemSprite::DropItemDto> item_list) { m_itemDtoList = item_list; }
     std::list<DropItemSprite::DropItemDto> getItemList() { return m_itemDtoList; }
 private:
-    int m_showItemDetailIdx;
-    // TODO: ユーザーデータから持ってくるようにする
-    std::list<DropItemSprite::DropItemDto> m_itemDtoList;
-    ItemWindowMenuCallback m_itemUseMenuCallback;
-    ItemWindowMenuCallback m_itemDropMenuCallback;
-    ItemWindowMenuCallback m_itemEquipMenuCallback;
-    
     void setItemDetail(int itemListIndex);
     void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
 };

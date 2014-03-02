@@ -69,6 +69,16 @@ bool MypageScene::init()
     this->addChild(comment_label);
     comment_label->setTag(100); // TODO: とりあえず
     
+    RogueScene::RoguePlayData rogue_play_data = AccountData::getInstance()->rogue_play_data_;
+    if (rogue_play_data.quest_id != 0)
+    {
+        ActorSprite::ActorDto player_data = AccountData::getInstance()->player_actor_;
+        // セーブデータあり
+        std::string save_text = StringUtils::format("セーブデータがあるわ。\n\n%s（%d F）\n\nLv %d exp %d HP %d/%d 所持金 %d G",
+                                                    "初心者の洞窟", rogue_play_data.quest_id, player_data.lv, player_data.exp, player_data.hitPoint, player_data.hitPointLimit, 0);
+        comment_label->setString(save_text);
+    }
+    
     // 枠
     auto comment_window_waku = CommonWindowUtil::createWindowWaku(Size(win_size.width / 2, win_size.height / 3));
     comment_window_waku->setPosition(comment_label->getContentSize().width / 2, comment_label->getContentSize().height / 2);
@@ -100,14 +110,26 @@ void MypageScene::initGlobalMenu()
     auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("くえ　すと", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
         
         CCLOG("tappedMenuItem3");
-        Scene* scene = NovelScene::scene(2, 0, [this]() {
-            CCLOG("novel2 end");
-            auto scene = RogueScene::scene(1);
+        
+        RogueScene::RoguePlayData rogue_play_data = AccountData::getInstance()->rogue_play_data_;
+        if (rogue_play_data.quest_id > 0)
+        {
+            auto scene = RogueScene::scene(rogue_play_data.quest_id);
             auto trans = TransitionProgressOutIn::create(1, scene);
             Director::getInstance()->replaceScene(trans);
-        });
-        TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
-        Director::getInstance()->replaceScene(trans);
+        }
+        else
+        {
+            Scene* scene = NovelScene::scene(2, 0, [this]() {
+                CCLOG("novel2 end");
+                int play_quest_id = 1;
+                auto scene = RogueScene::scene(play_quest_id);
+                auto trans = TransitionProgressOutIn::create(1, scene);
+                Director::getInstance()->replaceScene(trans);
+            });
+            TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
+            Director::getInstance()->replaceScene(trans);
+        }
     });
     
     auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("そ　う　こ", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {

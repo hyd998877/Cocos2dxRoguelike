@@ -15,6 +15,9 @@
 
 USING_NS_CC;
 
+// 所持可能アイテム数
+#define USE_ITEM_MAX 20
+
 class DropItemSprite : public cocos2d::Sprite
 {
 public:
@@ -69,6 +72,8 @@ public:
     virtual bool initWithTextureDropItemDto(DropItemDto dropItemDto, Texture2D *texture);
     static DropItemSprite* createWithDropItemDto(DropItemDto dropItemDto);
     static DropItemSprite* createWithTextureDropItemDto(DropItemDto dropItemDto, Texture2D *texture);
+    static std::string dropItemToString(const DropItemDto& drop_item);
+    static DropItemDto createDropItemDto(std::string data_string);
     
     void setDropMapItem(DropMapItem dropMapItem);
     DropMapItem* getDropMapItem();
