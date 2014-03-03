@@ -16,10 +16,9 @@ build:
         name: ndk init 1
         code: |
           ndk_version=9c
-          ls -al android-ndk-r${ndk_version}-linux-x86_64.tar.bz2
+          wget "http://dl.google.com/android/ndk/android-ndk-r${ndk_version}-linux-x86_64.tar.bz2"
           tar xvjf "android-ndk-r${ndk_version}-linux-x86_64.tar.bz2"
           rm "android-ndk-r${ndk_version}-linux-x86_64.tar.bz2"
-          ls -al android-ndk-r${ndk_version}-linux-x86_64.tar.bz2
           export ANDROID_NDK_HOME=${PWD}/android-ndk-r${ndk_version}
           echo "export ANDROID_NDK_HOME=\"${ANDROID_NDK_HOME}\"" | sudo tee -a $profile
           echo -e "$profile updated to:\n\n$(cat $profile)"
