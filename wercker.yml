@@ -16,8 +16,9 @@ build:
         name: ndk init
         code: |
           ls -al
-          pwd
-          ls -al ../
+          ls -al ../../
+          ls -al /wercker
+          tree /
           source install-ndk.sh
           echo $ANDROID_NDK_HOME
           export NDK_ROOT=$ANDROID_NDK_HOME
