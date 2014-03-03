@@ -1,4 +1,4 @@
-box: wercker/android
+box: kyokomi/android
 # Build definition
 build:
   # The steps that will be executed on build
@@ -15,9 +15,6 @@ build:
     - script:
         name: ndk init
         code: |
-          ndk_version="9c"
-          source install-ndk.sh
-          echo $ANDROID_NDK_HOME
           export NDK_ROOT=$ANDROID_NDK_HOME
     # 2 step that executes `clean` command
     - script:
