@@ -15,7 +15,8 @@ build:
     - script:
         name: ndk init
         code: |
-          source $WERCKER_SOURCE_DIR/install-ndk.sh
+          ls -al
+          source install-ndk.sh
           echo $ANDROID_NDK_HOME
           export NDK_ROOT=$ANDROID_NDK_HOME
     # 2 step that executes `clean` command
