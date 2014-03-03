@@ -1,4 +1,4 @@
-box: kyokomi/android
+box: wercker/android
 # Build definition
 build:
   # The steps that will be executed on build
