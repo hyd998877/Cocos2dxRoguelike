@@ -1,0 +1,24 @@
+box: wercker/android
+# Build definition
+build:
+  # The steps that will be executed on build
+  steps:
+    - script:
+        name: show base information
+        code: |
+          echo $ANDROID_HOME
+          echo $ANDROID_NDK_HOME
+          echo $ANDROID_SDK_VERSION
+          echo $ANDROID_BUILD_TOOLS
+          echo $ANDROID_UPDATE_FILTER
+    # A step that executes `clean` command
+    - script:
+        name: clean
+        code: |
+          proj.android/build_native.py -n clean
+    # B step that executes `build` command
+    - script:
+        name: run build
+        code: |
+          proj.android/build_native.py -p 19 -b debug
+
