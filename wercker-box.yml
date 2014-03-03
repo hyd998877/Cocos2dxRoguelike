@@ -1,0 +1,86 @@
+name: android
+version: 1.0.0
+inherits: pjvds/java@0.1.3
+type: main
+platform: ubuntu@12.04
+description: A box created for Android development with Gradle 1.9
+keywords:
+  - android
+  - gradle
+  - maven
+  - ant
+  - oracle java 7t
+  - ivy
+  - ndk
+box-detect:
+  priority : 200
+  version:
+  detect:
+    - files:
+      - build.gradle
+
+default-build:
+  android:
+    priority : 50
+    detect:
+      - default: true
+    text-to-append: |
+      # Build definition
+      build:
+        # The steps that will be executed on build
+        steps:
+          - script:
+              name: show base information
+              code: |
+                gradle -v
+                echo $ANDROID_HOME
+                echo $ANDROID_SDK_VERSION
+                echo $ANDROID_BUILD_TOOLS
+                echo $ANDROID_UPDATE_FILTER
+                echo $ANDROID_NDK_HOME
+          # A step that executes `gradle build` command
+          - script:
+              name: run gradle
+              code: |
+                gradle --full-stacktrace -q --project-cache-dir=$WERCKER_CACHE_DIR build
+env:
+  ANDROID_SDK_VERSION: "22.2.1"
+  ANDROID_NDK_VERSION: "9c"
+
+script: |
+  sdk_version="22.2.1"
+  ndk_version="9c"
+
+  profile="/etc/environment"
+
+  # Start with a clean profile
+  cd $HOME
+
+  # prepare packages
+  source $WERCKER_SOURCE_DIR/prepare-packages.sh
+
+  # remove old ones
+  source $WERCKER_SOURCE_DIR/purge-packages.sh
+
+  # list installed packages
+  sudo dpkg --get-selections
+
+  ## SDK ##
+  source $WERCKER_SOURCE_DIR/install-sdk.sh
+  source $WERCKER_SOURCE_DIR/update-sdk.sh
+
+  # ## NDK ##
+  source $WERCKER_SOURCE_DIR/install-ndk.sh
+
+  export GRADLE_VERSION=1.9
+  # install graddle
+  source $WERCKER_SOURCE_DIR/install-gradle.sh
+
+  export GRADLE_HOME=$HOME/gradle-1.9
+  export PATH=$PATH:$GRADLE_HOME/bin
+
+  echo "export GRADLE_HOME=\"${HOME}/gradle-1.9\"" | sudo tee -a $profile
+  echo "export PATH=\"${PATH}:${GRADLE_HOME}/bin\"" | sudo tee -a $profile
+  cat $profile
+  cd $HOME
+  du -h

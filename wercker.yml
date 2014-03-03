@@ -18,7 +18,7 @@ build:
           cat /wercker/wercker-build-essentials/init.sh
           ls -al /package
           ls -al /nonexistent
-          source install-ndk.sh
+          find install-ndk.sh /
           echo $ANDROID_NDK_HOME
           export NDK_ROOT=$ANDROID_NDK_HOME
     # 2 step that executes `clean` command
