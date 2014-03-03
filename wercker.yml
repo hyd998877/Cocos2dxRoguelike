@@ -15,6 +15,7 @@ build:
     - script:
         name: ndk init
         code: |
+          ndk_version="9c"
           source install-ndk.sh
           echo $ANDROID_NDK_HOME
           export NDK_ROOT=$ANDROID_NDK_HOME
