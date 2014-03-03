@@ -11,12 +11,19 @@ build:
           echo $ANDROID_SDK_VERSION
           echo $ANDROID_BUILD_TOOLS
           echo $ANDROID_UPDATE_FILTER
-    # A step that executes `clean` command
+    # 1 step that executes `ndk init` command
+    - script:
+        name: ndk init
+        code: |
+          source $WERCKER_SOURCE_DIR/install-ndk.sh
+          echo $ANDROID_NDK_HOME
+          export NDK_ROOT=$ANDROID_NDK_HOME
+    # 2 step that executes `clean` command
     - script:
         name: clean
         code: |
           proj.android/build_native.py -n clean
-    # B step that executes `build` command
+    # 3 step that executes `build` command
     - script:
         name: run build
         code: |
