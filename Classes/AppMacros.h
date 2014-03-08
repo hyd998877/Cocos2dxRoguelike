@@ -22,6 +22,9 @@
 #define PIXEL_MPLUS_12_FONT "PixelMplus12-Regular"
 #endif
 
+#define GAME_SCALE (1)
+//#define GAME_SCALE (0.52f)
+
 typedef struct tagResource
 {
     cocos2d::Size size;
@@ -35,12 +38,23 @@ static Resource xlargeResource = { cocos2d::Size(2048, 1536), "resources-xlarge"
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 577);
 
 // 最適なフォント取得
-static std::string GAME_FONT(int fontSize)
+const static int GAME_FONT_SIZE(int font_size) {
+    return (int)((float)font_size * GAME_SCALE);
+}
+
+const static std::string GAME_FONT(int fontSize)
 {
-    if (fontSize % 8 == 0) return MISAKI_FONT;
-    else if (fontSize % 10 == 0) return PIXEL_MPLUS_10_FONT;
-    else if (fontSize % 12 == 0) return PIXEL_MPLUS_12_FONT;
-    else return "";
+    fontSize = GAME_FONT_SIZE(fontSize);
+    if (fontSize % 8 == 0) {
+        return MISAKI_FONT;
+    } else if (fontSize % 10 == 0) {
+        return PIXEL_MPLUS_10_FONT;
+    } else if (fontSize % 12 == 0) {
+        return PIXEL_MPLUS_12_FONT;
+    } else {
+        CCLOG("font_size = %d", fontSize);
+        return "";
+    }
 }
 
 // 共通ウィンドウ枠

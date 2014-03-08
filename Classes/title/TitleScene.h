@@ -23,13 +23,13 @@ class TitleScene : public Layer
 //    // ccb
 //    ControlButton* mStartConrolButton;
     // CCBSelector
-    virtual SEL_MenuHandler onResolveCCBCCMenuItemSelector(Object* pTarget, const char* pSelectorName);
-    virtual Control::Handler onResolveCCBCCControlSelector(Object * pTarget, const char* pSelectorName);
+    virtual SEL_MenuHandler onResolveCCBCCMenuItemSelector(Ref *pTarget, const char* pSelectorName);
+    virtual Control::Handler onResolveCCBCCControlSelector(Ref *pTarget, const char* pSelectorName);
 //    // CCBMember
 //    virtual bool onAssignCCBMemberVariable(Object* pTarget, const char* pMemberVariableName, Node* pNode);
 
     // Startボタンのタップイベント用
-    void tappedStartButton(Object * pTarget, Control::EventType pControlEventType);
+    void tappedStartButton(Ref *pTarget, Control::EventType pControlEventType);
 public:
     // コンストラクタ、デストラクタ
     TitleScene();

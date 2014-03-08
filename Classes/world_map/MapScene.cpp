@@ -40,7 +40,7 @@ void MapScene::onEnterTransitionDidFinish()
 {
 }
 
-SEL_MenuHandler MapScene::onResolveCCBCCMenuItemSelector(cocos2d::Object *pTarget, const char *pSelectorName)
+SEL_MenuHandler MapScene::onResolveCCBCCMenuItemSelector(cocos2d::Ref *pTarget, const char *pSelectorName)
 {
     CCLOG("name = %s", pSelectorName);
     
@@ -52,13 +52,13 @@ SEL_MenuHandler MapScene::onResolveCCBCCMenuItemSelector(cocos2d::Object *pTarge
 }
 
 
-Control::Handler MapScene::onResolveCCBCCControlSelector(cocos2d::Object *pTarget, const char *pSelectorName)
+Control::Handler MapScene::onResolveCCBCCControlSelector(cocos2d::Ref *pTarget, const char *pSelectorName)
 {
     CCLOG("name = %s", pSelectorName);
     return NULL;
 }
 
-void MapScene::tappedMenuItem1(Object * pTarget)
+void MapScene::tappedMenuItem1(Ref * pTarget)
 {
     CCLOG("tappedMenuItem1");
     Scene* scene = NovelScene::scene(1, 0, [this]() {
@@ -71,7 +71,7 @@ void MapScene::tappedMenuItem1(Object * pTarget)
     Director::getInstance()->replaceScene(trans);
 }
 
-void MapScene::tappedMenuItem2(Object * pTarget)
+void MapScene::tappedMenuItem2(Ref * pTarget)
 {
     CCLOG("tappedMenuItem2");
 //    Scene* scene = SRPGScene::scene();
@@ -83,7 +83,7 @@ void MapScene::tappedMenuItem2(Object * pTarget)
 
 }
 
-void MapScene::tappedMenuItem3(Object * pTarget)
+void MapScene::tappedMenuItem3(Ref * pTarget)
 {
     CCLOG("tappedMenuItem3");
     Scene* scene = NovelScene::scene(2, 0, [this]() {

@@ -2,10 +2,10 @@
 
 USING_NS_CC;
 
-void CustomTableViewCell::draw()
-{
-	TableViewCell::draw();
-	// draw bounding box
+//void CustomTableViewCell::draw()
+//{
+//	TableViewCell::draw();
+//	// draw bounding box
 // 	CCPoint pos = getPosition();
 // 	CCSize size = CCSizeMake(178, 200);
 // 	CCPoint vertices[4]={
@@ -16,4 +16,4 @@ void CustomTableViewCell::draw()
 // 	};
 // 	ccDrawColor4B(0, 0, 255, 255);
 // 	ccDrawPoly(vertices, 4, true);
-}
+//}

@@ -190,7 +190,7 @@ bool RogueScene::initWithQuestId(int questId)
     statusLayer->setPosition(Point(0, winSize.height - statusLayer->getContentSize().height));
     
     // 更新する
-    auto sampleText = LabelTTF::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(16), 16);
+    auto sampleText = LabelTTF::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(32), GAME_FONT_SIZE(32));
     
     sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
     statusLayer->addChild(sampleText);
@@ -206,8 +206,8 @@ bool RogueScene::initWithQuestId(int questId)
     
     CommonWindowUtil::attachWindowWaku(pGameLogLayer);
     
-    int baseFontSize = 10;
-    auto pLogTextLabel = LabelTTF::create("", GAME_FONT(baseFontSize), baseFontSize, Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
+    int baseFontSize = 20;
+    auto pLogTextLabel = LabelTTF::create("", GAME_FONT(baseFontSize), GAME_FONT_SIZE(baseFontSize), Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
     pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getFontSize() / 4));
     pGameLogLayer->addChild(pLogTextLabel);
     
@@ -219,8 +219,8 @@ bool RogueScene::initWithQuestId(int questId)
     // 透明
     auto miniMapLayer = LayerColor::create(Color4B(0, 0, 0, 0));
     // 1/8サイズ
-    miniMapLayer->setContentSize(Size(base_map_size_.width * base_tile_size_.width / 8,
-                                      base_map_size_.height * base_tile_size_.height / 8));
+    miniMapLayer->setContentSize(Size(base_map_size_.width * base_tile_size_.width / MINI_MAP_SCALE,
+                                      base_map_size_.height * base_tile_size_.height / MINI_MAP_SCALE));
     // ステータスバーの下くらい
     miniMapLayer->setPosition(0, miniMapLayer->getPositionY() + winSize.height - miniMapLayer->getContentSize().height - statusLayer->getContentSize().height);
     this->addChild(miniMapLayer, RogueScene::MiniMapLayerZOrder, RogueScene::MiniMapLayerTag);
@@ -508,7 +508,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     auto pKeyBase = Sprite::create("ui/keypad.png");
     auto pKeyBasePress = Sprite::create("ui/keypad_press.png");
     
-    auto pMenuKeyUp = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Object *pSender) {
+    auto pMenuKeyUp = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyUpが押された！");
         if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
         {
@@ -518,10 +518,11 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
             this->touchEventExec(this->indexToPoint(mapIndex.x, mapIndex.y + 1));
         }
     });
+    
     pMenuKeyUp->setPosition(indexToPoint(1, 2));
     resultArray.pushBack(pMenuKeyUp);
     
-    auto pMenuKeyRight = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Object *pSender) {
+    auto pMenuKeyRight = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyRightが押された！");
         if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
         {
@@ -535,7 +536,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     pMenuKeyRight->setPosition(indexToPoint(2, 1));
     resultArray.pushBack(pMenuKeyRight);
     
-    auto pMenuKeyDown = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Object *pSender) {
+    auto pMenuKeyDown = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyDownが押された！");
         if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
         {
@@ -549,7 +550,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     pMenuKeyDown->setPosition(indexToPoint(1, 0));
     resultArray.pushBack(pMenuKeyDown);
     
-    auto pMenuKeyLeft = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Object *pSender) {
+    auto pMenuKeyLeft = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyLeftが押された！");
         if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
         {
@@ -568,63 +569,69 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
 
 Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
 {
+    Size win_size = Director::getInstance()->getWinSize();
+    
     Vector<MenuItem*> resultArray;
     
     auto a_button = Sprite::create("ui/a_button.png");
     auto a_buttonPress = Sprite::create("ui/a_button_press.png");
     a_buttonPress->setOpacity(128);
-    auto pA_MenuButton = MenuItemSprite::create(a_button, a_buttonPress, [this](Object* pSender) {
+    auto pA_MenuButton = MenuItemSprite::create(a_button, a_buttonPress, [this](Ref* pSender) {
         CCLOG("Aボタンが押された！");
         if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
         {
             this->attack();
         }
     });
-    pA_MenuButton->setPosition(indexToPoint(12, 1));
+    pA_MenuButton->setPosition(Point(win_size.width - base_tile_size_.width, indexToPoint(12, 1).y));
+//    pA_MenuButton->setPosition(indexToPoint(12, 1));
     pA_MenuButton->setTag(RogueScene::A_ButtonMenuTag);
     resultArray.pushBack(pA_MenuButton);
     
     auto b_button = Sprite::create("ui/b_button.png");
     auto b_buttonPress = Sprite::create("ui/b_button_press.png");
     b_buttonPress->setOpacity(128);
-    auto pB_MenuButton = MenuItemSprite::create(b_button, b_buttonPress, [this](Object* pSender) {
+    auto pB_MenuButton = MenuItemSprite::create(b_button, b_buttonPress, [this](Ref* pSender) {
         CCLOG("Bボタンが押された！");
     });
-    pB_MenuButton->setPosition(indexToPoint(11, 0));
+    pB_MenuButton->setPosition(Point(win_size.width - base_tile_size_.width * 2, indexToPoint(11, 0).y));
+//    pB_MenuButton->setPosition(indexToPoint(11, 0));
     pB_MenuButton->setTag(RogueScene::B_ButtonMenuTag);
     resultArray.pushBack(pB_MenuButton);
     
     auto c_button = Sprite::create("ui/c_button.png");
     auto c_buttonPress = Sprite::create("ui/c_button_press.png");
     c_buttonPress->setOpacity(128);
-    auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Object* pSender) {
+    auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Ref* pSender) {
         CCLOG("Cボタンが押された！");
         
-        this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Object* pSender){
+        this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Ref* pSender){
             // OK
             this->hideCommonWindow();
             
             // 画面遷移
             this->changeScene(RogueScene::scene(rogue_play_data_.quest_id + 1));
             
-        }, [this](Object* pSender){
+        }, [this](Ref* pSender){
             // NG
             this->hideCommonWindow();
         });
         
     });
-    pC_MenuButton->setPosition(indexToPoint(10, 1));
+    pC_MenuButton->setPosition(Point(win_size.width - base_tile_size_.width * 3, indexToPoint(10, 1).y));
+//    pC_MenuButton->setPosition(indexToPoint(10, 1));
     pC_MenuButton->setTag(RogueScene::C_ButtonMenuTag);
     resultArray.pushBack(pC_MenuButton);
     
     auto d_button = Sprite::create("ui/d_button.png");
     auto d_buttonPress = Sprite::create("ui/d_button_press.png");
     d_buttonPress->setOpacity(128);
-    auto pD_MenuButton = MenuItemSprite::create(d_button, d_buttonPress, [this](Object* pSender) {
+    auto pD_MenuButton = MenuItemSprite::create(d_button, d_buttonPress, [this](Ref* pSender) {
         CCLOG("Dボタンが押された！");
         showItemList(1);
     });
-    pD_MenuButton->setPosition(indexToPoint(11, 2));
+    pD_MenuButton->setPosition(Point(win_size.width - base_tile_size_.width * 2, indexToPoint(11, 2).y));
+//    pD_MenuButton->setPosition(indexToPoint(11, 2));
     pD_MenuButton->setTag(RogueScene::D_ButtonMenuTag);
     resultArray.pushBack(pD_MenuButton);
     
@@ -1094,7 +1101,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                 
                 // 階段下りる判定
                 
-                this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this, pActorSprite](Object* pSender){
+                this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this, pActorSprite](Ref* pSender){
                     // OK
                     
                     // 閉じる
@@ -1112,7 +1119,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                     // 画面遷移
                     this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
                     
-                }, [this](Object* pSender){
+                }, [this](Ref* pSender){
                     // NG
                     
                     // 閉じる
@@ -1315,8 +1322,8 @@ void RogueScene::moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapD
     {
         auto pMiniMapActorNode = pMiniMapLayer->getChildByTag(pActorSprite->getTag());
         
-        float scale = 1.0f / 8.0f;
-        auto point = indexToPointNotTileSize(pActorSprite->getActorMapItem()->mapIndex) / 8;
+        float scale = 1.0f / MINI_MAP_SCALE;
+        auto point = indexToPointNotTileSize(pActorSprite->getActorMapItem()->mapIndex) / MINI_MAP_SCALE;
         pMiniMapActorNode->setPosition(point.x + pMiniMapActorNode->getContentSize().width / 2 * scale,
                                        point.y + pMiniMapActorNode->getContentSize().height / 2 * scale);
     }
@@ -1431,7 +1438,7 @@ void RogueScene::showItemList(int showTextIndex)
         pItemWindowLayer = ItemWindowLayer::createWithContentSize(winSize * 0.8);
         pItemWindowLayer->setPosition(Point(winSize.width / 2 - pItemWindowLayer->getContentSize().width / 2,
                                             winSize.height /2 - pItemWindowLayer->getContentSize().height / 2));
-        pItemWindowLayer->setItemDropMenuCallback([this](Object* pSender, DropItemSprite::DropItemDto dropItemDto) {
+        pItemWindowLayer->setItemDropMenuCallback([this](Ref* pSender, DropItemSprite::DropItemDto dropItemDto) {
             CCLOG("RogueScene::itemDropMenuCallback");
             
             auto pPlayerSprite = getPlayerActorSprite(1);
@@ -1474,7 +1481,7 @@ void RogueScene::showItemList(int showTextIndex)
             this->hideItemList();
         });
         
-        pItemWindowLayer->setItemUseMenuCallback([this](Object* pSender, DropItemSprite::DropItemDto dropItemDto) {
+        pItemWindowLayer->setItemUseMenuCallback([this](Ref* pSender, DropItemSprite::DropItemDto dropItemDto) {
             CCLOG("RogueScene::itemUseMenuCallback");
             
             auto pPlayerSprite = getPlayerActorSprite(1);
@@ -1491,7 +1498,7 @@ void RogueScene::showItemList(int showTextIndex)
             this->changeGameStatus(RogueScene::ENEMY_TURN);
         });
         
-        pItemWindowLayer->setItemEquipMenuCallback([this, pItemWindowLayer](Object* pSender, DropItemSprite::DropItemDto dropItemDto) {
+        pItemWindowLayer->setItemEquipMenuCallback([this, pItemWindowLayer](Ref* pSender, DropItemSprite::DropItemDto dropItemDto) {
             CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", dropItemDto.itemType);
             
             auto pPlayerSprite = getPlayerActorSprite(1);
@@ -1546,8 +1553,10 @@ void RogueScene::showItemList(int showTextIndex)
         
         pModalLayer->addChild(pItemWindowLayer, RogueScene::ItemListLayerZOrder, RogueScene::ItemListWindowTag);
 
+        const int font_size = 20;
+        
         // 並び替えボタン
-        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("並び替え", GAME_FONT(10), 10), Size(12, 4), [this, pItemWindowLayer](Object *pSender) {
+        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("並び替え", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this, pItemWindowLayer](Ref *pSender) {
             // 並び替え
             pItemWindowLayer->sortItemList();
             pItemWindowLayer->reloadItemList();
@@ -1555,7 +1564,7 @@ void RogueScene::showItemList(int showTextIndex)
         sort_menu_item_label->setPosition(Point(pItemWindowLayer->getContentSize().width, pItemWindowLayer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
         
         // 閉じるボタン
-        auto pCloseMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("とじる", GAME_FONT(10), 10), Size(12, 4), [this](Object *pSender) {
+        auto pCloseMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("とじる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this](Ref *pSender) {
             // 閉じる
             this->hideItemList();
         });
@@ -1791,11 +1800,11 @@ void RogueScene::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag)
         pSprite->setOpacity(alpha);
         
         // タイルの1/8サイズ
-        float scale = 1.0f / 8.0f;
+        float scale = 1.0f / MINI_MAP_SCALE;
         pSprite->setScale(scale);
-        pSprite->setContentSize(base_tile_size_ / 8);
+        pSprite->setContentSize(base_tile_size_ / MINI_MAP_SCALE);
         // 現在位置からPositionを取得して1/8にする
-        auto point = indexToPointNotTileSize(pMapItem->mapIndex) / 8;
+        auto point = indexToPointNotTileSize(pMapItem->mapIndex) / MINI_MAP_SCALE;
         pSprite->setPosition(point.x + pSprite->getContentSize().width / 2 * scale,
                              point.y + pSprite->getContentSize().height / 2 * scale);
         // 移動時に更新できるようにtag管理

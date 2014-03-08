@@ -20,12 +20,12 @@ class MapScene : public Layer
 , public cocosbuilder::CCBSelectorResolver /** CocosBuilderからメニューとかコントロールボタンを取得するのに必要 */
 {
     // CCBSelector
-    virtual SEL_MenuHandler onResolveCCBCCMenuItemSelector(Object* pTarget, const char* pSelectorName);
-    virtual Control::Handler onResolveCCBCCControlSelector(Object * pTarget, const char* pSelectorName);
+    virtual SEL_MenuHandler onResolveCCBCCMenuItemSelector(Ref* pTarget, const char* pSelectorName);
+    virtual Control::Handler onResolveCCBCCControlSelector(Ref * pTarget, const char* pSelectorName);
     
-    void tappedMenuItem1(Object * pTarget);
-    void tappedMenuItem2(Object * pTarget);
-    void tappedMenuItem3(Object * pTarget);
+    void tappedMenuItem1(Ref * pTarget);
+    void tappedMenuItem2(Ref * pTarget);
+    void tappedMenuItem3(Ref * pTarget);
 public:
     // コンストラクタ、デストラクタ
     MapScene();

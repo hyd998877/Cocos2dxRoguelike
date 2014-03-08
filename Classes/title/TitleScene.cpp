@@ -46,7 +46,7 @@ void TitleScene::onEnterTransitionDidFinish()
     
 }
 
-//bool TitleScene::onAssignCCBMemberVariable(cocos2d::Object *pTarget, const char *pMemberVariableName, cocos2d::Node *pNode)
+//bool TitleScene::onAssignCCBMemberVariable(cocos2d::Ref *pTarget, const char *pMemberVariableName, cocos2d::Node *pNode)
 //{
 //    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "mStartConrolButton", ControlButton*, this->mStartConrolButton);
 //    CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "mBg2", Sprite*, this->mBg2);
@@ -59,7 +59,7 @@ void TitleScene::onEnterTransitionDidFinish()
 //    return false;
 //}
 
-SEL_MenuHandler TitleScene::onResolveCCBCCMenuItemSelector(cocos2d::Object *pTarget, const char *pSelectorName)
+SEL_MenuHandler TitleScene::onResolveCCBCCMenuItemSelector(cocos2d::Ref *pTarget, const char *pSelectorName)
 {
     CCLOG("name = %s", pSelectorName);
     
@@ -70,7 +70,7 @@ SEL_MenuHandler TitleScene::onResolveCCBCCMenuItemSelector(cocos2d::Object *pTar
 }
 
 
-Control::Handler TitleScene::onResolveCCBCCControlSelector(cocos2d::Object *pTarget, const char *pSelectorName)
+Control::Handler TitleScene::onResolveCCBCCControlSelector(cocos2d::Ref *pTarget, const char *pSelectorName)
 {
     CCLOG("name = %s", pSelectorName);
     
@@ -78,7 +78,7 @@ Control::Handler TitleScene::onResolveCCBCCControlSelector(cocos2d::Object *pTar
     return NULL;
 }
 
-void TitleScene::tappedStartButton(Object * pTarget, Control::EventType pControlEventType)
+void TitleScene::tappedStartButton(Ref * pTarget, Control::EventType pControlEventType)
 {
     CCLOG("tappedStartButton eventType = %d", pControlEventType);
 //    Scene* scene = MapSceneLoader::scene();

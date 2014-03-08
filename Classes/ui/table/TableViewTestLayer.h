@@ -28,7 +28,7 @@ public:
     } TableLayout;
     
     // 一覧タップ時のコールバック
-    typedef std::function<void(Object*, long idx)> TableCellTouchedCallback;
+    typedef std::function<void(Ref*, long idx)> TableCellTouchedCallback;
     void setCallback(const TableCellTouchedCallback& callback);
     
     // 初期

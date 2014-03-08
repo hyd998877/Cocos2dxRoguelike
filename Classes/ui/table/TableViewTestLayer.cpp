@@ -132,11 +132,11 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx)
         pTextLayer->addChild(pItemImageSprite);
         
         // 本文テキスト
-        int baseFontSize = 10;
+        int baseFontSize = 20;
         
-        LabelTTF* pTextLabel = LabelTTF::create(tableItem.labelText, GAME_FONT(baseFontSize), baseFontSize);
+        LabelTTF* pTextLabel = LabelTTF::create(tableItem.labelText, GAME_FONT(baseFontSize), GAME_FONT_SIZE(baseFontSize));
         pTextLabel->setColor(tableItem.textColor);
-        pTextLabel->setPosition(Point(baseFontSize + pItemImageSprite->getContentSize().width + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
+        pTextLabel->setPosition(Point(pTextLabel->getFontSize() + pItemImageSprite->getContentSize().width + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
         pTextLabel->setTag(TableViewTestLayer::ItemTextLabelTag);
 
         pTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);

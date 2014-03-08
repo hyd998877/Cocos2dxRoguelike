@@ -49,7 +49,7 @@ private:
     /** 選択肢ボタンの生成 */
     void makeSelectSpriteButton(const string& str1, int next1Id, const string& str2, int next2Id);
     /** 選択肢を選んだ時のコールバック */
-    void menuSelectCallback(Object *pSender);
+    void menuSelectCallback(Ref *pSender);
     
     /** テキストを表示させる */
     void dispText(string text);
@@ -63,9 +63,9 @@ private:
     
     void changeBackgroundAnimation(const string& imgFilePath);
 //    FiniteTimeAction* changeBackgroundAnimation(const string&  imgFilePath);
-//    void changeBackground(Object *pSender, void* node);
+//    void changeBackground(Ref *pSender, void* node);
     
-    void logMenuSelectCallback(Object *pSender);
+    void logMenuSelectCallback(Ref *pSender);
     void showTextLog(int showTextIndex);
     void hideTextLog();
     

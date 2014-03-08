@@ -51,8 +51,11 @@ bool MypageScene::init()
     actor_sprite->setFlippedX(true);
     this->addChild(actor_sprite);
     
+    const int title_font_size = 32;
+    const int detail_font_size = 20;
+    
     // タイトル表示
-    auto title_label = LabelTTF::create("すてーたす画面", GAME_FONT(16), 16);
+    auto title_label = LabelTTF::create("すてーたす画面", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
     title_label->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
     title_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
     this->addChild(title_label);
@@ -63,7 +66,7 @@ bool MypageScene::init()
     title_label->setPosition(Point(win_size.width / 2, win_size.height - window_waku->getContentSize().height / 2));
 
     // セリフ表示
-    auto comment_label = LabelTTF::create("ここにはお知らせとか表示する予定よ！\nまだ開発中です。", GAME_FONT(10), 10);
+    auto comment_label = LabelTTF::create("ここにはお知らせとか表示する予定よ！\nまだ開発中です。", GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
     comment_label->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
     comment_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
     this->addChild(comment_label);
@@ -97,17 +100,18 @@ bool MypageScene::init()
  */
 void MypageScene::initGlobalMenu()
 {
+    const int font_size = 20;
     // メニュー
     const Size WAKU_PADDING = Size(8, 8);
     
-    auto item_menu1 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("すてーたす", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+    auto item_menu1 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("すてーたす", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         auto comment_label = dynamic_cast<LabelTTF*>(this->getChildByTag(100));
         comment_label->setString("この画面は、ユーザー自身のステータスを\n表示する予定です。");
         comment_label->getChildren().at(0)->setPosition(comment_label->getContentSize().width / 2, comment_label->getContentSize().height / 2);
     });
     item_menu1->setColor(Color3B::GREEN);
     
-    auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("くえ　すと", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+    auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("くえ　すと", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         
         CCLOG("tappedMenuItem3");
         
@@ -132,7 +136,7 @@ void MypageScene::initGlobalMenu()
         }
     });
     
-    auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("そ　う　こ", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+    auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("そ　う　こ", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         auto comment_label = dynamic_cast<LabelTTF*>(this->getChildByTag(100));
         comment_label->setString("まだ未実装です！");
         comment_label->getChildren().at(0)->setPosition(comment_label->getContentSize().width / 2, comment_label->getContentSize().height / 2);
@@ -140,7 +144,7 @@ void MypageScene::initGlobalMenu()
         AccountData::getInstance()->reset();
     });
     
-    auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("の　べ　る", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+    auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("の　べ　る", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         
         Scene* scene = NovelScene::scene(1, 0, [this]() {
             CCLOG("novel end");
@@ -152,14 +156,14 @@ void MypageScene::initGlobalMenu()
         Director::getInstance()->replaceScene(trans);
     });
     
-    auto item_menu5 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("ば　と　る", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+    auto item_menu5 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("ば　と　る", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         
         Scene* scene = BattleScene::scene();
         TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
         Director::getInstance()->replaceScene(trans);
     });
     
-    auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("て　す　と", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+    auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("て　す　と", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         
         Scene* scene = SRPGScene::scene();
         TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);

@@ -20,18 +20,18 @@ AppDelegate::~AppDelegate()
 bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
     Director* director = Director::getInstance();
-    EGLView* eglView = EGLView::getInstance();
-
+    auto glview = director->getOpenGLView();
+    if(!glview) {
+        glview = GLView::create("Cocos2dRogueLike Game");
+        director->setOpenGLView(glview);
+    }
     // チラツキ対策
-//    Director::getInstance()->setProjection(Director::Projection::_2D);
     Director::getInstance()->setDepthTest(false);
   
-    Director::getInstance()->setOpenGLView(eglView);
-	
     // 800x480基準
-    eglView->setDesignResolutionSize(
-                                     800 * 0.52, // 13
-                                     480 * 0.52, //  7.8
+    glview->setDesignResolutionSize(
+                                     800.0f * GAME_SCALE, // 13
+                                     480.0f * GAME_SCALE, //  7.8
 //                                     32 * 13,// 352 416   704 800
 //                                     32 * 7 ,// 224 249.6 448 480
                                      ResolutionPolicy::SHOW_ALL);
@@ -43,12 +43,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-//    Scene *pScene = GameScene::scene();
-//    auto *pScene = TitleSceneLoader::scene();
-    auto *pScene = MypageScene::scene();
+    auto scene = MypageScene::scene();
     
     // run
-    director->runWithScene(pScene);
+    director->runWithScene(scene);
 
     return true;
 }

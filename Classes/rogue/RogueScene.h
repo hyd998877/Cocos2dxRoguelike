@@ -18,6 +18,8 @@
 #include "AlertDialogLayer.h"
 #include "ModalLayer.h"
 
+#define MINI_MAP_SCALE (4.16f / GAME_SCALE)
+
 class RogueScene : public cocos2d::Layer
 {
 public:

@@ -15,7 +15,7 @@
 class ItemWindowLayer : public cocos2d::LayerColor
 {
 public:
-    typedef std::function<void(Object*, DropItemSprite::DropItemDto)> ItemWindowMenuCallback;
+    typedef std::function<void(Ref*, DropItemSprite::DropItemDto)> ItemWindowMenuCallback;
 protected:
     enum tag {
         ItemTableLayerTag  = 10000,

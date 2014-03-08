@@ -7,7 +7,7 @@
 class CustomTableViewCell : public cocos2d::extension::TableViewCell
 {
 public:
-	virtual void draw();
+    
 };
 
 #endif /* __CUSTOMTABELVIEWCELL_H__ */
