@@ -45,13 +45,15 @@ public:
         int turn_count;
         // 敵出現数（トータル）
         int enemy_count;
+        // アイテム出現数（トータル）
+        int item_count;
         
     } RoguePlayData;
     
     static RoguePlayData createRoguePlayData(std::string data_string)
     {
         std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
-        if (data_string_array.size() != 6) {
+        if (data_string_array.size() != 7) {
             return {0, 0, GameStatus::INIT, 0, 0, 0};
         }
         
@@ -63,18 +65,21 @@ public:
         data.no_action_count = atoi(data_string_array[index].c_str()); index++;
         data.turn_count = atoi(data_string_array[index].c_str()); index++;
         data.enemy_count = atoi(data_string_array[index].c_str()); index++;
+        data.item_count = atoi(data_string_array[index].c_str()); index++;
         return data;
     }
     
     static std::string const roguePlayDataToString(const RoguePlayData& data)
     {
-        return StringUtils::format("%d,%d,%d,%d,%d,%d",
+        return StringUtils::format("%d,%d,%d,%d,%d,%d,%d",
                                    data.quest_id,
                                    data.floor_id,
                                    data.game_status,
                                    data.no_action_count,
                                    data.turn_count,
-                                   data.enemy_count);
+                                   data.enemy_count,
+                                   data.item_count
+                                   );
     }
     
 protected:

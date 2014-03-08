@@ -27,9 +27,6 @@ public:
         }
         res.push_back(std::string(s, current, s.size() - current));
         return res;
-//        std::sregex_token_iterator first(s.begin(), s.end(), "", -1);
-//        std::sregex_token_iterator last;
-//        return std::vector<std::string>(first, last);
     }
 };
 

@@ -28,12 +28,12 @@ protected:
         ItemDetailMenuEquipTag = 30003,
     };
 private:
-    int m_showItemDetailIdx;
+    int show_item_detail_idx_;
     // TODO: ユーザーデータから持ってくるようにする
-    std::list<DropItemSprite::DropItemDto> m_itemDtoList;
-    ItemWindowMenuCallback m_itemUseMenuCallback;
-    ItemWindowMenuCallback m_itemDropMenuCallback;
-    ItemWindowMenuCallback m_itemEquipMenuCallback;
+    std::list<DropItemSprite::DropItemDto> item_dto_list_;
+    ItemWindowMenuCallback item_use_menu_callback_;
+    ItemWindowMenuCallback item_drop_menu_callback_;
+    ItemWindowMenuCallback item_Equip_Menu_Callback_;
 public:
     ItemWindowLayer();
     ~ItemWindowLayer();
@@ -46,13 +46,14 @@ public:
     void addItemList(DropItemSprite::DropItemDto dropItemDto);
     void setItemEquip(int objectId, bool isEquip);
     void reloadItemList();
+    void sortItemList();
     
     void setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback);
     void setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback);
     void setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback);
     
-    void setItemList(std::list<DropItemSprite::DropItemDto> item_list) { m_itemDtoList = item_list; }
-    std::list<DropItemSprite::DropItemDto> getItemList() { return m_itemDtoList; }
+    void setItemList(std::list<DropItemSprite::DropItemDto> item_list) { item_dto_list_ = item_list; }
+    std::list<DropItemSprite::DropItemDto> getItemList() { return item_dto_list_; }
 private:
     void setItemDetail(int itemListIndex);
     void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);

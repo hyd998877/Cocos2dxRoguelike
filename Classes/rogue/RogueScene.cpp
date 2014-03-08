@@ -103,7 +103,7 @@ bool RogueScene::initWithQuestId(int questId)
         // 基本
         actorDto.attackRange = 1;
         actorDto.movePoint = 5;
-        actorDto.playerId = 4;
+        actorDto.playerId = 4; // actorId
         // 攻守
         actorDto.attackPoint = 5;
         actorDto.defencePoint = 1;
@@ -276,6 +276,7 @@ bool RogueScene::initWithQuestId(int questId)
     hideItemList();
     // TODO: アイテム引き継ぎ
     getItemWindowLayer()->setItemList(AccountData::getInstance()->item_list_);
+    getItemWindowLayer()->sortItemList();
     
     // ---------------------
     // プレイヤー生成
@@ -359,12 +360,17 @@ bool RogueScene::initWithQuestId(int questId)
     //-------------------------
     // アイテム配置
     //-------------------------
-    int objectCount = 0;
+    int object_count = AccountData::getInstance()->rogue_play_data_.item_count;
+    if (object_count < 0)
+    {
+        object_count = 0;
+    }
+    // TODO: (kyokomi) とりあえずアイテムとか武器はテストのため全種類配置してる
     for (int i = 0; i < 6; i++)
     {
         MUseItem mUseItem = MUseItemDao::getInstance()->selectById(i + 1);
         DropItemSprite::DropItemDto dropItemDto;
-        dropItemDto.objectId = objectCount + i + 1; // 単純に連番でいい
+        dropItemDto.objectId = object_count + i + 1; // 単純に連番でいい
         dropItemDto.itemId = mUseItem.getUseItemId();
         dropItemDto.itemType = mUseItem.getUseItemType();
         dropItemDto.imageResId = mUseItem.getUseItemImageId();
@@ -374,14 +380,14 @@ bool RogueScene::initWithQuestId(int questId)
         MapIndex mapIndex = getRandomMapIndex(false, false);
         tileSetDropMapItem(dropItemDto, mapIndex);
 
-        objectCount++;
+        object_count++;
     }
 
     for (int i = 0; i < 11; i++)
     {
         MWeapon mWeapon = MWeaponDao::getInstance()->selectById(i + 1);
         DropItemSprite::DropItemDto dropItemDto3;
-        dropItemDto3.objectId = objectCount + i + 1;
+        dropItemDto3.objectId = object_count + i + 1;
         dropItemDto3.itemId = mWeapon.getWeaponId(); // weaponId
         dropItemDto3.itemType = MUseItem::ItemType::EQUIP_WEAPON;
         dropItemDto3.imageResId = mWeapon.getWeaponImageId();
@@ -391,14 +397,14 @@ bool RogueScene::initWithQuestId(int questId)
         MapIndex mapIndex3 = getRandomMapIndex(false, false);;
         tileSetDropMapItem(dropItemDto3, mapIndex3);
         
-        objectCount++;
+        object_count++;
     }
     for (int i = 0; i < 7; i++)
     {
         MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(i + 1);
         
         DropItemSprite::DropItemDto dropItemDto4;
-        dropItemDto4.objectId = objectCount + i + 1;
+        dropItemDto4.objectId = object_count + i + 1;
         dropItemDto4.itemId = mAccessory.getAccessoryId();
         dropItemDto4.itemType = MUseItem::ItemType::EQUIP_ACCESSORY;
         dropItemDto4.imageResId = mAccessory.getAccessoryImageId();
@@ -408,7 +414,7 @@ bool RogueScene::initWithQuestId(int questId)
         MapIndex mapIndex4 = getRandomMapIndex(false, false);;
         tileSetDropMapItem(dropItemDto4, mapIndex4);
         
-        objectCount++;
+        object_count++;
     }
     
     // -------------------------------
@@ -418,6 +424,7 @@ bool RogueScene::initWithQuestId(int questId)
     MapIndex kaidanIndex = getRandomMapIndex(false, false);
     auto pKaidanSprite = Sprite::create("kaidan.png");
     pKaidanSprite->setPosition(indexToPoint(kaidanIndex));
+    pKaidanSprite->setVisible(false);
     pTiledMap->addChild(pKaidanSprite, TiledMapIndexs::TiledMapObjectZOrder, TiledMapTags::TiledMapObjectTag);
     
     // マップに追加
@@ -1083,7 +1090,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
             }
             else if (pTouchPointMapItem->mapDataType == MapDataType::KAIDAN)
             {
-                // 階段SE
+                // TODO: (kyokomi)階段SE
                 
                 // 階段下りる判定
                 
@@ -1538,6 +1545,14 @@ void RogueScene::showItemList(int showTextIndex)
         });
         
         pModalLayer->addChild(pItemWindowLayer, RogueScene::ItemListLayerZOrder, RogueScene::ItemListWindowTag);
+
+        // 並び替えボタン
+        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("並び替え", GAME_FONT(10), 10), Size(12, 4), [this, pItemWindowLayer](Object *pSender) {
+            // 並び替え
+            pItemWindowLayer->sortItemList();
+            pItemWindowLayer->reloadItemList();
+        });
+        sort_menu_item_label->setPosition(Point(pItemWindowLayer->getContentSize().width, pItemWindowLayer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
         
         // 閉じるボタン
         auto pCloseMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("とじる", GAME_FONT(10), 10), Size(12, 4), [this](Object *pSender) {
@@ -1546,7 +1561,7 @@ void RogueScene::showItemList(int showTextIndex)
         });
         pCloseMenuItemLabel->setPosition(Point(pItemWindowLayer->getContentSize().width, pCloseMenuItemLabel->getPositionY() -  pCloseMenuItemLabel->getContentSize().height / 2));
         
-        auto pMenu = Menu::create(pCloseMenuItemLabel, NULL);
+        auto pMenu = Menu::create(sort_menu_item_label, pCloseMenuItemLabel, NULL);
         pMenu->setPosition(Point::ZERO);
         
         pItemWindowLayer->addChild(pMenu);
@@ -1912,21 +1927,24 @@ void RogueScene::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRef
             }
         }
     }
+    
     //階段
     auto pKaidan = pTiledMapLayer->getChildByTag(TiledMapTags::TiledMapObjectTag);
     if (pKaidan)
     {
-        bool isContains = floorInfoIndexRect.containsPoint(pKaidan->getPosition());
-        if (isRefresh || isContains)
-        {
-            pKaidan->setVisible(isContains);
-            
-            if (pBatchNode)
+        if (!pKaidan->isVisible()) {
+            bool isContains = floorInfoIndexRect.containsPoint(pKaidan->getPosition());
+            if (isRefresh || isContains)
             {
-                auto pMiniKaidanNode = pBatchNode->getChildByTag(pKaidan->getTag());
-                if (pMiniKaidanNode)
+                pKaidan->setVisible(isContains);
+                
+                if (pBatchNode)
                 {
-                    pMiniKaidanNode->setVisible(isContains);
+                    auto pMiniKaidanNode = pBatchNode->getChildByTag(pKaidan->getTag());
+                    if (pMiniKaidanNode)
+                    {
+                        pMiniKaidanNode->setVisible(isContains);
+                    }
                 }
             }
         }

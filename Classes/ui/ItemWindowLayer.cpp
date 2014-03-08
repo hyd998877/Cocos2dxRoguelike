@@ -22,37 +22,33 @@ USING_NS_CC;
 #define ITEM_LAYER_DETAIL_DEFAULT "左のリストを選択すると\nここにアイテムの説明が\n表示されます"
 
 ItemWindowLayer::ItemWindowLayer()
-:m_itemDtoList(std::list<DropItemSprite::DropItemDto>()),
-m_showItemDetailIdx(-1),
-m_itemDropMenuCallback(nullptr),
-m_itemUseMenuCallback(nullptr)
+:item_dto_list_(std::list<DropItemSprite::DropItemDto>()),
+show_item_detail_idx_(-1),
+item_drop_menu_callback_(nullptr),
+item_use_menu_callback_(nullptr)
 {
 }
 
 ItemWindowLayer::~ItemWindowLayer()
 {
-    
 }
 
-ItemWindowLayer* ItemWindowLayer::createWithContentSize(Size contentSize)
-{
+ItemWindowLayer* ItemWindowLayer::createWithContentSize(Size contentSize) {
     ItemWindowLayer *pRet = new ItemWindowLayer();
-    if (pRet && pRet->initWithContentSize(contentSize))
-    {
+    if (pRet && pRet->initWithContentSize(contentSize)) {
         pRet->autorelease();
         return pRet;
-    }
-    else
-    {
+    } else {
         CC_SAFE_DELETE(pRet);
         return NULL;
     }
 }
 
-bool ItemWindowLayer::initWithContentSize(Size contentSize)
-{
-    if (!LayerColor::init())
-    {
+#pragma mark
+#pragma mark 初期処理
+
+bool ItemWindowLayer::initWithContentSize(Size contentSize) {
+    if (!LayerColor::init()) {
         return false;
     }
     setContentSize(contentSize);
@@ -61,8 +57,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
 
     // アイテム一覧レイヤー（左側）
     std::list<TableViewTestLayer::TableLayout> itemNameList;
-    for (DropItemSprite::DropItemDto dropItem : m_itemDtoList)
-    {
+    for (DropItemSprite::DropItemDto dropItem : item_dto_list_) {
         TableViewTestLayer::TableLayout layout = {StringUtils::format("item_%d.png", dropItem.imageResId), dropItem.name};
         
         itemNameList.push_back(layout);
@@ -72,26 +67,24 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
                                                                   Size(contentSize.width / 2, contentSize.height));
     pItemListLayer->setColor(Color3B::BLACK);
     pItemListLayer->setOpacity(128);
-    pItemListLayer->setPosition(Point(
-                                      contentSize.width / 2 - pItemListLayer->getContentSize().width - padding,
+    pItemListLayer->setPosition(Point(contentSize.width / 2 - pItemListLayer->getContentSize().width - padding,
                                       contentSize.height / 2 - pItemListLayer->getContentSize().height / 2));
     pItemListLayer->setCallback([this](Object* pObject, long touchedIdx) {
         // 行選択時
         CCLOG(" touched idx = %ld", touchedIdx);
         // 同じ行連打は無視
-        if (m_showItemDetailIdx == touchedIdx)
-        {
+        if (show_item_detail_idx_ == touchedIdx) {
             return;
         }
         // touched DropItemDto
-        auto it = m_itemDtoList.begin();
+        auto it = item_dto_list_.begin();
         std::advance(it, touchedIdx);
         auto dropItemDto = (DropItemSprite::DropItemDto) *it;
         
         this->setItemDetail(&dropItemDto);
         
         // 表示indexを更新
-        m_showItemDetailIdx = touchedIdx;
+        show_item_detail_idx_ = touchedIdx;
     });
     auto pItemItemListWaku = CommonWindowUtil::createWindowWaku(pItemListLayer);
     pItemListLayer->addChild(pItemItemListWaku);
@@ -156,29 +149,27 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize)
     return true;
 }
 
-Menu* ItemWindowLayer::initCreateMenu()
-{
+Menu* ItemWindowLayer::initCreateMenu() {
     // -----------------------------
     // メニューボタン
     const Size WAKU_PADDING = Size(8, 4);
     
     // 捨てるボタン
     auto pMenuItemDrop = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("すてる", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+        
         // hoge
         CCLOG("item drop menu pressed");
-        if (m_showItemDetailIdx < 0)
-        {
+        if (show_item_detail_idx_ < 0) {
             return;
         }
-        if (m_itemDropMenuCallback)
-        {
-            auto it = m_itemDtoList.begin();
-            std::advance(it, m_showItemDetailIdx);
+        if (item_drop_menu_callback_) {
+            auto it = item_dto_list_.begin();
+            std::advance(it, show_item_detail_idx_);
             auto dropItemDto = (DropItemSprite::DropItemDto) *it;
             // 削除
-            m_itemDtoList.erase(it);
+            item_dto_list_.erase(it);
             
-            m_itemDropMenuCallback(pSeneder, dropItemDto);
+            item_drop_menu_callback_(pSeneder, dropItemDto);
         }
     });
     
@@ -186,41 +177,39 @@ Menu* ItemWindowLayer::initCreateMenu()
     
     // 使用ボタン
     auto pMenuItemUse = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("つかう", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+        
         // hoge
         CCLOG("item use menu pressed");
-        if (m_showItemDetailIdx < 0)
-        {
+        if (show_item_detail_idx_ < 0) {
             return;
         }
-        if (m_itemUseMenuCallback)
-        {
-            auto it = m_itemDtoList.begin();
-            std::advance(it, m_showItemDetailIdx);
+        if (item_use_menu_callback_) {
+            auto it = item_dto_list_.begin();
+            std::advance(it, show_item_detail_idx_);
             auto dropItemDto = (DropItemSprite::DropItemDto) *it;
             // 削除
-            m_itemDtoList.erase(it);
+            item_dto_list_.erase(it);
             
-            m_itemUseMenuCallback(pSeneder, dropItemDto);
+            item_use_menu_callback_(pSeneder, dropItemDto);
         }
     });
     pMenuItemUse->setTag(ItemWindowLayer::ItemDetailMenuUseTag);
     
     // 装備（する/はずす）ボタン
     auto pMenuItemEquip = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("そうび", GAME_FONT(10), 10), WAKU_PADDING, [this](Object* pSeneder) {
+        
         CCLOG("item equip menu pressed");
-        if (m_showItemDetailIdx < 0)
-        {
+        if (show_item_detail_idx_ < 0) {
             return;
         }
-        if (m_itemEquipMenuCallback)
-        {
-            auto it = m_itemDtoList.begin();
-            std::advance(it, m_showItemDetailIdx);
+        if (item_Equip_Menu_Callback_) {
+            auto it = item_dto_list_.begin();
+            std::advance(it, show_item_detail_idx_);
             // ステータスを装備状態を反転
             it->isEquip = !it->isEquip;
             
             auto dropItemDto = (DropItemSprite::DropItemDto) *it;
-            m_itemEquipMenuCallback(pSeneder, dropItemDto);
+            item_Equip_Menu_Callback_(pSeneder, dropItemDto);
         }
     });
     pMenuItemEquip->setTag(ItemWindowLayer::ItemDetailMenuEquipTag);
@@ -233,14 +222,12 @@ Menu* ItemWindowLayer::initCreateMenu()
     return pMenu;
 }
 
-#pragma mardk
-#pragma mardk itemList関連
+#pragma mark
+#pragma mark itemList関連
 
-DropItemSprite::DropItemDto ItemWindowLayer::findItem(int itemListIndex)
-{
-    if (itemListIndex >= 0 && m_itemDtoList.size() > itemListIndex)
-    {
-        auto it = m_itemDtoList.begin();
+DropItemSprite::DropItemDto ItemWindowLayer::findItem(int itemListIndex) {
+    if (itemListIndex >= 0 && item_dto_list_.size() > itemListIndex) {
+        auto it = item_dto_list_.begin();
         std::advance(it, itemListIndex);
         auto dropItemDto = (DropItemSprite::DropItemDto) *it;
         return dropItemDto;
@@ -248,81 +235,76 @@ DropItemSprite::DropItemDto ItemWindowLayer::findItem(int itemListIndex)
     return {0, 0, MUseItem::ItemType::NONE, 0, "", false};
 }
 
-void ItemWindowLayer::addItemList(DropItemSprite::DropItemDto dropItemDto)
-{
-    m_itemDtoList.push_back(dropItemDto);
+void ItemWindowLayer::addItemList(DropItemSprite::DropItemDto dropItemDto) {
+    item_dto_list_.push_back(dropItemDto);
 }
-void ItemWindowLayer::setItemEquip(int objectId, bool isEquip)
-{
-    for (DropItemSprite::DropItemDto& itemDto : m_itemDtoList)
-    {
-        if (itemDto.objectId == objectId)
-        {
+
+// 指定したアイテムを装備状態を変更する
+void ItemWindowLayer::setItemEquip(int objectId, bool isEquip) {
+    for (DropItemSprite::DropItemDto& itemDto : item_dto_list_) {
+        if (itemDto.objectId == objectId) {
             // TODO: とりあえず装備だけ
             itemDto.isEquip = isEquip;
+            break;
         }
     }
 }
 
-void ItemWindowLayer::reloadItemList()
-{
+void ItemWindowLayer::reloadItemList() {
     // 選択をリセット
-    m_showItemDetailIdx = -1;
+    show_item_detail_idx_ = -1;
     
     auto pItemTabelLayer = static_cast<TableViewTestLayer*>(getChildByTag(ItemWindowLayer::ItemTableLayerTag));
-    if (pItemTabelLayer)
-    {
-        // ソート
-        m_itemDtoList.sort(DropItemSprite::DropItemDto::compare_dropItem_equip);
+    if (pItemTabelLayer) {
+        
+        // 装備ソート
+        item_dto_list_.sort(DropItemSprite::DropItemDto::compare_dropItem_equip);
         
         std::list<TableViewTestLayer::TableLayout> itemNameList;
-        for (DropItemSprite::DropItemDto dropItem : m_itemDtoList)
-        {
+        
+        for (DropItemSprite::DropItemDto dropItem : item_dto_list_) {
             TableViewTestLayer::TableLayout layout = {
                 DropItemSprite::createItemImageFileName(dropItem.imageResId),
                 dropItem.name,
-                dropItem.isEquip ? Color3B::YELLOW : Color3B::WHITE // 装備中は青文字
+                dropItem.isEquip ? Color3B::YELLOW : Color3B::WHITE // 装備中は黄文字
             };
             itemNameList.push_back(layout);
         }
         pItemTabelLayer->makeItemList(itemNameList);
     }
-    setItemDetail(m_showItemDetailIdx);
+    setItemDetail(show_item_detail_idx_);
 }
 
-void ItemWindowLayer::setItemDetail(int itemListIndex)
-{
+void ItemWindowLayer::sortItemList() {
+    // ソート
+    item_dto_list_.sort(DropItemSprite::DropItemDto::compare_dropItem_weapon_with_accessory);
+}
+
+#pragma mark
+#pragma mark privateメソッド
+
+void ItemWindowLayer::setItemDetail(int itemListIndex) {
     DropItemSprite::DropItemDto dropItemDto = findItem(itemListIndex);
     setItemDetail(&dropItemDto);
 }
 
-void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
-{
-    if (!pDropItemDto)
-    {
+void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
+    if (!pDropItemDto) {
         return;
     }
     
     auto pItemDetailLayer = this->getChildByTag(ItemWindowLayer::ItemDetailLayerTag);
-    if (pItemDetailLayer)
-    {
+    if (pItemDetailLayer) {
         // name
         auto pItemNameLabel = static_cast<LabelTTF*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemNameTag));
-        if (pItemNameLabel)
-        {
-            if (pDropItemDto->name.empty())
-            {
+        if (pItemNameLabel) {
+            if (pDropItemDto->name.empty()) {
                 pItemNameLabel->setString(ITEM_LAYER_NAME_DEFAULT);
-            }
-            else
-            {
+            } else {
                 // TODO: とりあえず装備中で文言かえる
-                if (pDropItemDto->isEquip)
-                {
+                if (pDropItemDto->isEquip) {
                     pItemNameLabel->setString(StringUtils::format("%s(装備中)", pDropItemDto->name.c_str()));
-                }
-                else
-                {
+                } else {
                     pItemNameLabel->setString(pDropItemDto->name);
                 }
             }
@@ -330,55 +312,42 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
         
         // detail
         auto pItemDetailLabel = static_cast<LabelTTF*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemDetailTag));
-        if (pItemDetailLabel)
-        {
-            if (pDropItemDto->name.empty())
-            {
+        if (pItemDetailLabel) {
+            if (pDropItemDto->name.empty()) {
                 pItemDetailLabel->setString(ITEM_LAYER_DETAIL_DEFAULT);
-            }
-            else
-            {
-                if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON)
-                {
+            } else {
+                if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON) {
                     MWeapon weapon = MWeaponDao::getInstance()->selectById(pDropItemDto->itemId);
                     pItemDetailLabel->setString(weapon.getWeaponDetail());
-                }
-                else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
-                {
+                } else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     MAccessory accessory = MAccessoryDao::getInstance()->selectById(pDropItemDto->itemId);
                     pItemDetailLabel->setString(accessory.getAccessoryDetail());
-                }
-                else if (pDropItemDto->itemType != MUseItem::ItemType::NONE)
-                {
+                } else if (pDropItemDto->itemType != MUseItem::ItemType::NONE) {
                     MUseItem useItem = MUseItemDao::getInstance()->selectById(pDropItemDto->itemId);
                     pItemDetailLabel->setString(useItem.getUseItemDetail());
                 }
             }
         }
+        
         // menu
         auto pItemDetailMenu = static_cast<Menu*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemDetailMenuTag));
-        if (pItemDetailMenu)
-        {
+        if (pItemDetailMenu) {
             auto pMenuUse = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuUseTag));
             auto pMenuDrop = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuDropTag));
             auto pMenuEquip = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuEquipTag));
             
             // 未指定
-            if (pDropItemDto->itemType == MUseItem::ItemType::NONE)
-            {
+            if (pDropItemDto->itemType == MUseItem::ItemType::NONE) {
                 pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
                 pMenuDrop->setEnabled(false);pMenuDrop->setVisible(false);
                 pMenuEquip->setEnabled(false);pMenuEquip->setVisible(false);
-            }
-            else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON || pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
-            {
+            } else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON ||
+                       pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
                 // 装備可能・置く
                 pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
                 pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
                 pMenuEquip->setEnabled(true);pMenuEquip->setVisible(true);
-            }
-            else
-            {
+            } else {
                 pMenuUse->setEnabled(true);pMenuUse->setVisible(true);
                 pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
                 pMenuEquip->setEnabled(false);pMenuEquip->setVisible(false);
@@ -387,20 +356,17 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto)
     }
 }
 
-#pragma mardk
-#pragma mardk callback関連
+#pragma mark
+#pragma mark callback関連
 
-void ItemWindowLayer::setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback)
-{
-    m_itemUseMenuCallback = itemUseMenuCallback;
+void ItemWindowLayer::setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback) {
+    item_use_menu_callback_ = itemUseMenuCallback;
 }
 
-void ItemWindowLayer::setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback)
-{
-    m_itemDropMenuCallback = itemDropMenuCallback;
+void ItemWindowLayer::setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback) {
+    item_drop_menu_callback_ = itemDropMenuCallback;
 }
-void ItemWindowLayer::setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback)
-{
-    m_itemEquipMenuCallback = itemEquipMenuCallback;
+void ItemWindowLayer::setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback) {
+    item_Equip_Menu_Callback_ = itemEquipMenuCallback;
 }
 
