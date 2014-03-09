@@ -22,8 +22,8 @@
 #define PIXEL_MPLUS_12_FONT "PixelMplus12-Regular"
 #endif
 
-#define GAME_SCALE (1)
-//#define GAME_SCALE (0.52f)
+//#define GAME_SCALE (1)
+#define GAME_SCALE (0.52f)
 
 typedef struct tagResource
 {

@@ -7,13 +7,11 @@
 class TableViewTestLayer :
 public cocos2d::LayerColor,
 public cocos2d::extension::TableViewDataSource,
-public cocos2d::extension::TableViewDelegate
-{
+public cocos2d::extension::TableViewDelegate {
     const int LIST_SIZE = 6;
 protected:
     
-    enum Tag
-    {
+    enum Tag {
         ItemLayerTag = 1,
         ItemTextLabelTag,
         ItemImageTag,
@@ -51,11 +49,13 @@ public:
     
 private:
     
-    // TODO: とりあえず文字列だけ（アイコンの表示とかでimgResIdがほしい）typedef作るか
     std::list<TableLayout> m_itemList;
     
     // コールバック
     TableCellTouchedCallback m_callback;
+    
+    // 現在選択中にセルインデックス
+    int choice_touch_cell_idx_;
 };
 
 #endif // __TABLEVIEWTESTSCENE_H__

@@ -87,7 +87,6 @@
 		CE93B450188156C700825FD1 /* LabelSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B434188156C700825FD1 /* LabelSprite.cpp */; };
 		CE93B451188156C700825FD1 /* MenuItemSelectLabelSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */; };
 		CE93B452188156C700825FD1 /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B438188156C700825FD1 /* ModalLayer.cpp */; };
-		CE93B453188156C700825FD1 /* CustomTableViewCell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B43B188156C700825FD1 /* CustomTableViewCell.cpp */; };
 		CE93B454188156C700825FD1 /* TableViewTestLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */; };
 		CE93B455188156C700825FD1 /* MapScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B440188156C700825FD1 /* MapScene.cpp */; };
 		CE93B456188156C700825FD1 /* MapSceneLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B442188156C700825FD1 /* MapSceneLoader.cpp */; };
@@ -360,8 +359,6 @@
 		CE93B437188156C700825FD1 /* MenuItemSelectLabelSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemSelectLabelSprite.h; sourceTree = "<group>"; };
 		CE93B438188156C700825FD1 /* ModalLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModalLayer.cpp; sourceTree = "<group>"; };
 		CE93B439188156C700825FD1 /* ModalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalLayer.h; sourceTree = "<group>"; };
-		CE93B43B188156C700825FD1 /* CustomTableViewCell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CustomTableViewCell.cpp; sourceTree = "<group>"; };
-		CE93B43C188156C700825FD1 /* CustomTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableViewCell.h; sourceTree = "<group>"; };
 		CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TableViewTestLayer.cpp; sourceTree = "<group>"; };
 		CE93B43E188156C700825FD1 /* TableViewTestLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewTestLayer.h; sourceTree = "<group>"; };
 		CE93B440188156C700825FD1 /* MapScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapScene.cpp; sourceTree = "<group>"; };
@@ -799,8 +796,6 @@
 		CE93B43A188156C700825FD1 /* table */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B43B188156C700825FD1 /* CustomTableViewCell.cpp */,
-				CE93B43C188156C700825FD1 /* CustomTableViewCell.h */,
 				CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */,
 				CE93B43E188156C700825FD1 /* TableViewTestLayer.h */,
 			);
@@ -1088,7 +1083,6 @@
 				CE93B44E188156C700825FD1 /* TitleSceneLoader.cpp in Sources */,
 				CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */,
 				CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */,
-				CE93B453188156C700825FD1 /* CustomTableViewCell.cpp in Sources */,
 				CE7F54B418AF0AFD00BFD0DC /* NovelScene.cpp in Sources */,
 				CE93B452188156C700825FD1 /* ModalLayer.cpp in Sources */,
 				CE890F2718B0E2A60088A9BC /* MAccessory.cpp in Sources */,

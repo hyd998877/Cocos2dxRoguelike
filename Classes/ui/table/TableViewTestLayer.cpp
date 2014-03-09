@@ -1,5 +1,4 @@
 #include "TableViewTestLayer.h"
-#include "CustomTableViewCell.h"
 
 #include "AppMacros.h"
 
@@ -8,21 +7,17 @@ USING_NS_CC_EXT;
 
 TableViewTestLayer::TableViewTestLayer()
 :m_itemList(std::list<TableLayout>()),
-m_callback(nullptr)
+m_callback(nullptr),
+choice_touch_cell_idx_(0)
 {
-
 }
 
-TableViewTestLayer* TableViewTestLayer::createWithTextArray(std::list<TableLayout> itemList, Size contentSize)
-{
+TableViewTestLayer* TableViewTestLayer::createWithTextArray(std::list<TableLayout> itemList, Size contentSize) {
     TableViewTestLayer *pRet = new TableViewTestLayer();
-    if (pRet && pRet->init(itemList, contentSize))
-    {
+    if (pRet && pRet->init(itemList, contentSize)) {
         pRet->autorelease();
         return pRet;
-    }
-    else
-    {
+    } else {
         delete pRet;
         pRet = NULL;
         return NULL;
@@ -30,10 +25,8 @@ TableViewTestLayer* TableViewTestLayer::createWithTextArray(std::list<TableLayou
 }
 
 // on "init" you need to initialize your instance
-bool TableViewTestLayer::init(std::list<TableLayout> itemList, Size contentSize)
-{
-    if ( !LayerColor::init() )
-    {
+bool TableViewTestLayer::init(std::list<TableLayout> itemList, Size contentSize) {
+    if ( !LayerColor::init() ) {
         return false;
     }
     m_itemList = itemList;
@@ -57,105 +50,100 @@ bool TableViewTestLayer::init(std::list<TableLayout> itemList, Size contentSize)
     return true;
 }
 
-void TableViewTestLayer::tableCellTouched(TableView* table, TableViewCell* cell)
-{
+void TableViewTestLayer::tableCellTouched(TableView* table, TableViewCell* cell) {
     CCLOG("cell touched at index: %ld", cell->getIdx());
-    if (m_callback)
-    {
+    if (m_callback) {
         m_callback(this, cell->getIdx());
     }
-    
     touchCellRefreshColor(table, cell->getIdx());
 }
 
-void TableViewTestLayer::touchCellRefreshColor(TableView* pTable, int touchCellIdx)
-{
-    for (auto pLayer : pTable->getChildren())
-    {
-        for (auto pCell : pLayer->getChildren())
-        {
-            if (static_cast<TableViewCell*>(pCell)->getIdx() == touchCellIdx)
-            {
+void TableViewTestLayer::touchCellRefreshColor(TableView* pTable, int touchCellIdx) {
+    // タッチした位置を覚えておく（スクロール対策）
+    choice_touch_cell_idx_ = touchCellIdx;
+    
+    for (auto pLayer : pTable->getChildren()) {
+        for (auto pCell : pLayer->getChildren()) {
+            if (static_cast<TableViewCell*>(pCell)->getIdx() == touchCellIdx) {
                 pCell->getChildByTag(TableViewTestLayer::ItemLayerTag)->setColor(Color3B::GREEN);
-            }
-            else
-            {
+            } else {
                 pCell->getChildByTag(TableViewTestLayer::ItemLayerTag)->setColor(Color3B::BLACK);
             }
         }
     }
 }
 
-Size TableViewTestLayer::tableCellSizeForIndex(TableView *table, long idx)
-{
-    Size contentSize = getContentSize();
-    return Size(contentSize.width, contentSize.height / TableViewTestLayer::LIST_SIZE);
+Size TableViewTestLayer::tableCellSizeForIndex(TableView *table, long idx) {
+    Size content_size = getContentSize();
+    return Size(content_size.width, content_size.height / TableViewTestLayer::LIST_SIZE);
 }
 
-TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx)
-{
-    Size contentSize = getContentSize();
-    TableLayout tableItem;
+TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) {
     
-    long listSize = m_itemList.size();
-    if (listSize > 0 && idx < listSize)
-    {
+    // 本文テキスト
+    const int kDetailFontSize = 20;
+    
+    Size content_size = getContentSize();
+    TableLayout table_item;
+    
+    long list_size = m_itemList.size();
+    if (list_size > 0 && idx < list_size) {
         auto it = m_itemList.begin();
         std::advance(it, idx);
         TableLayout item = *it;
-        tableItem = item;
+        table_item = item;
         m_itemList.end();
     }
-    CCLOG("idx = %ld size = %ld text = %s", idx, listSize, tableItem.labelText.c_str());
+    CCLOG("idx = %ld size = %ld text = %s", idx, list_size, table_item.labelText.c_str());
     
-    
-    auto pSpriteFrameCache = SpriteFrameCache::getInstance();
-    auto pSpriteFrame = pSpriteFrameCache->getSpriteFrameByName(tableItem.imageFileName);
-    if (!pSpriteFrame)
-    {
-        pSpriteFrame = Sprite::create(tableItem.imageFileName)->getSpriteFrame();
-        SpriteFrameCache::getInstance()->addSpriteFrame(pSpriteFrame, tableItem.imageFileName);
+    auto sprite_frame_cache = SpriteFrameCache::getInstance();
+    auto sprite_frame = sprite_frame_cache->getSpriteFrameByName(table_item.imageFileName);
+    if (!sprite_frame) {
+        sprite_frame = Sprite::create(table_item.imageFileName)->getSpriteFrame();
+        SpriteFrameCache::getInstance()->addSpriteFrame(sprite_frame, table_item.imageFileName);
     }
     
-    TableViewCell *cell = table->dequeueCell();
+    auto cell = table->dequeueCell();
     if (!cell) {
-        cell = new CustomTableViewCell();
+        cell = new TableViewCell();
         cell->autorelease();
         
-        LayerColor* pTextLayer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), contentSize.width * 0.9, contentSize.height / TableViewTestLayer::LIST_SIZE * 0.9);
-        pTextLayer->setPosition(contentSize.width * 0.05, contentSize.height / TableViewTestLayer::LIST_SIZE * 0.05);
-        pTextLayer->setTag(TableViewTestLayer::ItemLayerTag);
+        LayerColor* text_layer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), content_size.width * 0.9, content_size.height / TableViewTestLayer::LIST_SIZE * 0.9);
+        text_layer->setPosition(content_size.width * 0.05, content_size.height / TableViewTestLayer::LIST_SIZE * 0.05);
+        text_layer->setTag(TableViewTestLayer::ItemLayerTag);
         
-        auto pItemImageSprite = Sprite::createWithSpriteFrame(pSpriteFrame);
-        pItemImageSprite->setTag(TableViewTestLayer::ItemImageTag);
-        pItemImageSprite->setPosition(Point(pItemImageSprite->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
-        pTextLayer->addChild(pItemImageSprite);
+        auto item_image_sprite = Sprite::createWithSpriteFrame(sprite_frame);
+        item_image_sprite->setTag(TableViewTestLayer::ItemImageTag);
+        item_image_sprite->setPosition(Point(item_image_sprite->getContentSize().width / 2, text_layer->getContentSize().height / 2));
+        text_layer->addChild(item_image_sprite);
         
-        // 本文テキスト
-        int baseFontSize = 20;
-        
-        LabelTTF* pTextLabel = LabelTTF::create(tableItem.labelText, GAME_FONT(baseFontSize), GAME_FONT_SIZE(baseFontSize));
-        pTextLabel->setColor(tableItem.textColor);
-        pTextLabel->setPosition(Point(pTextLabel->getFontSize() + pItemImageSprite->getContentSize().width + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
-        pTextLabel->setTag(TableViewTestLayer::ItemTextLabelTag);
+        LabelTTF* text_label = LabelTTF::create(table_item.labelText, GAME_FONT(kDetailFontSize), GAME_FONT_SIZE(kDetailFontSize));
+        text_label->setColor(table_item.textColor);
+        text_label->setPosition(Point(text_label->getFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
+        text_label->setTag(TableViewTestLayer::ItemTextLabelTag);
 
-        pTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
-        pTextLabel->setHorizontalAlignment(TextHAlignment::LEFT);
-        pTextLayer->addChild(pTextLabel);
+        text_label->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
+        text_label->setHorizontalAlignment(TextHAlignment::LEFT);
+        text_layer->addChild(text_label);
         
-        cell->addChild(pTextLayer);
-    }
-    else
-    {
-        LayerColor* pTextLayer = static_cast<LayerColor*>(cell->getChildByTag(TableViewTestLayer::ItemLayerTag));
-        auto pItemImageSprite = static_cast<Sprite*>(pTextLayer->getChildByTag(TableViewTestLayer::ItemImageTag));
-        pItemImageSprite->setSpriteFrame(pSpriteFrame);
-        pItemImageSprite->setPosition(Point(pItemImageSprite->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
+        cell->addChild(text_layer);
+    } else {
+        auto text_layer = static_cast<LayerColor*>(cell->getChildByTag(TableViewTestLayer::ItemLayerTag));
+        auto item_image_sprite = static_cast<Sprite*>(text_layer->getChildByTag(TableViewTestLayer::ItemImageTag));
+        item_image_sprite->setSpriteFrame(sprite_frame);
+        item_image_sprite->setPosition(Point(item_image_sprite->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         
-        LabelTTF* pTextLabel = static_cast<LabelTTF*>(pTextLayer->getChildByTag(TableViewTestLayer::ItemTextLabelTag));
-        pTextLabel->setString(tableItem.labelText);
-        pTextLabel->setPosition(Point(pTextLabel->getFontSize() + pItemImageSprite->getContentSize().width + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height / 2));
-        pTextLabel->setColor(tableItem.textColor);
+        auto text_label = static_cast<LabelTTF*>(text_layer->getChildByTag(TableViewTestLayer::ItemTextLabelTag));
+        text_label->setString(table_item.labelText);
+        text_label->setPosition(Point(text_label->getFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
+        text_label->setColor(table_item.textColor);
+        
+        // タッチ中を更新
+        if (choice_touch_cell_idx_ == idx) {
+            text_layer->setColor(Color3B::GREEN);
+        } else {
+            text_layer->setColor(Color3B::BLACK);
+        }
     }
 
     return cell;
@@ -169,21 +157,21 @@ long TableViewTestLayer::numberOfCellsInTableView(TableView *table)
 #pragma mark
 #pragma mark 要素設定とか
 
-void TableViewTestLayer::makeItemList(std::list<TableLayout> itemList)
-{
+void TableViewTestLayer::makeItemList(std::list<TableLayout> itemList) {
     m_itemList = itemList;
     
-    auto pTableView = static_cast<TableView*>(this->getChildByTag(TableViewTestLayer::TableViewTag));
+    auto table_view = static_cast<TableView*>(this->getChildByTag(TableViewTestLayer::TableViewTag));
     
-    touchCellRefreshColor(pTableView, -1);
-    pTableView->reloadData();
+    // タッチなしに初期化
+    touchCellRefreshColor(table_view, -1);
+    
+    table_view->reloadData();
 }
 
 #pragma mark
 #pragma mark コールバック関連
 
-void TableViewTestLayer::setCallback(const TableCellTouchedCallback &callback)
-{
+void TableViewTestLayer::setCallback(const TableCellTouchedCallback &callback) {
     m_callback = callback;
 }
 
