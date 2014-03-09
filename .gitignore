@@ -11,3 +11,5 @@ gen
 proj.android/build
 
 modules/libcocos
+
+project.xcworkspace
