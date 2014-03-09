@@ -80,7 +80,7 @@ RogueScene* RogueScene::createWithQuestId(int questId)
 bool RogueScene::initWithQuestId(int questId)
 {
     // 1. super init first
-    if ( !Layer::init() )
+    if ( !Scene::init() )
     {
         return false;
     }
@@ -134,7 +134,7 @@ bool RogueScene::initWithQuestId(int questId)
     listener->onTouchMoved = CC_CALLBACK_2(RogueScene::onTouchMoved, this);
     listener->onTouchEnded = CC_CALLBACK_2(RogueScene::onTouchEnded, this);
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
-    
+
     auto winSize = Director::getInstance()->getWinSize();
     
     // ---------------------
@@ -285,6 +285,7 @@ bool RogueScene::initWithQuestId(int questId)
     actorMapItem.mapDataType = MapDataType::PLAYER;
     // 画面の中心（固定）
     MapIndex playerRandMapIndex = getRandomMapIndex(false, true);
+    playerRandMapIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
     actorMapItem.mapIndex = playerRandMapIndex;
     actorMapItem.seqNo = 1;
     actorMapItem.moveDist = actorDto.movePoint;
@@ -584,7 +585,6 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
         }
     });
     pA_MenuButton->setPosition(Point(win_size.width - base_tile_size_.width, indexToPoint(12, 1).y));
-//    pA_MenuButton->setPosition(indexToPoint(12, 1));
     pA_MenuButton->setTag(RogueScene::A_ButtonMenuTag);
     resultArray.pushBack(pA_MenuButton);
     
@@ -595,7 +595,6 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
         CCLOG("Bボタンが押された！");
     });
     pB_MenuButton->setPosition(Point(win_size.width - base_tile_size_.width * 2, indexToPoint(11, 0).y));
-//    pB_MenuButton->setPosition(indexToPoint(11, 0));
     pB_MenuButton->setTag(RogueScene::B_ButtonMenuTag);
     resultArray.pushBack(pB_MenuButton);
     
@@ -619,7 +618,6 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
         
     });
     pC_MenuButton->setPosition(Point(win_size.width - base_tile_size_.width * 3, indexToPoint(10, 1).y));
-//    pC_MenuButton->setPosition(indexToPoint(10, 1));
     pC_MenuButton->setTag(RogueScene::C_ButtonMenuTag);
     resultArray.pushBack(pC_MenuButton);
     
@@ -631,11 +629,20 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
         showItemList(1);
     });
     pD_MenuButton->setPosition(Point(win_size.width - base_tile_size_.width * 2, indexToPoint(11, 2).y));
-//    pD_MenuButton->setPosition(indexToPoint(11, 2));
     pD_MenuButton->setTag(RogueScene::D_ButtonMenuTag);
     resultArray.pushBack(pD_MenuButton);
     
     return resultArray;
+}
+
+void RogueScene::onEnter() {
+    CCLOG("%s(%d) onEnter", __FILE__, __LINE__);
+    Scene::onEnter();
+}
+
+void RogueScene::onEnterTransitionDidFinish() {
+    CCLOG("%s(%d) onEnterTransitionDidFinish", __FILE__, __LINE__);
+    Scene::onEnterTransitionDidFinish();
 }
 
 #pragma mark
@@ -2015,157 +2022,149 @@ Rect RogueScene::getTileMapFloorInfo()
     return Rect::ZERO;
 }
 
-void RogueScene::showPlayerLighting()
-{
+void RogueScene::showPlayerLighting() {
     auto winSize = Director::getInstance()->getWinSize();
     
-    auto pFrontLayer = this->getChildByTag(RogueScene::RogueLayerTag);
-    if (pFrontLayer)
-    {
-        pFrontLayer->setVisible(true);
+    auto base_layer = dynamic_cast<LayerColor*>(this->getChildByTag(RogueScene::RoguePlayerLightBaseTag));
+    if (base_layer) {
+        base_layer->setVisible(true);
+    } else {
+        base_layer = LayerColor::create();
+        this->addChild(base_layer, RogueScene::RoguePlayerLightBaseZOrder, RogueScene::RoguePlayerLightBaseTag);
     }
-    else
-    {
-        pFrontLayer = Layer::create();
-        this->addChild(pFrontLayer, RogueScene::RogueZOrder, RogueScene::RogueLayerTag);
+
+    // フロントレイヤーにマップを暗くするやつを設定
+    auto mask_layer = dynamic_cast<LayerColor*>(base_layer->getChildByTag(RogueScene::RoguePlayerLightMaskTag));
+    if (mask_layer) {
+        mask_layer->setVisible(true);
+    } else {
+        mask_layer = LayerColor::create(Color4B(0,0,0,128));
+        mask_layer->setContentSize(winSize);
+        mask_layer->setPosition(Point::ZERO);
+        base_layer->addChild(mask_layer, RogueScene::RoguePlayerLightMaskZOrder, RogueScene::RoguePlayerLightMaskTag);
+    }
+
+    auto light_draw = dynamic_cast<DrawNode*>(mask_layer->getChildByTag(RogueScene::RoguePlayerLightTag));
+    if (light_draw) {
+        light_draw->setVisible(true);
+    } else {
+        auto actor_sprite = getPlayerActorSprite(1);
         
-        // フロントレイヤーにマップを暗くするやつを設定
-        auto pRogueLayer = LayerColor::create(Color4B(0,0,0,128));
-        pRogueLayer->setContentSize(winSize);
-        pRogueLayer->setPosition(Point::ZERO);
-        pRogueLayer->setZOrder(RogueScene::RogueZOrder);
-        pFrontLayer->addChild(pRogueLayer);
-        
-        auto pMask = DrawNode::create();
-        pMask->setZOrder(RogueScene::RogueMaskZOrder);
-        pFrontLayer->addChild(pMask);
-        
-        auto pActorSprite = getPlayerActorSprite(1);
-        pMask->drawDot(pActorSprite->getPosition(), base_tile_size_.width * 3.0f / 2.0f, Color4F::WHITE);
+        light_draw = DrawNode::create();
+        light_draw->drawDot(actor_sprite->getPosition(), base_tile_size_.width * 3.0f / 2.0f, Color4F::WHITE);
+        mask_layer->addChild(light_draw, RogueScene::RoguePlayerLightZOrder, RogueScene::RoguePlayerLightTag);
         
         BlendFunc blend;
         blend.src = GL_DST_COLOR;
         blend.dst = GL_ONE;
-        
-        pMask->setBlendFunc(blend);
+        light_draw->setBlendFunc(blend);
     }
 }
 
-void RogueScene::hidePlayerLighting()
-{
-    auto pFrontLayer = this->getChildByTag(RogueScene::RogueLayerTag);
-    if (pFrontLayer)
-    {
-        pFrontLayer->setVisible(false);
+void RogueScene::hidePlayerLighting() {
+    auto rogue_player_light_base_layer = this->getChildByTag(RogueScene::RoguePlayerLightBaseTag);
+    if (rogue_player_light_base_layer) {
+        rogue_player_light_base_layer->setVisible(false);
     }
 }
 
-void RogueScene::showFloorLighting(const Rect floorInfoIndexRect)
-{
-    auto pTileMapLayer = getChildByTag(RogueScene::TiledMapLayerTag);
-    auto pFrontLayer = pTileMapLayer->getChildByTag(TiledMapTags::TiledMapFrontLayerTag);
-    if (pFrontLayer)
-    {
-        pFrontLayer->setVisible(true);
+void RogueScene::showFloorLighting(const Rect floorInfoIndexRect) {
+    auto tile_map_layer = getChildByTag(RogueScene::TiledMapLayerTag);
+    auto base_layer = tile_map_layer->getChildByTag(TiledMapTags::TiledMapFrontLayerTag);
+    if (base_layer) {
+        base_layer->setVisible(true);
         
         // フロントレイヤーにマップを暗くするやつを設定
-        auto pFloorLayer = dynamic_cast<LayerColor*>(pFrontLayer->getChildByTag(TiledMapTags::FloorLayerTag));
-        if (!pFloorLayer)
-        {
-            pFloorLayer = LayerColor::create(Color4B(0,0,0,128));
-            pFloorLayer->setContentSize(pTileMapLayer->getContentSize());
-            pFloorLayer->setPosition(Point::ZERO);
+        auto mask_layer = dynamic_cast<LayerColor*>(base_layer->getChildByTag(TiledMapTags::FloorLayerTag));
+        if (!mask_layer) {
+            mask_layer = LayerColor::create(Color4B(0,0,0,128));
+            mask_layer->setContentSize(tile_map_layer->getContentSize());
+            mask_layer->setPosition(Point::ZERO);
             
-            pFrontLayer->addChild(pFloorLayer, TiledMapIndexs::FloorLayerZOrder, TiledMapTags::FloorLayerTag);
+            base_layer->addChild(mask_layer, TiledMapIndexs::FloorLayerZOrder, TiledMapTags::FloorLayerTag);
         }
 
         // 部屋の明かり
-        auto pFloorMask = dynamic_cast<LayerColor*>(pFrontLayer->getChildByTag(TiledMapTags::FloorMaskLayerTag));
-        if (!pFloorMask)
-        {
-            pFloorMask = LayerColor::create(Color4B(255,255,255,0));
-            pFrontLayer->addChild(pFloorMask, TiledMapIndexs::FloorMaskLayerZOrder, TiledMapTags::FloorMaskLayerTag);
+        auto floor_light_layer = dynamic_cast<LayerColor*>(base_layer->getChildByTag(TiledMapTags::FloorMaskLayerTag));
+        if (!floor_light_layer) {
+            floor_light_layer = LayerColor::create(Color4B(255,255,255,0));
+            base_layer->addChild(floor_light_layer, TiledMapIndexs::FloorMaskLayerZOrder, TiledMapTags::FloorMaskLayerTag);
         }
-        pFloorMask->setContentSize(floorInfoIndexRect.size);
-        pFloorMask->setPosition(Point(floorInfoIndexRect.getMinX(), floorInfoIndexRect.getMinY()));
+        floor_light_layer->setContentSize(floorInfoIndexRect.size);
+        floor_light_layer->setPosition(Point(floorInfoIndexRect.getMinX(), floorInfoIndexRect.getMinY()));
         
         BlendFunc blendFloor;
         blendFloor.src = GL_DST_COLOR;
         blendFloor.dst = GL_ONE;
         
-        pFloorMask->setBlendFunc(blendFloor);
+        floor_light_layer->setBlendFunc(blendFloor);
 
         // プレイヤー周辺の明かり
-        auto pPlayerMask = dynamic_cast<LayerColor*>(pFloorMask->getChildByTag(TiledMapTags::FloorMaskPlayerLayerTag));
-        if (!pPlayerMask)
-        {
-            pPlayerMask = LayerColor::create(Color4B(255,255,255,0));
-            pFloorMask->addChild(pPlayerMask, TiledMapIndexs::FloorMaskLayerZOrder, TiledMapTags::FloorMaskPlayerLayerTag);
+        auto player_light_layer = dynamic_cast<LayerColor*>(floor_light_layer->getChildByTag(TiledMapTags::FloorMaskPlayerLayerTag));
+        if (!player_light_layer) {
+            player_light_layer = LayerColor::create(Color4B(255,255,255,0));
+            floor_light_layer->addChild(player_light_layer, TiledMapIndexs::FloorMaskLayerZOrder, TiledMapTags::FloorMaskPlayerLayerTag);
         }
+        
         // プレイヤー前方のみ
         Rect playerRect = createPlayerRect(1); // プレイヤー周辺3*3
-        if (playerRect.getMinX() < floorInfoIndexRect.getMinX())
-        {
+        if (playerRect.getMinX() < floorInfoIndexRect.getMinX()) {
             // 左
-            pPlayerMask->setContentSize(Size(playerRect.size.width / 3, playerRect.size.height));
-            pPlayerMask->setPosition(Point(playerRect.getMinX(), playerRect.getMinY()) - pFloorMask->getPosition());
-            pPlayerMask->setBlendFunc(blendFloor);
-            pPlayerMask->setVisible(true);
-        }
-        else if (playerRect.getMinY() < floorInfoIndexRect.getMinY())
-        {
+            player_light_layer->setContentSize(Size(playerRect.size.width / 3, playerRect.size.height));
+            player_light_layer->setPosition(Point(playerRect.getMinX(), playerRect.getMinY()) - floor_light_layer->getPosition());
+            player_light_layer->setBlendFunc(blendFloor);
+            player_light_layer->setVisible(true);
+        } else if (playerRect.getMinY() < floorInfoIndexRect.getMinY()) {
             // 下
-            pPlayerMask->setContentSize(Size(playerRect.size.width, playerRect.size.height / 3));
-            pPlayerMask->setPosition(Point(playerRect.getMinX(), playerRect.getMinY()) - pFloorMask->getPosition());
-            pPlayerMask->setBlendFunc(blendFloor);
-            pPlayerMask->setVisible(true);
-        }
-        else if (playerRect.getMaxX() > floorInfoIndexRect.getMaxX())
-        {
+            player_light_layer->setContentSize(Size(playerRect.size.width, playerRect.size.height / 3));
+            player_light_layer->setPosition(Point(playerRect.getMinX(), playerRect.getMinY()) - floor_light_layer->getPosition());
+            player_light_layer->setBlendFunc(blendFloor);
+            player_light_layer->setVisible(true);
+        } else if (playerRect.getMaxX() > floorInfoIndexRect.getMaxX()) {
             // 右
-            pPlayerMask->setContentSize(Size(playerRect.size.width / 3, playerRect.size.height));
-            pPlayerMask->setPosition(Point(playerRect.getMaxX() - pPlayerMask->getContentSize().width, playerRect.getMinY()) - pFloorMask->getPosition());
-            pPlayerMask->setBlendFunc(blendFloor);
-            pPlayerMask->setVisible(true);
-        }
-        else if (playerRect.getMaxY() > floorInfoIndexRect.getMaxY())
-        {
+            player_light_layer->setContentSize(Size(playerRect.size.width / 3, playerRect.size.height));
+            player_light_layer->setPosition(Point(playerRect.getMaxX() - player_light_layer->getContentSize().width, playerRect.getMinY()) - floor_light_layer->getPosition());
+            player_light_layer->setBlendFunc(blendFloor);
+            player_light_layer->setVisible(true);
+        } else if (playerRect.getMaxY() > floorInfoIndexRect.getMaxY()) {
             // 上
-            pPlayerMask->setContentSize(Size(playerRect.size.width, playerRect.size.height / 3));
-            pPlayerMask->setPosition(Point(playerRect.getMinX(), playerRect.getMaxY() - pPlayerMask->getContentSize().height) - pFloorMask->getPosition());
-            pPlayerMask->setBlendFunc(blendFloor);
-            pPlayerMask->setVisible(true);
-        }
-        else
-        {
-            pPlayerMask->setVisible(false);
+            player_light_layer->setContentSize(Size(playerRect.size.width, playerRect.size.height / 3));
+            player_light_layer->setPosition(Point(playerRect.getMinX(), playerRect.getMaxY() - player_light_layer->getContentSize().height) - floor_light_layer->getPosition());
+            player_light_layer->setBlendFunc(blendFloor);
+            player_light_layer->setVisible(true);
+        } else {
+            player_light_layer->setVisible(false);
         }
     }
 }
 
-void RogueScene::hideFloorLighting()
-{
+void RogueScene::hideFloorLighting() {
     auto pTileMapLayer = getChildByTag(RogueScene::TiledMapLayerTag);
-    auto pFrontLayer = pTileMapLayer->getChildByTag(TiledMapTags::TiledMapFrontLayerTag);
-    if (pFrontLayer)
-    {
-        pFrontLayer->setVisible(false);
+    if (pTileMapLayer) {
+        auto pFrontLayer = pTileMapLayer->getChildByTag(TiledMapTags::TiledMapFrontLayerTag);
+        if (pFrontLayer) {
+            pFrontLayer->setVisible(false);
+        }
     }
 }
 
 Rect RogueScene::createPlayerRect(int rectSize)
 {
     auto pActorSprite = getPlayerActorSprite(1);
-    MapIndex actorRectMinMapIndex = {
-        pActorSprite->getActorMapItem()->mapIndex.x - rectSize,
-        pActorSprite->getActorMapItem()->mapIndex.y - rectSize,
-        MoveDirectionType::MOVE_NONE
-    };
-    Point actorRectMinMapPoint = indexToPointNotTileSize(actorRectMinMapIndex);
-    // プレイヤー周辺のrectを作成
-    return Rect(actorRectMinMapPoint.x, actorRectMinMapPoint.y,
-                base_tile_size_.width * (rectSize * 2 + 1),
-                base_tile_size_.width * (rectSize * 2 + 1));
+    if (pActorSprite) {
+        MapIndex actorRectMinMapIndex = {
+            pActorSprite->getActorMapItem()->mapIndex.x - rectSize,
+            pActorSprite->getActorMapItem()->mapIndex.y - rectSize,
+            MoveDirectionType::MOVE_NONE
+        };
+        Point actorRectMinMapPoint = indexToPointNotTileSize(actorRectMinMapIndex);
+        // プレイヤー周辺のrectを作成
+        return Rect(actorRectMinMapPoint.x, actorRectMinMapPoint.y,
+                    base_tile_size_.width * (rectSize * 2 + 1),
+                    base_tile_size_.width * (rectSize * 2 + 1));
+    } else {
+        return Rect::ZERO;
+    }
 }
 
 void RogueScene::refreshAutoMapping(const Rect& floorInfoIndexRect)

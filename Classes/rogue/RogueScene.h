@@ -20,7 +20,7 @@
 
 #define MINI_MAP_SCALE (4.16f / GAME_SCALE)
 
-class RogueScene : public cocos2d::Layer
+class RogueScene : public cocos2d::Scene
 {
 public:
     // ゲームステート
@@ -117,7 +117,9 @@ protected:
         TiledMapLayerTag          =      1,
         GridLineTag               =    100,
         ActorPlayerTag            = 100000,
-        RogueLayerTag             = 110000,
+        RoguePlayerLightBaseTag   = 110000,  // プレイヤー周辺の明かりを持つベースLayer
+        RoguePlayerLightTag       = 110001,  // 明る部分
+        RoguePlayerLightMaskTag   = 110002,  // 暗い部分
         MiniMapLayerTag           = 150000,
         StatusBarLayerTag         = 200000,
         GameLogLayerTag           = 210000,
@@ -135,11 +137,12 @@ protected:
     enum ZOrders {
         TiledMapLayerZOrder = 1,
         GridLineZOrder,
-        RogueZOrder,               // 明る部分
-        RogueMaskZOrder,           // 暗い部分
         ActorBaseZOrder,
         ActorPlayerZOrder,
         ActionCursorZOrder,
+        RoguePlayerLightBaseZOrder,    // プレイヤー周辺の明かりを持つベースLayer
+        RoguePlayerLightZOrder,        // 明るい部分
+        RoguePlayerLightMaskZOrder,    // 暗い部分
         MiniMapLayerZOrder,
         MiniMapLayerMapNoneZOrder,
         MiniMapLayerMapItemZOrder,
@@ -254,6 +257,9 @@ public:
     virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
     virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
     virtual void onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event *event);
+    
+    void onEnter();
+    void onEnterTransitionDidFinish();
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__RogueScene__) */

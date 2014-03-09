@@ -4,6 +4,7 @@
 
 #include "TitleSceneLoader.h"
 #include "MypageScene.h"
+#include "RogueScene.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
