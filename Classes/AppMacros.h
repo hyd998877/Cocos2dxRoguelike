@@ -57,6 +57,8 @@ const static std::string GAME_FONT(int fontSize)
     }
 }
 
+#define EVENT_COME_TO_FOREGROUND_ROGUE "EVENT_COME_TO_FOREGROUND_ROGUE"
+
 // 共通ウィンドウ枠
 //#define CREATE_WINDOW_WAKU() extension::Scale9Sprite::create("ui/dot_waku.png", Rect(0, 0, 16, 16), Rect(3, 3, 10, 10));
 

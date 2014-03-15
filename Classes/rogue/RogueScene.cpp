@@ -80,7 +80,7 @@ RogueScene* RogueScene::createWithQuestId(int questId)
 bool RogueScene::initWithQuestId(int questId)
 {
     // 1. super init first
-    if ( !Scene::init() )
+    if ( !Layer::init() )
     {
         return false;
     }
@@ -134,6 +134,16 @@ bool RogueScene::initWithQuestId(int questId)
     listener->onTouchMoved = CC_CALLBACK_2(RogueScene::onTouchMoved, this);
     listener->onTouchEnded = CC_CALLBACK_2(RogueScene::onTouchEnded, this);
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+
+//    auto foreground_listener = EventListenerCustom::create(EVENT_COME_TO_FOREGROUND_ROGUE, [this](EventCustom* event){
+//        CCLOG("event! EVENT_COME_TO_FOREGROUND_ROGUE this");
+//        this->showCommonWindow("EVENT_COME_TO_FOREGROUND_ROGUEで\n再開します。", [this](Ref* pSender){
+//            this->hideCommonWindow();
+//        }, [this](Ref* pSender){
+//            this->hideCommonWindow();
+//        });
+//    });
+//    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(foreground_listener, this);
 
     auto winSize = Director::getInstance()->getWinSize();
     
@@ -637,12 +647,30 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
 
 void RogueScene::onEnter() {
     CCLOG("%s(%d) onEnter", __FILE__, __LINE__);
-    Scene::onEnter();
+    Layer::onEnter();
 }
 
 void RogueScene::onEnterTransitionDidFinish() {
     CCLOG("%s(%d) onEnterTransitionDidFinish", __FILE__, __LINE__);
-    Scene::onEnterTransitionDidFinish();
+    Layer::onEnterTransitionDidFinish();
+}
+
+void RogueScene::onApplicationDidEnterBackground() {
+    CCLOG("RogueScene::onApplicationDidEnterBackground");
+    
+    auto base_scene = Director::getInstance()->getRunningScene();
+    auto main_scene = base_scene->getChildren().at(0);
+    int count = main_scene->getChildrenCount();
+    
+    CCLOG("RogueScene::表示中Sceneのchildren count = %d", count);
+}
+
+void RogueScene::onApplicationWillEnterForeground() {
+    this->showCommonWindow("再開します。", [this](Ref* pSender){
+        this->hideCommonWindow();
+    }, [this](Ref* pSender){
+        this->hideCommonWindow();
+    });
 }
 
 #pragma mark

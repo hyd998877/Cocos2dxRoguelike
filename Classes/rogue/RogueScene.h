@@ -20,7 +20,7 @@
 
 #define MINI_MAP_SCALE (4.16f / GAME_SCALE)
 
-class RogueScene : public cocos2d::Scene
+class RogueScene : public cocos2d::Layer
 {
 public:
     // ゲームステート
@@ -260,6 +260,9 @@ public:
     
     void onEnter();
     void onEnterTransitionDidFinish();
+    
+    void onApplicationDidEnterBackground();
+    void onApplicationWillEnterForeground();
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__RogueScene__) */

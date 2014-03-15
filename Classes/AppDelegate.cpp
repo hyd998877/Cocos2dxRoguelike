@@ -66,4 +66,8 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+
+    // フォアグラウンド時のイベントを発行
+//    cocos2d::EventCustom foreground_event_rgoue(EVENT_COME_TO_FOREGROUND_ROGUE);
+//    Director::getInstance()->getEventDispatcher()->dispatchEvent(&foreground_event_rgoue);
 }
