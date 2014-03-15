@@ -128,11 +128,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/rogue/RogueScene.cpp"
-            timestampString = "416567483.986958"
+            timestampString = "416619458.682324"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2142"
-            endingLineNumber = "2142"
+            startingLineNumber = "2135"
+            endingLineNumber = "2135"
             landmarkName = "RogueScene::showFloorLighting(const Rect floorInfoIndexRect)"
             landmarkType = "5">
          </BreakpointContent>

@@ -289,13 +289,13 @@ ActorSprite::ActorEquipDto ActorSprite::createEquipDto(std::string data_string)
     
     equipDto.weaponObjectId    = atoi(data_string_array[index].c_str()); index++;
     equipDto.weaponId          = atoi(data_string_array[index].c_str()); index++;
-    equipDto.weaponName        = data_string_array[index];
+    equipDto.weaponName        = data_string_array[index];               index++;
     equipDto.weaponImgResId    = atoi(data_string_array[index].c_str()); index++;
     equipDto.weaponStr         = atoi(data_string_array[index].c_str()); index++;
 
     equipDto.accessoryObjectId = atoi(data_string_array[index].c_str()); index++;
     equipDto.accessoryId       = atoi(data_string_array[index].c_str()); index++;
-    equipDto.accessoryName     = data_string_array[index];
+    equipDto.accessoryName     = data_string_array[index];               index++;
     equipDto.accessoryImgResId = atoi(data_string_array[index].c_str()); index++;
     equipDto.accessoryDef      = atoi(data_string_array[index].c_str()); index++;
     return equipDto;
