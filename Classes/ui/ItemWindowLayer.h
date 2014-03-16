@@ -26,6 +26,7 @@ protected:
         ItemDetailMenuUseTag   = 30001,
         ItemDetailMenuDropTag  = 30002,
         ItemDetailMenuEquipTag = 30003,
+        ItemCountLabelTag      = 40000,
     };
 private:
     int show_item_detail_idx_;

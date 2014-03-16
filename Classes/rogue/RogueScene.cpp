@@ -830,43 +830,42 @@ void RogueScene::checkEnmeyTurnEnd()
 #pragma mark
 #pragma mark タッチイベント関連
 
-void RogueScene::touchEventExec(cocos2d::Point touchPoint)
-{
+void RogueScene::touchEventExec(cocos2d::Point touchPoint) {
+    
     auto rogue_map_layer = getRogueMapLayer();
     // マップ移動分を考慮
-    MapIndex touchPointMapIndex = rogue_map_layer->touchPointToIndex(touchPoint - rogue_map_layer->getPosition());
-    CCLOG("touchEventExec touchPointMapIndex x = %d y = %d", touchPointMapIndex.x, touchPointMapIndex.y);
+    MapIndex touch_point_map_index = rogue_map_layer->touchPointToIndex(touchPoint - rogue_map_layer->getPosition());
+    CCLOG("touchEventExec touchPointMapIndex x = %d y = %d", touch_point_map_index.x, touch_point_map_index.y);
     
     // 画面外判定
-    if (rogue_map_layer->isMapLayerOver(touchPointMapIndex))
-    {
+    if (rogue_map_layer->isMapLayerOver(touch_point_map_index)) {
         // タッチ判定とみなさない
         CCLOG("画面外");
         return;
     }
+    
     // タッチした位置が有効なIndexか判定
-    MapIndex addMoveIndex = checkTouchEventIndex(touchPointMapIndex);
-    if (addMoveIndex.x == 0 && addMoveIndex.y == 0)
-    {
+    auto actor_map_item = getPlayerActorSprite(1)->getActorMapItem();
+    MapIndex add_move_index = MapManager::checkTouchEventIndex(actor_map_item->mapIndex, touch_point_map_index);
+    if (add_move_index.x == 0 && add_move_index.y == 0) {
         // タッチ判定とみなさない
         CCLOG("有効じゃない");
         return;
     }
-    
-    touchEventExec(addMoveIndex, touchPointMapIndex);
+    touchEventExec(add_move_index, touch_point_map_index);
 }
 
 void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex) {
     auto rogue_map_layer = getRogueMapLayer();
     
     // キャラの向きを変更
-    auto pActorSprite = getPlayerActorSprite(1);
-    pActorSprite->runMoveAction(addMoveIndex);
-    pActorSprite->getActorMapItem()->mapIndex.moveDictType = addMoveIndex.moveDictType;
+    auto actor_sprite = getPlayerActorSprite(1);
+    actor_sprite->runMoveAction(addMoveIndex);
+    actor_sprite->getActorMapItem()->mapIndex.moveDictType = addMoveIndex.moveDictType;
     
     // 敵をタッチした
-    auto pEnemyMapItem = MapManager::getInstance()->getActorMapItem(&touchPointMapIndex);
-    if (pEnemyMapItem->mapDataType == MapDataType::ENEMY) {
+    auto enemy_map_item = MapManager::getInstance()->getActorMapItem(&touchPointMapIndex);
+    if (enemy_map_item->mapDataType == MapDataType::ENEMY) {
         // 向きだけ変えてターン経過しない
     } else {
         // 障害物判定
@@ -881,11 +880,11 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
             changeGameStatus(GameStatus::PLAYER_NO_ACTION);
             
             // アイテムに重なったときの拾う処理
-            auto pTouchPointMapItem = MapManager::getInstance()->getMapItem(&touchPointMapIndex);
-            if (pTouchPointMapItem->mapDataType == MapDataType::MAP_ITEM) {
+            auto touch_point_map_item = MapManager::getInstance()->getMapItem(&touchPointMapIndex);
+            if (touch_point_map_item->mapDataType == MapDataType::MAP_ITEM) {
 
                 // itemを取得
-                auto pDropMapItem = static_cast<DropMapItem*>(pTouchPointMapItem);
+                auto pDropMapItem = static_cast<DropMapItem*>(touch_point_map_item);
                 auto pDropItemSprite = rogue_map_layer->getDropItemSprite(pDropMapItem->seqNo);
                 auto pDropItemDto = pDropItemSprite->getDropItemDto();
                 
@@ -907,12 +906,12 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                     logMessage("持ち物が一杯で、\n%sを拾えなかった。", pDropItemDto->name.c_str());
                 }
                 
-            } else if (pTouchPointMapItem->mapDataType == MapDataType::KAIDAN) {
+            } else if (touch_point_map_item->mapDataType == MapDataType::KAIDAN) {
                 // TODO: (kyokomi)階段SE
                 
                 // 階段下りる判定
                 
-                this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this, pActorSprite](Ref* pSender){
+                this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this, actor_sprite](Ref* pSender) {
                     // OK
                     
                     // 閉じる
@@ -921,7 +920,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                     // save
                     rogue_play_data_.quest_id += 1;
                     
-                    AccountData::getInstance()->player_actor_ = *(pActorSprite->getActorDto());
+                    AccountData::getInstance()->player_actor_ = *(actor_sprite->getActorDto());
                     AccountData::getInstance()->rogue_play_data_ =  rogue_play_data_;
                     // TODO: アイテムリスト暫定
                     AccountData::getInstance()->item_list_ = getItemWindowLayer()->getItemList();
@@ -939,7 +938,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
             }
             
             // 移動処理
-            rogue_map_layer->movePlayerMap(pActorSprite, addMoveIndex, getAnimationSpeed(), CallFunc::create([this](void) {
+            rogue_map_layer->movePlayerMap(actor_sprite, addMoveIndex, getAnimationSpeed(), CallFunc::create([this](void) {
                 // ターンエンド
                 changeGameStatus(GameStatus::ENEMY_TURN);
             }));
@@ -1039,47 +1038,6 @@ void RogueScene::attack()
     }), NULL));
 }
 
-MapIndex RogueScene::checkTouchEventIndex(MapIndex touchPointMapIndex)
-{
-    // 移動距離計算
-    auto pActorSprite = getPlayerActorSprite(1);
-    
-    MapIndex addMoveIndex;
-    addMoveIndex.x = touchPointMapIndex.x - pActorSprite->getActorMapItem()->mapIndex.x;
-    addMoveIndex.y = touchPointMapIndex.y - pActorSprite->getActorMapItem()->mapIndex.y;
-    
-    if (addMoveIndex.x == 1 && addMoveIndex.y == 0)
-    {
-        addMoveIndex.moveDictType = MoveDirectionType::MOVE_RIGHT;
-    }
-    else if (addMoveIndex.x == -1 && addMoveIndex.y == 0)
-    {
-        addMoveIndex.moveDictType = MoveDirectionType::MOVE_LEFT;
-    }
-    else if (addMoveIndex.x == 0 && addMoveIndex.y == 1)
-    {
-        addMoveIndex.moveDictType = MoveDirectionType::MOVE_UP;
-    }
-    else if (addMoveIndex.x == 0 && addMoveIndex.y == -1)
-    {
-        addMoveIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
-    }
-    else
-    {
-        // 上記以外は有効なタッチじゃない
-        addMoveIndex.x = 0;
-        addMoveIndex.y = 0;
-        addMoveIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
-        return addMoveIndex;
-    }
-    
-    // プレイヤーから1マス以内なら移動or攻撃と判断
-    CCLOG("move ok %d,%d %d,%d", pActorSprite->getActorMapItem()->mapIndex.x, pActorSprite->getActorMapItem()->mapIndex.y, touchPointMapIndex.x, touchPointMapIndex.y);
-    
-    CCLOG("addMoveIndex %d,%d", addMoveIndex.x, addMoveIndex.y);
-    return addMoveIndex;
-}
-
 #pragma mark
 #pragma mark UI関連
 
@@ -1100,7 +1058,8 @@ void RogueScene::logMessage(const char * pszFormat, ...)
         return;
     }
     
-    auto pGameLogText = static_cast<LabelTTF*>(pGameLogNode->getChildren().at(1)); // TODO: 1子しかaddしてないから動く。ちゃんとしないと・・・
+    // TODO: 1子しかaddしてないから動く。ちゃんとしないと・・・
+    auto pGameLogText = static_cast<LabelTTF*>(pGameLogNode->getChildren().at(1));
     if (pGameLogText)
     {
         // TODO: 別クラスにしてログをlistで保持する。デフォルトの表示は1件だけで、center寄せ表示でいいかと
@@ -1311,8 +1270,7 @@ void RogueScene::hideItemList()
     }
 }
 
-void RogueScene::showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback)
-{
+void RogueScene::showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback) {
     auto winSize = Director::getInstance()->getWinSize();
     
     // モーダルレイヤー作成
@@ -1320,12 +1278,9 @@ void RogueScene::showCommonWindow(std::string titleText, const ccMenuCallback& o
     pModalLayer->setVisible(true);
     
     auto pCommonWindow = getCommonWindow();
-    if (pCommonWindow)
-    {
+    if (pCommonWindow) {
         pCommonWindow->setVisible(true);
-    }
-    else
-    {
+    } else {
         // アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
         pCommonWindow = AlertDialogLayer::createWithContentSize(winSize * 0.5, titleText, "は　い", "いいえ");
         pCommonWindow->setPosition(Point(winSize.width / 2 - pCommonWindow->getContentSize().width / 2,
@@ -1337,39 +1292,34 @@ void RogueScene::showCommonWindow(std::string titleText, const ccMenuCallback& o
     pCommonWindow->setNgMenuItemCallback(ngMenuItemCallback);
 }
 
-AlertDialogLayer* RogueScene::getCommonWindow()
-{
+AlertDialogLayer* RogueScene::getCommonWindow() {
     auto pModalLayer = getModalLayer();
     return static_cast<AlertDialogLayer*>(pModalLayer->getChildByTag(RogueScene::CommonWindowTag));
 }
 
-void RogueScene::hideCommonWindow()
-{
+void RogueScene::hideCommonWindow() {
     auto pCommonWindow = getCommonWindow();
-    if (pCommonWindow)
-    {
+    if (pCommonWindow) {
         pCommonWindow->setVisible(false);
     }
     
     auto pModalLayer = getModalLayer();
-    if (pModalLayer)
-    {
+    if (pModalLayer) {
         pModalLayer->setVisible(false);
     }
 }
 
 
-void RogueScene::refreshStatus()
-{
+void RogueScene::refreshStatus() {
+    
     auto pStatusBarLayer = getChildByTag(RogueScene::StatusBarLayerTag);
-    if (!pStatusBarLayer)
-    {
+    if (!pStatusBarLayer) {
         return;
     }
     
     auto pStatusText = pStatusBarLayer->getChildren().at(0); // TODO: とりあえず1要素なので。。。
-    if (pStatusText)
-    {
+    if (pStatusText) {
+        
         // プレイヤー取得
         auto pPlayerSprite = getPlayerActorSprite(1);
         auto pPlayerDto = pPlayerSprite->getActorDto();
@@ -1382,31 +1332,21 @@ void RogueScene::refreshStatus()
         pLabelText->setPositionX(pLabelText->getContentSize().width / 2);
         
         // TODO: 死亡判定ここで？
-        if (pPlayerDto->hitPoint == 0)
-        {
+        if (pPlayerDto->hitPoint == 0) {
             logMessage("%sは死亡した。", pPlayerDto->name.c_str());
             changeGameStatus(RogueScene::GameStatus::GAME_OVER);
-        }
-        else if (pPlayerDto->magicPoint == 0)
-        {
+        } else if (pPlayerDto->magicPoint == 0) {
             logMessage("%sは空腹で倒れた。", pPlayerDto->name.c_str());
             changeGameStatus(RogueScene::GameStatus::GAME_OVER);
-        }
-        else
-        {
+        } else {
             // 残りHPで文字色を変える
             float hitPointDiv = (float)pPlayerDto->hitPoint / (float)pPlayerDto->hitPointLimit;
             float mpDiv = (float)pPlayerDto->magicPoint / (float)pPlayerDto->magicPointLimit;
-            if (hitPointDiv <= 0.25 || mpDiv <= 0.10)
-            {
+            if (hitPointDiv <= 0.25 || mpDiv <= 0.10) {
                 pLabelText->setColor(Color3B::RED);
-            }
-            else if (hitPointDiv <= 0.50 || mpDiv <= 0.30)
-            {
+            } else if (hitPointDiv <= 0.50 || mpDiv <= 0.30) {
                 pLabelText->setColor(Color3B::YELLOW);
-            }
-            else
-            {
+            } else {
                 pLabelText->setColor(Color3B::WHITE);
             }
         }

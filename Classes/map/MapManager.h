@@ -103,6 +103,7 @@ public:
     // シングルトン
     static MapManager* getInstance();
     static std::list<MapIndex> createRelatedMapIndexList(MapIndex baseMapIndex);
+    static MapIndex checkTouchEventIndex(const MapIndex& target_map_index, const MapIndex& touch_point_map_index);
     
 private:
     // マップデータ save

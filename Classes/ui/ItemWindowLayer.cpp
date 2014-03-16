@@ -149,6 +149,12 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     pItemDetailLayer->addChild(pItemDetailWaku);
     this->addChild(pItemDetailLayer);
     
+    // アイテム個数
+    auto item_count_label = LabelTTF::create(StringUtils::format("%d/%d", 0, USE_ITEM_MAX), GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
+    item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
+    item_count_label->setTag(ItemWindowLayer::ItemCountLabelTag);
+    this->addChild(item_count_label);
+    
     return true;
 }
 
@@ -277,6 +283,17 @@ void ItemWindowLayer::reloadItemList() {
             itemNameList.push_back(layout);
         }
         pItemTabelLayer->makeItemList(itemNameList);
+        
+        auto item_count_label = static_cast<LabelTTF*>(this->getChildByTag(ItemWindowLayer::ItemCountLabelTag));
+        if (item_count_label) {
+            item_count_label->setString(StringUtils::format("所持数 %d/%d", (int)item_dto_list_.size(), USE_ITEM_MAX));
+            item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
+            if (item_dto_list_.size() >= USE_ITEM_MAX) {
+                item_count_label->setColor(Color3B::RED);
+            } else {
+                item_count_label->setColor(Color3B::WHITE);
+            }
+        }
     }
     setItemDetail(show_item_detail_idx_);
 }

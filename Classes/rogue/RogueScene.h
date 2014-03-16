@@ -160,7 +160,6 @@ private:
     // タッチイベント系
     void touchEventExec(cocos2d::Point touchPoint);
     void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
-    MapIndex checkTouchEventIndex(MapIndex touchPointMapIndex);
     
     void attack();
     

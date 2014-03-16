@@ -572,6 +572,34 @@ std::list<MapIndex> MapManager::createRelatedMapIndexList(MapIndex baseMapIndex)
     return relatedMapIndexList;
 }
 
+// ターゲットとタッチした位置が1マス以内の場合に移動距離のMapIndexを返却する
+MapIndex MapManager::checkTouchEventIndex(const MapIndex& target_map_index, const MapIndex& touch_point_map_index) {
+    // 移動距離計算
+    MapIndex add_move_map_index;
+    add_move_map_index.x = touch_point_map_index.x - target_map_index.x;
+    add_move_map_index.y = touch_point_map_index.y - target_map_index.y;
+    
+    if (add_move_map_index.x == 1 && add_move_map_index.y == 0) {
+        add_move_map_index.moveDictType = MoveDirectionType::MOVE_RIGHT;
+    } else if (add_move_map_index.x == -1 && add_move_map_index.y == 0) {
+        add_move_map_index.moveDictType = MoveDirectionType::MOVE_LEFT;
+    } else if (add_move_map_index.x == 0 && add_move_map_index.y == 1) {
+        add_move_map_index.moveDictType = MoveDirectionType::MOVE_UP;
+    } else if (add_move_map_index.x == 0 && add_move_map_index.y == -1) {
+        add_move_map_index.moveDictType = MoveDirectionType::MOVE_DOWN;
+    } else {
+        // 上記以外は有効なタッチじゃない
+        add_move_map_index.x = 0;
+        add_move_map_index.y = 0;
+        add_move_map_index.moveDictType = MoveDirectionType::MOVE_DOWN;
+        return add_move_map_index;
+    }
+    
+    // プレイヤーから1マス以内か
+    return add_move_map_index;
+}
+
+
 #pragma mark
 #pragma mark DEBUG関連
 
