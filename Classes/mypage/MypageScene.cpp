@@ -66,11 +66,17 @@ bool MypageScene::init()
     title_label->setPosition(Point(win_size.width / 2, win_size.height - window_waku->getContentSize().height / 2));
 
     // セリフ表示
+    auto comment_layer = Layer::create();
+    comment_layer->setContentSize(Size(win_size.width / 2, win_size.height / 3));
+    comment_layer->setPosition(Point(win_size.width * 0.7 - comment_layer->getContentSize().width / 2, win_size.height * 0.5 - comment_layer->getContentSize().height / 2));
+    comment_layer->setTag(10); // TODO: とりあえず
+    this->addChild(comment_layer);
+    
     auto comment_label = LabelTTF::create("ここにはお知らせとか表示する予定よ！\nまだ開発中です。", GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
     comment_label->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
     comment_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
-    this->addChild(comment_label);
     comment_label->setTag(100); // TODO: とりあえず
+    comment_layer->addChild(comment_label);
     
     RogueScene::RoguePlayData rogue_play_data = AccountData::getInstance()->rogue_play_data_;
     if (rogue_play_data.quest_id != 0)
@@ -82,18 +88,16 @@ bool MypageScene::init()
         comment_label->setString(save_text);
     }
     
+    comment_label->setPosition(Point(comment_layer->getContentSize().width / 2, comment_layer->getContentSize().height / 2));
+    
     // 枠
-    auto comment_window_waku = CommonWindowUtil::createWindowWaku(Size(win_size.width / 2, win_size.height / 3));
-    comment_window_waku->setPosition(comment_label->getContentSize().width / 2, comment_label->getContentSize().height / 2);
-    comment_label->addChild(comment_window_waku);
-    comment_label->setPosition(Point(win_size.width * 0.7, win_size.height * 0.5));
+    CommonWindowUtil::attachWindowWaku(comment_layer);
     
     // グロナビ生成
     initGlobalMenu();
 
     return true;
 }
-
 
 /**
  * グロナビ生成
@@ -105,9 +109,9 @@ void MypageScene::initGlobalMenu()
     const Size WAKU_PADDING = Size(8, 8);
     
     auto item_menu1 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("すてーたす", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
-        auto comment_label = dynamic_cast<LabelTTF*>(this->getChildByTag(100));
+        auto comment_label = dynamic_cast<LabelTTF*>(this->getChildByTag(10)->getChildByTag(100));
+        
         comment_label->setString("この画面は、ユーザー自身のステータスを\n表示する予定です。");
-        comment_label->getChildren().at(0)->setPosition(comment_label->getContentSize().width / 2, comment_label->getContentSize().height / 2);
     });
     item_menu1->setColor(Color3B::GREEN);
     
@@ -137,9 +141,9 @@ void MypageScene::initGlobalMenu()
     });
     
     auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("そ　う　こ", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
-        auto comment_label = dynamic_cast<LabelTTF*>(this->getChildByTag(100));
+        auto comment_label = dynamic_cast<LabelTTF*>(this->getChildByTag(10)->getChildByTag(100));
+        
         comment_label->setString("まだ未実装です！");
-        comment_label->getChildren().at(0)->setPosition(comment_label->getContentSize().width / 2, comment_label->getContentSize().height / 2);
         
         AccountData::getInstance()->reset();
     });
