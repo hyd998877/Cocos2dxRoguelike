@@ -63,6 +63,7 @@
 		CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */; };
 		CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */; };
 		CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */; };
+		CE6C2DF618D572FC0042FA93 /* RogueTMXTiledMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */; };
 		CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */; };
 		CE73FB2218B0A073009273D0 /* MWeapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB2018B0A073009273D0 /* MWeapon.cpp */; };
 		CE73FB2418B0A3F1009273D0 /* test_master in Resources */ = {isa = PBXBuildFile; fileRef = CE73FB2318B0A3F1009273D0 /* test_master */; };
@@ -300,6 +301,8 @@
 		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
 		CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageScene.cpp; sourceTree = "<group>"; };
 		CE68D3E418B9F9D0006CCA37 /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
+		CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueTMXTiledMap.cpp; sourceTree = "<group>"; };
+		CE6C2DF518D572FC0042FA93 /* RogueTMXTiledMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RogueTMXTiledMap.h; sourceTree = "<group>"; };
 		CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeaponDao.cpp; sourceTree = "<group>"; };
 		CE73FB1E18B0A064009273D0 /* MWeaponDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeaponDao.h; sourceTree = "<group>"; };
 		CE73FB2018B0A073009273D0 /* MWeapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeapon.cpp; sourceTree = "<group>"; };
@@ -720,6 +723,8 @@
 			children = (
 				CE93B42A188156C700825FD1 /* RogueScene.cpp */,
 				CE93B42B188156C700825FD1 /* RogueScene.h */,
+				CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */,
+				CE6C2DF518D572FC0042FA93 /* RogueTMXTiledMap.h */,
 			);
 			name = rogue;
 			path = ../Classes/rogue;
@@ -1008,6 +1013,7 @@
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				CE93B454188156C700825FD1 /* TableViewTestLayer.cpp in Sources */,
 				CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */,
+				CE6C2DF618D572FC0042FA93 /* RogueTMXTiledMap.cpp in Sources */,
 				CE93B444188156C700825FD1 /* AccountData.cpp in Sources */,
 				CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
