@@ -124,17 +124,17 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     // -----------------------------
     
     // 本文
-    int fontSize = 25;
+    const int font_size = 24;
     LayerColor * textLayer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), winSize.width, winSize.height * 0.25);
     textLayer->setPosition(Point::ZERO);
     this->addChild(textLayer, kZOrder_TextLayer, kTag_TextLayer);
 
     // test
-    std::string string = StringUtils::format("w = %f.1 h = %f.1 f = %d", winSize.width, winSize.height, fontSize);
+    std::string string = StringUtils::format("w = %f.1 h = %f.1 f = %d", winSize.width, winSize.height, font_size);
     CCLOG("init %s", string.c_str());
     
     // 本文テキスト
-    LabelTTF* textLabel = LabelTTF::create("", GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
+    LabelTTF* textLabel = LabelTTF::create("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
     textLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     textLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
     
@@ -150,7 +150,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     nameTextLayer->setPosition(Point(textLayer->getPositionX(), textLayer->getPositionY() + textLayer->getContentSize().height + nameTextLayer->getContentSize().height * 0.05));
     this->addChild(nameTextLayer, kZOrder_TextLayer, kTag_TextLayer_name);
     // 名前テキスト
-    LabelTTF* nameTextLabel = LabelTTF::create("", GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
+    LabelTTF* nameTextLabel = LabelTTF::create("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
     nameTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     nameTextLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
 //    nameTextLabel->setColor(Color3B::GREEN);
@@ -358,7 +358,7 @@ void NovelScene::makeSelectSpriteButton(const string& str1, int next1Id, const s
     else
     {
         // 選択肢1
-        const int FONT_SIZE = 25;
+        const int FONT_SIZE = 24;
         MenuItemSelectLabelSprite* menuSprite1 = MenuItemSelectLabelSprite::createWithLabelSprite("menu_button.png", str1, GAME_FONT(FONT_SIZE), GAME_FONT_SIZE(FONT_SIZE), Color3B::RED, Color3B::BLUE, Color3B::RED, [this](Ref *pSender) {
             this->menuSelectCallback(pSender);
         });
