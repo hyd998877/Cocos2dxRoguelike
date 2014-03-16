@@ -115,6 +115,40 @@ void RogueTMXTiledMap::initRogue() {
 
 }
 
+void RogueTMXTiledMap::setPlayerActorMapItem(ActorMapItem* actor_map_item, int tag) {
+    MapManager::getInstance()->addActor(actor_map_item);
+    // プレイヤーの位置表示用（同じく1/8サイズ）
+    addMiniMapItem(actor_map_item, tag);
+}
+
+ActorMapItem RogueTMXTiledMap::startPlayerRandomPosition(ActorSprite::ActorDto& actor_dto, const MapIndex& base_actor_index) {
+    ActorMapItem actorMapItem;
+    
+    actorMapItem.mapDataType = MapDataType::PLAYER;
+    // 画面の中心（固定）
+    MapIndex playerRandMapIndex = getRandomMapIndex(false, true);
+    playerRandMapIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
+    actorMapItem.mapIndex = playerRandMapIndex;
+    actorMapItem.seqNo = 1;
+    actorMapItem.moveDist = actor_dto.movePoint;
+    actorMapItem.attackDist = actor_dto.attackRange;
+    actorMapItem.moveDone = false;
+    actorMapItem.attackDone = false;
+    
+    // プレイヤー位置にマップを移動
+    MapIndex moveIndex = {
+        playerRandMapIndex.x - base_actor_index.x,
+        playerRandMapIndex.y - base_actor_index.y,
+        actorMapItem.mapIndex.moveDictType
+    };
+    // 移動する距離をPointに変換
+    auto addMovePoint = Point(getTileSize().width * moveIndex.x, this->getTileSize().height * moveIndex.y);
+    // マップを移動
+    this->runAction(MoveTo::create(0.0f, this->getPosition() - addMovePoint));
+    
+    return actorMapItem;
+}
+
 bool RogueTMXTiledMap::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, MapIndex mapIndex) {
     
     // すでにプレイヤーが置いてある場合は置けない

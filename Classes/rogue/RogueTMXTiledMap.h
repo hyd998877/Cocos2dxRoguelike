@@ -58,12 +58,10 @@ class RogueTMXTiledMap : public TMXTiledMap
     };
     
 public:
-    /** creates a TMX Tiled Map with a TMX file.*/
     static RogueTMXTiledMap* create(const std::string& tmxFile);
     
-//    /** initializes a TMX Tiled Map with a TMX formatted XML string and a path to TMX resources */
-//    static RogueTMXTiledMap* createWithXML(const std::string& tmxString, const std::string& resourcePath);
-    
+    ActorMapItem startPlayerRandomPosition(ActorSprite::ActorDto& actor_dto, const MapIndex& base_actor_index);
+    void setPlayerActorMapItem(ActorMapItem* actor_map_item, int tag);
     bool tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, MapIndex mapIndex);
     void removeEnemyActorSprite(ActorSprite* pEnemySprite);
     bool tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, MapIndex mapIndex);
@@ -114,21 +112,14 @@ private:
     void moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex, MapDataType mapDataType, float animation_speed, CallFunc* moveFinishedCallFunc);
     
     // 照明
-    void showPlayerLighting(ActorSprite::ActorSprite* actor_sprite);
+    void showPlayerLighting(ActorSprite* actor_sprite);
     void hidePlayerLighting();
     
     void tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRefresh);
     
-//    Rect createPlayerRect(int rectSize);
     Rect createPlayerRect(const MapIndex& actor_map_index, int rectSize);
     
     void refreshAutoMapping(const Rect& floorInfoIndexRect);
-    
-//    /** initializes a TMX Tiled Map with a TMX file */
-//    bool initWithTMXFile(const std::string& tmxFile);
-//    
-//    /** initializes a TMX Tiled Map with a TMX formatted XML string and a path to TMX resources */
-//    bool initWithXML(const std::string& tmxString, const std::string& resourcePath);
 };
 
 NS_ROGUE_END

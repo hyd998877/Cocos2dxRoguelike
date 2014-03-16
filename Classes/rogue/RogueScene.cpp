@@ -192,44 +192,19 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ---------------------
     // プレイヤー生成
     // ---------------------
-    ActorMapItem actorMapItem;
-    actorMapItem.mapDataType = MapDataType::PLAYER;
-    // 画面の中心（固定）
-    MapIndex playerRandMapIndex = tiled_map_layer->getRandomMapIndex(false, true);
-    playerRandMapIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
-    actorMapItem.mapIndex = playerRandMapIndex;
-    actorMapItem.seqNo = 1;
-    actorMapItem.moveDist = actor_dto.movePoint;
-    actorMapItem.attackDist = actor_dto.attackRange;
-    actorMapItem.moveDone = false;
-    actorMapItem.attackDone = false;
-    
-    auto actorSprite = ActorSprite::createWithActorDto(actor_dto);
-    MapIndex baseActorIndex = tiled_map_layer->pointToIndex(Point(win_size.width/2, win_size.height/2));
-    actorSprite->setPosition(tiled_map_layer->indexToPoint(baseActorIndex));
-    actorSprite->setActorMapItem(actorMapItem);
-    actorSprite->runBottomAction();
+    auto actor_sprite = ActorSprite::createWithActorDto(actor_dto);
+    // 画面の中心に配置
+    MapIndex base_actor_index = tiled_map_layer->pointToIndex(Point(win_size.width/2, win_size.height/2));
+    base_actor_index.moveDictType = MoveDirectionType::MOVE_DOWN;
+    // マップ上は、ランダムな位置で開始する
+    ActorMapItem actor_map_item = tiled_map_layer->startPlayerRandomPosition(actor_dto, base_actor_index);
+    actor_sprite->setActorMapItem(actor_map_item);
+    actor_sprite->setPosition(tiled_map_layer->indexToPoint(base_actor_index));
+    actor_sprite->runBottomAction();
     // プレイヤーは画面中心にくるのでmapLayerに追加しない
-    this->addChild(actorSprite, RogueScene::ActorPlayerZOrder, (RogueScene::ActorPlayerTag + actorMapItem.seqNo));
-
+    this->addChild(actor_sprite, RogueScene::ActorPlayerZOrder, (RogueScene::ActorPlayerTag + actor_map_item.seqNo));
     // マップに追加
-    MapManager::getInstance()->addActor(actorSprite->getActorMapItem());
-
-    refreshStatus();
-    
-    // プレイヤーの位置表示用（同じく1/8サイズ）
-    tiled_map_layer->addMiniMapItem(actorSprite->getActorMapItem(), actorSprite->getTag());
-    
-    // プレイヤー位置にマップを移動
-    MapIndex moveIndex = {
-        playerRandMapIndex.x - baseActorIndex.x,
-        playerRandMapIndex.y - baseActorIndex.y,
-        actorMapItem.mapIndex.moveDictType
-    };
-    // 移動する距離をPointに変換
-    auto addMovePoint = Point(tiled_map_layer->getTileSize().width * moveIndex.x, tiled_map_layer->getTileSize().height * moveIndex.y);
-    // 移動
-    tiled_map_layer->runAction(MoveTo::create(0.0f, tiled_map_layer->getPosition() - addMovePoint));
+    tiled_map_layer->setPlayerActorMapItem(actor_sprite->getActorMapItem(), actor_sprite->getTag());
     
     // ---------------------
     // 敵キャラ生成
@@ -563,9 +538,9 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     {        
         // TODO: ゲームオーバーの演出
         
-        // TODO: ゲームオーバー画面Scene？表示
+        // ゲームオーバー画面Scene？表示
         
-        // TODO: とりあえずタイトルへ
+        // とりあえずタイトルへ
         this->changeScene(MypageScene::scene());
     }
     else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
@@ -881,8 +856,7 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint)
     touchEventExec(addMoveIndex, touchPointMapIndex);
 }
 
-void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex)
-{
+void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex) {
     auto rogue_map_layer = getRogueMapLayer();
     
     // キャラの向きを変更
@@ -892,48 +866,48 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     
     // 敵をタッチした
     auto pEnemyMapItem = MapManager::getInstance()->getActorMapItem(&touchPointMapIndex);
-    if (pEnemyMapItem->mapDataType == MapDataType::ENEMY)
-    {
+    if (pEnemyMapItem->mapDataType == MapDataType::ENEMY) {
         // 向きだけ変えてターン経過しない
-    }
-    else
-    {
+    } else {
         // 障害物判定
-        if (rogue_map_layer->isTiledMapColisionLayer(touchPointMapIndex))
-        {
+        if (rogue_map_layer->isTiledMapColisionLayer(touchPointMapIndex)) {
             // TODO: ぶつかるSE再生
             logMessage("壁ドーン SE再生");
             
             // ターン経過なし
-        }
-        else
-        {
+            
+        } else {
+            
             changeGameStatus(GameStatus::PLAYER_NO_ACTION);
             
             // アイテムに重なったときの拾う処理
             auto pTouchPointMapItem = MapManager::getInstance()->getMapItem(&touchPointMapIndex);
-            if (pTouchPointMapItem->mapDataType == MapDataType::MAP_ITEM)
-            {
-                // ドロップアイテムを拾う
-                auto pDropMapItem = static_cast<DropMapItem*>(pTouchPointMapItem);
-                
-                // TODO: 拾うSE再生
-                
+            if (pTouchPointMapItem->mapDataType == MapDataType::MAP_ITEM) {
+
                 // itemを取得
+                auto pDropMapItem = static_cast<DropMapItem*>(pTouchPointMapItem);
                 auto pDropItemSprite = rogue_map_layer->getDropItemSprite(pDropMapItem->seqNo);
-                
-                // メッセージログ
                 auto pDropItemDto = pDropItemSprite->getDropItemDto();
-                logMessage("%sを拾った。", pDropItemDto->name.c_str());
                 
-                // イベントリに追加する
-                getItemWindowLayer()->addItemList(*pDropItemDto);
+                if (getItemWindowLayer()->getItemList().size() < USE_ITEM_MAX) {
+                    // ドロップアイテムを拾う
+                    
+                    // TODO: 拾うSE再生
+                    
+                    // メッセージログ
+                    logMessage("%sを拾った。", pDropItemDto->name.c_str());
+                    
+                    // イベントリに追加する
+                    getItemWindowLayer()->addItemList(*pDropItemDto);
+                    
+                    // Map上から削除する
+                    rogue_map_layer->removeDropItemSprite(pDropItemSprite);
+                } else {
+                    // アイテム所持数限界
+                    logMessage("持ち物が一杯で、\n%sを拾えなかった。", pDropItemDto->name.c_str());
+                }
                 
-                // Map上から削除する
-                rogue_map_layer->removeDropItemSprite(pDropItemSprite);
-            }
-            else if (pTouchPointMapItem->mapDataType == MapDataType::KAIDAN)
-            {
+            } else if (pTouchPointMapItem->mapDataType == MapDataType::KAIDAN) {
                 // TODO: (kyokomi)階段SE
                 
                 // 階段下りる判定
