@@ -73,6 +73,8 @@ public:
         ActorEquipDto equip;
         /** スキルリスト. */
         //List<ActorPlayerSkillDto> skillDtoList;
+        /** 所持ゴールド */
+        int gold;
     } ActorDto;
 
     // コンストラクタ、デストラクタ
@@ -126,7 +128,7 @@ public:
     
     static std::string actorToString(const ActorDto& data)
     {
-        return StringUtils::format("%d,%d,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+        return StringUtils::format("%d,%d,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
                                    data.playerId,
                                    data.imageResId,
                                    data.faceImgId,
@@ -141,7 +143,8 @@ public:
                                    data.magicPoint,
                                    data.magicPointLimit,
                                    data.movePoint,
-                                   data.attackRange
+                                   data.attackRange,
+                                   data.gold
                                    );
     }
     

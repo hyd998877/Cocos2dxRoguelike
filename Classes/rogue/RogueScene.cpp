@@ -16,14 +16,14 @@
 #include "ItemLogic.h"
 #include "BattleLogic.h"
 
-#include "TitleSceneLoader.h"
-
 #include "MLevelDao.h"
 #include "MWeaponDao.h"
 #include "MUseItemDao.h"
 #include "MAccessoryDao.h"
 
 #include "AccountData.h"
+
+#include "MypageScene.h"
 
 USING_NS_CC;
 
@@ -77,11 +77,10 @@ RogueScene* RogueScene::createWithQuestId(int questId)
     }
 }
 
-bool RogueScene::initWithQuestId(int questId)
-{
+bool RogueScene::initWithQuestId(int quest_id) {
+    
     // 1. super init first
-    if ( !Layer::init() )
-    {
+    if ( !Layer::init() ) {
         return false;
     }
     // 乱数初期化
@@ -90,62 +89,48 @@ bool RogueScene::initWithQuestId(int questId)
     // データロード
     AccountData::getInstance()->load();
     
-    ActorSprite::ActorDto actorDto;
+    ActorSprite::ActorDto actor_dto;
     // 不一致の場合初期化
-    if (AccountData::getInstance()->rogue_play_data_.quest_id != questId)
-    {
+    if (AccountData::getInstance()->rogue_play_data_.quest_id != quest_id) {
         AccountData::getInstance()->reset();
-        rogue_play_data_.quest_id = questId;
+        rogue_play_data_.quest_id = quest_id;
         
-        actorDto.name = "ジニー";
-        actorDto.faceImgId = 0;
-        actorDto.imageResId = 1015;
+        actor_dto.name = "ジニー";
+        actor_dto.faceImgId = 0;
+        actor_dto.imageResId = 1015;
         // 基本
-        actorDto.attackRange = 1;
-        actorDto.movePoint = 5;
-        actorDto.playerId = 4; // actorId
+        actor_dto.attackRange = 1;
+        actor_dto.movePoint = 5;
+        actor_dto.playerId = 4; // actorId
         // 攻守
-        actorDto.attackPoint = 5;
-        actorDto.defencePoint = 1;
+        actor_dto.attackPoint = 5;
+        actor_dto.defencePoint = 1;
         // 経験値
-        actorDto.exp = 0;
-        actorDto.nextExp = 10;
+        actor_dto.exp = 0;
+        actor_dto.nextExp = 10;
         // HP
-        actorDto.hitPoint = 15;
-        actorDto.hitPointLimit = 15;
-        actorDto.lv = 1;
+        actor_dto.hitPoint = 15;
+        actor_dto.hitPointLimit = 15;
+        actor_dto.lv = 1;
         // 満腹度？精神力？
-        actorDto.magicPoint = 100;
-        actorDto.magicPointLimit = 100;
+        actor_dto.magicPoint = 100;
+        actor_dto.magicPointLimit = 100;
         // 装備
-        actorDto.equip = ActorSprite::createEquipDto();
-    }
-    else
-    {
+        actor_dto.equip = ActorSprite::createEquipDto();
+        // お金
+        actor_dto.gold = 0;
+    } else {
         // ロード処理
         rogue_play_data_ = AccountData::getInstance()->rogue_play_data_;
-        actorDto = AccountData::getInstance()->player_actor_;
+        actor_dto = AccountData::getInstance()->player_actor_;
     }
     
-    // TouchEvent settings
-    auto listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
-    listener->setSwallowTouches(true);
-    listener->onTouchBegan = CC_CALLBACK_2(RogueScene::onTouchBegan, this);
-    listener->onTouchMoved = CC_CALLBACK_2(RogueScene::onTouchMoved, this);
-    listener->onTouchEnded = CC_CALLBACK_2(RogueScene::onTouchEnded, this);
-    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+    auto win_size = Director::getInstance()->getWinSize();
 
-//    auto foreground_listener = EventListenerCustom::create(EVENT_COME_TO_FOREGROUND_ROGUE, [this](EventCustom* event){
-//        CCLOG("event! EVENT_COME_TO_FOREGROUND_ROGUE this");
-//        this->showCommonWindow("EVENT_COME_TO_FOREGROUND_ROGUEで\n再開します。", [this](Ref* pSender){
-//            this->hideCommonWindow();
-//        }, [this](Ref* pSender){
-//            this->hideCommonWindow();
-//        });
-//    });
-//    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(foreground_listener, this);
-
-    auto winSize = Director::getInstance()->getWinSize();
+    // ---------------------
+    // フロア開始カットイン表示
+    // ---------------------
+    this->addChild(createFloorTitleCutinLayer(rogue_play_data_.quest_id), RogueScene::CutInLayerZOrder);
     
     // ---------------------
     // タイルマップを生成
@@ -196,8 +181,8 @@ bool RogueScene::initWithQuestId(int questId)
     // ステータスバー？
     //-------------------------
     auto statusLayer = LayerColor::create(Color4B::BLACK);
-    statusLayer->setContentSize(Size(winSize.width, base_tile_size_.height * 0.8));
-    statusLayer->setPosition(Point(0, winSize.height - statusLayer->getContentSize().height));
+    statusLayer->setContentSize(Size(win_size.width, base_tile_size_.height * 0.8));
+    statusLayer->setPosition(Point(0, win_size.height - statusLayer->getContentSize().height));
     
     // 更新する
     auto sampleText = LabelTTF::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(32), GAME_FONT_SIZE(32));
@@ -211,8 +196,8 @@ bool RogueScene::initWithQuestId(int questId)
     // ゲームログ表示
     //-------------------------
     auto pGameLogLayer = LayerColor::create(Color4B(0, 0, 0, 192));
-    pGameLogLayer->setContentSize(Size(winSize.width * 0.5, base_tile_size_.height * 1.5));
-    pGameLogLayer->setPosition(winSize.width / 2 - pGameLogLayer->getContentSize().width / 2, 0);
+    pGameLogLayer->setContentSize(Size(win_size.width * 0.5, base_tile_size_.height * 1.5));
+    pGameLogLayer->setPosition(win_size.width / 2 - pGameLogLayer->getContentSize().width / 2, 0);
     
     CommonWindowUtil::attachWindowWaku(pGameLogLayer);
     
@@ -232,7 +217,7 @@ bool RogueScene::initWithQuestId(int questId)
     miniMapLayer->setContentSize(Size(base_map_size_.width * base_tile_size_.width / MINI_MAP_SCALE,
                                       base_map_size_.height * base_tile_size_.height / MINI_MAP_SCALE));
     // ステータスバーの下くらい
-    miniMapLayer->setPosition(0, miniMapLayer->getPositionY() + winSize.height - miniMapLayer->getContentSize().height - statusLayer->getContentSize().height);
+    miniMapLayer->setPosition(0, miniMapLayer->getPositionY() + win_size.height - miniMapLayer->getContentSize().height - statusLayer->getContentSize().height);
     this->addChild(miniMapLayer, RogueScene::MiniMapLayerZOrder, RogueScene::MiniMapLayerTag);
     
     // ------------------------
@@ -298,13 +283,13 @@ bool RogueScene::initWithQuestId(int questId)
     playerRandMapIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
     actorMapItem.mapIndex = playerRandMapIndex;
     actorMapItem.seqNo = 1;
-    actorMapItem.moveDist = actorDto.movePoint;
-    actorMapItem.attackDist = actorDto.attackRange;
+    actorMapItem.moveDist = actor_dto.movePoint;
+    actorMapItem.attackDist = actor_dto.attackRange;
     actorMapItem.moveDone = false;
     actorMapItem.attackDone = false;
     
-    auto actorSprite = ActorSprite::createWithActorDto(actorDto);
-    MapIndex baseActorIndex = pointToIndex(Point(winSize.width/2, winSize.height/2));
+    auto actorSprite = ActorSprite::createWithActorDto(actor_dto);
+    MapIndex baseActorIndex = pointToIndex(Point(win_size.width/2, win_size.height/2));
     actorSprite->setPosition(indexToPoint(baseActorIndex));
     actorSprite->setActorMapItem(actorMapItem);
     actorSprite->runBottomAction();
@@ -645,6 +630,38 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
     return resultArray;
 }
 
+// floorTitleカットインを生成する
+// タッチイベントでフェードアウトしてremoveする
+// private
+LayerColor* RogueScene::createFloorTitleCutinLayer(int quest_id) {
+    auto win_size = Director::getInstance()->getWinSize();
+    const int floor_title_font_size = 47;
+    
+    // 真っ黒の全画面で中心にフロア名 N層 と表示され　タップするとフェードアウトして消える
+    auto floor_title_cutin_layer = LayerColor::create(Color4B::BLACK);
+    floor_title_cutin_layer->setContentSize(win_size);
+    // テキスト中央
+    // TODO: (kyokomi) タイトルはdaoからとってくる予定
+    auto floor_title_text = StringUtils::format("初心者の洞窟 %d層", quest_id);
+    auto floor_title_text_label = LabelTTF::create(floor_title_text, GAME_FONT(floor_title_font_size), GAME_FONT_SIZE(floor_title_font_size));
+    floor_title_text_label->setPosition(Point(floor_title_cutin_layer->getContentSize().width / 2, floor_title_cutin_layer->getContentSize().height / 2));
+    floor_title_cutin_layer->addChild(floor_title_text_label);
+
+    auto cutin_listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
+    cutin_listener->setSwallowTouches(true);
+    cutin_listener->onTouchBegan = [floor_title_cutin_layer](Touch* touch, Event* event) -> bool {
+        // カットインを破棄
+        floor_title_cutin_layer->runAction(Sequence::create(FadeOut::create(1.0f), CallFunc::create([floor_title_cutin_layer]() {
+            floor_title_cutin_layer->setVisible(false);
+            floor_title_cutin_layer->removeAllChildrenWithCleanup(true);
+        }), NULL));
+        return false;
+    };
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cutin_listener, this);
+    
+    return floor_title_cutin_layer;
+}
+
 void RogueScene::onEnter() {
     CCLOG("%s(%d) onEnter", __FILE__, __LINE__);
     Layer::onEnter();
@@ -690,7 +707,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
         // TODO: ゲームオーバー画面Scene？表示
         
         // TODO: とりあえずタイトルへ
-        this->changeScene(TitleSceneLoader::scene());
+        this->changeScene(MypageScene::scene());
     }
     else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
         && rogue_play_data_.game_status == GameStatus::ENEMY_TURN)
@@ -1026,35 +1043,6 @@ void RogueScene::checkEnmeyTurnEnd()
 
 #pragma mark
 #pragma mark タッチイベント関連
-
-bool RogueScene::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event)
-{
-    CCLOG("RogueScene onTouchBegan");
-    if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
-    {
-        return true;
-    }
-    return false;
-}
-
-void RogueScene::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event)
-{
-
-}
-
-void RogueScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event)
-{
-    if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
-    {
-        // keypadにしました。
-    }
-}
-
-void RogueScene::onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event *event)
-{
-    this->unscheduleUpdate();
-}
-
 
 void RogueScene::touchEventExec(cocos2d::Point touchPoint)
 {
@@ -1866,9 +1854,8 @@ void RogueScene::refreshStatus()
         auto pPlayerSprite = getPlayerActorSprite(1);
         auto pPlayerDto = pPlayerSprite->getActorDto();
         int floor = rogue_play_data_.quest_id; // フロア情報（クエストID=フロア数でいい？)
-        int gold = 0; // TODO: player情報
         // 作成
-        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G", floor, pPlayerDto->lv, pPlayerDto->hitPoint, pPlayerDto->hitPointLimit, pPlayerDto->magicPoint, pPlayerDto->magicPointLimit, gold);
+        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G", floor, pPlayerDto->lv, pPlayerDto->hitPoint, pPlayerDto->hitPointLimit, pPlayerDto->magicPoint, pPlayerDto->magicPointLimit, pPlayerDto->gold);
         
         auto pLabelText = static_cast<LabelTTF*>(pStatusText);
         pLabelText->setString(pStr->getCString());

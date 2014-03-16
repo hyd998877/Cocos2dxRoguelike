@@ -81,25 +81,14 @@
 		CE93B44A188156C700825FD1 /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B424188156C700825FD1 /* SRPGMapLayer.cpp */; };
 		CE93B44B188156C700825FD1 /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B427188156C700825FD1 /* SRPGScene.cpp */; };
 		CE93B44C188156C700825FD1 /* RogueScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B42A188156C700825FD1 /* RogueScene.cpp */; };
-		CE93B44D188156C700825FD1 /* TitleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B42D188156C700825FD1 /* TitleScene.cpp */; };
-		CE93B44E188156C700825FD1 /* TitleSceneLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B42F188156C700825FD1 /* TitleSceneLoader.cpp */; };
 		CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */; };
 		CE93B450188156C700825FD1 /* LabelSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B434188156C700825FD1 /* LabelSprite.cpp */; };
 		CE93B451188156C700825FD1 /* MenuItemSelectLabelSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */; };
 		CE93B452188156C700825FD1 /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B438188156C700825FD1 /* ModalLayer.cpp */; };
 		CE93B454188156C700825FD1 /* TableViewTestLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */; };
-		CE93B455188156C700825FD1 /* MapScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B440188156C700825FD1 /* MapScene.cpp */; };
-		CE93B456188156C700825FD1 /* MapSceneLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B442188156C700825FD1 /* MapSceneLoader.cpp */; };
-		CE93B4B4188156FC00825FD1 /* bg_jan.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE93B499188156FC00825FD1 /* bg_jan.jpg */; };
-		CE93B4BB188156FC00825FD1 /* btn-test-0.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A0188156FC00825FD1 /* btn-test-0.png */; };
-		CE93B4BC188156FC00825FD1 /* btn-test-1.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A1188156FC00825FD1 /* btn-test-1.png */; };
-		CE93B4BD188156FC00825FD1 /* btn-test-2.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A2188156FC00825FD1 /* btn-test-2.png */; };
 		CE93B4BF188156FC00825FD1 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A4188156FC00825FD1 /* fonts */; };
 		CE93B4C0188156FC00825FD1 /* grid32.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A5188156FC00825FD1 /* grid32.png */; };
-		CE93B4C1188156FC00825FD1 /* HelloWorld.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A6188156FC00825FD1 /* HelloWorld.png */; };
-		CE93B4C7188156FC00825FD1 /* MapScene.ccbi in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AC188156FC00825FD1 /* MapScene.ccbi */; };
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
-		CE93B4C9188156FC00825FD1 /* TitleScene.ccbi in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AE188156FC00825FD1 /* TitleScene.ccbi */; };
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
 		CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
@@ -347,10 +336,6 @@
 		CE93B428188156C700825FD1 /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
 		CE93B42A188156C700825FD1 /* RogueScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueScene.cpp; sourceTree = "<group>"; };
 		CE93B42B188156C700825FD1 /* RogueScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RogueScene.h; sourceTree = "<group>"; };
-		CE93B42D188156C700825FD1 /* TitleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TitleScene.cpp; sourceTree = "<group>"; };
-		CE93B42E188156C700825FD1 /* TitleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TitleScene.h; sourceTree = "<group>"; };
-		CE93B42F188156C700825FD1 /* TitleSceneLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TitleSceneLoader.cpp; sourceTree = "<group>"; };
-		CE93B430188156C700825FD1 /* TitleSceneLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TitleSceneLoader.h; sourceTree = "<group>"; };
 		CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindowLayer.cpp; sourceTree = "<group>"; };
 		CE93B433188156C700825FD1 /* ItemWindowLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindowLayer.h; sourceTree = "<group>"; };
 		CE93B434188156C700825FD1 /* LabelSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelSprite.cpp; sourceTree = "<group>"; };
@@ -361,20 +346,9 @@
 		CE93B439188156C700825FD1 /* ModalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalLayer.h; sourceTree = "<group>"; };
 		CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TableViewTestLayer.cpp; sourceTree = "<group>"; };
 		CE93B43E188156C700825FD1 /* TableViewTestLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewTestLayer.h; sourceTree = "<group>"; };
-		CE93B440188156C700825FD1 /* MapScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapScene.cpp; sourceTree = "<group>"; };
-		CE93B441188156C700825FD1 /* MapScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapScene.h; sourceTree = "<group>"; };
-		CE93B442188156C700825FD1 /* MapSceneLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapSceneLoader.cpp; sourceTree = "<group>"; };
-		CE93B443188156C700825FD1 /* MapSceneLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapSceneLoader.h; sourceTree = "<group>"; };
-		CE93B499188156FC00825FD1 /* bg_jan.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg_jan.jpg; sourceTree = "<group>"; };
-		CE93B4A0188156FC00825FD1 /* btn-test-0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-test-0.png"; sourceTree = "<group>"; };
-		CE93B4A1188156FC00825FD1 /* btn-test-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-test-1.png"; sourceTree = "<group>"; };
-		CE93B4A2188156FC00825FD1 /* btn-test-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-test-2.png"; sourceTree = "<group>"; };
 		CE93B4A4188156FC00825FD1 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		CE93B4A5188156FC00825FD1 /* grid32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid32.png; sourceTree = "<group>"; };
-		CE93B4A6188156FC00825FD1 /* HelloWorld.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HelloWorld.png; sourceTree = "<group>"; };
-		CE93B4AC188156FC00825FD1 /* MapScene.ccbi */ = {isa = PBXFileReference; lastKnownFileType = file; path = MapScene.ccbi; sourceTree = "<group>"; };
 		CE93B4AD188156FC00825FD1 /* menu_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_button.png; sourceTree = "<group>"; };
-		CE93B4AE188156FC00825FD1 /* TitleScene.ccbi */ = {isa = PBXFileReference; lastKnownFileType = file; path = TitleScene.ccbi; sourceTree = "<group>"; };
 		CE93B4AF188156FC00825FD1 /* tmx */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tmx; sourceTree = "<group>"; };
 		CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonWindowUtil.cpp; sourceTree = "<group>"; };
 		CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
@@ -471,9 +445,7 @@
 				CE93B420188156C700825FD1 /* map */,
 				CE93B423188156C700825FD1 /* quest */,
 				CE93B429188156C700825FD1 /* rogue */,
-				CE93B42C188156C700825FD1 /* title */,
 				CE93B431188156C700825FD1 /* ui */,
-				CE93B43F188156C700825FD1 /* world_map */,
 				1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */,
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 				CE93B417188156C700825FD1 /* AppMacros.h */,
@@ -602,15 +574,8 @@
 				CEB1A5E61881895A00D26BAE /* ui */,
 				CE93B4A4188156FC00825FD1 /* fonts */,
 				CE93B4AF188156FC00825FD1 /* tmx */,
-				CE93B499188156FC00825FD1 /* bg_jan.jpg */,
-				CE93B4A0188156FC00825FD1 /* btn-test-0.png */,
-				CE93B4A1188156FC00825FD1 /* btn-test-1.png */,
-				CE93B4A2188156FC00825FD1 /* btn-test-2.png */,
 				CE93B4A5188156FC00825FD1 /* grid32.png */,
 				CE93B4AD188156FC00825FD1 /* menu_button.png */,
-				CE93B4A6188156FC00825FD1 /* HelloWorld.png */,
-				CE93B4AC188156FC00825FD1 /* MapScene.ccbi */,
-				CE93B4AE188156FC00825FD1 /* TitleScene.ccbi */,
 			);
 			name = Resources;
 			path = ../Resources;
@@ -760,18 +725,6 @@
 			path = ../Classes/rogue;
 			sourceTree = "<group>";
 		};
-		CE93B42C188156C700825FD1 /* title */ = {
-			isa = PBXGroup;
-			children = (
-				CE93B42D188156C700825FD1 /* TitleScene.cpp */,
-				CE93B42E188156C700825FD1 /* TitleScene.h */,
-				CE93B42F188156C700825FD1 /* TitleSceneLoader.cpp */,
-				CE93B430188156C700825FD1 /* TitleSceneLoader.h */,
-			);
-			name = title;
-			path = ../Classes/title;
-			sourceTree = "<group>";
-		};
 		CE93B431188156C700825FD1 /* ui */ = {
 			isa = PBXGroup;
 			children = (
@@ -800,18 +753,6 @@
 				CE93B43E188156C700825FD1 /* TableViewTestLayer.h */,
 			);
 			path = table;
-			sourceTree = "<group>";
-		};
-		CE93B43F188156C700825FD1 /* world_map */ = {
-			isa = PBXGroup;
-			children = (
-				CE93B440188156C700825FD1 /* MapScene.cpp */,
-				CE93B441188156C700825FD1 /* MapScene.h */,
-				CE93B442188156C700825FD1 /* MapSceneLoader.cpp */,
-				CE93B443188156C700825FD1 /* MapSceneLoader.h */,
-			);
-			name = world_map;
-			path = ../Classes/world_map;
 			sourceTree = "<group>";
 		};
 		CEF46A6318B8740500F887CA /* battle */ = {
@@ -1001,14 +942,10 @@
 				CECE37B518B9A6EA0086C8A0 /* battle in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
-				CE93B4C7188156FC00825FD1 /* MapScene.ccbi in Resources */,
-				CE93B4BD188156FC00825FD1 /* btn-test-2.png in Resources */,
-				CE93B4B4188156FC00825FD1 /* bg_jan.jpg in Resources */,
 				CECE37AD18B9A08C0086C8A0 /* bg in Resources */,
 				CE0D522B188A507F00ECB309 /* icon_set in Resources */,
 				CE81F79618940AA900A8162B /* kaidan.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
-				CE93B4BC188156FC00825FD1 /* btn-test-1.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				CEF46A6818B87A0200F887CA /* actor in Resources */,
@@ -1017,9 +954,6 @@
 				CE93B4CA188156FC00825FD1 /* tmx in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
-				CE93B4BB188156FC00825FD1 /* btn-test-0.png in Resources */,
-				CE93B4C1188156FC00825FD1 /* HelloWorld.png in Resources */,
-				CE93B4C9188156FC00825FD1 /* TitleScene.ccbi in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
@@ -1069,9 +1003,7 @@
 				CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */,
 				CE93B44B188156C700825FD1 /* SRPGScene.cpp in Sources */,
 				CE93B450188156C700825FD1 /* LabelSprite.cpp in Sources */,
-				CE93B456188156C700825FD1 /* MapSceneLoader.cpp in Sources */,
 				CE9297C0188BCC9700568EE1 /* MLevel.cpp in Sources */,
-				CE93B455188156C700825FD1 /* MapScene.cpp in Sources */,
 				CE93B451188156C700825FD1 /* MenuItemSelectLabelSprite.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				CE93B454188156C700825FD1 /* TableViewTestLayer.cpp in Sources */,
@@ -1080,7 +1012,6 @@
 				CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */,
-				CE93B44E188156C700825FD1 /* TitleSceneLoader.cpp in Sources */,
 				CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */,
 				CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */,
 				CE7F54B418AF0AFD00BFD0DC /* NovelScene.cpp in Sources */,
@@ -1092,7 +1023,6 @@
 				CE890F1B18B0E26A0088A9BC /* MUseItem.cpp in Sources */,
 				CE93B448188156C700825FD1 /* ItemLogic.cpp in Sources */,
 				CE93B44A188156C700825FD1 /* SRPGMapLayer.cpp in Sources */,
-				CE93B44D188156C700825FD1 /* TitleScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

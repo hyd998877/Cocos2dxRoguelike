@@ -78,7 +78,7 @@ bool MypageScene::init()
         ActorSprite::ActorDto player_data = AccountData::getInstance()->player_actor_;
         // セーブデータあり
         std::string save_text = StringUtils::format("セーブデータがあるわ。\n\n%s（%d F）\n\nLv %d exp %d HP %d/%d 所持金 %d G",
-                                                    "初心者の洞窟", rogue_play_data.quest_id, player_data.lv, player_data.exp, player_data.hitPoint, player_data.hitPointLimit, 0);
+                                                    "初心者の洞窟", rogue_play_data.quest_id, player_data.lv, player_data.exp, player_data.hitPoint, player_data.hitPointLimit, player_data.gold);
         comment_label->setString(save_text);
     }
     

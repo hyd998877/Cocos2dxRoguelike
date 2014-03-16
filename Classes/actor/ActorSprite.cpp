@@ -336,6 +336,9 @@ ActorSprite::ActorDto ActorSprite::createDto()
     actorDto.attackRange = 0;
     /** 装備. */
     actorDto.equip = ActorSprite::createEquipDto();
+    /** 所持ゴールド */
+    actorDto.gold = 0;
+    
     return actorDto;
 }
 
@@ -344,7 +347,7 @@ ActorSprite::ActorDto ActorSprite::createActorDto(std::string data_string)
     std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
     int index = 0;
     
-    if (data_string_array.size() != 15) {
+    if (data_string_array.size() != 16) {
         return createDto();
     }
     
@@ -353,7 +356,7 @@ ActorSprite::ActorDto ActorSprite::createActorDto(std::string data_string)
     actor_dto.playerId        = atoi(data_string_array[index].c_str()); index++;
     actor_dto.imageResId      = atoi(data_string_array[index].c_str()); index++;
     actor_dto.faceImgId       = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.name            = data_string_array[index];            index++;
+    actor_dto.name            = data_string_array[index];               index++;
     actor_dto.attackPoint     = atoi(data_string_array[index].c_str()); index++;
     actor_dto.defencePoint    = atoi(data_string_array[index].c_str()); index++;
     actor_dto.lv              = atoi(data_string_array[index].c_str()); index++;
@@ -365,5 +368,6 @@ ActorSprite::ActorDto ActorSprite::createActorDto(std::string data_string)
     actor_dto.magicPointLimit = atoi(data_string_array[index].c_str()); index++;
     actor_dto.movePoint       = atoi(data_string_array[index].c_str()); index++;
     actor_dto.attackRange     = atoi(data_string_array[index].c_str()); index++;
+    actor_dto.gold            = atoi(data_string_array[index].c_str()); index++;
     return actor_dto;
 }

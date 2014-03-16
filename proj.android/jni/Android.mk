@@ -15,10 +15,8 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
                    $(LOCAL_PATH)/../../Classes/data \
                    $(LOCAL_PATH)/../../Classes/util \
                    $(LOCAL_PATH)/../../Classes/account \
-                   $(LOCAL_PATH)/../../Classes/title \
                    $(LOCAL_PATH)/../../Classes/battle \
                    $(LOCAL_PATH)/../../Classes/mypage \
-                   $(LOCAL_PATH)/../../Classes/world_map \
                    $(LOCAL_PATH)/../../Classes/ui \
                    $(LOCAL_PATH)/../../Classes/quest \
                    $(LOCAL_PATH)/../../Classes/actor \

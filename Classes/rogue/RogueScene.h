@@ -35,9 +35,9 @@ public:
     };
     
     typedef struct _RoguePlayData {
-        // クエストID
+        // クエストID（階数）
         int quest_id;
-        // フロアID
+        // フロアID(マップデータID)
         int floor_id;
         // ゲーム状態
         RogueScene::GameStatus game_status;
@@ -152,6 +152,7 @@ protected:
         MenuLayerZOrder,
         ItemListLayerZOrder,
         CommonWindowZOrder,
+        CutInLayerZOrder,
         ModalLayerZOrder,
     };
     
@@ -191,6 +192,7 @@ private:
     DrawNode* createGridDraw();
     Vector<MenuItem*> createKeypadMenuItemArray();
     Vector<MenuItem*> createButtonMenuItemArray();
+    LayerColor* createFloorTitleCutinLayer(int quest_id);
     
     MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
     
@@ -253,11 +255,6 @@ public:
     static cocos2d::Scene* scene(int questId);
     static RogueScene* createWithQuestId(int questId);
         
-    virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
-    virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
-    virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
-    virtual void onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event *event);
-    
     void onEnter();
     void onEnterTransitionDidFinish();
     
