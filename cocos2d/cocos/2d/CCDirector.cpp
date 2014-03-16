@@ -935,7 +935,8 @@ void Director::createStatsLabel()
      So I added a new method called 'setIgnoreContentScaleFactor' for 'AtlasNode',
      this is not exposed to game developers, it's only used for displaying FPS now.
      */
-    float scaleFactor = 1 / CC_CONTENT_SCALE_FACTOR();
+    const float GAME_FONT_SCALE = 0.52f;
+    float scaleFactor = 1 / CC_CONTENT_SCALE_FACTOR() * GAME_FONT_SCALE;
 
     _FPSLabel = LabelAtlas::create();
     _FPSLabel->retain();
@@ -958,10 +959,10 @@ void Director::createStatsLabel()
 
     Texture2D::setDefaultAlphaPixelFormat(currentFormat);
 
-    const int height_spacing = 22 / CC_CONTENT_SCALE_FACTOR();
-    _drawnVerticesLabel->setPosition(Point(0, height_spacing*2) + CC_DIRECTOR_STATS_POSITION);
-    _drawnBatchesLabel->setPosition(Point(0, height_spacing*1) + CC_DIRECTOR_STATS_POSITION);
-    _FPSLabel->setPosition(Point(0, height_spacing*0)+CC_DIRECTOR_STATS_POSITION);
+    const int height_spacing = 22 / CC_CONTENT_SCALE_FACTOR() * GAME_FONT_SCALE;
+    _drawnVerticesLabel->setPosition(Point(0, height_spacing*2) + CC_DIRECTOR_STATS_POSITION * GAME_FONT_SCALE);
+    _drawnBatchesLabel->setPosition(Point(0, height_spacing*1) + CC_DIRECTOR_STATS_POSITION * GAME_FONT_SCALE);
+    _FPSLabel->setPosition(Point(0, height_spacing*0)+CC_DIRECTOR_STATS_POSITION * GAME_FONT_SCALE);
 }
 
 void Director::setContentScaleFactor(float scaleFactor)
