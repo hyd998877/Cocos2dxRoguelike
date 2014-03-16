@@ -20,6 +20,7 @@
 #include "MWeaponDao.h"
 #include "MUseItemDao.h"
 #include "MAccessoryDao.h"
+#include "MMonster.h"
 
 #include "AccountData.h"
 
@@ -185,7 +186,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ------------------------
     showItemList(1);
     hideItemList();
-    // TODO: アイテム引き継ぎ
+    // アイテム引き継ぎ
     getItemWindowLayer()->setItemList(AccountData::getInstance()->item_list_);
     getItemWindowLayer()->sortItemList();
     
@@ -209,40 +210,21 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ---------------------
     // 敵キャラ生成
     // ---------------------
-    ActorSprite::ActorDto enemyDto;
-    enemyDto.name = "スライム";
-    enemyDto.faceImgId = 0;
-    enemyDto.imageResId = 1011;
-    // 基本
-    enemyDto.attackRange = 1; // 未使用
-    enemyDto.movePoint = 10; // 索敵範囲
-    enemyDto.playerId = 901;
-    // 攻守
-    enemyDto.attackPoint = 2;
-    enemyDto.defencePoint = 0;
-    // 経験値
-    enemyDto.exp = 2;
-    enemyDto.nextExp = 10;
-    // HP
-    enemyDto.hitPoint = 10;
-    enemyDto.hitPointLimit = 10;
-    enemyDto.lv = 1;
-    // 満腹度？精神力？
-    enemyDto.magicPoint = 100;
-    enemyDto.magicPointLimit = 100;
-    // 装備
-    enemyDto.equip = ActorSprite::createEquipDto();
+    ActorSprite::ActorDto enemy_dto1 = ActorSprite::createActorDto(m_monster::data_.at("1").asString());
+    enemy_dto1.equip = ActorSprite::createEquipDto();
+    ActorSprite::ActorDto enemy_dto2 = ActorSprite::createActorDto(m_monster::data_.at("2").asString());
+    enemy_dto2.equip = ActorSprite::createEquipDto();
+    ActorSprite::ActorDto enemy_dto3 = ActorSprite::createActorDto(m_monster::data_.at("3").asString());
+    enemy_dto3.equip = ActorSprite::createEquipDto();
     
     MapIndex enemyMapIndex1 = tiled_map_layer->getRandomMapIndex(false, true);
-    tiled_map_layer->tileSetEnemyActorMapItem(enemyDto, enemyMapIndex1);
+    tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto1, enemyMapIndex1);
     
-    ActorSprite::ActorDto enemyDto2 = enemyDto;
     MapIndex enemyMapIndex2 = tiled_map_layer->getRandomMapIndex(false, true);
-    tiled_map_layer->tileSetEnemyActorMapItem(enemyDto2, enemyMapIndex2);
+    tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto2, enemyMapIndex2);
     
-    ActorSprite::ActorDto enemyDto3 = enemyDto;
     MapIndex enemyMapIndex3 = tiled_map_layer->getRandomMapIndex(false, true);
-    tiled_map_layer->tileSetEnemyActorMapItem(enemyDto3, enemyMapIndex3);
+    tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto3, enemyMapIndex3);
     
     //-------------------------
     // アイテム配置
@@ -534,31 +516,23 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     GameStatus beforeGameStatus = rogue_play_data_.game_status;
     rogue_play_data_.game_status = gameStatus;
     
-    if (rogue_play_data_.game_status == GameStatus::GAME_OVER)
-    {        
+    if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
         // TODO: ゲームオーバーの演出
         
         // ゲームオーバー画面Scene？表示
         
         // とりあえずタイトルへ
         this->changeScene(MypageScene::scene());
-    }
-    else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
-        && rogue_play_data_.game_status == GameStatus::ENEMY_TURN)
-    {
+        return;
+    } else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
+        && rogue_play_data_.game_status == GameStatus::ENEMY_TURN) {
         // 敵のターン開始時
         enemyTurn();
-    }
-    else if (rogue_play_data_.game_status == GameStatus::PLAYER_ACTION)
-    {
+    } else if (rogue_play_data_.game_status == GameStatus::PLAYER_ACTION) {
         rogue_play_data_.no_action_count = 0;
-    }
-    else if (rogue_play_data_.game_status == GameStatus::PLAYER_NO_ACTION)
-    {
+    } else if (rogue_play_data_.game_status == GameStatus::PLAYER_NO_ACTION) {
         rogue_play_data_.no_action_count++;
-    }
-    else if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
-    {
+    } else if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
         // カーソルはクリアする
         MapManager::getInstance()->clearCursor();
         // ターン数を進める
@@ -568,16 +542,14 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
         auto pPlayerDto = pPlayer->getActorDto();
         
         // 10ターンに1空腹度が減るという
-        if (rogue_play_data_.turn_count % 10 == 0)
-        {
+        if (rogue_play_data_.turn_count % 10 == 0) {
             if (pPlayerDto->magicPoint > 0)
             {
                 pPlayerDto->magicPoint--;
             }
         }
         // 無行動が4ターン続くとHPが回復
-        if (rogue_play_data_.no_action_count == 4)
-        {
+        if (rogue_play_data_.no_action_count == 4) {
             rogue_play_data_.no_action_count = 0;
             
             if (pPlayerDto->hitPointLimit > pPlayerDto->hitPoint)
@@ -590,33 +562,11 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
         
         // ランダムなタイミングでランダムに湧く
         int rand = GetRandom(1, 10); // 1%
-        if (rand == 1)
-        {
+        if (rand == 1) {
             MapIndex rePopIndex = rogue_map_layer->getRandomMapIndex(false, true);
-            
-            // TODO: 敵データは仮
-            ActorSprite::ActorDto enemyDto;
-            enemyDto.name = "スライム";
-            enemyDto.faceImgId = 0;
-            enemyDto.imageResId = 1011;
-            // 基本
-            enemyDto.attackRange = 1; // 未使用
-            enemyDto.movePoint = 10; // 索敵範囲
-            enemyDto.playerId = 901;
-            // 攻守
-            enemyDto.attackPoint = 2;
-            enemyDto.defencePoint = 0;
-            // 経験値
-            enemyDto.exp = 2;
-            enemyDto.nextExp = 10;
-            // HP
-            enemyDto.hitPoint = 10;
-            enemyDto.hitPointLimit = 10;
-            enemyDto.lv = 1;
-            // 満腹度？精神力？
-            enemyDto.magicPoint = 100;
-            enemyDto.magicPointLimit = 100;
-            // 装備
+            // 敵データ作成
+            int enemy_rand_id = GetRandom(1, 8);
+            ActorSprite::ActorDto enemyDto = ActorSprite::createActorDto(m_monster::data_.at(StringUtils::format("%d", enemy_rand_id)).asString());
             enemyDto.equip = ActorSprite::createEquipDto();
             
             rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;

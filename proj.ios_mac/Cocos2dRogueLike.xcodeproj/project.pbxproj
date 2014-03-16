@@ -355,6 +355,7 @@
 		CE93B4AF188156FC00825FD1 /* tmx */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tmx; sourceTree = "<group>"; };
 		CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonWindowUtil.cpp; sourceTree = "<group>"; };
 		CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
+		CEAEE91418D5F46B0026D6B4 /* MMonster.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMonster.h; sourceTree = "<group>"; };
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
 		CECE37AC18B9A08C0086C8A0 /* bg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bg; sourceTree = "<group>"; };
 		CECE37B418B9A6EA0086C8A0 /* battle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = battle; sourceTree = "<group>"; };
@@ -648,6 +649,7 @@
 				CE33EF6518B0E92D006C4B13 /* MUseItemDao.h */,
 				CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */,
 				CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */,
+				CEAEE91418D5F46B0026D6B4 /* MMonster.h */,
 			);
 			name = dao;
 			path = ../Classes/dao;
