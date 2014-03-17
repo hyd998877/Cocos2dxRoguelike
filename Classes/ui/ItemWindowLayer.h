@@ -45,7 +45,7 @@ public:
     Menu* initCreateMenu();
     DropItemSprite::DropItemDto findItem(long itemListIndex);
     void addItemList(DropItemSprite::DropItemDto dropItemDto);
-    void setItemEquip(int objectId, bool isEquip);
+    void setItemEquip(long objectId, bool isEquip);
     void reloadItemList();
     void sortItemList();
     

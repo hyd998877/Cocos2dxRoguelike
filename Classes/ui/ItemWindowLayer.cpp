@@ -252,7 +252,7 @@ void ItemWindowLayer::addItemList(DropItemSprite::DropItemDto dropItemDto) {
 }
 
 // 指定したアイテムを装備状態を変更する
-void ItemWindowLayer::setItemEquip(int objectId, bool isEquip) {
+void ItemWindowLayer::setItemEquip(long objectId, bool isEquip) {
     for (DropItemSprite::DropItemDto& itemDto : item_dto_list_) {
         if (itemDto.objectId == objectId) {
             // TODO: とりあえず装備だけ

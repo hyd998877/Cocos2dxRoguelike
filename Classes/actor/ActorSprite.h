@@ -22,13 +22,13 @@ public:
     
     typedef struct _ActorEquipDto {
         // 武器
-        int weaponObjectId;
+        long weaponObjectId;
         int weaponId;
         std::string weaponName;
         int weaponImgResId;
         int weaponStr;
         // アクセサリー
-        int accessoryObjectId;
+        long accessoryObjectId;
         int accessoryId;
         std::string accessoryName;
         int accessoryImgResId;
@@ -112,7 +112,7 @@ public:
     
     static std::string actorEquipToString(const ActorEquipDto& data)
     {
-        return StringUtils::format("%d,%d,%s,%d,%d,%d,%d,%s,%d,%d",
+        return StringUtils::format("%ld,%d,%s,%d,%d,%ld,%d,%s,%d,%d",
                                    data.weaponObjectId,
                                    data.weaponId,
                                    data.weaponName.c_str(),

@@ -374,7 +374,7 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
         if (pActorSprite)
         {
             // 移動アニメーション作成。移動後にマップカーソルを初期化
-
+            
             long movePointSize = list.size();
             auto moveArray = Vector<FiniteTimeAction*>();
             for (auto mapIndex : list)

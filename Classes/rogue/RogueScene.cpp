@@ -991,8 +991,7 @@ void RogueScene::attack()
 #pragma mark
 #pragma mark UI関連
 
-void RogueScene::logMessage(const char * pszFormat, ...)
-{
+void RogueScene::logMessage(const char * pszFormat, ...) {
     va_list ap;
     va_start(ap, pszFormat);
     char buf[RogueScene::MAX_LOG_LENGTH];
@@ -1003,15 +1002,13 @@ void RogueScene::logMessage(const char * pszFormat, ...)
     
     auto pGameLogNode = getChildByTag(RogueScene::GameLogLayerTag);
     // とりあえず子要素がないなら無理
-    if (!pGameLogNode || pGameLogNode->getChildrenCount() <= 0)
-    {
+    if (!pGameLogNode || pGameLogNode->getChildrenCount() <= 0) {
         return;
     }
     
     // TODO: 1子しかaddしてないから動く。ちゃんとしないと・・・
     auto pGameLogText = static_cast<LabelTTF*>(pGameLogNode->getChildren().at(1));
-    if (pGameLogText)
-    {
+    if (pGameLogText) {
         // TODO: 別クラスにしてログをlistで保持する。デフォルトの表示は1件だけで、center寄せ表示でいいかと
         auto pMessage = String::create(buf);
         
@@ -1019,16 +1016,14 @@ void RogueScene::logMessage(const char * pszFormat, ...)
 
         std::string nowString = pGameLogText->getString();
         
-        int count = f_r(nowString, '\n');
+        long count = f_r(nowString, '\n');
         
         // 3行まで表示
-        if (count >= 3)
-        {
-            int size = nowString.size();
-            unsigned int loc = nowString.find_last_of('\n', size);
-            CCLOG("logMessage: loc = %d size = %d", loc, size);
-            if (loc != std::string::npos)
-            {
+        if (count >= 3) {
+            long size = nowString.size();
+            unsigned long loc = nowString.find_last_of('\n', size);
+            CCLOG("logMessage: loc = %ld size = %ld", loc, size);
+            if (loc != std::string::npos) {
                 nowString.erase(loc, nowString.size() - loc);
             }
         }
@@ -1094,7 +1089,8 @@ void RogueScene::showItemList(int showTextIndex)
                     }
                 }
                 
-                // アイテムをマップのプレイヤーの足元に置く
+                // アイテムをマップのプ
+                // レイヤーの足元に置く
                 if (this->getRogueMapLayer()->tileSetDropMapItem(dropItemDto, pPlayerSprite->getActorMapItem()->mapIndex))
                 {
                     this->logMessage("%sを床においた。", dropItemDto.name.c_str());
