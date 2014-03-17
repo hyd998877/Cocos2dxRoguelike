@@ -237,7 +237,7 @@ Menu* ItemWindowLayer::initCreateMenu() {
 #pragma mark
 #pragma mark itemList関連
 
-DropItemSprite::DropItemDto ItemWindowLayer::findItem(int itemListIndex) {
+DropItemSprite::DropItemDto ItemWindowLayer::findItem(long itemListIndex) {
     if (itemListIndex >= 0 && item_dto_list_.size() > itemListIndex) {
         auto it = item_dto_list_.begin();
         std::advance(it, itemListIndex);
@@ -306,7 +306,7 @@ void ItemWindowLayer::sortItemList() {
 #pragma mark
 #pragma mark privateメソッド
 
-void ItemWindowLayer::setItemDetail(int itemListIndex) {
+void ItemWindowLayer::setItemDetail(long itemListIndex) {
     DropItemSprite::DropItemDto dropItemDto = findItem(itemListIndex);
     setItemDetail(&dropItemDto);
 }

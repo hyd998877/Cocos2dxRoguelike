@@ -103,7 +103,7 @@ protected:
     
 private:
     LayerColor* mini_map_layer_;
-    long enemyCount_;
+    int enemyCount_;
     
     void initRogue();
     

@@ -55,7 +55,7 @@ void TableViewTestLayer::tableCellTouched(TableView* table, TableViewCell* cell)
     if (m_callback) {
         m_callback(this, cell->getIdx());
     }
-    touchCellRefreshColor(table, cell->getIdx());
+    touchCellRefreshColor(table, (int)cell->getIdx());
 }
 
 void TableViewTestLayer::touchCellRefreshColor(TableView* pTable, int touchCellIdx) {

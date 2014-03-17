@@ -29,7 +29,7 @@ protected:
         ItemCountLabelTag      = 40000,
     };
 private:
-    int show_item_detail_idx_;
+    long show_item_detail_idx_;
     // TODO: ユーザーデータから持ってくるようにする
     std::list<DropItemSprite::DropItemDto> item_dto_list_;
     ItemWindowMenuCallback item_use_menu_callback_;
@@ -43,7 +43,7 @@ public:
     static ItemWindowLayer* createWithContentSize(cocos2d::Size contentSize);
     
     Menu* initCreateMenu();
-    DropItemSprite::DropItemDto findItem(int itemListIndex);
+    DropItemSprite::DropItemDto findItem(long itemListIndex);
     void addItemList(DropItemSprite::DropItemDto dropItemDto);
     void setItemEquip(int objectId, bool isEquip);
     void reloadItemList();
@@ -56,7 +56,7 @@ public:
     void setItemList(std::list<DropItemSprite::DropItemDto> item_list) { item_dto_list_ = item_list; }
     std::list<DropItemSprite::DropItemDto> getItemList() { return item_dto_list_; }
 private:
-    void setItemDetail(int itemListIndex);
+    void setItemDetail(long itemListIndex);
     void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
 };
 
