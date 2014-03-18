@@ -464,9 +464,11 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
 // floorTitleカットインを生成する
 // タッチイベントでフェードアウトしてremoveする
 // private
-LayerColor* RogueScene::createFloorTitleCutinLayer(int quest_id) {
+ModalLayer* RogueScene::createFloorTitleCutinLayer(int quest_id) {
     auto win_size = Director::getInstance()->getWinSize();
     const int floor_title_font_size = 47;
+    
+    auto modal_layer = ModalLayer::create();
     
     // 真っ黒の全画面で中心にフロア名 N層 と表示され　タップするとフェードアウトして消える
     auto floor_title_cutin_layer = LayerColor::create(Color4B::BLACK);
@@ -480,17 +482,19 @@ LayerColor* RogueScene::createFloorTitleCutinLayer(int quest_id) {
 
     auto cutin_listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
     cutin_listener->setSwallowTouches(true);
-    cutin_listener->onTouchBegan = [floor_title_cutin_layer](Touch* touch, Event* event) -> bool {
+    cutin_listener->onTouchBegan = [modal_layer](Touch* touch, Event* event) -> bool {
         // カットインを破棄
-        floor_title_cutin_layer->runAction(Sequence::create(FadeOut::create(1.0f), CallFunc::create([floor_title_cutin_layer]() {
-            floor_title_cutin_layer->setVisible(false);
-            floor_title_cutin_layer->removeAllChildrenWithCleanup(true);
+        modal_layer->runAction(Sequence::create(FadeOut::create(1.0f), CallFunc::create([modal_layer]() {
+            modal_layer->setVisible(false);
+            modal_layer->removeAllChildrenWithCleanup(true);
         }), NULL));
         return false;
     };
-    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cutin_listener, this);
+    floor_title_cutin_layer->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cutin_listener, floor_title_cutin_layer);
     
-    return floor_title_cutin_layer;
+    modal_layer->addChild(floor_title_cutin_layer);
+    
+    return modal_layer;
 }
 
 void RogueScene::onEnter() {

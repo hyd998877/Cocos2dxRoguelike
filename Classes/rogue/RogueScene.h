@@ -168,7 +168,7 @@ private:
     Vector<MenuItem*> createKeypadMenuItemArray();
     Vector<MenuItem*> createButtonMenuItemArray();
     MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
-    LayerColor* createFloorTitleCutinLayer(int quest_id);
+    ModalLayer* createFloorTitleCutinLayer(int quest_id);
     
     // アイテムリスト
     void showItemList(int showTextIndex);
