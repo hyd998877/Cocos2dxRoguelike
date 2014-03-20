@@ -168,10 +168,11 @@ private:
     Vector<MenuItem*> createKeypadMenuItemArray();
     Vector<MenuItem*> createButtonMenuItemArray();
     MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
-    ModalLayer* createFloorTitleCutinLayer(int quest_id);
+    ModalLayer* createFloorTitleCutInLayer(int quest_id);
+    ModalLayer* createGameOverCutInLayer();
     
     // アイテムリスト
-    void showItemList(int showTextIndex);
+    void showItemList();
     void hideItemList();
     
     // 共通ウィンドウ

@@ -327,6 +327,10 @@ void RogueTMXTiledMap::movePlayerMap(ActorSprite* pActorSprite, MapIndex addMove
 void RogueTMXTiledMap::moveEnemyMap(int enemy_seq_no, MapIndex addMoveIndex, float animation_speed, CallFunc* moveFinishedCallFunc) {
     auto enemy_sprite = getEnemyActorSprite(enemy_seq_no);
     if (enemy_sprite) {
+        // モンスターは普通にモンスターが移動 見えないやつはアニメーション不要
+        if (enemy_sprite->isVisible()) {
+            animation_speed = 0;
+        }
         moveMap(enemy_sprite, addMoveIndex, MapDataType::ENEMY, animation_speed, moveFinishedCallFunc);
     }
 }
@@ -340,15 +344,11 @@ void RogueTMXTiledMap::moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex,
     Node* pActionTargetNode;
     FiniteTimeAction* pMoveRunAction;
     // マップを指定index分移動
-    if (pActorSprite->getActorMapItem()->mapDataType == MapDataType::PLAYER)
-    {
+    if (pActorSprite->getActorMapItem()->mapDataType == MapDataType::PLAYER) {
         // プレイヤーならマップが移動
         pMoveRunAction = MoveTo::create(animation_speed, this->getPosition() - addMovePoint);
         pActionTargetNode = this;
-    }
-    else
-    {
-        // モンスターは普通にモンスターが移動
+    } else {
         pMoveRunAction = MoveTo::create(animation_speed, pActorSprite->getPosition() + addMovePoint);
         pActionTargetNode = pActorSprite;
     }
@@ -365,10 +365,8 @@ void RogueTMXTiledMap::moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex,
     
     // ミニマップも更新
     auto pMiniMapLayer = getGridSpriteBatchNode();
-    if (pMiniMapLayer)
-    {
+    if (pMiniMapLayer) {
         auto pMiniMapActorNode = pMiniMapLayer->getChildByTag(pActorSprite->getTag());
-        
         float scale = 1.0f / MINI_MAP_SCALE;
         auto point = indexToPointNotTileSize(pActorSprite->getActorMapItem()->mapIndex) / MINI_MAP_SCALE;
         pMiniMapActorNode->setPosition(point.x + pMiniMapActorNode->getContentSize().width / 2 * scale,
@@ -376,9 +374,6 @@ void RogueTMXTiledMap::moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex,
     }
     // move実行
     pActionTargetNode->runAction(Sequence::create(pMoveRunAction, moveFinishedCallFunc, NULL));
-    
-    // TODO: リリースしたほうがいい？
-//    pActionTargetNode->release();
 }
 
 #pragma mark

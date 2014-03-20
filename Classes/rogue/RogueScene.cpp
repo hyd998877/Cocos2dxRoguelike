@@ -27,8 +27,6 @@
 #include "MypageScene.h"
 
 // プロトタイプ宣言
-//int GetRandom(int min,int max);
-
 std::size_t f_r(const std::string& s, char c)
 {
     std::string::size_type pos = s.find(c);
@@ -40,36 +38,27 @@ std::size_t f_r(const std::string& s, char c)
 
 RogueScene::RogueScene()
 :rogue_play_data_()
-//base_map_size_(Size::ZERO),
-//base_tile_size_(Size::ZERO),
-//base_content_size_(Size::ZERO)
 {
     CCLOG("new rogueScene");
 }
 
-RogueScene::~RogueScene()
-{
+RogueScene::~RogueScene() {
     CCLOG("death rogueScene");
 }
 
-Scene* RogueScene::scene(int questId)
-{
+Scene* RogueScene::scene(int questId) {
     Scene *scene = Scene::create();
     RogueScene *layer = RogueScene::createWithQuestId(questId);
     scene->addChild(layer);
     return scene;
 }
 
-RogueScene* RogueScene::createWithQuestId(int questId)
-{
+RogueScene* RogueScene::createWithQuestId(int questId) {
     auto *pRet = new RogueScene();
-    if (pRet && pRet->initWithQuestId(questId))
-    {
+    if (pRet && pRet->initWithQuestId(questId)) {
         pRet->autorelease();
         return pRet;
-    }
-    else
-    {
+    } else {
         delete pRet;
         pRet = NULL;
         return NULL;
@@ -129,7 +118,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ---------------------
     // フロア開始カットイン表示
     // ---------------------
-    this->addChild(createFloorTitleCutinLayer(rogue_play_data_.quest_id), RogueScene::CutInLayerZOrder);
+    this->addChild(createFloorTitleCutInLayer(rogue_play_data_.quest_id), RogueScene::CutInLayerZOrder);
     
     // ---------------------
     // タイルマップを生成
@@ -184,7 +173,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ------------------------
     // イベントリ作成
     // ------------------------
-    showItemList(1);
+    showItemList();
     hideItemList();
     // アイテム引き継ぎ
     getItemWindowLayer()->setItemList(AccountData::getInstance()->item_list_);
@@ -230,13 +219,11 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // アイテム配置
     //-------------------------
     int object_count = AccountData::getInstance()->rogue_play_data_.item_count;
-    if (object_count < 0)
-    {
+    if (object_count < 0) {
         object_count = 0;
     }
     // TODO: (kyokomi) とりあえずアイテムとか武器はテストのため全種類配置してる
-    for (int i = 0; i < 6; i++)
-    {
+    for (int i = 0; i < 6; i++) {
         MUseItem mUseItem = MUseItemDao::getInstance()->selectById(i + 1);
         DropItemSprite::DropItemDto dropItemDto;
         dropItemDto.objectId = object_count + i + 1; // 単純に連番でいい
@@ -252,8 +239,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         object_count++;
     }
 
-    for (int i = 0; i < 11; i++)
-    {
+    for (int i = 0; i < 11; i++) {
         MWeapon mWeapon = MWeaponDao::getInstance()->selectById(i + 1);
         DropItemSprite::DropItemDto dropItemDto3;
         dropItemDto3.objectId = object_count + i + 1;
@@ -268,8 +254,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         
         object_count++;
     }
-    for (int i = 0; i < 7; i++)
-    {
+    for (int i = 0; i < 7; i++) {
         MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(i + 1);
         
         DropItemSprite::DropItemDto dropItemDto4;
@@ -312,8 +297,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     return true;
 }
 
-MenuItem* RogueScene::createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback)
-{
+MenuItem* RogueScene::createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback) {
     auto pKeypad = Sprite::createWithSpriteFrame(pBaseSpriteFrame);
     auto pKeypadPress = Sprite::createWithSpriteFrame(pBasePressSpriteFrame);
     
@@ -323,8 +307,7 @@ MenuItem* RogueScene::createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, 
     return pMenuKey;
 }
 
-Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
-{
+Vector<MenuItem*> RogueScene::createKeypadMenuItemArray() {
     Vector<MenuItem*> resultArray;
     
     auto pKeyBase = Sprite::create("ui/keypad.png");
@@ -334,8 +317,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     
     auto pMenuKeyUp = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyUpが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
-        {
+        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
             auto winSize = Director::getInstance()->getWinSize();
             Point point = Point(winSize.width / 2, winSize.height / 2);
             MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
@@ -348,8 +330,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     
     auto pMenuKeyRight = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyRightが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
-        {
+        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
             auto winSize = Director::getInstance()->getWinSize();
             Point point = Point(winSize.width / 2, winSize.height / 2);
             MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
@@ -362,8 +343,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     
     auto pMenuKeyDown = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyDownが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
-        {
+        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
             auto winSize = Director::getInstance()->getWinSize();
             Point point = Point(winSize.width / 2, winSize.height / 2);
             MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
@@ -376,8 +356,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     
     auto pMenuKeyLeft = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyLeftが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
-        {
+        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
             auto winSize = Director::getInstance()->getWinSize();
             Point point = Point(winSize.width / 2, winSize.height / 2);
             MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
@@ -391,8 +370,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray()
     return resultArray;
 }
 
-Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
-{
+Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     Size win_size = Director::getInstance()->getWinSize();
     
     Vector<MenuItem*> resultArray;
@@ -402,8 +380,7 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
     a_buttonPress->setOpacity(128);
     auto pA_MenuButton = MenuItemSprite::create(a_button, a_buttonPress, [this](Ref* pSender) {
         CCLOG("Aボタンが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN)
-        {
+        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
             this->attack();
         }
     });
@@ -452,7 +429,7 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
     d_buttonPress->setOpacity(128);
     auto pD_MenuButton = MenuItemSprite::create(d_button, d_buttonPress, [this](Ref* pSender) {
         CCLOG("Dボタンが押された！");
-        showItemList(1);
+        showItemList();
     });
     pD_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 2, rogu_map_layer->indexToPoint(11, 2).y));
     pD_MenuButton->setTag(RogueScene::D_ButtonMenuTag);
@@ -464,11 +441,12 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray()
 // floorTitleカットインを生成する
 // タッチイベントでフェードアウトしてremoveする
 // private
-ModalLayer* RogueScene::createFloorTitleCutinLayer(int quest_id) {
+ModalLayer* RogueScene::createFloorTitleCutInLayer(int quest_id) {
     auto win_size = Director::getInstance()->getWinSize();
     const int floor_title_font_size = 47;
     
     auto modal_layer = ModalLayer::create();
+    modal_layer->setOpacity(0);
     
     // 真っ黒の全画面で中心にフロア名 N層 と表示され　タップするとフェードアウトして消える
     auto floor_title_cutin_layer = LayerColor::create(Color4B::BLACK);
@@ -482,9 +460,9 @@ ModalLayer* RogueScene::createFloorTitleCutinLayer(int quest_id) {
 
     auto cutin_listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
     cutin_listener->setSwallowTouches(true);
-    cutin_listener->onTouchBegan = [modal_layer](Touch* touch, Event* event) -> bool {
+    cutin_listener->onTouchBegan = [floor_title_cutin_layer, modal_layer](Touch* touch, Event* event) -> bool {
         // カットインを破棄
-        modal_layer->runAction(Sequence::create(FadeOut::create(1.0f), CallFunc::create([modal_layer]() {
+        floor_title_cutin_layer->runAction(Sequence::create(FadeOut::create(1.5f), CallFunc::create([modal_layer]() {
             modal_layer->setVisible(false);
             modal_layer->removeAllChildrenWithCleanup(true);
         }), NULL));
@@ -494,6 +472,44 @@ ModalLayer* RogueScene::createFloorTitleCutinLayer(int quest_id) {
     
     modal_layer->addChild(floor_title_cutin_layer);
     
+    return modal_layer;
+}
+
+// gameoverカットインを生成する
+ModalLayer* RogueScene::createGameOverCutInLayer() {
+     auto win_size = Director::getInstance()->getWinSize();
+    
+    auto modal_layer = ModalLayer::create();
+    modal_layer->setOpacity(255);
+    modal_layer->setColor(Color3B::BLACK);
+    
+    // ---------------
+    
+    // TODO: (kyokomi) 画像は一般公開できないので注意
+    auto game_over_layer = Sprite::create("game_over.jpg");
+    game_over_layer->setPosition(Point(win_size.width / 2, win_size.height / 2));
+    
+    // ---------------
+    modal_layer->addChild(game_over_layer);
+    
+    // フェードインで登場
+    game_over_layer->setOpacity(0);
+    game_over_layer->runAction(Sequence::create(FadeIn::create(2.0f), CallFunc::create([this, game_over_layer, modal_layer]() {
+        // フェードイン後にタップ可能になる
+        auto cutin_listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
+        cutin_listener->setSwallowTouches(true);
+        cutin_listener->onTouchBegan = [this, game_over_layer, modal_layer](Touch* touch, Event* event) -> bool {
+            // カットインを破棄
+            game_over_layer->runAction(Sequence::create(FadeOut::create(1.5f), CallFunc::create([this, modal_layer]() {
+                modal_layer->setVisible(false);
+                modal_layer->removeAllChildrenWithCleanup(true);
+                // マイページへ
+                this->changeScene(MypageScene::scene());
+            }), NULL));
+            return false;
+        };
+        game_over_layer->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cutin_listener, game_over_layer);
+    }), NULL));
     return modal_layer;
 }
 
@@ -510,8 +526,7 @@ void RogueScene::onEnterTransitionDidFinish() {
 #pragma mark
 #pragma mark ゲームステート関連
 
-void RogueScene::changeGameStatus(GameStatus gameStatus)
-{
+void RogueScene::changeGameStatus(GameStatus gameStatus) {
     CCLOG("turn %d change gameStatus %d => %d", rogue_play_data_.turn_count, rogue_play_data_.game_status, gameStatus);
     
     auto rogue_map_layer = getRogueMapLayer();
@@ -520,14 +535,16 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     GameStatus beforeGameStatus = rogue_play_data_.game_status;
     rogue_play_data_.game_status = gameStatus;
     
-    if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
-        // TODO: ゲームオーバーの演出
-        
-        // ゲームオーバー画面Scene？表示
-        
-        // とりあえずタイトルへ
-        this->changeScene(MypageScene::scene());
+    if (beforeGameStatus == GameStatus::GAME_OVER) {
         return;
+    }
+    
+    if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
+        // ゲームオーバーの演出
+        auto game_over_layer = createGameOverCutInLayer();
+        this->addChild(game_over_layer, RogueScene::CutInLayerZOrder);
+        return;
+        
     } else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
         && rogue_play_data_.game_status == GameStatus::ENEMY_TURN) {
         // 敵のターン開始時
@@ -584,8 +601,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus)
     rogueMapLighting();
 }
 
-void RogueScene::changeScene(Scene* scene)
-{
+void RogueScene::changeScene(Scene* scene) {
     // TODO: とりあえず真っ黒のレイヤーを乗せる
     this->addChild(LayerColor::create(Color4B::BLACK), 99999999, 99999999);
     
@@ -593,14 +609,11 @@ void RogueScene::changeScene(Scene* scene)
     Director::getInstance()->replaceScene(trans);
 }
 
-float RogueScene::getAnimationSpeed()
-{
+float RogueScene::getAnimationSpeed() {
     auto pMenu = getChildByTag(RogueScene::ButtonMenuTag);
-    if (pMenu)
-    {
+    if (pMenu) {
         auto pB_ButtonMenuItem = static_cast<MenuItem*>(pMenu->getChildByTag(RogueScene::B_ButtonMenuTag));
-        if (pB_ButtonMenuItem && pB_ButtonMenuItem->isSelected())
-        {
+        if (pB_ButtonMenuItem && pB_ButtonMenuItem->isSelected()) {
             return 0.0f;
         }
     }
@@ -611,26 +624,21 @@ float RogueScene::getAnimationSpeed()
 #pragma mark
 #pragma mark モンスターのAI関連
 
-void RogueScene::enemyTurn()
-{
+void RogueScene::enemyTurn() {
     auto rogue_map_layer = getRogueMapLayer();
     
     // モンスターの数だけ繰り返す
     std::list<ActorMapItem> enemyList = MapManager::getInstance()->findEnemyMapItem();
-    for (ActorMapItem enemyMapItem : enemyList)
-    {
+    for (ActorMapItem enemyMapItem : enemyList) {
         // ランダムでとどまるか移動するかきめる
         int rand = GetRandom(2, 2);
-        if (rand == 1)
-        {
+        if (rand == 1) {
             auto pEnemySprite = rogue_map_layer->getEnemyActorSprite(enemyMapItem.seqNo);
             pEnemySprite->getActorMapItem()->moveDone = true;
             
             // とどまる
             logMessage("様子を見ている seqNo = %d", enemyMapItem.seqNo);
-        }
-        else if (rand == 2)
-        {
+        } else if (rand == 2) {
             // プレイヤーに向かって移動 or プレイヤーに攻撃
             auto pPlayerActorSprite = getPlayerActorSprite(1);
             
@@ -641,23 +649,19 @@ void RogueScene::enemyTurn()
             // そもそもプレイヤーが隣接しているかチェック
             bool isPlayerAttack = false;
             {
-                for (MapIndex mapIndex : searchMapIndexList)
-                {
-                    if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, mapIndex))
-                    {
+                for (MapIndex mapIndex : searchMapIndexList) {
+                    if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, mapIndex)) {
                         isPlayerAttack = true;
                     }
                 }
             }
             
             MapIndex moveMapIndex = enemyMapItem.mapIndex;
-            if (isPlayerAttack)
-            {
+            if (isPlayerAttack) {
                 // 攻撃
                 moveMapIndex =pPlayerActorSprite->getActorMapItem()->mapIndex;
-            }
-            else
-            {
+                
+            } else {
                 // 移動可能な経路情報を設定
                 MapManager::getInstance()->createActorFindDist(enemyMapItem.mapIndex, enemyMapItem.moveDist);
                 
@@ -665,8 +669,7 @@ void RogueScene::enemyTurn()
                 MapItem targetMoveDistMapItem = MapManager::getInstance()->searchTargetMapItem(searchMapIndexList);
                 
                 // 移動リスト作成
-                if (targetMoveDistMapItem.mapDataType == MapDataType::MOVE_DIST)
-                {
+                if (targetMoveDistMapItem.mapDataType == MapDataType::MOVE_DIST) {
                     std::list<MapIndex> moveList = MapManager::getInstance()->createMovePointList(targetMoveDistMapItem.mapIndex,
                                                                                     &enemyMapItem);
                     std::list<MapIndex>::iterator it = moveList.begin();
@@ -689,30 +692,26 @@ void RogueScene::enemyTurn()
             pEnemySprite->getActorMapItem()->moveDone = false;
             pEnemySprite->getActorMapItem()->attackDone = false;
             
-            if (rogue_map_layer->isMapLayerOver(moveMapIndex))
-            {
+            if (rogue_map_layer->isMapLayerOver(moveMapIndex)) {
+                
                 CCLOG("移動不可 seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
                 pEnemySprite->getActorMapItem()->moveDone = true;
-            }
-            else if (rogue_map_layer->isTiledMapColisionLayer(moveMapIndex))
-            {
+                
+            } else if (rogue_map_layer->isTiledMapColisionLayer(moveMapIndex)) {
+                
                 logMessage("壁ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
                 pEnemySprite->getActorMapItem()->moveDone = true;
-            }
-            else if (MapManager::getInstance()->getActorMapItem(&moveMapIndex)->mapDataType == MapDataType::ENEMY)
-            {
-                if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, moveMapIndex))
-                {
+                
+            } else if (MapManager::getInstance()->getActorMapItem(&moveMapIndex)->mapDataType == MapDataType::ENEMY) {
+                
+                if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, moveMapIndex)) {
                     //logMessage("待機 seqNo = %d (%d, %d)");
-                }
-                else
-                {
+                } else {
                     logMessage("敵ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
                 }
                 pEnemySprite->getActorMapItem()->moveDone = true;
-            }
-            else if (MapManager::getInstance()->getActorMapItem(&moveMapIndex)->mapDataType == MapDataType::PLAYER)
-            {
+                
+            } else if (MapManager::getInstance()->getActorMapItem(&moveMapIndex)->mapDataType == MapDataType::PLAYER) {
                 // 移動中のステータスへ
                 changeGameStatus(GameStatus::ENEMY_ACTION);
                 
@@ -723,13 +722,18 @@ void RogueScene::enemyTurn()
                 
                 pEnemySprite->runAction(Sequence::create(pMove1, pMove2,
                                                          CallFunc::create([this, pEnemySprite, pPlayerActorSprite]() {
-                    auto pPlayerDto = pPlayerActorSprite->getActorDto();
-                    auto pEnemyDto = pEnemySprite->getActorDto();
+                    auto player = pPlayerActorSprite->getActorDto();
+                    auto enemy = pEnemySprite->getActorDto();
                                         
-                    int damage = BattleLogic::exec(pEnemyDto, pPlayerDto);
-                    
+                    int damage = BattleLogic::exec(*enemy, *player);
                     // 攻撃イベント
-                    this->logMessage("%sの攻撃: %sに%dダメージ", pEnemyDto->name.c_str(), pPlayerDto->name.c_str(), damage);
+                    this->logMessage("%sの攻撃: %sに%dダメージ", enemy->name.c_str(), player->name.c_str(), damage);
+                    // オーバーキル判定
+                    if (player->hitPoint < damage) {
+                        player->hitPoint = 0;
+                    } else {
+                        player->hitPoint = player->hitPoint - damage;
+                    }
                     
                     // プレイヤーステータス更新と死亡判定
                     this->refreshStatus();
@@ -739,11 +743,10 @@ void RogueScene::enemyTurn()
                     checkEnmeyTurnEnd();
                     
                 }), NULL));
-            }
-            else
-            {
+            } else {
                 // アニメーション中のステータスへ
                 changeGameStatus(GameStatus::ENEMY_ACTION);
+                
                 // 移動開始
                 rogue_map_layer->moveEnemyMap(enemyMapItem.seqNo, addMoveIndex, getAnimationSpeed(),CallFunc::create([this, pEnemySprite]() {
                     // 移動終わり
@@ -757,26 +760,20 @@ void RogueScene::enemyTurn()
     checkEnmeyTurnEnd();
 }
 
-void RogueScene::checkEnmeyTurnEnd()
-{
+void RogueScene::checkEnmeyTurnEnd() {
     bool isTurnEnd = true;
     std::list<ActorMapItem> enemyList = MapManager::getInstance()->findEnemyMapItem();
-    for (ActorMapItem enemyMapItem : enemyList)
-    {
+    for (ActorMapItem enemyMapItem : enemyList) {
         auto pEnemySprite = getRogueMapLayer()->getEnemyActorSprite(enemyMapItem.seqNo);
         auto pEnemyMapItem = pEnemySprite->getActorMapItem();
-        if (!pEnemyMapItem->moveDone && !pEnemyMapItem->attackDone)
-        {
+        if (!pEnemyMapItem->moveDone && !pEnemyMapItem->attackDone) {
             isTurnEnd = false;
             break;
         }
     }
-    if (isTurnEnd)
-    {
+    if (isTurnEnd) {
         changeGameStatus(GameStatus::PLAYER_TURN);
-    }
-    else
-    {
+    } else {
         changeGameStatus(GameStatus::ENEMY_TURN);
     }
 }
@@ -902,33 +899,25 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     }
 }
 
-void RogueScene::attack()
-{
+void RogueScene::attack() {
     auto rogue_map_layer = getRogueMapLayer();
     auto pActorSprite = getPlayerActorSprite(1);
     
     MapIndex addMapIndex = {0, 0, MoveDirectionType::MOVE_NONE};
     MapIndex attackMapIndex = pActorSprite->getActorMapItem()->mapIndex;
-    if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_UP)
-    {
+    if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_UP) {
         // 上
         addMapIndex.y += 1;
         attackMapIndex.y += 1;
-    }
-    else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_RIGHT)
-    {
+    } else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_RIGHT) {
         // 右
         addMapIndex.x += 1;
         attackMapIndex.x += 1;
-    }
-    else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_LEFT)
-    {
+    } else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_LEFT) {
         // 左
         addMapIndex.x -= 1;
         attackMapIndex.x -= 1;
-    }
-    else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_DOWN)
-    {
+    } else if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_DOWN) {
         // 下
         addMapIndex.y -= 1;
         attackMapIndex.y -= 1;
@@ -944,43 +933,39 @@ void RogueScene::attack()
     ActorSprite* pEnemySprite = NULL;
     // 敵をタッチした
     auto pEnemyMapItem = MapManager::getInstance()->getActorMapItem(&attackMapIndex);
-    if (pEnemyMapItem->mapDataType == MapDataType::ENEMY)
-    {
+    if (pEnemyMapItem->mapDataType == MapDataType::ENEMY) {
         pEnemySprite = rogue_map_layer->getEnemyActorSprite(pEnemyMapItem->seqNo);
-    }
-    else
-    {
+    } else {
         // 空振り
     }
     
     // アニメーション
     pActorSprite->runAction(Sequence::create(pMove1, pMove2, CallFunc::create([this, pActorSprite, pEnemySprite](void) {
-        if (pEnemySprite)
-        {
-            auto pPlayerDto = pActorSprite->getActorDto();
-            auto pEnemyDto = pEnemySprite->getActorDto();
+        if (pEnemySprite) {
+            auto player = pActorSprite->getActorDto();
+            auto enemy = pEnemySprite->getActorDto();
             
-            int damage = BattleLogic::exec(pPlayerDto, pEnemyDto);
-            
+            // 攻撃開始
+            int damage = BattleLogic::exec(*player, *enemy);
             // 攻撃イベント
-            logMessage("%sの攻撃: %sに%dのダメージ", pPlayerDto->name.c_str(), pEnemyDto->name.c_str(), damage);
+            logMessage("%sの攻撃: %sに%dのダメージ", player->name.c_str(), enemy->name.c_str(), damage);
+            // オーバーキル考慮しない
+            enemy->hitPoint = enemy->hitPoint - damage;
             
             // 敵の死亡判定
-            if (pEnemyDto->hitPoint == 0)
-            {
-                logMessage("%sを倒した。経験値%dを得た。", pEnemyDto->name.c_str(), pEnemyDto->exp);
+            if (enemy->hitPoint <= 0) {
+                logMessage("%sを倒した。経験値%dを得た。", enemy->name.c_str(), enemy->exp);
                 
-                // 経験値更新
-                pPlayerDto->exp += pEnemyDto->exp;
-                if (MLevelDao::getInstance()->checkLevelUp(pPlayerDto->lv, pPlayerDto->exp))
-                {
-                    pPlayerDto->lv++;
-                    auto mLevel = MLevelDao::getInstance()->selectById(pPlayerDto->lv);
-                    pPlayerDto->hitPointLimit += mLevel.getGrowHitPoint();
+                // TODO: (kyokomi) 経験値更新（計算式 適当）
+                player->exp += enemy->exp;
+                if (MLevelDao::getInstance()->checkLevelUp(player->lv, player->exp)) {
+                    player->lv++;
+                    auto mLevel = MLevelDao::getInstance()->selectById(player->lv);
+                    player->hitPointLimit += mLevel.getGrowHitPoint();
                     
                     // TODO: レベルアップ演出（SE？）
                     
-                    logMessage("%sはレベル%dになった。", pPlayerDto->name.c_str(), pPlayerDto->lv);
+                    logMessage("%sはレベル%dになった。", player->name.c_str(), player->lv);
                 }
                 
                 // マップから消える
@@ -1039,65 +1024,50 @@ void RogueScene::logMessage(const char * pszFormat, ...) {
     }
 }
 
-void RogueScene::showItemList(int showTextIndex)
-{
-    // いまのところ使用してないindex
-    if (showTextIndex <= 0)
-    {
-        return;
-    }
+void RogueScene::showItemList() {
     
-    auto winSize = Director::getInstance()->getWinSize();
+    auto win_size = Director::getInstance()->getWinSize();
     
-    auto pModalLayer = getModalLayer();
-    pModalLayer->setVisible(true);
+    auto item_list_modal_layer = getModalLayer();
+    item_list_modal_layer->setVisible(true);
     
-    auto pItemWindowLayer = getItemWindowLayer();
-    if (pItemWindowLayer)
-    {
-        pItemWindowLayer->reloadItemList();
-        pItemWindowLayer->setVisible(true);
-    }
-    else
-    {
+    auto item_window_layer = getItemWindowLayer();
+    if (item_window_layer) {
+        item_window_layer->reloadItemList();
+        item_window_layer->setVisible(true);
+    } else {
         // アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
-        pItemWindowLayer = ItemWindowLayer::createWithContentSize(winSize * 0.8);
-        pItemWindowLayer->setPosition(Point(winSize.width / 2 - pItemWindowLayer->getContentSize().width / 2,
-                                            winSize.height /2 - pItemWindowLayer->getContentSize().height / 2));
-        pItemWindowLayer->setItemDropMenuCallback([this](Ref* pSender, DropItemSprite::DropItemDto dropItemDto) {
+        item_window_layer = ItemWindowLayer::createWithContentSize(win_size * 0.8);
+        item_window_layer->setPosition(Point(win_size.width / 2 - item_window_layer->getContentSize().width / 2,
+                                            win_size.height /2 - item_window_layer->getContentSize().height / 2));
+        item_window_layer->setItemDropMenuCallback([this](Ref* ref, DropItemSprite::DropItemDto drop_item) {
             CCLOG("RogueScene::itemDropMenuCallback");
             
-            auto pPlayerSprite = getPlayerActorSprite(1);
+            auto player_sprite = getPlayerActorSprite(1);
             
             // すでにアイテムが置いてある場合は置けない
-            if (MapManager::getInstance()->getDropMapItem(&pPlayerSprite->getActorMapItem()->mapIndex)->mapDataType != MapDataType::NONE)
-            {
-                this->logMessage("%sを床におけなかった。", dropItemDto.name.c_str());
+            if (MapManager::getInstance()->getDropMapItem(&player_sprite->getActorMapItem()->mapIndex)->mapDataType != MapDataType::NONE) {
+                this->logMessage("%sを床におけなかった。", drop_item.name.c_str());
                 // アイテムを戻す
-                this->getItemWindowLayer()->addItemList(dropItemDto);
-            }
-            else
-            {
+                this->getItemWindowLayer()->addItemList(drop_item);
+                
+            } else {
+                
                 // 装備してたら外す
-                if (dropItemDto.isEquip)
-                {
-                    dropItemDto.isEquip = false;
+                if (drop_item.isEquip) {
+                    drop_item.isEquip = false;
                     
-                    if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_WEAPON)
-                    {
-                        pPlayerSprite->equipReleaseWeapon();
-                    }
-                    else if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
-                    {
-                        pPlayerSprite->equipReleaseAccessory();
+                    if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
+                        player_sprite->equipReleaseWeapon();
+                    } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                        player_sprite->equipReleaseAccessory();
                     }
                 }
                 
                 // アイテムをマップのプ
                 // レイヤーの足元に置く
-                if (this->getRogueMapLayer()->tileSetDropMapItem(dropItemDto, pPlayerSprite->getActorMapItem()->mapIndex))
-                {
-                    this->logMessage("%sを床においた。", dropItemDto.name.c_str());
+                if (this->getRogueMapLayer()->tileSetDropMapItem(drop_item, player_sprite->getActorMapItem()->mapIndex)) {
+                    this->logMessage("%sを床においた。", drop_item.name.c_str());
                     
                     // ターン消費
                     this->changeGameStatus(RogueScene::ENEMY_TURN);
@@ -1108,68 +1078,15 @@ void RogueScene::showItemList(int showTextIndex)
             this->hideItemList();
         });
         
-        pItemWindowLayer->setItemUseMenuCallback([this](Ref* pSender, DropItemSprite::DropItemDto dropItemDto) {
+        item_window_layer->setItemUseMenuCallback([this](Ref* ref, DropItemSprite::DropItemDto drop_item) {
             CCLOG("RogueScene::itemUseMenuCallback");
             
-            auto pPlayerSprite = getPlayerActorSprite(1);
+            auto player_sprite = getPlayerActorSprite(1);
             
             // itemIdで処理してくれるlogicへ
-            std::string useMessage = ItemLogic::use(dropItemDto.itemId, pPlayerSprite->getActorDto());
+            std::string use_message = ItemLogic::use(drop_item.itemId, player_sprite->getActorDto());
             
-            this->logMessage(useMessage.c_str());
-            
-            // インベントリは閉じる
-            this->hideItemList();
-            
-            // ターン消費
-            this->changeGameStatus(RogueScene::ENEMY_TURN);
-        });
-        
-        pItemWindowLayer->setItemEquipMenuCallback([this, pItemWindowLayer](Ref* pSender, DropItemSprite::DropItemDto dropItemDto) {
-            CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", dropItemDto.itemType);
-            
-            auto pPlayerSprite = getPlayerActorSprite(1);
-            
-            if (dropItemDto.isEquip)
-            {
-                if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_WEAPON)
-                {
-                    // 解除
-                    pItemWindowLayer->setItemEquip(pPlayerSprite->getActorDto()->equip.weaponObjectId, false);
-                    // 武器装備
-                    pPlayerSprite->getActorDto()->equip.weaponObjectId = dropItemDto.objectId;
-                    pPlayerSprite->getActorDto()->equip.weaponId       = dropItemDto.itemId;
-                    pPlayerSprite->getActorDto()->equip.weaponImgResId = dropItemDto.imageResId;
-                    pPlayerSprite->getActorDto()->equip.weaponName     = dropItemDto.name;
-                    pPlayerSprite->getActorDto()->equip.weaponStr      = 5; // TODO: valueはマスタから実はnameも取りたい・・・
-                }
-                else if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
-                {
-                    // 解除
-                    pItemWindowLayer->setItemEquip(pPlayerSprite->getActorDto()->equip.accessoryObjectId, false);
-                    // 防具装備
-                    pPlayerSprite->getActorDto()->equip.accessoryObjectId = dropItemDto.objectId;
-                    pPlayerSprite->getActorDto()->equip.accessoryId       = dropItemDto.itemId;
-                    pPlayerSprite->getActorDto()->equip.accessoryImgResId = dropItemDto.imageResId;
-                    pPlayerSprite->getActorDto()->equip.accessoryName     = dropItemDto.name;
-                    pPlayerSprite->getActorDto()->equip.accessoryDef      = 2; // TODO: valueはマスタから実はnameも取りたい・・・
-                }
-                this->logMessage("%sを装備した。", dropItemDto.name.c_str());
-            }
-            else
-            {
-                if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_WEAPON)
-                {
-                    // 武器解除
-                    pPlayerSprite->equipReleaseWeapon();
-                }
-                else if (dropItemDto.itemType == MUseItem::ItemType::EQUIP_ACCESSORY)
-                {
-                    // 防具装備
-                    pPlayerSprite->equipReleaseAccessory();
-                }
-                this->logMessage("%sの装備をはずした。", dropItemDto.name.c_str());
-            }
+            this->logMessage(use_message.c_str());
             
             // インベントリは閉じる
             this->hideItemList();
@@ -1178,45 +1095,92 @@ void RogueScene::showItemList(int showTextIndex)
             this->changeGameStatus(RogueScene::ENEMY_TURN);
         });
         
-        pModalLayer->addChild(pItemWindowLayer, RogueScene::ItemListLayerZOrder, RogueScene::ItemListWindowTag);
+        item_window_layer->setItemEquipMenuCallback([this, item_window_layer](Ref* ref, DropItemSprite::DropItemDto drop_item) {
+            CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", drop_item.itemType);
+            
+            auto player_sprite = getPlayerActorSprite(1);
+            
+            if (drop_item.isEquip) {
+                if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
+                    // 解除
+                    item_window_layer->setItemEquip(player_sprite->getActorDto()->equip.weaponObjectId, false);
 
+                    // 武器装備
+                    MWeapon weapon_master = MWeaponDao::getInstance()->selectById(drop_item.itemId);
+                    player_sprite->getActorDto()->equip.weaponObjectId = drop_item.objectId;
+                    player_sprite->getActorDto()->equip.weaponId       = weapon_master.getWeaponId();
+                    player_sprite->getActorDto()->equip.weaponImgResId = weapon_master.getWeaponImageId();
+                    player_sprite->getActorDto()->equip.weaponName     = weapon_master.getWeaponName();
+                    player_sprite->getActorDto()->equip.weaponStr      = weapon_master.getAttackPoint();
+                    
+                } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                    // 解除
+                    item_window_layer->setItemEquip(player_sprite->getActorDto()->equip.accessoryObjectId, false);
+                    // 防具装備
+                    MAccessory accessory_master = MAccessoryDao::getInstance()->selectById(drop_item.itemId);
+                    player_sprite->getActorDto()->equip.accessoryObjectId = drop_item.objectId;
+                    player_sprite->getActorDto()->equip.accessoryId       = accessory_master.getAccessoryId();
+                    player_sprite->getActorDto()->equip.accessoryImgResId = accessory_master.getAccessoryImageId();
+                    player_sprite->getActorDto()->equip.accessoryName     = accessory_master.getAccessoryName();
+                    player_sprite->getActorDto()->equip.accessoryDef      = accessory_master.getDefensePoint();
+                }
+                this->logMessage("%sを装備した。", drop_item.name.c_str());
+            } else {
+                if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
+                    // 武器解除
+                    player_sprite->equipReleaseWeapon();
+                } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                    // 防具装備
+                    player_sprite->equipReleaseAccessory();
+                }
+                this->logMessage("%sの装備をはずした。", drop_item.name.c_str());
+            }
+            
+            // インベントリは閉じる
+            this->hideItemList();
+            
+            // ターン消費
+            this->changeGameStatus(RogueScene::ENEMY_TURN);
+        });
+        
+        item_list_modal_layer->addChild(item_window_layer, RogueScene::ItemListLayerZOrder, RogueScene::ItemListWindowTag);
+        
+        // ---- button -----
+        
         const int font_size = 20;
         
         // 並び替えボタン
-        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("並び替え", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this, pItemWindowLayer](Ref *pSender) {
+        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("並び替え", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this, item_window_layer](Ref* ref) {
             // 並び替え
-            pItemWindowLayer->sortItemList();
-            pItemWindowLayer->reloadItemList();
+            item_window_layer->sortItemList();
+            item_window_layer->reloadItemList();
         });
-        sort_menu_item_label->setPosition(Point(pItemWindowLayer->getContentSize().width, pItemWindowLayer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
+        sort_menu_item_label->setPosition(Point(item_window_layer->getContentSize().width, item_window_layer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
         
         // 閉じるボタン
-        auto pCloseMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("とじる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this](Ref *pSender) {
+        auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("とじる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this](Ref* ref) {
             // 閉じる
             this->hideItemList();
         });
-        pCloseMenuItemLabel->setPosition(Point(pItemWindowLayer->getContentSize().width, pCloseMenuItemLabel->getPositionY() -  pCloseMenuItemLabel->getContentSize().height / 2));
+        clone_menu_item_label->setPosition(Point(item_window_layer->getContentSize().width, clone_menu_item_label->getPositionY() -  clone_menu_item_label->getContentSize().height / 2));
         
-        auto pMenu = Menu::create(sort_menu_item_label, pCloseMenuItemLabel, NULL);
-        pMenu->setPosition(Point::ZERO);
+        auto menu = Menu::create(sort_menu_item_label, clone_menu_item_label, NULL);
+        menu->setPosition(Point::ZERO);
         
-        pItemWindowLayer->addChild(pMenu);
+        item_window_layer->addChild(menu);
     }
 }
 
-void RogueScene::hideItemList()
-{
+void RogueScene::hideItemList() {
     // モーダルレイヤー非表示にする
-    auto pItemWindow = getItemWindowLayer();
-    if (pItemWindow)
-    {
-        pItemWindow->setVisible(false);
+    auto item_window_layer = getItemWindowLayer();
+    if (item_window_layer) {
+        item_window_layer->setVisible(false);
     }
     
-    auto pModalLayer = getModalLayer();
-    if (pModalLayer)
-    {
-        pModalLayer->setVisible(false);
+    auto modal_layer = getModalLayer();
+    if (modal_layer) {
+        modal_layer->setVisible(false);
     }
 }
 
@@ -1390,6 +1354,7 @@ ItemWindowLayer* RogueScene::getItemWindowLayer()
     return static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(RogueScene::ItemListWindowTag));
 }
 
+// TODO: (kyokomi)これイマイチ。ItemWindowとCommonWindowで共用しちゃってる
 ModalLayer* RogueScene::getModalLayer()
 {
     // モーダルレイヤー作成

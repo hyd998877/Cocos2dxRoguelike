@@ -64,6 +64,7 @@
 		CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */; };
 		CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */; };
 		CE6C2DF618D572FC0042FA93 /* RogueTMXTiledMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */; };
+		CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE6E644B18DB33CF0008C116 /* game_over.jpg */; };
 		CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */; };
 		CE73FB2218B0A073009273D0 /* MWeapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB2018B0A073009273D0 /* MWeapon.cpp */; };
 		CE73FB2418B0A3F1009273D0 /* test_master in Resources */ = {isa = PBXBuildFile; fileRef = CE73FB2318B0A3F1009273D0 /* test_master */; };
@@ -303,6 +304,7 @@
 		CE68D3E418B9F9D0006CCA37 /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
 		CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueTMXTiledMap.cpp; sourceTree = "<group>"; };
 		CE6C2DF518D572FC0042FA93 /* RogueTMXTiledMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RogueTMXTiledMap.h; sourceTree = "<group>"; };
+		CE6E644B18DB33CF0008C116 /* game_over.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = game_over.jpg; sourceTree = "<group>"; };
 		CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeaponDao.cpp; sourceTree = "<group>"; };
 		CE73FB1E18B0A064009273D0 /* MWeaponDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeaponDao.h; sourceTree = "<group>"; };
 		CE73FB2018B0A073009273D0 /* MWeapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeapon.cpp; sourceTree = "<group>"; };
@@ -568,18 +570,19 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CE6E644B18DB33CF0008C116 /* game_over.jpg */,
+				CE81F79518940AA900A8162B /* kaidan.png */,
+				CE93B4A5188156FC00825FD1 /* grid32.png */,
+				CE93B4AD188156FC00825FD1 /* menu_button.png */,
 				CECE37B418B9A6EA0086C8A0 /* battle */,
 				CECE37AC18B9A08C0086C8A0 /* bg */,
 				CEF46A6718B87A0200F887CA /* actor */,
 				CE73FB2318B0A3F1009273D0 /* test_master */,
 				CE2F8A3D18AF28E5001B457C /* novel */,
-				CE81F79518940AA900A8162B /* kaidan.png */,
 				CE0D522A188A507F00ECB309 /* icon_set */,
 				CEB1A5E61881895A00D26BAE /* ui */,
 				CE93B4A4188156FC00825FD1 /* fonts */,
 				CE93B4AF188156FC00825FD1 /* tmx */,
-				CE93B4A5188156FC00825FD1 /* grid32.png */,
-				CE93B4AD188156FC00825FD1 /* menu_button.png */,
 			);
 			name = Resources;
 			path = ../Resources;
@@ -949,6 +952,7 @@
 				CECE37B518B9A6EA0086C8A0 /* battle in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
+				CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */,
 				CECE37AD18B9A08C0086C8A0 /* bg in Resources */,
 				CE0D522B188A507F00ECB309 /* icon_set in Resources */,
 				CE81F79618940AA900A8162B /* kaidan.png in Resources */,
