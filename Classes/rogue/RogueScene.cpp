@@ -1359,12 +1359,9 @@ ModalLayer* RogueScene::getModalLayer()
 {
     // モーダルレイヤー作成
     auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::ModalLayerTag));
-    if (pModalLayer)
-    {
+    if (pModalLayer) {
         //pModalLayer->setVisible(true);
-    }
-    else
-    {
+    } else {
         pModalLayer = ModalLayer::create();
         this->addChild(pModalLayer, RogueScene::ModalLayerZOrder, RogueScene::ModalLayerTag);
     }

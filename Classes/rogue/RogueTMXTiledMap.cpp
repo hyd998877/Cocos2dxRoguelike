@@ -256,37 +256,28 @@ void RogueTMXTiledMap::addMiniMapItem(MapItem* pMapItem, int baseSpriteTag) {
     int index = 0;
     Color3B spriteColor;
     int alpha = 255;
-    if (pMapItem->mapDataType == MapDataType::MAP_ITEM)
-    {
+    
+    if (pMapItem->mapDataType == MapDataType::MAP_ITEM) {
         spriteColor = Color3B(51, 204, 255);
         index = RogueTMXTiledMap::MiniMapLayerMapItemZOrder;
-    }
-    else if (pMapItem->mapDataType == MapDataType::ENEMY)
-    {
+    } else if (pMapItem->mapDataType == MapDataType::ENEMY) {
         spriteColor = Color3B::RED;
         index = RogueTMXTiledMap::MiniMapLayerMapActorZOrder;
-    }
-    else if (pMapItem->mapDataType == MapDataType::PLAYER)
-    {
+    } else if (pMapItem->mapDataType == MapDataType::PLAYER) {
         spriteColor = Color3B::YELLOW;
         index = RogueTMXTiledMap::MiniMapLayerMapActorZOrder;
-    }
-    else if (pMapItem->mapDataType == MapDataType::NONE)
-    {
+    } else if (pMapItem->mapDataType == MapDataType::NONE) {
         spriteColor = Color3B(0, 0, 196);
         alpha = 128;
         index = RogueTMXTiledMap::MiniMapLayerMapNoneZOrder;
-    }
-    else if (pMapItem->mapDataType == MapDataType::KAIDAN)
-    {
+    } else if (pMapItem->mapDataType == MapDataType::KAIDAN) {
         spriteColor = Color3B::GREEN;
         alpha = 128;
         index = RogueTMXTiledMap::MiniMapLayerMapItemZOrder;
     }
     
     auto pBatchNode = getGridSpriteBatchNode();
-    if (pBatchNode)
-    {
+    if (pBatchNode) {
         auto pSprite = Sprite::createWithTexture(pBatchNode->getTexture());
         pSprite->setPosition(indexToPoint(pMapItem->mapIndex.x, pMapItem->mapIndex.y));
         
@@ -328,15 +319,14 @@ void RogueTMXTiledMap::moveEnemyMap(int enemy_seq_no, MapIndex addMoveIndex, flo
     auto enemy_sprite = getEnemyActorSprite(enemy_seq_no);
     if (enemy_sprite) {
         // モンスターは普通にモンスターが移動 見えないやつはアニメーション不要
-        if (enemy_sprite->isVisible()) {
+        if (!enemy_sprite->isVisible()) {
             animation_speed = 0;
         }
         moveMap(enemy_sprite, addMoveIndex, MapDataType::ENEMY, animation_speed, moveFinishedCallFunc);
     }
 }
 
-void RogueTMXTiledMap::moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex, MapDataType mapDataType, float animation_speed, CallFunc* moveFinishedCallFunc)
-{
+void RogueTMXTiledMap::moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex, MapDataType mapDataType, float animation_speed, CallFunc* moveFinishedCallFunc) {
     // 移動距離計算
     // 移動する距離をPointに変換
     auto addMovePoint = Point(this->getTileSize().width * addMoveIndex.x, this->getTileSize().height * addMoveIndex.y);
@@ -404,20 +394,15 @@ void RogueTMXTiledMap::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool
     // 今いる部屋以外見えなくする
     // アイテム
     auto pDropItemMapLayer = this->getChildByTag(TiledMapTags::TiledMapDropItemBaseTag);
-    if (pDropItemMapLayer)
-    {
-        for (auto pDropItemNode : pDropItemMapLayer->getChildren())
-        {
+    if (pDropItemMapLayer) {
+        for (auto pDropItemNode : pDropItemMapLayer->getChildren()) {
             bool isContains = floorInfoIndexRect.containsPoint(pDropItemNode->getPosition());
-            if (isRefresh || isContains)
-            {
+            if (isRefresh || isContains) {
                 pDropItemNode->setVisible(isContains);
                 
-                if (pBatchNode)
-                {
+                if (pBatchNode) {
                     auto pMiniDropItemNode = pBatchNode->getChildByTag(pDropItemNode->getTag());
-                    if (pMiniDropItemNode)
-                    {
+                    if (pMiniDropItemNode) {
                         pMiniDropItemNode->setVisible(isContains);
                     }
                 }
@@ -427,19 +412,15 @@ void RogueTMXTiledMap::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool
     
     //階段
     auto pKaidan = this->getChildByTag(TiledMapTags::TiledMapObjectTag);
-    if (pKaidan)
-    {
+    if (pKaidan) {
         if (!pKaidan->isVisible()) {
             bool isContains = floorInfoIndexRect.containsPoint(pKaidan->getPosition());
-            if (isRefresh || isContains)
-            {
+            if (isRefresh || isContains) {
                 pKaidan->setVisible(isContains);
                 
-                if (pBatchNode)
-                {
+                if (pBatchNode) {
                     auto pMiniKaidanNode = pBatchNode->getChildByTag(pKaidan->getTag());
-                    if (pMiniKaidanNode)
-                    {
+                    if (pMiniKaidanNode) {
                         pMiniKaidanNode->setVisible(isContains);
                     }
                 }
@@ -449,20 +430,15 @@ void RogueTMXTiledMap::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool
     
     // 敵
     auto pEnemyMapLayer = this->getChildByTag(TiledMapTags::TiledMapEnemyBaseTag);
-    if (pEnemyMapLayer)
-    {
-        for (auto pEnemyNode : pEnemyMapLayer->getChildren())
-        {
+    if (pEnemyMapLayer) {
+        for (auto pEnemyNode : pEnemyMapLayer->getChildren()) {
             bool isContains = floorInfoIndexRect.containsPoint(pEnemyNode->getPosition());
-            if (isRefresh || isContains)
-            {
+            if (isRefresh || isContains) {
                 pEnemyNode->setVisible(isContains);
                 
-                if (pBatchNode)
-                {
+                if (pBatchNode) {
                     auto pMiniEnemyNode = pBatchNode->getChildByTag(pEnemyNode->getTag());
-                    if (pMiniEnemyNode)
-                    {
+                    if (pMiniEnemyNode) {
                         pMiniEnemyNode->setVisible(isContains);
                     }
                 }
@@ -484,7 +460,7 @@ Rect RogueTMXTiledMap::getTileMapFloorInfo(const MapIndex& actor_map_index) {
             auto pTile = layer->getTileAt(Point(tiledIndex.x, tiledIndex.y));
             if (pTile) {
                 MapIndex tileMapIndex = mapIndexToTileIndex(layer->getProperty("x").asInt(), layer->getProperty("y").asInt());
-                // TODO: メタデータでyが上から設定されているので逆転している あとindexなので1足してる
+                // メタデータでyが上から設定されているので逆転している あとindexなので1足してる
                 tileMapIndex.y = tileMapIndex.y - layer->getProperty("height").asInt() + 1;
                 Point floorMaskPoint = indexToPoint(tileMapIndex);
                 Size floorMaskSize = Size(layer->getProperty("width").asInt() * this->getTileSize().width, layer->getProperty("height").asInt() * this->getTileSize().height);
@@ -573,8 +549,7 @@ void RogueTMXTiledMap::hideFloorLighting() {
     }
 }
 
-Rect RogueTMXTiledMap::createPlayerRect(const MapIndex& actor_map_index, int rectSize)
-{
+Rect RogueTMXTiledMap::createPlayerRect(const MapIndex& actor_map_index, int rectSize) {
     MapIndex actorRectMinMapIndex = {
         actor_map_index.x - rectSize,
         actor_map_index.y - rectSize,
@@ -587,24 +562,21 @@ Rect RogueTMXTiledMap::createPlayerRect(const MapIndex& actor_map_index, int rec
                 this->getTileSize().width * (rectSize * 2 + 1));
 }
 
-void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect)
-{
+void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect) {
+    
     MapIndex minMapIndex = pointToIndex(Point(floorInfoIndexRect.getMinX() + this->getTileSize().width / 2, floorInfoIndexRect.getMinY() + this->getTileSize().height / 2));
     MapIndex maxMapIndex = pointToIndex(Point(floorInfoIndexRect.getMaxX() + this->getTileSize().width / 2, floorInfoIndexRect.getMaxY()+ this->getTileSize().height / 2));
     
     auto pBatchNode = getGridSpriteBatchNode();
     auto mappingData = MapManager::getInstance()->getMappingData();
-    for (int x = minMapIndex.x; x < maxMapIndex.x; x++)
-    {
-        for (int y = minMapIndex.y; y < maxMapIndex.y; y++)
-        {
+    for (int x = minMapIndex.x; x < maxMapIndex.x; x++) {
+        for (int y = minMapIndex.y; y < maxMapIndex.y; y++) {
             MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
             auto tileMapIndex = mapIndexToTileIndex(mapIndex);
             // TODO: タグが強引すぎる・・・
             int tag = 10000 * tileMapIndex.x + 100 * tileMapIndex.y;
             auto pNode = pBatchNode->getChildByTag(tag);
-            if (pNode)
-            {
+            if (pNode) {
                 MapManager::getInstance()->addMapping(tileMapIndex);
                 pNode->setVisible(true);
             }
@@ -619,18 +591,15 @@ MapIndex RogueTMXTiledMap::getRandomMapIndex(bool isColision, bool isActor) {
     MapIndex randMapIndex;
     int randX = 0;
     int randY = 0;
-    while (true)
-    {
+    while (true) {
         // 出現位置をランダムで決める
         randX = GetRandom(0, this->getMapSize().width-1); // x軸
         randY = GetRandom(0, this->getMapSize().height-1); // y軸
         randMapIndex = {randX, randY, MoveDirectionType::MOVE_NONE};
         
         // 壁以外
-        if (!isColision)
-        {
-            if (isTiledMapColisionLayer(randMapIndex))
-            {
+        if (!isColision) {
+            if (isTiledMapColisionLayer(randMapIndex)) {
                 // リトライ
                 continue;
             }
@@ -639,20 +608,15 @@ MapIndex RogueTMXTiledMap::getRandomMapIndex(bool isColision, bool isActor) {
         // マップ上を確認
         auto randTargetMapItem = MapManager::getInstance()->getMapItem(&randMapIndex);
         
-        if (isActor)
-        {
+        if (isActor) {
             // アイテムの上もOK
-            if (randTargetMapItem->mapDataType == MapDataType::NONE || randTargetMapItem->mapDataType == MapDataType::MAP_ITEM)
-            {
+            if (randTargetMapItem->mapDataType == MapDataType::NONE || randTargetMapItem->mapDataType == MapDataType::MAP_ITEM) {
                 // OK
                 break;
             }
-        }
-        else
-        {
+        } else {
             // NONEのみ
-            if (randTargetMapItem->mapDataType == MapDataType::NONE)
-            {
+            if (randTargetMapItem->mapDataType == MapDataType::NONE) {
                 // OK
                 break;
             }
@@ -684,8 +648,7 @@ bool RogueTMXTiledMap::isMapLayerOver(MapIndex touchPointMapIndex) {
     return false;
 }
 
-DrawNode* RogueTMXTiledMap::createGridDraw()
-{
+DrawNode* RogueTMXTiledMap::createGridDraw() {
     auto draw = DrawNode::create();
     draw->setPosition(Point::ZERO);
     
