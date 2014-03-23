@@ -21,6 +21,7 @@
 #include "MUseItemDao.h"
 #include "MAccessoryDao.h"
 #include "MMonster.h"
+#include "MPlayer.h"
 
 #include "AccountData.h"
 
@@ -42,7 +43,8 @@ RogueScene::RogueScene()
     CCLOG("new rogueScene");
 }
 
-RogueScene::~RogueScene() {
+RogueScene::~RogueScene()
+{
     CCLOG("death rogueScene");
 }
 
@@ -82,31 +84,9 @@ bool RogueScene::initWithQuestId(int quest_id) {
     if (AccountData::getInstance()->rogue_play_data_.quest_id != quest_id) {
         AccountData::getInstance()->reset();
         rogue_play_data_.quest_id = quest_id;
-        
-        actor_dto.name = "ジニー";
-        actor_dto.faceImgId = 0;
-        actor_dto.imageResId = 1015;
-        // 基本
-        actor_dto.attackRange = 1;
-        actor_dto.movePoint = 5;
-        actor_dto.playerId = 4; // actorId
-        // 攻守
-        actor_dto.attackPoint = 5;
-        actor_dto.defencePoint = 1;
-        // 経験値
-        actor_dto.exp = 0;
-        actor_dto.nextExp = 10;
-        // HP
-        actor_dto.hitPoint = 15;
-        actor_dto.hitPointLimit = 15;
-        actor_dto.lv = 1;
-        // 満腹度？精神力？
-        actor_dto.magicPoint = 100;
-        actor_dto.magicPointLimit = 100;
-        // 装備
+        // デフォルトステータス
+        actor_dto = ActorSprite::createActorDto(m_player::data_.at("1").asString());
         actor_dto.equip = ActorSprite::createEquipDto();
-        // お金
-        actor_dto.gold = 0;
     } else {
         // ロード処理
         rogue_play_data_ = AccountData::getInstance()->rogue_play_data_;
@@ -1343,20 +1323,17 @@ void RogueScene::hidePlayerLighting() {
 #pragma mark
 #pragma mark 汎用
 
-ActorSprite* RogueScene::getPlayerActorSprite(int seqNo)
-{
+ActorSprite* RogueScene::getPlayerActorSprite(int seqNo) {
     return static_cast<ActorSprite*>(getChildByTag(RogueScene::ActorPlayerTag + seqNo));
 }
 
-ItemWindowLayer* RogueScene::getItemWindowLayer()
-{
+ItemWindowLayer* RogueScene::getItemWindowLayer() {
     auto pModalLayer = getModalLayer();
     return static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(RogueScene::ItemListWindowTag));
 }
 
 // TODO: (kyokomi)これイマイチ。ItemWindowとCommonWindowで共用しちゃってる
-ModalLayer* RogueScene::getModalLayer()
-{
+ModalLayer* RogueScene::getModalLayer() {
     // モーダルレイヤー作成
     auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::ModalLayerTag));
     if (pModalLayer) {
