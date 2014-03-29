@@ -11,10 +11,8 @@
 // シングルトン
 static MLevelDao *s_m_level_dao_instance = nullptr;
 
-MLevelDao* MLevelDao::getInstance()
-{
-    if (!s_m_level_dao_instance)
-    {
+MLevelDao* MLevelDao::getInstance() {
+    if (!s_m_level_dao_instance) {
         s_m_level_dao_instance = new MLevelDao();
         s_m_level_dao_instance->init();
     }
@@ -22,33 +20,31 @@ MLevelDao* MLevelDao::getInstance()
     return s_m_level_dao_instance;
 }
 
-void MLevelDao::init()
-{
+void MLevelDao::init() {
     // TODO: とりあえず手動でマスタ作成
-    for (int i = 0; i < 50; i++)
-    {
+    for (int i = 0; i < 50; i++) {
         // level 1毎に10exp必要 level1上がる毎にHpが3 * level数上がる
         MLevel level = MLevel(i + 1, 10 * i, 3 * (i));
         m_levelList.push_back(level);
     }
 }
 
-bool MLevelDao::checkLevelUp(int lv, int exp)
-{
+bool MLevelDao::checkLevelUp(int lv, int exp) {
     auto mLevel = selectById(lv + 1);
-    if (exp >= mLevel.getExp())
-    {
+    if (mLevel.getLevelId() == lv) {
+        // カンスト
+        return false;
+    }
+    
+    if (exp >= mLevel.getExp()) {
         return true;
     }
     return false;
 }
 
-const MLevel MLevelDao::selectById(int lv)
-{
-    for (MLevel mLevel : m_levelList)
-    {
-        if (mLevel.getLevelId() == lv)
-        {
+const MLevel MLevelDao::selectById(int lv) {
+    for (MLevel mLevel : m_levelList) {
+        if (mLevel.getLevelId() == lv) {
             return mLevel;
         }
     }
