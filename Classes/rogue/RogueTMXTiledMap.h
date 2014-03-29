@@ -79,6 +79,7 @@ public:
     void showFloorLighting(const MapIndex& actor_map_index, const Rect floorInfoIndexRect);
     void hideFloorLighting();
     
+    MapIndex getFloorRandomMapIndex(bool isActor);
     MapIndex getRandomMapIndex(bool isColision, bool isActor);
     bool isTiledMapColisionLayer(MapIndex touchPointMapIndex);
     bool isMapLayerOver(MapIndex touchPointMapIndex);
@@ -114,6 +115,8 @@ private:
     // 照明
     void showPlayerLighting(ActorSprite* actor_sprite);
     void hidePlayerLighting();
+    
+    MapIndex getRandomMapIndex(bool isColision, bool isActor, bool isFloor);
     
     void tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRefresh);
     

@@ -94,8 +94,8 @@ void RogueTMXTiledMap::initRogue() {
 
     // ----------------
     // 階段
-    
-    MapIndex kaidanIndex = getRandomMapIndex(false, false);
+    // ----------------
+    MapIndex kaidanIndex = getFloorRandomMapIndex(false);
     auto pKaidanSprite = Sprite::create("kaidan.png");
     pKaidanSprite->setPosition(indexToPoint(kaidanIndex));
     pKaidanSprite->setVisible(false);
@@ -587,7 +587,18 @@ void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect) {
 #pragma mark
 #pragma mark その他
 
+// getRandomMapIndexでさらに部屋だけが対象のランダムmapIndex取得
+MapIndex RogueTMXTiledMap::getFloorRandomMapIndex(bool isActor) {
+    return getRandomMapIndex(true, isActor, true);
+}
+
+// 壁とか障害物を避けてランダムなmapIndexを取得
 MapIndex RogueTMXTiledMap::getRandomMapIndex(bool isColision, bool isActor) {
+    return getRandomMapIndex(isColision, isActor, false);
+}
+
+// private
+MapIndex RogueTMXTiledMap::getRandomMapIndex(bool isColision, bool isActor, bool isFloor) {
     MapIndex randMapIndex;
     int randX = 0;
     int randY = 0;
@@ -607,6 +618,15 @@ MapIndex RogueTMXTiledMap::getRandomMapIndex(bool isColision, bool isActor) {
         
         // マップ上を確認
         auto randTargetMapItem = MapManager::getInstance()->getMapItem(&randMapIndex);
+        
+        // 部屋単位
+        if (isFloor) {
+            auto rect = getTileMapFloorInfo(randMapIndex);
+            if (Rect::ZERO.equals(rect)) {
+                // とれなかったらリトライ
+                continue;
+            }
+        }
         
         if (isActor) {
             // アイテムの上もOK

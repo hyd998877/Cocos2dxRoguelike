@@ -130,7 +130,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ゲームログ表示
     //-------------------------
     auto pGameLogLayer = LayerColor::create(Color4B(0, 0, 0, 192));
-    pGameLogLayer->setContentSize(Size(win_size.width * 0.5, win_size.height / 5));
+    pGameLogLayer->setContentSize(Size(win_size.width * 0.5, win_size.height * 0.2));
     pGameLogLayer->setPosition(win_size.width / 2 - pGameLogLayer->getContentSize().width / 2, 0);
     
     CommonWindowUtil::attachWindowWaku(pGameLogLayer);
@@ -185,13 +185,13 @@ bool RogueScene::initWithQuestId(int quest_id) {
     ActorSprite::ActorDto enemy_dto3 = ActorSprite::createActorDto(m_monster::data_.at("3").asString());
     enemy_dto3.equip = ActorSprite::createEquipDto();
     
-    MapIndex enemyMapIndex1 = tiled_map_layer->getRandomMapIndex(false, true);
+    MapIndex enemyMapIndex1 = tiled_map_layer->getFloorRandomMapIndex(true);
     tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto1, enemyMapIndex1);
     
-    MapIndex enemyMapIndex2 = tiled_map_layer->getRandomMapIndex(false, true);
+    MapIndex enemyMapIndex2 = tiled_map_layer->getFloorRandomMapIndex(true);
     tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto2, enemyMapIndex2);
     
-    MapIndex enemyMapIndex3 = tiled_map_layer->getRandomMapIndex(false, true);
+    MapIndex enemyMapIndex3 = tiled_map_layer->getFloorRandomMapIndex(true);
     tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto3, enemyMapIndex3);
     
     //-------------------------
@@ -212,7 +212,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         dropItemDto.name = mUseItem.getUseItemName();
         dropItemDto.isEquip = false;
         
-        MapIndex mapIndex = tiled_map_layer->getRandomMapIndex(false, false);
+        MapIndex mapIndex = tiled_map_layer->getFloorRandomMapIndex(false);
         tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
 
         object_count++;
@@ -228,7 +228,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         dropItemDto3.name = mWeapon.getWeaponName();
         dropItemDto3.isEquip = false;
         
-        MapIndex mapIndex3 = tiled_map_layer->getRandomMapIndex(false, false);;
+        MapIndex mapIndex3 = tiled_map_layer->getFloorRandomMapIndex(false);
         tiled_map_layer->tileSetDropMapItem(dropItemDto3, mapIndex3);
         
         object_count++;
@@ -244,7 +244,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         dropItemDto4.name = mAccessory.getAccessoryName();
         dropItemDto4.isEquip = false;
         
-        MapIndex mapIndex4 = tiled_map_layer->getRandomMapIndex(false, false);;
+        MapIndex mapIndex4 = tiled_map_layer->getFloorRandomMapIndex(false);
         tiled_map_layer->tileSetDropMapItem(dropItemDto4, mapIndex4);
         
         object_count++;
@@ -563,7 +563,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
         // ランダムなタイミングでランダムに湧く
         int rand = GetRandom(1, 10); // 1%
         if (rand == 1) {
-            MapIndex rePopIndex = rogue_map_layer->getRandomMapIndex(false, true);
+            MapIndex rePopIndex = rogue_map_layer->getFloorRandomMapIndex(true);
             // 敵データ作成
             int enemy_rand_id = GetRandom(1, 8);
             ActorSprite::ActorDto enemyDto = ActorSprite::createActorDto(m_monster::data_.at(StringUtils::format("%d", enemy_rand_id)).asString());
