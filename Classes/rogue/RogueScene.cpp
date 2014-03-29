@@ -157,7 +157,6 @@ bool RogueScene::initWithQuestId(int quest_id) {
     hideItemList();
     // アイテム引き継ぎ
     getItemWindowLayer()->setItemList(AccountData::getInstance()->item_list_);
-    getItemWindowLayer()->sortItemList();
     
     // ---------------------
     // プレイヤー生成
