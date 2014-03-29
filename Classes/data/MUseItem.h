@@ -26,6 +26,7 @@ public:
         NONE               = 0,
         EQUIP_WEAPON       = 1,
         EQUIP_ACCESSORY    = 2,
+        GOLD               = 10,
         HP_RECOVER_VALUE   = 100,
         HP_RECOVER_PERCENT = 101,
         MP_RECOVER_VALUE   = 200,

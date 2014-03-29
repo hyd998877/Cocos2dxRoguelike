@@ -202,7 +202,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         object_count = 0;
     }
     // TODO: (kyokomi) とりあえずアイテムとか武器はテストのため全種類配置してる
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 7; i++) {
         MUseItem mUseItem = MUseItemDao::getInstance()->selectById(i + 1);
         DropItemSprite::DropItemDto dropItemDto;
         dropItemDto.objectId = object_count + i + 1; // 単純に連番でいい
@@ -814,26 +814,45 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
             if (touch_point_map_item->mapDataType == MapDataType::MAP_ITEM) {
 
                 // itemを取得
-                auto pDropMapItem = static_cast<DropMapItem*>(touch_point_map_item);
-                auto pDropItemSprite = rogue_map_layer->getDropItemSprite(pDropMapItem->seqNo);
-                auto pDropItemDto = pDropItemSprite->getDropItemDto();
+                auto drop_map_item = static_cast<DropMapItem*>(touch_point_map_item);
+                auto drop_item_sprite = rogue_map_layer->getDropItemSprite(drop_map_item->seqNo);
+                auto drop_item_dto = drop_item_sprite->getDropItemDto();
                 
-                if (getItemWindowLayer()->getItemList().size() < USE_ITEM_MAX) {
-                    // ドロップアイテムを拾う
-                    
-                    // TODO: 拾うSE再生
+                // ゴールドは別扱い
+                if (drop_item_dto->itemType == MUseItem::ItemType::GOLD) {
+
+                    // ゴールド値を乱数で決める
+                    // TODO: 乱数の範囲はフロア情報で管理する
+                    int gold = GetRandom(10, 999);
                     
                     // メッセージログ
-                    logMessage("%sを拾った。", pDropItemDto->name.c_str());
-                    
-                    // イベントリに追加する
-                    getItemWindowLayer()->addItemList(*pDropItemDto);
+                    logMessage("%d%sを拾った。", gold, drop_item_dto->name.c_str());
+                    // ゴールドを加算
+                    actor_sprite->getActorDto()->gold += gold;
                     
                     // Map上から削除する
-                    rogue_map_layer->removeDropItemSprite(pDropItemSprite);
+                    rogue_map_layer->removeDropItemSprite(drop_item_sprite);
+                    
                 } else {
-                    // アイテム所持数限界
-                    logMessage("持ち物が一杯で、\n%sを拾えなかった。", pDropItemDto->name.c_str());
+                    // ゴールド以外はインベントリへ
+                    
+                    if (getItemWindowLayer()->getItemList().size() < USE_ITEM_MAX) {
+                        // ドロップアイテムを拾う
+                        
+                        // TODO: 拾うSE再生
+                        
+                        // メッセージログ
+                        logMessage("%sを拾った。", drop_item_dto->name.c_str());
+                        
+                        // イベントリに追加する
+                        getItemWindowLayer()->addItemList(*drop_item_dto);
+                        
+                        // Map上から削除する
+                        rogue_map_layer->removeDropItemSprite(drop_item_sprite);
+                    } else {
+                        // アイテム所持数限界
+                        logMessage("持ち物が一杯で、\n%sを拾えなかった。", drop_item_dto->name.c_str());
+                    }
                 }
                 
             } else if (touch_point_map_item->mapDataType == MapDataType::KAIDAN) {
