@@ -13,7 +13,7 @@
 
 class LabelSprite : public cocos2d::Sprite
 {
-    cocos2d::LabelTTF* m_pLabel;
+    cocos2d::Label* m_pLabel;
 public:
     LabelSprite();
     

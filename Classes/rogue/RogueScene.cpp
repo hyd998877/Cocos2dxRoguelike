@@ -119,7 +119,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     statusLayer->setPosition(Point(0, win_size.height - statusLayer->getContentSize().height));
     
     // 更新する
-    auto sampleText = LabelTTF::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(32), GAME_FONT_SIZE(32));
+    auto sampleText = Label::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(32), GAME_FONT_SIZE(32));
     
     sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
     statusLayer->addChild(sampleText);
@@ -136,7 +136,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     CommonWindowUtil::attachWindowWaku(pGameLogLayer);
     
     int baseFontSize = 20;
-    auto pLogTextLabel = LabelTTF::create("", GAME_FONT(baseFontSize), GAME_FONT_SIZE(baseFontSize), Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
+    auto pLogTextLabel = Label::create("", GAME_FONT(baseFontSize), GAME_FONT_SIZE(baseFontSize), Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
     pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getFontSize() / 4));
     pGameLogLayer->addChild(pLogTextLabel);
     
@@ -433,7 +433,7 @@ ModalLayer* RogueScene::createFloorTitleCutInLayer(int quest_id) {
     // テキスト中央
     // TODO: (kyokomi) タイトルはdaoからとってくる予定
     auto floor_title_text = StringUtils::format("初心者の洞窟 %d層", quest_id);
-    auto floor_title_text_label = LabelTTF::create(floor_title_text, GAME_FONT(floor_title_font_size), GAME_FONT_SIZE(floor_title_font_size));
+    auto floor_title_text_label = Label::create(floor_title_text, GAME_FONT(floor_title_font_size), GAME_FONT_SIZE(floor_title_font_size));
     floor_title_text_label->setPosition(Point(floor_title_cutin_layer->getContentSize().width / 2, floor_title_cutin_layer->getContentSize().height / 2));
     floor_title_cutin_layer->addChild(floor_title_text_label);
 
@@ -994,7 +994,7 @@ void RogueScene::logMessage(const char * pszFormat, ...) {
     }
     
     // TODO: 1子しかaddしてないから動く。ちゃんとしないと・・・
-    auto pGameLogText = static_cast<LabelTTF*>(pGameLogNode->getChildren().at(1));
+    auto pGameLogText = static_cast<Label*>(pGameLogNode->getChildren().at(1));
     if (pGameLogText) {
         // TODO: 別クラスにしてログをlistで保持する。デフォルトの表示は1件だけで、center寄せ表示でいいかと
         auto pMessage = String::create(buf);
@@ -1148,7 +1148,7 @@ void RogueScene::showItemList() {
         const int font_size = 20;
         
         // 並び替えボタン
-        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("並び替え", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this, item_window_layer](Ref* ref) {
+        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::create("並び替え", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this, item_window_layer](Ref* ref) {
             // 並び替え
             item_window_layer->sortItemList();
             item_window_layer->reloadItemList();
@@ -1156,7 +1156,7 @@ void RogueScene::showItemList() {
         sort_menu_item_label->setPosition(Point(item_window_layer->getContentSize().width, item_window_layer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
         
         // 閉じるボタン
-        auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("とじる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this](Ref* ref) {
+        auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::create("とじる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this](Ref* ref) {
             // 閉じる
             this->hideItemList();
         });
@@ -1239,7 +1239,7 @@ void RogueScene::refreshStatus() {
         // 作成
         auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G", floor, pPlayerDto->lv, pPlayerDto->hitPoint, pPlayerDto->hitPointLimit, pPlayerDto->magicPoint, pPlayerDto->magicPointLimit, pPlayerDto->gold);
         
-        auto pLabelText = static_cast<LabelTTF*>(pStatusText);
+        auto pLabelText = static_cast<Label*>(pStatusText);
         pLabelText->setString(pStr->getCString());
         pLabelText->setPositionX(pLabelText->getContentSize().width / 2);
         

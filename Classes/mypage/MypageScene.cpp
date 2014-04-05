@@ -54,16 +54,21 @@ bool MypageScene::init()
     const int detail_font_size = 20;
     
     // タイトル表示
-    auto title_label = LabelTTF::create("すてーたす画面", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
+    auto title_layer = Layer::create();
+    title_layer->setContentSize(Size(win_size.width, win_size.height / 8));
+    title_layer->setPosition(Point(0, win_size.height - title_layer->getContentSize().height));
+    this->addChild(title_layer);
+    
+    auto title_label = Label::create("すてーたす画面", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
     title_label->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
     title_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
-    this->addChild(title_label);
+    title_label->setPosition(Point(title_layer->getContentSize().width /2, title_layer->getContentSize().height / 2));
+    title_layer->addChild(title_label);
+    
     // 枠
     auto window_waku = CommonWindowUtil::createWindowWaku(Size(win_size.width, title_label->getContentSize().height + title_label->getFontSize()));
-    window_waku->setPosition(title_label->getContentSize().width / 2, title_label->getContentSize().height / 2);
-    title_label->addChild(window_waku);
-    title_label->setPosition(Point(win_size.width / 2, win_size.height - window_waku->getContentSize().height / 2));
-
+    title_layer->addChild(window_waku);
+    
     // セリフ表示
     auto comment_layer = Layer::create();
     comment_layer->setContentSize(Size(win_size.width / 2, win_size.height / 3));
@@ -71,7 +76,7 @@ bool MypageScene::init()
     comment_layer->setTag(10); // TODO: とりあえず
     this->addChild(comment_layer);
     
-    auto comment_label = LabelTTF::create("ここにはお知らせとか表示する予定よ！\nまだ開発中です。", GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
+    auto comment_label = Label::create("ここにはお知らせとか表示する予定よ！\nまだ開発中です。", GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
     comment_label->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
     comment_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
     comment_label->setTag(100); // TODO: とりあえず
@@ -107,14 +112,14 @@ void MypageScene::initGlobalMenu()
     // メニュー
     const Size WAKU_PADDING = Size(8, 8);
     
-    auto item_menu1 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("すてーたす", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
-        auto comment_label = dynamic_cast<LabelTTF*>(this->getChildByTag(10)->getChildByTag(100));
+    auto item_menu1 = CommonWindowUtil::createMenuItemLabelWaku(Label::create("すてーたす", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
+        auto comment_label = dynamic_cast<Label*>(this->getChildByTag(10)->getChildByTag(100));
         
         comment_label->setString("この画面は、ユーザー自身のステータスを\n表示する予定です。");
     });
     item_menu1->setColor(Color3B::GREEN);
     
-    auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("くえ　すと", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(Label::create("くえ　すと", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         
         CCLOG("tappedMenuItem3");
         
@@ -139,15 +144,15 @@ void MypageScene::initGlobalMenu()
         }
     });
     
-    auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("そ　う　こ", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
-        auto comment_label = dynamic_cast<LabelTTF*>(this->getChildByTag(10)->getChildByTag(100));
+    auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(Label::create("そ　う　こ", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
+        auto comment_label = dynamic_cast<Label*>(this->getChildByTag(10)->getChildByTag(100));
         
         comment_label->setString("まだ未実装です！");
         
         AccountData::getInstance()->reset();
     });
     
-    auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("の　べ　る", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(Label::create("の　べ　る", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         
         Scene* scene = NovelScene::scene(1, 0, [this]() {
             CCLOG("novel end");
@@ -159,14 +164,14 @@ void MypageScene::initGlobalMenu()
         Director::getInstance()->replaceScene(trans);
     });
     
-    auto item_menu5 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("ば　と　る", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu5 = CommonWindowUtil::createMenuItemLabelWaku(Label::create("ば　と　る", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         
         Scene* scene = BattleScene::scene();
         TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
         Director::getInstance()->replaceScene(trans);
     });
     
-    auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("て　す　と", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(Label::create("て　す　と", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref * pSeneder) {
         
         Scene* scene = SRPGScene::scene();
         TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);

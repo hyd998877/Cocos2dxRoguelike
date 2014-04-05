@@ -108,7 +108,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) 
         cell = new TableViewCell();
         cell->autorelease();
         
-        LayerColor* text_layer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), content_size.width * 0.9, content_size.height / TableViewTestLayer::LIST_SIZE * 0.9);
+        auto text_layer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), content_size.width * 0.9, content_size.height / TableViewTestLayer::LIST_SIZE * 0.9);
         text_layer->setPosition(content_size.width * 0.05, content_size.height / TableViewTestLayer::LIST_SIZE * 0.05);
         text_layer->setTag(TableViewTestLayer::ItemLayerTag);
         
@@ -117,7 +117,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) 
         item_image_sprite->setPosition(Point(item_image_sprite->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         text_layer->addChild(item_image_sprite);
         
-        LabelTTF* text_label = LabelTTF::create(table_item.labelText, GAME_FONT(kDetailFontSize), GAME_FONT_SIZE(kDetailFontSize));
+        auto text_label = Label::create(table_item.labelText, GAME_FONT(kDetailFontSize), GAME_FONT_SIZE(kDetailFontSize));
         text_label->setColor(table_item.textColor);
         text_label->setPosition(Point(text_label->getFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         text_label->setTag(TableViewTestLayer::ItemTextLabelTag);
@@ -133,7 +133,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) 
         item_image_sprite->setSpriteFrame(sprite_frame);
         item_image_sprite->setPosition(Point(item_image_sprite->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         
-        auto text_label = static_cast<LabelTTF*>(text_layer->getChildByTag(TableViewTestLayer::ItemTextLabelTag));
+        auto text_label = static_cast<Label*>(text_layer->getChildByTag(TableViewTestLayer::ItemTextLabelTag));
         text_label->setString(table_item.labelText);
         text_label->setPosition(Point(text_label->getFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         text_label->setColor(table_item.textColor);

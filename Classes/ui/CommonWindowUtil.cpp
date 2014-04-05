@@ -9,7 +9,7 @@
 #include "CommonWindowUtil.h"
 
 
-cocos2d::MenuItemLabel* CommonWindowUtil::createMenuItemLabelWaku(cocos2d::LabelTTF* pLabel, cocos2d::Size wakuPadding, const cocos2d::ccMenuCallback& callback)
+cocos2d::MenuItemLabel* CommonWindowUtil::createMenuItemLabelWaku(cocos2d::Label* pLabel, cocos2d::Size wakuPadding, const cocos2d::ccMenuCallback& callback)
 {
     if (pLabel)
     {

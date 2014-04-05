@@ -103,7 +103,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     const int title_font_size = 32;
     const int detail_font_size = 20;
     // アイテム名
-    auto pItemNameTitleLabel = LabelTTF::create("なまえ", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
+    auto pItemNameTitleLabel = Label::create("なまえ", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
     pItemNameTitleLabel->setColor(Color3B::WHITE);
     pItemNameTitleLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     pItemNameTitleLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
@@ -112,7 +112,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
                                            pItemDetailLayer->getContentSize().height - pItemNameTitleLabel->getContentSize().height / 2 - pItemNameTitleLabel->getFontSize() / 2));
     pItemDetailLayer->addChild(pItemNameTitleLabel);
     
-    auto pItemNameLabel = LabelTTF::create(ITEM_LAYER_NAME_DEFAULT, GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
+    auto pItemNameLabel = Label::create(ITEM_LAYER_NAME_DEFAULT, GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
     pItemNameLabel->setColor(Color3B::WHITE);
     pItemNameLabel->setPosition(Point(
                                       pItemDetailLayer->getContentSize().width * 0.5,
@@ -121,7 +121,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     pItemDetailLayer->addChild(pItemNameLabel);
     
     // アイテム説明
-    auto pItemDetailTitleLabel = LabelTTF::create("せつめい", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
+    auto pItemDetailTitleLabel = Label::create("せつめい", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
     pItemDetailTitleLabel->setColor(Color3B::WHITE);
     pItemDetailTitleLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     pItemDetailTitleLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
@@ -130,7 +130,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
                                              pItemDetailLayer->getContentSize().height / 2 - pItemDetailTitleLabel->getContentSize().height / 2 - pItemDetailTitleLabel->getFontSize() / 2));
     pItemDetailLayer->addChild(pItemDetailTitleLabel);
     
-    auto pItemDetailLabel = LabelTTF::create(ITEM_LAYER_DETAIL_DEFAULT, GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
+    auto pItemDetailLabel = Label::create(ITEM_LAYER_DETAIL_DEFAULT, GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
     pItemDetailLabel->setColor(Color3B::WHITE);
     pItemDetailLabel->setPosition(Point(
                                         pItemDetailLayer->getContentSize().width * 0.5,
@@ -150,7 +150,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     this->addChild(pItemDetailLayer);
     
     // アイテム個数
-    auto item_count_label = LabelTTF::create(StringUtils::format("%d/%d", 0, USE_ITEM_MAX), GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
+    auto item_count_label = Label::create(StringUtils::format("%d/%d", 0, USE_ITEM_MAX), GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
     item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
     item_count_label->setTag(ItemWindowLayer::ItemCountLabelTag);
     this->addChild(item_count_label);
@@ -167,7 +167,7 @@ Menu* ItemWindowLayer::initCreateMenu() {
     const Size WAKU_PADDING = Size(8, 4);
     
     // 捨てるボタン
-    auto pMenuItemDrop = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("すてる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
+    auto pMenuItemDrop = CommonWindowUtil::createMenuItemLabelWaku(Label::create("すてる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
         
         // hoge
         CCLOG("item drop menu pressed");
@@ -188,7 +188,7 @@ Menu* ItemWindowLayer::initCreateMenu() {
     pMenuItemDrop->setTag(ItemWindowLayer::ItemDetailMenuDropTag);
     
     // 使用ボタン
-    auto pMenuItemUse = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("つかう", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
+    auto pMenuItemUse = CommonWindowUtil::createMenuItemLabelWaku(Label::create("つかう", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
         
         // hoge
         CCLOG("item use menu pressed");
@@ -208,7 +208,7 @@ Menu* ItemWindowLayer::initCreateMenu() {
     pMenuItemUse->setTag(ItemWindowLayer::ItemDetailMenuUseTag);
     
     // 装備（する/はずす）ボタン
-    auto pMenuItemEquip = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create("そうび", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
+    auto pMenuItemEquip = CommonWindowUtil::createMenuItemLabelWaku(Label::create("そうび", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
         
         CCLOG("item equip menu pressed");
         if (show_item_detail_idx_ < 0) {
@@ -284,7 +284,7 @@ void ItemWindowLayer::reloadItemList() {
         }
         pItemTabelLayer->makeItemList(itemNameList);
         
-        auto item_count_label = static_cast<LabelTTF*>(this->getChildByTag(ItemWindowLayer::ItemCountLabelTag));
+        auto item_count_label = static_cast<Label*>(this->getChildByTag(ItemWindowLayer::ItemCountLabelTag));
         if (item_count_label) {
             item_count_label->setString(StringUtils::format("所持数 %d/%d", (int)item_dto_list_.size(), USE_ITEM_MAX));
             item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
@@ -319,7 +319,7 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
     auto pItemDetailLayer = this->getChildByTag(ItemWindowLayer::ItemDetailLayerTag);
     if (pItemDetailLayer) {
         // name
-        auto pItemNameLabel = static_cast<LabelTTF*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemNameTag));
+        auto pItemNameLabel = static_cast<Label*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemNameTag));
         if (pItemNameLabel) {
             if (pDropItemDto->name.empty()) {
                 pItemNameLabel->setString(ITEM_LAYER_NAME_DEFAULT);
@@ -334,7 +334,7 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
         }
         
         // detail
-        auto pItemDetailLabel = static_cast<LabelTTF*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemDetailTag));
+        auto pItemDetailLabel = static_cast<Label*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemDetailTag));
         if (pItemDetailLabel) {
             if (pDropItemDto->name.empty()) {
                 pItemDetailLabel->setString(ITEM_LAYER_DETAIL_DEFAULT);

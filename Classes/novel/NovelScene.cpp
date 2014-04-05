@@ -134,7 +134,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     CCLOG("init %s", string.c_str());
     
     // 本文テキスト
-    LabelTTF* textLabel = LabelTTF::create("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
+    auto textLabel = Label::create("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
     textLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     textLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
     
@@ -150,7 +150,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     nameTextLayer->setPosition(Point(textLayer->getPositionX(), textLayer->getPositionY() + textLayer->getContentSize().height + nameTextLayer->getContentSize().height * 0.05));
     this->addChild(nameTextLayer, kZOrder_TextLayer, kTag_TextLayer_name);
     // 名前テキスト
-    LabelTTF* nameTextLabel = LabelTTF::create("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
+    auto nameTextLabel = Label::create("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
     nameTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     nameTextLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
 //    nameTextLabel->setColor(Color3B::GREEN);
@@ -162,7 +162,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     // -----------------------------
     // ログ表示用ボタン配置
     // TODO: ログ機能はとりあえず外しました
-//    LabelTTF* logButtonLabel = LabelTTF::create("Log", GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
+//    Label* logButtonLabel = Label::create("Log", GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
 //    MenuItemLabel* logButtonMenuItem = MenuItemLabel::create(logButtonLabel, [this](Ref *pSender) {
 //        this->logMenuSelectCallback(pSender);
 //    });
@@ -220,7 +220,7 @@ void NovelScene::dispText(string text)
     if (pTextLayer)
     {
         // テキストをすすめる
-        LabelTTF* pTextLabel = (LabelTTF*) pTextLayer->getChildByTag(kTag_TextLayer_textLabel);
+        auto pTextLabel = dynamic_cast<Label*>(pTextLayer->getChildByTag(kTag_TextLayer_textLabel));
         pTextLabel->setString(text.c_str());
         pTextLabel->setPosition(Point(pTextLabel->getFontSize() / 2 + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height - pTextLabel->getContentSize().height / 2 - pTextLabel->getFontSize() / 2));
     }
@@ -232,7 +232,7 @@ void NovelScene::dispName(string name)
     if (pLayer)
     {
         // テキストをすすめる
-        LabelTTF* nameTextLabel = (LabelTTF*) pLayer->getChildByTag(kTag_TextLayer_nameTextLabel);
+        auto nameTextLabel = dynamic_cast<Label*>(pLayer->getChildByTag(kTag_TextLayer_nameTextLabel));
         nameTextLabel->setString(name.c_str());
         nameTextLabel->setPosition(Point(nameTextLabel->getFontSize() / 2 + nameTextLabel->getContentSize().width / 2, pLayer->getContentSize().height / 2));
     }
