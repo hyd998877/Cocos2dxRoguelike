@@ -72,6 +72,7 @@
 		CE81F79618940AA900A8162B /* kaidan.png in Resources */ = {isa = PBXBuildFile; fileRef = CE81F79518940AA900A8162B /* kaidan.png */; };
 		CE890F1B18B0E26A0088A9BC /* MUseItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE890F1918B0E26A0088A9BC /* MUseItem.cpp */; };
 		CE890F2718B0E2A60088A9BC /* MAccessory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE890F2518B0E2A60088A9BC /* MAccessory.cpp */; };
+		CE8D50EC18EB66710078046F /* Joystick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE8D50EA18EB66710078046F /* Joystick.cpp */; };
 		CE9297C0188BCC9700568EE1 /* MLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9297BE188BCC9700568EE1 /* MLevel.cpp */; };
 		CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */; };
 		CE93B444188156C700825FD1 /* AccountData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B412188156C700825FD1 /* AccountData.cpp */; };
@@ -317,6 +318,8 @@
 		CE890F1A18B0E26A0088A9BC /* MUseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItem.h; sourceTree = "<group>"; };
 		CE890F2518B0E2A60088A9BC /* MAccessory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessory.cpp; sourceTree = "<group>"; };
 		CE890F2618B0E2A60088A9BC /* MAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessory.h; sourceTree = "<group>"; };
+		CE8D50EA18EB66710078046F /* Joystick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Joystick.cpp; sourceTree = "<group>"; };
+		CE8D50EB18EB66710078046F /* Joystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Joystick.h; sourceTree = "<group>"; };
 		CE9297BE188BCC9700568EE1 /* MLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevel.cpp; sourceTree = "<group>"; };
 		CE9297BF188BCC9700568EE1 /* MLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevel.h; sourceTree = "<group>"; };
 		CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevelDao.cpp; sourceTree = "<group>"; };
@@ -753,6 +756,8 @@
 				CE93B43A188156C700825FD1 /* table */,
 				CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */,
 				CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */,
+				CE8D50EA18EB66710078046F /* Joystick.cpp */,
+				CE8D50EB18EB66710078046F /* Joystick.h */,
 			);
 			name = ui;
 			path = ../Classes/ui;
@@ -1010,6 +1015,7 @@
 				CE93B449188156C700825FD1 /* MapManager.cpp in Sources */,
 				CE93B447188156C700825FD1 /* BattleLogic.cpp in Sources */,
 				CE93B44C188156C700825FD1 /* RogueScene.cpp in Sources */,
+				CE8D50EC18EB66710078046F /* Joystick.cpp in Sources */,
 				CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */,
 				CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */,
 				CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */,

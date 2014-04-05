@@ -17,7 +17,6 @@
 
 #include "AccountData.h"
 
-
 MypageScene::MypageScene()
 {
 }
