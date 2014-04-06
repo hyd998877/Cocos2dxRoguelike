@@ -405,11 +405,13 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
                 
                 // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので
                 CCLOG("begore setString %f %f", pMenuEquip->getPosition().x, pMenuEquip->getPosition().y);
+                Size beforeSize = pMenuEquip->getContentSize();
                 if (pDropItemDto->isEquip) {
-                    dynamic_cast<LabelProtocol*>(pMenuEquip->getLabel())->setString("はずす");
+                    pMenuEquip->setString("はずす");
                 } else {
-                    dynamic_cast<LabelProtocol*>(pMenuEquip->getLabel())->setString("そうび");
+                    pMenuEquip->setString("そうび");
                 }
+                pMenuEquip->setContentSize(beforeSize);
                 CCLOG("after setString %f %f", pMenuEquip->getPosition().x, pMenuEquip->getPosition().y);
             } else {
                 pMenuUse->setEnabled(true);pMenuUse->setVisible(true);
