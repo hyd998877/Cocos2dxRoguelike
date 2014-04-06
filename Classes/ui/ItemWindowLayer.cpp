@@ -389,7 +389,7 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
         if (pItemDetailMenu) {
             auto pMenuUse = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuUseTag));
             auto pMenuDrop = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuDropTag));
-            auto pMenuEquip = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuEquipTag));
+            auto pMenuEquip = static_cast<MenuItemLabel*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuEquipTag));
             
             // 未指定
             if (pDropItemDto->itemType == MUseItem::ItemType::NONE) {
@@ -402,6 +402,15 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
                 pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
                 pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
                 pMenuEquip->setEnabled(true);pMenuEquip->setVisible(true);
+                
+                // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので
+                CCLOG("begore setString %f %f", pMenuEquip->getPosition().x, pMenuEquip->getPosition().y);
+                if (pDropItemDto->isEquip) {
+                    dynamic_cast<LabelProtocol*>(pMenuEquip->getLabel())->setString("はずす");
+                } else {
+                    dynamic_cast<LabelProtocol*>(pMenuEquip->getLabel())->setString("そうび");
+                }
+                CCLOG("after setString %f %f", pMenuEquip->getPosition().x, pMenuEquip->getPosition().y);
             } else {
                 pMenuUse->setEnabled(true);pMenuUse->setVisible(true);
                 pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
