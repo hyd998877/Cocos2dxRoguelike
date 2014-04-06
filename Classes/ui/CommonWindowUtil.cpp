@@ -8,8 +8,10 @@
 
 #include "CommonWindowUtil.h"
 
+#pragma mark
+#pragma mark メニュー
 
-cocos2d::MenuItemLabel* CommonWindowUtil::createMenuItemLabelWaku(cocos2d::LabelTTF* pLabel, cocos2d::Size wakuPadding, const cocos2d::ccMenuCallback& callback)
+cocos2d::MenuItemLabel* CommonWindowUtil::createMenuItemLabelWaku(cocos2d::Label* pLabel, cocos2d::Size wakuPadding, const cocos2d::ccMenuCallback& callback)
 {
     if (pLabel)
     {
@@ -73,3 +75,35 @@ cocos2d::extension::Scale9Sprite* CommonWindowUtil::createWindowWaku(cocos2d::Si
     pWaku->setPosition(pWaku->getPreferredSize().width / 2, pWaku->getPreferredSize().height / 2);
     return pWaku;
 }
+
+#pragma mark
+#pragma mark sprite
+
+// TODO: (kyokomi) ちゃんと専用クラスつくらないとダメだこりゃ（SpriteとTextの更新でtagはイケてない）
+cocos2d::Layer* CommonWindowUtil::createSpriteWithLabelLayer(cocos2d::Size layerSize, std::string spriteFrameFileName, std::string text, std::string gameFontName, float gameFontSize) {
+    auto equipWeaponLayer = cocos2d::LayerColor::create(cocos2d::Color4B::BLACK);
+    equipWeaponLayer->setOpacity(128);
+    equipWeaponLayer->setContentSize(layerSize);
+    CommonWindowUtil::attachWindowWaku(equipWeaponLayer);
+    
+    auto sprite_frame_cache = cocos2d::SpriteFrameCache::getInstance();
+    auto equipWeaponSprite = sprite_frame_cache->getSpriteFrameByName(spriteFrameFileName);
+    if (!equipWeaponSprite) {
+        equipWeaponSprite = cocos2d::Sprite::create(spriteFrameFileName)->getSpriteFrame();
+        cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipWeaponSprite, spriteFrameFileName);
+    }
+    auto sprite = cocos2d::Sprite::createWithSpriteFrame(equipWeaponSprite);
+    sprite->setPosition(cocos2d::Point(equipWeaponLayer->getContentSize().width * 0.1 + sprite->getContentSize().width / 2, equipWeaponLayer->getContentSize().height /2));
+    sprite->setTag(1);// TODO: (kyokomi)とりあえず...サーセン
+    equipWeaponLayer->addChild(sprite);
+    
+    auto textLabel = cocos2d::Label::create(text, gameFontName, gameFontSize);
+    textLabel->setPosition(cocos2d::Point(equipWeaponLayer->getContentSize().width * 0.4 + textLabel->getContentSize().width / 2, equipWeaponLayer->getContentSize().height / 2));
+    textLabel->setTag(2);// TODO: (kyokomi)とりあえず...サーセン
+    equipWeaponLayer->addChild(textLabel);
+    
+    return equipWeaponLayer;
+}
+
+
+

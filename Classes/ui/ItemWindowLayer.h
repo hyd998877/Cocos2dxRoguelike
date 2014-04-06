@@ -22,13 +22,15 @@ protected:
         ItemDetailLayerTag = 20000,
         ItemNameTag        = 21000,
         ItemDetailTag      = 22000,
+        ItemParamTag       = 23000,
         ItemDetailMenuTag      = 30000,
         ItemDetailMenuUseTag   = 30001,
         ItemDetailMenuDropTag  = 30002,
         ItemDetailMenuEquipTag = 30003,
+        ItemCountLabelTag      = 40000,
     };
 private:
-    int show_item_detail_idx_;
+    long show_item_detail_idx_;
     // TODO: ユーザーデータから持ってくるようにする
     std::list<DropItemSprite::DropItemDto> item_dto_list_;
     ItemWindowMenuCallback item_use_menu_callback_;
@@ -42,9 +44,9 @@ public:
     static ItemWindowLayer* createWithContentSize(cocos2d::Size contentSize);
     
     Menu* initCreateMenu();
-    DropItemSprite::DropItemDto findItem(int itemListIndex);
+    DropItemSprite::DropItemDto findItem(long itemListIndex);
     void addItemList(DropItemSprite::DropItemDto dropItemDto);
-    void setItemEquip(int objectId, bool isEquip);
+    void setItemEquip(long objectId, bool isEquip);
     void reloadItemList();
     void sortItemList();
     
@@ -55,8 +57,11 @@ public:
     void setItemList(std::list<DropItemSprite::DropItemDto> item_list) { item_dto_list_ = item_list; }
     std::list<DropItemSprite::DropItemDto> getItemList() { return item_dto_list_; }
 private:
-    void setItemDetail(int itemListIndex);
+    void setItemDetail(long itemListIndex);
     void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
+    
+    Label* createDetailTitleLabel(const Node* base, std::string text, float fontSize, float heightPointProportion);
+    Label* createDetailTextLabel(const Node* base, std::string text, float fontSize, float heightPointProportion);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ItemWindowLayer__) */

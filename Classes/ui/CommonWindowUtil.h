@@ -22,7 +22,9 @@ public:
     static void attachWindowWaku(cocos2d::Node* pNode);
     static void attachWindowWaku(cocos2d::Node* pNode, cocos2d::Size padding);
     
-    static cocos2d::MenuItemLabel* createMenuItemLabelWaku(cocos2d::LabelTTF* pLabel, cocos2d::Size wakuPadding, const cocos2d::ccMenuCallback& callback);
+    static cocos2d::MenuItemLabel* createMenuItemLabelWaku(cocos2d::Label* pLabel, cocos2d::Size wakuPadding, const cocos2d::ccMenuCallback& callback);
+    
+    static cocos2d::Layer* createSpriteWithLabelLayer(cocos2d::Size layerSize, std::string spriteFrameFileName, std::string text, std::string gameFontName, float gameFontSize);
 };
 
 #endif /* defined(__Cocos2dRogueLike__CommonWindowUtil__) */

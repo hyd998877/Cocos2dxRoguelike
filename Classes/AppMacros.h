@@ -22,6 +22,9 @@
 #define PIXEL_MPLUS_12_FONT "PixelMplus12-Regular"
 #endif
 
+#define NS_ROGUE_BEGIN                     namespace rogue {
+#define NS_ROGUE_END                       }
+
 //#define GAME_SCALE (1)
 #define GAME_SCALE (0.52f)
 
@@ -58,6 +61,11 @@ const static std::string GAME_FONT(int fontSize)
 }
 
 #define EVENT_COME_TO_FOREGROUND_ROGUE "EVENT_COME_TO_FOREGROUND_ROGUE"
+
+static int GetRandom(int min,int max)
+{
+	return min + (int)(rand()*(max-min+1.0)/(1.0+RAND_MAX));
+}
 
 // 共通ウィンドウ枠
 //#define CREATE_WINDOW_WAKU() extension::Scale9Sprite::create("ui/dot_waku.png", Rect(0, 0, 16, 16), Rect(3, 3, 10, 10));

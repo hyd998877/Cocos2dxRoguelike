@@ -42,7 +42,7 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     
     // タイトル内容
     const int font_size = 20;
-    auto pTitle = LabelTTF::create(titleText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
+    auto pTitle = Label::create(titleText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
     pTitle->setTag(AlertDialogLayer::TitleTextTag);
     this->addChild(pTitle);
     
@@ -53,7 +53,7 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     const Size WAKU_PADDING = Size(8, 4);
     
     // OKボタン
-    auto pOkMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create(okText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSender) {
+    auto pOkMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::create(okText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSender) {
         if (m_okMenuItemCallback)
         {
             this->m_okMenuItemCallback(pSender);
@@ -63,7 +63,7 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     pOkMenuItemLabel->setTag(AlertDialogLayer::OK_MenuItemLabelTag);
     
     // NGボタン
-    auto pNgMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(LabelTTF::create(ngText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSender) {
+    auto pNgMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::create(ngText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSender) {
         if (m_ngMenuItemCallback)
         {
             this->m_ngMenuItemCallback(pSender);
@@ -82,7 +82,7 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
 
 void AlertDialogLayer::setTitleText(const std::string& text)
 {
-    auto pLabel = dynamic_cast<LabelTTF*>(getChildByTag(AlertDialogLayer::TitleTextTag));
+    auto pLabel = dynamic_cast<Label*>(getChildByTag(AlertDialogLayer::TitleTextTag));
     if (pLabel)
     {
         pLabel->setString(text);

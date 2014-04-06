@@ -17,7 +17,7 @@ class BattleLogic
 private:
     
 public:
-    static int exec(ActorSprite::ActorDto* from, ActorSprite::ActorDto* to);
+    static int exec(const ActorSprite::ActorDto& from, const ActorSprite::ActorDto& to);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__BattleLogic__) */

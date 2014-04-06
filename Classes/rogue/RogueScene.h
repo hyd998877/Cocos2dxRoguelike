@@ -17,6 +17,11 @@
 #include "ItemWindowLayer.h"
 #include "AlertDialogLayer.h"
 #include "ModalLayer.h"
+#include "RogueTMXTiledMap.h"
+
+USING_NS_CC;
+
+using namespace rogue;
 
 #define MINI_MAP_SCALE (4.16f / GAME_SCALE)
 
@@ -84,34 +89,8 @@ public:
                                    );
     }
     
-protected:
-    
+private:
     static const int MAX_LOG_LENGTH = 16*1024;
-    
-    enum TiledMapTags {
-        TiledMapDropItemBaseTag = 10000, // + seqNo
-        TiledMapObjectTag       = 15000, // 階段専用
-        TiledMapEnemyBaseTag    = 20000, // + seqNo
-        
-        TiledMapFrontLayerTag          = 40000,
-        FloorLayerTag                  = 40001,
-        FloorMaskLayerTag              = 40002,
-        FloorMaskPlayerLayerTag        = 40003,
-    };
-    
-    enum TiledMapIndexs {
-        TiledMapDropItemBaseZOrder,
-        TiledMapObjectZOrder,
-        TiledMapEnemyBaseZOrder,
-        TiledMapFrontZOrder,
-        FloorLayerZOrder,
-        FloorMaskLayerZOrder,
-    };
-    
-    // ミニマップ上のタグ
-    enum MiniMapLayerTags {
-        MiniMapSimbolBatchNodeTag = 100,
-    };
     
     enum Tags {
         TiledMapLayerTag          =      1,
@@ -122,6 +101,13 @@ protected:
         RoguePlayerLightMaskTag   = 110002,  // 暗い部分
         MiniMapLayerTag           = 150000,
         StatusBarLayerTag         = 200000,
+        // この辺StatusBarがいまいち
+        StatusBarEquipWeaponTag            = 200100,
+        StatusBarEquipWeaponSpriteTag      = 200101,
+        StatusBarEquipWeaponLabelTag       = 200102,
+        StatusBarEquipAccessoryTag         = 200200,
+        StatusBarEquipAccessorySpriteTag   = 200201,
+        StatusBarEquipAccessoryLabelTag    = 200202,
         GameLogLayerTag           = 210000,
         ItemListWindowTag         = 220000,
         CommonWindowTag           = 230000,
@@ -144,9 +130,6 @@ protected:
         RoguePlayerLightZOrder,        // 明るい部分
         RoguePlayerLightMaskZOrder,    // 暗い部分
         MiniMapLayerZOrder,
-        MiniMapLayerMapNoneZOrder,
-        MiniMapLayerMapItemZOrder,
-        MiniMapLayerMapActorZOrder,
         StatusBarLayerZOrder,
         GameLogLayerZOrder,
         MenuLayerZOrder,
@@ -155,95 +138,9 @@ protected:
         CutInLayerZOrder,
         ModalLayerZOrder,
     };
-    
-private:
+
     // ゲーム管理 save
     RoguePlayData rogue_play_data_;
-    
-    // マップベース情報 （フロアIDから取れるのでsave不要）
-    cocos2d::Size base_content_size_;
-    cocos2d::Size base_map_size_;
-    cocos2d::Size base_tile_size_;
-    
-private:
-    float getAnimationSpeed();
-    void changeGameStatus(GameStatus gameStatus);
-    void enemyTurn();
-    void checkEnmeyTurnEnd();
-    
-    void changeScene(cocos2d::Scene* scene);
-    
-    // マップ制御
-//    MapManager m_mapManager; // TODO: シングルトンにしないとな あと再構築に必要なデータを取得するメソッド
-    MapIndex getRandomMapIndex(bool isColision, bool isActor);
-    
-    // タッチイベント系
-    void touchEventExec(cocos2d::Point touchPoint);
-    void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
-    void attack();
-    
-    MapIndex checkTouchEventIndex(MapIndex touchPointMapIndex);
-    void moveMap(MapIndex addMoveIndex, int actorSeqNo, MapDataType mapDataType, cocos2d::CallFunc* moveFinishedCallFunc);
-    bool isTiledMapColisionLayer(MapIndex touchPointMapIndex);
-    bool isMapLayerOver(MapIndex touchPointMapIndex);
-    
-    // UI関連
-    void logMessage(const char * pszFormat, ...);
-    DrawNode* createGridDraw();
-    Vector<MenuItem*> createKeypadMenuItemArray();
-    Vector<MenuItem*> createButtonMenuItemArray();
-    LayerColor* createFloorTitleCutinLayer(int quest_id);
-    
-    MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
-    
-    // アイテムリスト
-    void showItemList(int showTextIndex);
-    void hideItemList();
-    void refreshStatus();
-    
-    void showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback);
-    AlertDialogLayer* getCommonWindow();
-    void hideCommonWindow();
-    
-    // tileSet関連
-    bool tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, MapIndex mapIndex);
-    bool tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, MapIndex mapIndex);
-    
-    void removeEnemyActorSprite(ActorSprite* pActorSprite);
-    void removeDropItemSprite(Node* pRemoveParentNode, DropItemSprite* pDropItemSprite);
-    
-    // マップ座標変換
-    cocos2d::Point indexToPoint(int mapIndex_x, int mapIndex_y);
-    cocos2d::Point indexToPoint(MapIndex mapIndex);
-    cocos2d::Point indexToPointNotTileSize(int mapIndex_x, int mapIndex_y);
-    cocos2d::Point indexToPointNotTileSize(MapIndex mapIndex);
-    
-    MapIndex pointToIndex(cocos2d::Point point);
-    MapIndex touchPointToIndex(cocos2d::Point point);
-    // MapIndexからtileIndexに変換
-    MapIndex mapIndexToTileIndex(int mapIndex_x, int mapIndex_y);
-    MapIndex mapIndexToTileIndex(MapIndex mapIndex);
-    
-    ActorSprite* getPlayerActorSprite(int seqNo);
-    ActorSprite* getEnemyActorSprite(int seqNo);
-    ModalLayer* getModalLayer();
-    ItemWindowLayer* getItemWindowLayer();
-    
-    // ミニマップ関連
-    void addMiniMapItem(MapItem* pMapItem, int baseSpriteTag);
-    
-    // 照明
-    void tiledMapLighting();
-    Rect getTileMapFloorInfo();
-    void showPlayerLighting();
-    void hidePlayerLighting();
-    void showFloorLighting(const Rect floorInfoIndexRect);
-    void hideFloorLighting();
-    void tiledMapItemLighting(const Rect& floorInfoIndexRect, bool isRefresh);
-    Rect createPlayerRect(int rectSize);
-    void refreshAutoMapping(const Rect& floorInfoIndexRect);
-    
-    SpriteBatchNode* getGridSpriteBatchNode();
     
 public:
     RogueScene();
@@ -258,8 +155,49 @@ public:
     void onEnter();
     void onEnterTransitionDidFinish();
     
-    void onApplicationDidEnterBackground();
-    void onApplicationWillEnterForeground();
+private:
+    void changeGameStatus(GameStatus gameStatus);
+    void enemyTurn();
+    void checkEnmeyTurnEnd();
+    
+    float getAnimationSpeed();
+    void changeScene(cocos2d::Scene* scene);
+    void refreshStatus();
+    void refreshStatusEquip(const ActorSprite::ActorDto& actorDto);
+    
+    // タッチイベント系
+    void touchEventExec(cocos2d::Point touchPoint);
+    void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
+    
+    void attack();
+    
+    // UI関連
+    void logMessage(const char * pszFormat, ...);
+    Vector<MenuItem*> createKeypadMenuItemArray();
+    Vector<MenuItem*> createButtonMenuItemArray();
+    MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
+    ModalLayer* createFloorTitleCutInLayer(int quest_id);
+    ModalLayer* createGameOverCutInLayer();
+    
+    // アイテムリスト
+    void showItemList();
+    void hideItemList();
+    
+    // 共通ウィンドウ
+    void showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback);
+    AlertDialogLayer* getCommonWindow();
+    void hideCommonWindow();
+
+    // 汎用
+    ActorSprite* getPlayerActorSprite(int seqNo);
+    ModalLayer* getModalLayer();
+    RogueTMXTiledMap* getRogueMapLayer();
+    ItemWindowLayer* getItemWindowLayer();
+    
+    // 照明
+    void rogueMapLighting();
+    void showPlayerLighting(ActorSprite* actor_sprite);
+    void hidePlayerLighting();
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__RogueScene__) */
