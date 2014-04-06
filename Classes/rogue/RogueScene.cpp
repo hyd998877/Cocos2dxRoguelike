@@ -114,16 +114,36 @@ bool RogueScene::initWithQuestId(int quest_id) {
     //-------------------------
     // ステータスバー？
     //-------------------------
+    const float StatusBarFontSize = 32;
     auto statusLayer = LayerColor::create(Color4B::BLACK);
     statusLayer->setContentSize(Size(win_size.width, win_size.height / 7));
     statusLayer->setPosition(Point(0, win_size.height - statusLayer->getContentSize().height));
     
-    // 更新する
-    auto sampleText = Label::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(32), GAME_FONT_SIZE(32));
+    // あとで更新するやつ
+    auto sampleText = Label::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
     
     sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
     statusLayer->addChild(sampleText);
     
+    // 装備情報（武器）ステータスバーの下
+    if (actor_dto.equip.weaponId > 0) {
+        auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), DropItemSprite::createItemImageFileName(actor_dto.equip.weaponImgResId), StringUtils::format("%3d", actor_dto.attackPoint + actor_dto.equip.weaponStr), GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+        // 2つあるうちの左側なので2かけてます
+        float pointX = statusLayer->getContentSize().width - (equipWeaponLayer->getContentSize().width * 2);
+        float pointY = (statusLayer->getContentSize().height / 2 + equipWeaponLayer->getContentSize().height / 2) * -1;
+        equipWeaponLayer->setPosition(cocos2d::Point(pointX, pointY));
+        equipWeaponLayer->setTag(RogueScene::StatusBarEquipWeaponTag);
+        statusLayer->addChild(equipWeaponLayer);
+    }
+    // 装備情報（防具）ステータスバーの下
+    if (actor_dto.equip.accessoryId > 0) {
+        auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), DropItemSprite::createItemImageFileName(actor_dto.equip.accessoryImgResId), StringUtils::format("%3d", actor_dto.defencePoint + actor_dto.equip.accessoryDef), GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+        float pointX = statusLayer->getContentSize().width - equipAccessoryLayer->getContentSize().width;
+        float pointY = (statusLayer->getContentSize().height / 2 + equipAccessoryLayer->getContentSize().height / 2) * -1;
+        equipAccessoryLayer->setPosition(cocos2d::Point(pointX, pointY));
+        equipAccessoryLayer->setTag(RogueScene::StatusBarEquipAccessoryTag);
+        statusLayer->addChild(equipAccessoryLayer);
+    }
     this->addChild(statusLayer, RogueScene::StatusBarLayerZOrder, RogueScene::StatusBarLayerTag);
     
     //-------------------------
@@ -175,6 +195,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // マップに追加
     tiled_map_layer->setPlayerActorMapItem(actor_sprite->getActorMapItem(), actor_sprite->getTag());
     
+    refreshStatusEquip(actor_dto);
     // ---------------------
     // 敵キャラ生成
     // ---------------------
@@ -964,6 +985,9 @@ void RogueScene::attack() {
                     // TODO: レベルアップ演出（SE？）
                     
                     logMessage("%sはレベル%dになった。", player->name.c_str(), player->lv);
+                    
+                    // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
+                    this->refreshStatusEquip(*player);
                 }
                 
                 // マップから消える
@@ -1134,6 +1158,9 @@ void RogueScene::showItemList() {
                 this->logMessage("%sの装備をはずした。", drop_item.name.c_str());
             }
             
+            // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
+            this->refreshStatusEquip(*player_sprite->getActorDto());
+            
             // インベントリは閉じる
             this->hideItemList();
             
@@ -1221,7 +1248,6 @@ void RogueScene::hideCommonWindow() {
     }
 }
 
-
 void RogueScene::refreshStatus() {
     
     auto pStatusBarLayer = getChildByTag(RogueScene::StatusBarLayerTag);
@@ -1260,6 +1286,49 @@ void RogueScene::refreshStatus() {
                 pLabelText->setColor(Color3B::YELLOW);
             } else {
                 pLabelText->setColor(Color3B::WHITE);
+            }
+        }
+    }
+}
+
+// 装備状態更新
+void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
+    
+    auto statusLayer = dynamic_cast<Layer*>(getChildByTag(RogueScene::StatusBarLayerTag));
+    if (statusLayer) {
+        auto equipWeaponLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(RogueScene::StatusBarEquipWeaponTag));
+        if (equipWeaponLayer) {
+            std::string weaponName = DropItemSprite::createItemImageFileName(actorDto.equip.weaponImgResId);
+            std::string weaponText = StringUtils::format("%3d", actorDto.attackPoint + actorDto.equip.weaponStr);
+            // TODO: (kyokomi) とりあえず...サーセン
+            const int SpriteTag = 1;
+            auto sprite = dynamic_cast<Sprite*>(equipWeaponLayer->getChildByTag(SpriteTag));
+            if (sprite) {
+                sprite->setSpriteFrame(weaponName);
+            }
+            // TODO: (kyokomi) とりあえず...サーセン
+            const int LabelTag = 2;
+            auto label = dynamic_cast<Label*>(equipWeaponLayer->getChildByTag(LabelTag));
+            if (label) {
+                label->setString(weaponText);
+            }
+        }
+        
+        auto equipAccessoryLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(RogueScene::StatusBarEquipAccessoryTag));
+        if (equipAccessoryLayer) {
+            std::string accessorySpriteFrameFileName = DropItemSprite::createItemImageFileName(actorDto.equip.accessoryImgResId);
+            std::string accessoryLabelText = StringUtils::format("%3d", actorDto.defencePoint + actorDto.equip.accessoryDef);
+            // TODO: (kyokomi) とりあえず...サーセン
+            const int SpriteTag = 1;
+            auto spriteAccessory = dynamic_cast<Sprite*>(equipAccessoryLayer->getChildByTag(SpriteTag));
+            if (spriteAccessory) {
+                spriteAccessory->setSpriteFrame(accessorySpriteFrameFileName);
+            }
+            // TODO: (kyokomi) とりあえず...サーセン
+            const int LabelTag = 2;
+            auto labelAccessory = dynamic_cast<Label*>(equipAccessoryLayer->getChildByTag(LabelTag));
+            if (labelAccessory) {
+                labelAccessory->setString(accessoryLabelText);
             }
         }
     }
