@@ -20,6 +20,7 @@ USING_NS_CC;
 
 #define ITEM_LAYER_NAME_DEFAULT "左のリストを選択すると\nここにアイテム名が\n表示されます"
 #define ITEM_LAYER_DETAIL_DEFAULT "左のリストを選択すると\nここにアイテムの説明が\n表示されます"
+#define ITEM_LAYER_PARAM_DEFAULT "ぱらめーたが表示されます"
 
 ItemWindowLayer::ItemWindowLayer()
 :item_dto_list_(std::list<DropItemSprite::DropItemDto>()),
@@ -100,43 +101,32 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     pItemDetailLayer->setPosition(Point(contentSize.width / 2 + padding, 0));
     pItemDetailLayer->setTag(ItemDetailLayerTag);
     
-    const int title_font_size = 32;
+    const int title_font_size = 20;
     const int detail_font_size = 20;
     // アイテム名
-    auto pItemNameTitleLabel = Label::create("なまえ", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
-    pItemNameTitleLabel->setColor(Color3B::WHITE);
-    pItemNameTitleLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
-    pItemNameTitleLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
-    pItemNameTitleLabel->setPosition(Point(
-                                           pItemNameTitleLabel->getContentSize().width / 2 + pItemNameTitleLabel->getFontSize() / 2,
-                                           pItemDetailLayer->getContentSize().height - pItemNameTitleLabel->getContentSize().height / 2 - pItemNameTitleLabel->getFontSize() / 2));
+    auto pItemNameTitleLabel = createDetailTitleLabel(pItemDetailLayer, "なまえ", title_font_size, 1.00f);
     pItemDetailLayer->addChild(pItemNameTitleLabel);
-    
-    auto pItemNameLabel = Label::create(ITEM_LAYER_NAME_DEFAULT, GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
-    pItemNameLabel->setColor(Color3B::WHITE);
-    pItemNameLabel->setPosition(Point(
-                                      pItemDetailLayer->getContentSize().width * 0.5,
-                                      pItemDetailLayer->getContentSize().height * 0.75));
+    // アイテム名 内容
+    auto pItemNameLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_NAME_DEFAULT, detail_font_size, 0.80f);
     pItemNameLabel->setTag(ItemWindowLayer::ItemNameTag);
     pItemDetailLayer->addChild(pItemNameLabel);
     
     // アイテム説明
-    auto pItemDetailTitleLabel = Label::create("せつめい", GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
-    pItemDetailTitleLabel->setColor(Color3B::WHITE);
-    pItemDetailTitleLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
-    pItemDetailTitleLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
-    pItemDetailTitleLabel->setPosition(Point(
-                                             pItemDetailTitleLabel->getContentSize().width / 2 + pItemDetailTitleLabel->getFontSize() / 2,
-                                             pItemDetailLayer->getContentSize().height / 2 - pItemDetailTitleLabel->getContentSize().height / 2 - pItemDetailTitleLabel->getFontSize() / 2));
+    auto pItemDetailTitleLabel = createDetailTitleLabel(pItemDetailLayer, "せつめい", title_font_size, 0.70f);
     pItemDetailLayer->addChild(pItemDetailTitleLabel);
-    
-    auto pItemDetailLabel = Label::create(ITEM_LAYER_DETAIL_DEFAULT, GAME_FONT(detail_font_size), GAME_FONT_SIZE(detail_font_size));
-    pItemDetailLabel->setColor(Color3B::WHITE);
-    pItemDetailLabel->setPosition(Point(
-                                        pItemDetailLayer->getContentSize().width * 0.5,
-                                        pItemDetailLayer->getContentSize().height * 0.25));
+    // アイテム説明 内容
+    auto pItemDetailLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_DETAIL_DEFAULT, detail_font_size, 0.50f);
     pItemDetailLabel->setTag(ItemWindowLayer::ItemDetailTag);
     pItemDetailLayer->addChild(pItemDetailLabel);
+    
+    // アイテムパラメータ
+    auto paramTitleLabel = createDetailTitleLabel(pItemDetailLayer, "つよさ", title_font_size, 0.40f);
+    pItemDetailLayer->addChild(paramTitleLabel);
+    // アイテムパラメータ 内容
+    auto paramTextLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_PARAM_DEFAULT, detail_font_size, 0.25f);
+    paramTextLabel->setTag(ItemWindowLayer::ItemParamTag);
+    pItemDetailLayer->addChild(paramTextLabel);
+    
     // メニュー
     auto pMenu = initCreateMenu();
     pMenu->setPositionX(pItemDetailLayer->getContentSize().width / 2);
@@ -156,6 +146,26 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     this->addChild(item_count_label);
     
     return true;
+}
+
+// pointProportion （height * 0.5とかのやつ）
+Label* ItemWindowLayer::createDetailTitleLabel(const Node* base, std::string text, float fontSize, float heightPointProportion) {
+    auto titleLabel = Label::create(text, GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
+    titleLabel->setColor(Color3B::GRAY);
+    titleLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
+    titleLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
+    titleLabel->setPosition(Point(
+                                            titleLabel->getContentSize().width / 2 + titleLabel->getFontSize() / 2,
+                                            base->getContentSize().height * heightPointProportion - titleLabel->getContentSize().height / 2 - titleLabel->getFontSize() / 2));
+    return titleLabel;
+}
+
+// pointProportion （height * 0.5とかのやつ）
+Label* ItemWindowLayer::createDetailTextLabel(const Node* base, std::string text, float fontSize, float heightPointProportion) {
+    auto textLabel = Label::create(text, GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
+    textLabel->setColor(Color3B::WHITE);
+    textLabel->setPosition(Point(base->getContentSize().width / 2, base->getContentSize().height * heightPointProportion));
+    return textLabel;
 }
 
 Menu* ItemWindowLayer::initCreateMenu() {
@@ -306,11 +316,14 @@ void ItemWindowLayer::sortItemList() {
 #pragma mark
 #pragma mark privateメソッド
 
+// アイテム選択時の処理
 void ItemWindowLayer::setItemDetail(long itemListIndex) {
     DropItemSprite::DropItemDto dropItemDto = findItem(itemListIndex);
     setItemDetail(&dropItemDto);
 }
 
+// アイテム選択時の処理
+// アイテム名とか説明とかパラメータを右側に表示する
 void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
     if (!pDropItemDto) {
         return;
@@ -348,6 +361,25 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
                 } else if (pDropItemDto->itemType != MUseItem::ItemType::NONE) {
                     MUseItem useItem = MUseItemDao::getInstance()->selectById(pDropItemDto->itemId);
                     pItemDetailLabel->setString(useItem.getUseItemDetail());
+                }
+            }
+        }
+        
+        // param
+        auto pItemParamlLabel = static_cast<Label*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemParamTag));
+        if (pItemParamlLabel) {
+            if (pDropItemDto->name.empty()) {
+                pItemParamlLabel->setString(ITEM_LAYER_PARAM_DEFAULT);
+            } else {
+                if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON) {
+                    MWeapon weapon = MWeaponDao::getInstance()->selectById(pDropItemDto->itemId);
+                    pItemParamlLabel->setString(StringUtils::format("攻撃力: %3d", weapon.getAttackPoint()));
+                } else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                    MAccessory accessory = MAccessoryDao::getInstance()->selectById(pDropItemDto->itemId);
+                    pItemParamlLabel->setString(StringUtils::format("防御力: %3d", accessory.getDefensePoint()));
+                } else if (pDropItemDto->itemType != MUseItem::ItemType::NONE) {
+                    MUseItem useItem = MUseItemDao::getInstance()->selectById(pDropItemDto->itemId);
+                    pItemParamlLabel->setString(StringUtils::format("効果: %3d", useItem.getUseItemParam()));
                 }
             }
         }
