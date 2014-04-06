@@ -22,6 +22,7 @@ protected:
         ItemDetailLayerTag = 20000,
         ItemNameTag        = 21000,
         ItemDetailTag      = 22000,
+        ItemParamTag       = 23000,
         ItemDetailMenuTag      = 30000,
         ItemDetailMenuUseTag   = 30001,
         ItemDetailMenuDropTag  = 30002,
@@ -58,6 +59,9 @@ public:
 private:
     void setItemDetail(long itemListIndex);
     void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
+    
+    Label* createDetailTitleLabel(const Node* base, std::string text, float fontSize, float heightPointProportion);
+    Label* createDetailTextLabel(const Node* base, std::string text, float fontSize, float heightPointProportion);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ItemWindowLayer__) */
