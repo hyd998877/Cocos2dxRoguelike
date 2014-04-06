@@ -1084,6 +1084,9 @@ void RogueScene::showItemList() {
                     } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
                         player_sprite->equipReleaseAccessory();
                     }
+                    
+                    // 装備変更でステータス更新
+                    refreshStatusEquip(*player_sprite->getActorDto());
                 }
                 
                 // アイテムをマップのプ
@@ -1158,7 +1161,7 @@ void RogueScene::showItemList() {
                 this->logMessage("%sの装備をはずした。", drop_item.name.c_str());
             }
             
-            // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
+            // 装備解除、装備によってステータス変動するためステータスバーを更新
             this->refreshStatusEquip(*player_sprite->getActorDto());
             
             // インベントリは閉じる
@@ -1296,39 +1299,51 @@ void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
     
     auto statusLayer = dynamic_cast<Layer*>(getChildByTag(RogueScene::StatusBarLayerTag));
     if (statusLayer) {
+        // 武器
         auto equipWeaponLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(RogueScene::StatusBarEquipWeaponTag));
         if (equipWeaponLayer) {
-            std::string weaponName = DropItemSprite::createItemImageFileName(actorDto.equip.weaponImgResId);
-            std::string weaponText = StringUtils::format("%3d", actorDto.attackPoint + actorDto.equip.weaponStr);
             // TODO: (kyokomi) とりあえず...サーセン
             const int SpriteTag = 1;
             auto sprite = dynamic_cast<Sprite*>(equipWeaponLayer->getChildByTag(SpriteTag));
-            if (sprite) {
-                sprite->setSpriteFrame(weaponName);
-            }
             // TODO: (kyokomi) とりあえず...サーセン
             const int LabelTag = 2;
             auto label = dynamic_cast<Label*>(equipWeaponLayer->getChildByTag(LabelTag));
-            if (label) {
-                label->setString(weaponText);
+            if (actorDto.equip.weaponId > 0) {
+                std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.equip.weaponImgResId);
+                sprite->setVisible(true);
+                sprite->setSpriteFrame(spriteFileName);
+                std::string labelText = StringUtils::format("%3d", actorDto.attackPoint + actorDto.equip.weaponStr);
+                label->setString(labelText);
+            } else {
+                sprite->setVisible(false);
+                
+                std::string labelText = StringUtils::format("%3d", actorDto.attackPoint);
+                label->setString(labelText);
             }
         }
         
+        // 防具
         auto equipAccessoryLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(RogueScene::StatusBarEquipAccessoryTag));
         if (equipAccessoryLayer) {
-            std::string accessorySpriteFrameFileName = DropItemSprite::createItemImageFileName(actorDto.equip.accessoryImgResId);
-            std::string accessoryLabelText = StringUtils::format("%3d", actorDto.defencePoint + actorDto.equip.accessoryDef);
             // TODO: (kyokomi) とりあえず...サーセン
             const int SpriteTag = 1;
-            auto spriteAccessory = dynamic_cast<Sprite*>(equipAccessoryLayer->getChildByTag(SpriteTag));
-            if (spriteAccessory) {
-                spriteAccessory->setSpriteFrame(accessorySpriteFrameFileName);
-            }
+            auto sprite = dynamic_cast<Sprite*>(equipAccessoryLayer->getChildByTag(SpriteTag));
             // TODO: (kyokomi) とりあえず...サーセン
             const int LabelTag = 2;
-            auto labelAccessory = dynamic_cast<Label*>(equipAccessoryLayer->getChildByTag(LabelTag));
-            if (labelAccessory) {
-                labelAccessory->setString(accessoryLabelText);
+            auto label = dynamic_cast<Label*>(equipAccessoryLayer->getChildByTag(LabelTag));
+        
+            if (actorDto.equip.accessoryId > 0) {
+                std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.equip.accessoryImgResId);
+                sprite->setVisible(true);
+                sprite->setSpriteFrame(spriteFileName);
+                
+                std::string labelText = StringUtils::format("%3d", actorDto.defencePoint + actorDto.equip.accessoryDef);
+                label->setString(labelText);
+            } else {
+                sprite->setVisible(false);
+                
+                std::string labelText = StringUtils::format("%3d", actorDto.defencePoint);
+                label->setString(labelText);
             }
         }
     }
