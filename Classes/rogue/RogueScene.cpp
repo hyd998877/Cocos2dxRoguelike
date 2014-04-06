@@ -126,24 +126,38 @@ bool RogueScene::initWithQuestId(int quest_id) {
     statusLayer->addChild(sampleText);
     
     // 装備情報（武器）ステータスバーの下
+    int attackPoint = actor_dto.attackPoint;
     if (actor_dto.equip.weaponId > 0) {
-        auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), DropItemSprite::createItemImageFileName(actor_dto.equip.weaponImgResId), StringUtils::format("%3d", actor_dto.attackPoint + actor_dto.equip.weaponStr), GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
-        // 2つあるうちの左側なので2かけてます
+        attackPoint += actor_dto.equip.weaponStr;
+    }
+    std::string attackPointText = StringUtils::format("%3d", attackPoint);
+    auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", attackPointText, GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+    // 2つあるうちの左側なので2かけてます
+    {
+        equipWeaponLayer->getChildByTag(1)->setVisible(false);
         float pointX = statusLayer->getContentSize().width - (equipWeaponLayer->getContentSize().width * 2);
         float pointY = (statusLayer->getContentSize().height / 2 + equipWeaponLayer->getContentSize().height / 2) * -1;
         equipWeaponLayer->setPosition(cocos2d::Point(pointX, pointY));
         equipWeaponLayer->setTag(RogueScene::StatusBarEquipWeaponTag);
         statusLayer->addChild(equipWeaponLayer);
     }
+    
     // 装備情報（防具）ステータスバーの下
+    int defencePoint = actor_dto.defencePoint;
     if (actor_dto.equip.accessoryId > 0) {
-        auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), DropItemSprite::createItemImageFileName(actor_dto.equip.accessoryImgResId), StringUtils::format("%3d", actor_dto.defencePoint + actor_dto.equip.accessoryDef), GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+        defencePoint += actor_dto.equip.accessoryDef;
+    }
+    std::string defencePointText = StringUtils::format("%3d", defencePoint);
+    auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", defencePointText, GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+    {
+        equipAccessoryLayer->getChildByTag(1)->setVisible(false);
         float pointX = statusLayer->getContentSize().width - equipAccessoryLayer->getContentSize().width;
         float pointY = (statusLayer->getContentSize().height / 2 + equipAccessoryLayer->getContentSize().height / 2) * -1;
         equipAccessoryLayer->setPosition(cocos2d::Point(pointX, pointY));
         equipAccessoryLayer->setTag(RogueScene::StatusBarEquipAccessoryTag);
         statusLayer->addChild(equipAccessoryLayer);
     }
+    
     this->addChild(statusLayer, RogueScene::StatusBarLayerZOrder, RogueScene::StatusBarLayerTag);
     
     //-------------------------
@@ -1310,8 +1324,13 @@ void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
             auto label = dynamic_cast<Label*>(equipWeaponLayer->getChildByTag(LabelTag));
             if (actorDto.equip.weaponId > 0) {
                 std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.equip.weaponImgResId);
+                auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
+                if (!equipSpriteFrame) {
+                    equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
+                    cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipSpriteFrame, spriteFileName);
+                }
                 sprite->setVisible(true);
-                sprite->setSpriteFrame(spriteFileName);
+                sprite->setSpriteFrame(equipSpriteFrame);
                 std::string labelText = StringUtils::format("%3d", actorDto.attackPoint + actorDto.equip.weaponStr);
                 label->setString(labelText);
             } else {
@@ -1334,8 +1353,13 @@ void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
         
             if (actorDto.equip.accessoryId > 0) {
                 std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.equip.accessoryImgResId);
+                auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
+                if (!equipSpriteFrame) {
+                    equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
+                    cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipSpriteFrame, spriteFileName);
+                }
                 sprite->setVisible(true);
-                sprite->setSpriteFrame(spriteFileName);
+                sprite->setSpriteFrame(equipSpriteFrame);
                 
                 std::string labelText = StringUtils::format("%3d", actorDto.defencePoint + actorDto.equip.accessoryDef);
                 label->setString(labelText);

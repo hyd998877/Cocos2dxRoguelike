@@ -86,19 +86,18 @@ cocos2d::Layer* CommonWindowUtil::createSpriteWithLabelLayer(cocos2d::Size layer
     equipWeaponLayer->setContentSize(layerSize);
     CommonWindowUtil::attachWindowWaku(equipWeaponLayer);
     
-    auto sprite_frame_cache = cocos2d::SpriteFrameCache::getInstance();
-    auto equipWeaponSprite = sprite_frame_cache->getSpriteFrameByName(spriteFrameFileName);
+    auto equipWeaponSprite = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameFileName);
     if (!equipWeaponSprite) {
         equipWeaponSprite = cocos2d::Sprite::create(spriteFrameFileName)->getSpriteFrame();
         cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipWeaponSprite, spriteFrameFileName);
     }
     auto sprite = cocos2d::Sprite::createWithSpriteFrame(equipWeaponSprite);
-    sprite->setPosition(cocos2d::Point(equipWeaponLayer->getContentSize().width * 0.1 + sprite->getContentSize().width / 2, equipWeaponLayer->getContentSize().height /2));
+    sprite->setPosition(cocos2d::Point(sprite->getContentSize().width / 2, equipWeaponLayer->getContentSize().height /2));
     sprite->setTag(1);// TODO: (kyokomi)とりあえず...サーセン
     equipWeaponLayer->addChild(sprite);
     
     auto textLabel = cocos2d::Label::create(text, gameFontName, gameFontSize);
-    textLabel->setPosition(cocos2d::Point(equipWeaponLayer->getContentSize().width * 0.4 + textLabel->getContentSize().width / 2, equipWeaponLayer->getContentSize().height / 2));
+    textLabel->setPosition(cocos2d::Point(equipWeaponLayer->getContentSize().width * 0.5 + textLabel->getContentSize().width / 2, equipWeaponLayer->getContentSize().height / 2));
     textLabel->setTag(2);// TODO: (kyokomi)とりあえず...サーセン
     equipWeaponLayer->addChild(textLabel);
     
