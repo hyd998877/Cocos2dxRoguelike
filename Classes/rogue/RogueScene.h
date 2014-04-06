@@ -101,6 +101,13 @@ private:
         RoguePlayerLightMaskTag   = 110002,  // 暗い部分
         MiniMapLayerTag           = 150000,
         StatusBarLayerTag         = 200000,
+        // この辺StatusBarがいまいち
+        StatusBarEquipWeaponTag            = 200100,
+        StatusBarEquipWeaponSpriteTag      = 200101,
+        StatusBarEquipWeaponLabelTag       = 200102,
+        StatusBarEquipAccessoryTag         = 200200,
+        StatusBarEquipAccessorySpriteTag   = 200201,
+        StatusBarEquipAccessoryLabelTag    = 200202,
         GameLogLayerTag           = 210000,
         ItemListWindowTag         = 220000,
         CommonWindowTag           = 230000,
@@ -156,6 +163,7 @@ private:
     float getAnimationSpeed();
     void changeScene(cocos2d::Scene* scene);
     void refreshStatus();
+    void refreshStatusEquip(const ActorSprite::ActorDto& actorDto);
     
     // タッチイベント系
     void touchEventExec(cocos2d::Point touchPoint);
