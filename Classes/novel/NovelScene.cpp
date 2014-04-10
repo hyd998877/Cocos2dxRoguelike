@@ -124,7 +124,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     // -----------------------------
     
     // 本文
-    const int font_size = 24;
+    const int font_size = 20;
     LayerColor * textLayer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), winSize.width, winSize.height * 0.25);
     textLayer->setPosition(Point::ZERO);
     this->addChild(textLayer, kZOrder_TextLayer, kTag_TextLayer);
