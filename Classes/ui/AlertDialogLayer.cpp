@@ -11,30 +11,45 @@
 
 USING_NS_CC;
 
-AlertDialogLayer::~AlertDialogLayer()
-{
+// モーダル版のアラートダイアログ生成
+ModalLayer* AlertDialogLayer::createWithContentSizeModal(Size contentSize, std::string titleText, std::string okText, std::string ngText, const cocos2d::ccMenuCallback& okCallback, const cocos2d::ccMenuCallback& ngCallback) {
     
+    // モーダルレイヤー生成
+    auto modalLayer = ModalLayer::create();
+    // アラートダイアログ生成
+    auto alertDialogLayer = createWithContentSize(contentSize, titleText, okText, ngText);
+    // モーダルの中心に配置
+    alertDialogLayer->setPosition(CommonWindowUtil::createPointCenter(*alertDialogLayer, modalLayer->getContentSize()));
+    // OKボタン押した時の処理と閉じる
+    alertDialogLayer->setOkMenuItemCallback([modalLayer, okCallback](Ref *ref) {
+        okCallback(ref);
+        modalLayer->setVisible(false);
+        modalLayer->removeAllChildrenWithCleanup(true);
+    });
+    // NGボタン押した時の処理と閉じる
+    alertDialogLayer->setNgMenuItemCallback([modalLayer, ngCallback](Ref *ref) {
+        ngCallback(ref);
+        modalLayer->setVisible(false);
+        modalLayer->removeAllChildrenWithCleanup(true);
+    });
+    // モーダルに乗せて返す
+    modalLayer->addChild(alertDialogLayer);
+    return modalLayer;
 }
 
-AlertDialogLayer* AlertDialogLayer::createWithContentSize(Size contentSize, std::string titleText, std::string okText, std::string ngText)
-{
+AlertDialogLayer* AlertDialogLayer::createWithContentSize(Size contentSize, std::string titleText, std::string okText, std::string ngText) {
     AlertDialogLayer *pRet = new AlertDialogLayer();
-    if (pRet && pRet->initWithContentSize(contentSize, titleText, okText, ngText))
-    {
+    if (pRet && pRet->initWithContentSize(contentSize, titleText, okText, ngText)) {
         pRet->autorelease();
         return pRet;
-    }
-    else
-    {
+    } else {
         CC_SAFE_DELETE(pRet);
         return NULL;
     }
 }
 
-bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleText, std::string okText, std::string ngText)
-{
-    if (!LayerColor::initWithColor(Color4B::BLACK))
-    {
+bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleText, std::string okText, std::string ngText) {
+    if (!LayerColor::initWithColor(Color4B::BLACK)) {
         return false;
     }
     setContentSize(contentSize);
@@ -43,72 +58,33 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     // タイトル内容
     const int font_size = 20;
     auto pTitle = Label::create(titleText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
-    pTitle->setTag(AlertDialogLayer::TitleTextTag);
+    pTitle->setPosition(Point(this->getContentSize().width * 0.5, this->getContentSize().height * 0.75));
     this->addChild(pTitle);
-    
-    setTitleText(titleText);
     
     // --------------
     // ボタン生成
+    const int ButtonFontSize = 32;
     const Size WAKU_PADDING = Size(8, 4);
     
     // OKボタン
-    auto pOkMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::create(okText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSender) {
-        if (m_okMenuItemCallback)
-        {
+    auto pOkMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::create(okText, GAME_FONT(ButtonFontSize), GAME_FONT_SIZE(ButtonFontSize)), WAKU_PADDING, [this](Ref *pSender) {
+        if (m_okMenuItemCallback) {
             this->m_okMenuItemCallback(pSender);
         }
     });
     pOkMenuItemLabel->setPosition(Point(this->getContentSize().width * 0.25, pOkMenuItemLabel->getContentSize().height));
-    pOkMenuItemLabel->setTag(AlertDialogLayer::OK_MenuItemLabelTag);
     
     // NGボタン
-    auto pNgMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::create(ngText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSender) {
-        if (m_ngMenuItemCallback)
-        {
+    auto pNgMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::create(ngText, GAME_FONT(ButtonFontSize), GAME_FONT_SIZE(ButtonFontSize)), WAKU_PADDING, [this](Ref *pSender) {
+        if (m_ngMenuItemCallback) {
             this->m_ngMenuItemCallback(pSender);
         }
     });
     pNgMenuItemLabel->setPosition(Point(this->getContentSize().width * 0.75, pNgMenuItemLabel->getContentSize().height));
-    pNgMenuItemLabel->setTag(AlertDialogLayer::NG_MenuItemLabelTag);
     
     auto pCommonWindowMenu = Menu::create(pOkMenuItemLabel, pNgMenuItemLabel, NULL);
     pCommonWindowMenu->setPosition(Point::ZERO);
-    pCommonWindowMenu->setTag(AlertDialogLayer::MenuTag);
     this->addChild(pCommonWindowMenu);
     
     return true;
 }
-
-void AlertDialogLayer::setTitleText(const std::string& text)
-{
-    auto pLabel = dynamic_cast<Label*>(getChildByTag(AlertDialogLayer::TitleTextTag));
-    if (pLabel)
-    {
-        pLabel->setString(text);
-        pLabel->setPosition(Point(this->getContentSize().width * 0.5, this->getContentSize().height * 0.75));
-    }
-}
-
-void AlertDialogLayer::setOkText(const std::string& text)
-{
-    auto pLabel = dynamic_cast<MenuItemLabel*>(getChildByTag(AlertDialogLayer::MenuTag)->getChildByTag(AlertDialogLayer::OK_MenuItemLabelTag));
-    if (pLabel)
-    {
-        pLabel->setString(text);
-        pLabel->setPosition(Point(this->getContentSize().width * 0.25, pLabel->getContentSize().height));
-    }
-}
-
-void AlertDialogLayer::setNgText(const std::string& text)
-{
-    auto pLabel = dynamic_cast<MenuItemLabel*>(getChildByTag(AlertDialogLayer::MenuTag)->getChildByTag(AlertDialogLayer::NG_MenuItemLabelTag));
-    if (pLabel)
-    {
-        pLabel->setString(text);
-        pLabel->setPosition(Point(this->getContentSize().width * 0.75, pLabel->getContentSize().height));
-    }
-}
-
-
-

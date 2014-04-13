@@ -364,17 +364,12 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
         this->enemyMappingAllShow();
         this->itemMappingAllShow();
         
-//        this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Ref* pSender){
-//            // OK
-//            this->hideCommonWindow();
-//            
-//            // 画面遷移
-//            this->changeScene(RogueScene::scene(rogue_play_data_.quest_id + 1));
-//            
-//        }, [this](Ref* pSender){
-//            // NG
-//            this->hideCommonWindow();
-//        });
+        Size win_size = Director::getInstance()->getWinSize();
+        auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "あきらめますか？", "はい", "いいえ", [this](Ref *ref) {
+            // 画面遷移
+            this->changeScene(RogueScene::scene(rogue_play_data_.quest_id + 1));
+        }, [](Ref *ref) {});
+        this->addChild(alertDialog, RogueScene::ModalLayerZOrder);
         
     });
     pC_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 3, rogu_map_layer->indexToPoint(10, 1).y));
@@ -829,12 +824,8 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                 
                 // 階段下りる判定
                 
-                this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this, actor_sprite](Ref* pSender) {
-                    // OK
-                    
-                    // 閉じる
-                    this->hideCommonWindow();
-                    
+                Size win_size = Director::getInstance()->getWinSize();
+                auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "はい", "いいえ", [this, actor_sprite](Ref *ref) {
                     // save
                     rogue_play_data_.quest_id += 1;
                     
@@ -847,12 +838,8 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                     // 画面遷移
                     this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
                     
-                }, [this](Ref* pSender){
-                    // NG
-                    
-                    // 閉じる
-                    this->hideCommonWindow();
-                });
+                }, [](Ref *ref) {});
+                this->addChild(alertDialog, RogueScene::ModalLayerZOrder);
             }
             
             // 移動処理
@@ -1157,45 +1144,6 @@ void RogueScene::hideItemList() {
     auto modal_layer = getModalLayer();
     if (modal_layer) {
         modal_layer->setVisible(false);
-    }
-}
-
-void RogueScene::showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback) {
-    auto winSize = Director::getInstance()->getWinSize();
-    
-    // モーダルレイヤー作成
-    auto pModalLayer = getModalLayer();
-    pModalLayer->setVisible(true);
-    
-    auto pCommonWindow = getCommonWindow();
-    if (pCommonWindow) {
-        pCommonWindow->setVisible(true);
-    } else {
-        // アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
-        pCommonWindow = AlertDialogLayer::createWithContentSize(winSize * 0.5, titleText, "は　い", "いいえ");
-        pCommonWindow->setPosition(Point(winSize.width / 2 - pCommonWindow->getContentSize().width / 2,
-                                         winSize.height /2 - pCommonWindow->getContentSize().height / 2));
-        pModalLayer->addChild(pCommonWindow, RogueScene::CommonWindowZOrder, RogueScene::CommonWindowTag);
-    }
-    pCommonWindow->setTitleText(titleText);
-    pCommonWindow->setOkMenuItemCallback(okMenuItemCallback);
-    pCommonWindow->setNgMenuItemCallback(ngMenuItemCallback);
-}
-
-AlertDialogLayer* RogueScene::getCommonWindow() {
-    auto pModalLayer = getModalLayer();
-    return static_cast<AlertDialogLayer*>(pModalLayer->getChildByTag(RogueScene::CommonWindowTag));
-}
-
-void RogueScene::hideCommonWindow() {
-    auto pCommonWindow = getCommonWindow();
-    if (pCommonWindow) {
-        pCommonWindow->setVisible(false);
-    }
-    
-    auto pModalLayer = getModalLayer();
-    if (pModalLayer) {
-        pModalLayer->setVisible(false);
     }
 }
 

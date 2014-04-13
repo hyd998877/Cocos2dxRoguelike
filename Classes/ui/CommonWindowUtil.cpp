@@ -9,6 +9,13 @@
 #include "CommonWindowUtil.h"
 
 #pragma mark
+#pragma mark 汎用
+
+cocos2d::Point CommonWindowUtil::createPointCenter(const cocos2d::Node& baseNode, const cocos2d::Size& winSize) {
+    return cocos2d::Point(winSize.width / 2 - baseNode.getContentSize().width / 2, winSize.height / 2 - baseNode.getContentSize().height / 2);
+}
+
+#pragma mark
 #pragma mark メニュー
 
 cocos2d::MenuItemLabel* CommonWindowUtil::createMenuItemLabelWaku(cocos2d::Label* pLabel, cocos2d::Size wakuPadding, const cocos2d::ccMenuCallback& callback)

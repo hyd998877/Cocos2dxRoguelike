@@ -183,11 +183,6 @@ private:
     void showItemList();
     void hideItemList();
     
-    // 共通ウィンドウ
-    void showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback);
-    AlertDialogLayer* getCommonWindow();
-    void hideCommonWindow();
-
     // 配置
     void institutionEnemy(int probCount);
     void institutionDropItem(int probCount);
