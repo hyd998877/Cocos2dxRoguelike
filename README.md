@@ -22,6 +22,12 @@
 
 **「このアプリは、上記の画像提供元の画像素材を使用しています。このアプリで使用されている画像を、このゲームを遊ぶ以外の用途には使用しないで下さい」**
 
+
+## β版DL
+
+[DeployGate](https://dply.me/ks7a9w)
+
+
 ## 開発状況
 
 ![](https://bitbucket.org/kyokomi/cocos2droguelike/raw/30b6fd4248f14b72d696dee47dcda82dc7808db5/work/screen_captiue_20140118.png)
