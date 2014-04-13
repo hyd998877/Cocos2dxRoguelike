@@ -1,0 +1,3 @@
+[submodule "Classes/layers_nodes"]
+	path = Classes/layers_nodes
+	url = https://github.com/kyokomi/Cocos2dxModalLayer.git

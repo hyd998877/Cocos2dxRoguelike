@@ -13,6 +13,7 @@ class LotteryUtils
 {
 public:
     
+    // ValueVector{Value(ValueMap{"id", "prob"})}
     static ValueVector lotValues(const int probCount, const ValueVector probList) {
         ValueVector hitValues = {};
         // 抽選合計値を求める（100%基準を作成）
@@ -45,6 +46,7 @@ public:
         return hitValues;
     }
     
+    // ValueVector{Value(ValueMap{"id", "prob"})}
     static std::vector<int> lot(const int probCount, const ValueVector probList) {
         std::vector<int> hitIds;
         ValueVector hitValues = lotValues(probCount, probList);

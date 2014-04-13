@@ -13,6 +13,7 @@ LOCAL_SRC_FILES += $(CPP_FILES:$(LOCAL_PATH)/%=%)
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
                    $(LOCAL_PATH)/../../Classes/dao \
                    $(LOCAL_PATH)/../../Classes/data \
+                   $(LOCAL_PATH)/../../Classes/layers_nodes \
                    $(LOCAL_PATH)/../../Classes/util \
                    $(LOCAL_PATH)/../../Classes/account \
                    $(LOCAL_PATH)/../../Classes/battle \

@@ -10,6 +10,7 @@
 #include "RogueScene.h"
 // ------------------------------
 #include "CommonWindowUtil.h"
+#include "LayerActionUtils.h"
 #include "LotteryUtils.h"
 
 #include "TableViewTestLayer.h"
@@ -397,8 +398,7 @@ ModalLayer* RogueScene::createFloorTitleCutInLayer(int quest_id) {
     auto win_size = Director::getInstance()->getWinSize();
     const int floor_title_font_size = 47;
     
-    auto modal_layer = ModalLayer::create();
-    modal_layer->setOpacity(0);
+    auto modal_layer = ModalLayer::create(Color3B::BLACK, 0);
     
     // 真っ黒の全画面で中心にフロア名 N層 と表示され　タップするとフェードアウトして消える
     auto floor_title_cutin_layer = LayerColor::create(Color4B::BLACK);
@@ -410,18 +410,10 @@ ModalLayer* RogueScene::createFloorTitleCutInLayer(int quest_id) {
     floor_title_text_label->setPosition(Point(floor_title_cutin_layer->getContentSize().width / 2, floor_title_cutin_layer->getContentSize().height / 2));
     floor_title_cutin_layer->addChild(floor_title_text_label);
 
-    auto cutin_listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
-    cutin_listener->setSwallowTouches(true);
-    cutin_listener->onTouchBegan = [floor_title_cutin_layer, modal_layer](Touch* touch, Event* event) -> bool {
-        // カットインを破棄
-        floor_title_cutin_layer->runAction(Sequence::create(FadeOut::create(1.5f), CallFunc::create([modal_layer]() {
-            modal_layer->setVisible(false);
-            modal_layer->removeAllChildrenWithCleanup(true);
-        }), NULL));
-        return false;
-    };
-    floor_title_cutin_layer->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cutin_listener, floor_title_cutin_layer);
-    
+    floor_title_cutin_layer->runAction(LayerActionUtils::createCutInActionFadeOut(floor_title_cutin_layer, 1.5f, [this, modal_layer]() {
+        modal_layer->setVisible(false);
+        modal_layer->removeAllChildrenWithCleanup(true);
+    }));
     modal_layer->addChild(floor_title_cutin_layer);
     
     return modal_layer;
@@ -429,40 +421,26 @@ ModalLayer* RogueScene::createFloorTitleCutInLayer(int quest_id) {
 
 // gameoverカットインを生成する
 ModalLayer* RogueScene::createGameOverCutInLayer() {
-     auto win_size = Director::getInstance()->getWinSize();
     
-    auto modal_layer = ModalLayer::create();
-    modal_layer->setOpacity(255);
-    modal_layer->setColor(Color3B::BLACK);
+    auto win_size = Director::getInstance()->getWinSize();
+    
+    auto modalLayer = ModalLayer::create(Color3B::BLACK, 255);
     
     // ---------------
     
     // TODO: (kyokomi) 画像は一般公開できないので注意
-    auto game_over_layer = Sprite::create("game_over.jpg");
-    game_over_layer->setPosition(Point(win_size.width / 2, win_size.height / 2));
-    
+    auto gameOverSprite = Sprite::create("game_over.jpg");
+    gameOverSprite->setPosition(Point(win_size.width / 2, win_size.height / 2));
+    gameOverSprite->runAction(LayerActionUtils::createCutInActionFadeInOut(gameOverSprite, 2.0f, [this, modalLayer]() {
+        modalLayer->setVisible(false);
+        modalLayer->removeAllChildrenWithCleanup(true);
+        // マイページへ
+        this->changeScene(MypageScene::scene());
+    }));
     // ---------------
-    modal_layer->addChild(game_over_layer);
+    modalLayer->addChild(gameOverSprite);
     
-    // フェードインで登場
-    game_over_layer->setOpacity(0);
-    game_over_layer->runAction(Sequence::create(FadeIn::create(2.0f), CallFunc::create([this, game_over_layer, modal_layer]() {
-        // フェードイン後にタップ可能になる
-        auto cutin_listener = static_cast<EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());
-        cutin_listener->setSwallowTouches(true);
-        cutin_listener->onTouchBegan = [this, game_over_layer, modal_layer](Touch* touch, Event* event) -> bool {
-            // カットインを破棄
-            game_over_layer->runAction(Sequence::create(FadeOut::create(1.5f), CallFunc::create([this, modal_layer]() {
-                modal_layer->setVisible(false);
-                modal_layer->removeAllChildrenWithCleanup(true);
-                // マイページへ
-                this->changeScene(MypageScene::scene());
-            }), NULL));
-            return false;
-        };
-        game_over_layer->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cutin_listener, game_over_layer);
-    }), NULL));
-    return modal_layer;
+    return modalLayer;
 }
 
 void RogueScene::onEnter() {
