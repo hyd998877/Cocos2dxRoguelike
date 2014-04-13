@@ -169,8 +169,11 @@ private:
     // タッチイベント系
     void touchEventExec(cocos2d::Point touchPoint);
     void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
+    void touchKaidan();
+    void touchDropItem(const DropMapItem& drop_map_item);
     
     void attack();
+    void attackCallback(ActorSprite* player, ActorSprite* enemy);
     
     // UI関連
     void logMessage(const char * pszFormat, ...);

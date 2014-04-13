@@ -577,7 +577,7 @@ void RogueScene::enemyTurn() {
     // モンスターの数だけ繰り返す
     std::list<ActorMapItem> enemyList = MapManager::getInstance()->findEnemyMapItem();
     for (ActorMapItem enemyMapItem : enemyList) {
-        // ランダムでとどまるか移動するかきめる
+        // TODO: ランダムでとどまるか移動するかきめる
         int rand = GetRandom(2, 2);
         if (rand == 1) {
             auto pEnemySprite = rogue_map_layer->getEnemyActorSprite(enemyMapItem.seqNo);
@@ -765,94 +765,111 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     auto enemy_map_item = MapManager::getInstance()->getActorMapItem(&touchPointMapIndex);
     if (enemy_map_item->mapDataType == MapDataType::ENEMY) {
         // 向きだけ変えてターン経過しない
+        return;
+    }
+    
+    // 障害物判定
+    if (rogue_map_layer->isTiledMapColisionLayer(touchPointMapIndex)) {
+        // TODO: ぶつかるSE再生
+        logMessage("壁ドーン SE再生");
+        
+        // ターン経過なし
+        
     } else {
-        // 障害物判定
-        if (rogue_map_layer->isTiledMapColisionLayer(touchPointMapIndex)) {
-            // TODO: ぶつかるSE再生
-            logMessage("壁ドーン SE再生");
-            
-            // ターン経過なし
-            
-        } else {
-            
-            changeGameStatus(GameStatus::PLAYER_NO_ACTION);
+        
+        changeGameStatus(GameStatus::PLAYER_NO_ACTION);
+
+        auto touch_point_map_item = MapManager::getInstance()->getMapItem(&touchPointMapIndex);
+        
+        // 移動処理
+        rogue_map_layer->movePlayerMap(actor_sprite, addMoveIndex, getAnimationSpeed(), CallFunc::create([this, touch_point_map_item](void) {
             
             // アイテムに重なったときの拾う処理
-            auto touch_point_map_item = MapManager::getInstance()->getMapItem(&touchPointMapIndex);
             if (touch_point_map_item->mapDataType == MapDataType::MAP_ITEM) {
-
-                // itemを取得
+                // item
                 auto drop_map_item = static_cast<DropMapItem*>(touch_point_map_item);
-                auto drop_item_sprite = rogue_map_layer->getDropItemSprite(drop_map_item->seqNo);
-                auto drop_item_dto = drop_item_sprite->getDropItemDto();
-                
-                // ゴールドは別扱い
-                if (drop_item_dto->itemType == MUseItem::ItemType::GOLD) {
-
-                    // TODO: (kyokomi) 拾うSE再生
-                    
-                    // メッセージログ
-                    logMessage("%d%sを拾った。", drop_item_dto->param, drop_item_dto->name.c_str());
-                    // ゴールドを加算
-                    actor_sprite->getActorDto()->gold += drop_item_dto->param;
-                    
-                    // Map上から削除する
-                    rogue_map_layer->removeDropItemSprite(drop_item_sprite);
-                    
-                } else {
-                    // ゴールド以外はインベントリへ
-                    
-                    if (getItemWindowLayer()->getItemList().size() < USE_ITEM_MAX) {
-                        // ドロップアイテムを拾う
-                        
-                        // TODO: (kyokomi) 拾うSE再生
-                        
-                        // メッセージログ
-                        logMessage("%sを拾った。", drop_item_dto->name.c_str());
-                        
-                        // イベントリに追加する
-                        getItemWindowLayer()->addItemList(*drop_item_dto);
-                        
-                        // Map上から削除する
-                        rogue_map_layer->removeDropItemSprite(drop_item_sprite);
-                    } else {
-                        // アイテム所持数限界
-                        logMessage("持ち物が一杯で、\n%sを拾えなかった。", drop_item_dto->name.c_str());
-                    }
-                }
+                this->touchDropItem(*drop_map_item);
                 
             } else if (touch_point_map_item->mapDataType == MapDataType::KAIDAN) {
-                // TODO: (kyokomi)階段SE
-                
-                // 階段下りる判定
-                
-                Size win_size = Director::getInstance()->getWinSize();
-                auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "はい", "いいえ", [this, actor_sprite](Ref *ref) {
-                    // save
-                    rogue_play_data_.quest_id += 1;
-                    
-                    AccountData::getInstance()->player_actor_ = *(actor_sprite->getActorDto());
-                    AccountData::getInstance()->rogue_play_data_ =  rogue_play_data_;
-                    // TODO: アイテムリスト暫定
-                    AccountData::getInstance()->item_list_ = getItemWindowLayer()->getItemList();
-                    AccountData::getInstance()->save();
-                    
-                    // 画面遷移
-                    this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
-                    
-                }, [](Ref *ref) {});
-                this->addChild(alertDialog, RogueScene::ModalLayerZOrder);
+                // 階段
+                this->touchKaidan();
             }
             
-            // 移動処理
-            rogue_map_layer->movePlayerMap(actor_sprite, addMoveIndex, getAnimationSpeed(), CallFunc::create([this](void) {
-                // ターンエンド
-                changeGameStatus(GameStatus::ENEMY_TURN);
-            }));
+            // ターンエンド
+            changeGameStatus(GameStatus::ENEMY_TURN);
+        }));
+        
+        // コールバックまでgameStatusを更新はしない
+    }
+}
+
+void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
+    auto rogue_map_layer = getRogueMapLayer();
+    auto actor_sprite = getPlayerActorSprite(1);
+    
+    // itemを取得
+    auto drop_item_sprite = rogue_map_layer->getDropItemSprite(drop_map_item.seqNo);
+    auto drop_item_dto = drop_item_sprite->getDropItemDto();
+    
+    // ゴールドは別扱い
+    if (drop_item_dto->itemType == MUseItem::ItemType::GOLD) {
+        
+        // TODO: (kyokomi) 拾うSE再生
+        
+        // メッセージログ
+        logMessage("%d%sを拾った。", drop_item_dto->param, drop_item_dto->name.c_str());
+        // ゴールドを加算
+        actor_sprite->getActorDto()->gold += drop_item_dto->param;
+        
+        // Map上から削除する
+        rogue_map_layer->removeDropItemSprite(drop_item_sprite);
+        
+    } else {
+        // ゴールド以外はインベントリへ
+        
+        if (getItemWindowLayer()->getItemList().size() < USE_ITEM_MAX) {
+            // ドロップアイテムを拾う
             
-            // コールバックまでgameStatusを更新はしない
+            // TODO: (kyokomi) 拾うSE再生
+            
+            // メッセージログ
+            logMessage("%sを拾った。", drop_item_dto->name.c_str());
+            
+            // イベントリに追加する
+            getItemWindowLayer()->addItemList(*drop_item_dto);
+            
+            // Map上から削除する
+            rogue_map_layer->removeDropItemSprite(drop_item_sprite);
+        } else {
+            // アイテム所持数限界
+            logMessage("持ち物が一杯で、\n%sを拾えなかった。", drop_item_dto->name.c_str());
         }
     }
+}
+
+void RogueScene::touchKaidan() {
+    
+    // TODO: (kyokomi)階段SE
+    
+    auto actor_sprite = getPlayerActorSprite(1);
+    
+    // 階段下りる判定
+    Size win_size = Director::getInstance()->getWinSize();
+    auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "はい", "いいえ", [this, actor_sprite](Ref *ref) {
+        // save
+        rogue_play_data_.quest_id += 1;
+        
+        AccountData::getInstance()->player_actor_ = *(actor_sprite->getActorDto());
+        AccountData::getInstance()->rogue_play_data_ =  rogue_play_data_;
+        // TODO: アイテムリスト暫定
+        AccountData::getInstance()->item_list_ = getItemWindowLayer()->getItemList();
+        AccountData::getInstance()->save();
+        
+        // 画面遷移
+        this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
+        
+    }, [](Ref *ref) {});
+    this->addChild(alertDialog, RogueScene::ModalLayerZOrder);
 }
 
 void RogueScene::attack() {
