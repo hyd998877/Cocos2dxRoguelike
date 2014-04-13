@@ -547,10 +547,13 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
 }
 
 void RogueScene::changeScene(Scene* scene) {
-    // TODO: とりあえず真っ黒のレイヤーを乗せる
-    this->addChild(LayerColor::create(Color4B::BLACK), 99999999, 99999999);
+    // 真っ黒のモーダルを載せる
+    auto modal = ModalLayer::create();
+    modal->setColor(Color3B::BLACK);
+    modal->setOpacity(255);
+    this->addChild(modal, RogueScene::BlackLayerZOrder);
     
-    auto trans = TransitionProgressOutIn::create(1, scene);
+    auto trans = TransitionProgressOutIn::create(1.0f, scene);
     Director::getInstance()->replaceScene(trans);
 }
 
@@ -562,7 +565,6 @@ float RogueScene::getAnimationSpeed() {
             return 0.0f;
         }
     }
-    
     return 0.2f;
 }
 

@@ -137,6 +137,7 @@ private:
         CommonWindowZOrder,
         CutInLayerZOrder,
         ModalLayerZOrder,
+        BlackLayerZOrder
     };
 
     // ゲーム管理 save
