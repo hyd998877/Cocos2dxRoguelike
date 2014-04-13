@@ -221,58 +221,8 @@ bool RogueScene::initWithQuestId(int quest_id) {
     //-------------------------
     // アイテム配置
     //-------------------------
-    int object_count = AccountData::getInstance()->rogue_play_data_.item_count;
-    if (object_count < 0) {
-        object_count = 0;
-    }
-    // TODO: (kyokomi) とりあえずアイテムとか武器はテストのため全種類配置してる
-    for (int i = 0; i < 7; i++) {
-        MUseItem mUseItem = MUseItemDao::getInstance()->selectById(i + 1);
-        DropItemSprite::DropItemDto dropItemDto;
-        dropItemDto.objectId = object_count + i + 1; // 単純に連番でいい
-        dropItemDto.itemId = mUseItem.getUseItemId();
-        dropItemDto.itemType = mUseItem.getUseItemType();
-        dropItemDto.imageResId = mUseItem.getUseItemImageId();
-        dropItemDto.name = mUseItem.getUseItemName();
-        dropItemDto.isEquip = false;
-        
-        MapIndex mapIndex = tiled_map_layer->getFloorRandomMapIndex(false);
-        tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
-
-        object_count++;
-    }
-
-    for (int i = 0; i < 11; i++) {
-        MWeapon mWeapon = MWeaponDao::getInstance()->selectById(i + 1);
-        DropItemSprite::DropItemDto dropItemDto3;
-        dropItemDto3.objectId = object_count + i + 1;
-        dropItemDto3.itemId = mWeapon.getWeaponId(); // weaponId
-        dropItemDto3.itemType = MUseItem::ItemType::EQUIP_WEAPON;
-        dropItemDto3.imageResId = mWeapon.getWeaponImageId();
-        dropItemDto3.name = mWeapon.getWeaponName();
-        dropItemDto3.isEquip = false;
-        
-        MapIndex mapIndex3 = tiled_map_layer->getFloorRandomMapIndex(false);
-        tiled_map_layer->tileSetDropMapItem(dropItemDto3, mapIndex3);
-        
-        object_count++;
-    }
-    for (int i = 0; i < 7; i++) {
-        MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(i + 1);
-        
-        DropItemSprite::DropItemDto dropItemDto4;
-        dropItemDto4.objectId = object_count + i + 1;
-        dropItemDto4.itemId = mAccessory.getAccessoryId();
-        dropItemDto4.itemType = MUseItem::ItemType::EQUIP_ACCESSORY;
-        dropItemDto4.imageResId = mAccessory.getAccessoryImageId();
-        dropItemDto4.name = mAccessory.getAccessoryName();
-        dropItemDto4.isEquip = false;
-        
-        MapIndex mapIndex4 = tiled_map_layer->getFloorRandomMapIndex(false);
-        tiled_map_layer->tileSetDropMapItem(dropItemDto4, mapIndex4);
-        
-        object_count++;
-    }
+    int dropItemCount = getRogueMapData().at("dropItemCount").asInt();
+    institutionDropItem(dropItemCount);
     
     // -------------------------------
     // メニュー
@@ -410,7 +360,10 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Ref* pSender) {
         CCLOG("Cボタンが押された！");
 
+        // 千里眼、地獄耳デバッグ用
         this->enemyMappingAllShow();
+        this->itemMappingAllShow();
+        
 //        this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Ref* pSender){
 //            // OK
 //            this->hideCommonWindow();
@@ -1464,6 +1417,107 @@ void RogueScene::institutionEnemy(int probCount) {
         tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto, enemyMapIndex);
     }
     hitIds.clear();
+}
+
+// アイテム配置
+void RogueScene::institutionDropItem(int probCount) {
+    ValueMap rogueMapDatas = getRogueMapData();
+    
+    ValueVector probList = rogueMapDatas.at("dropItemIds").asValueVector();
+    ValueVector hitValues = LotteryUtils::lotValues(probCount, probList);
+    if (hitValues.size() <= 0) {
+        hitValues.clear();
+        return;
+    }
+    
+    auto tiled_map_layer = getRogueMapLayer();
+    
+    for (Value hitValue : hitValues) {
+        
+        ValueMap valueMap = hitValue.asValueMap();
+        
+        MUseItem::ItemType itemType = static_cast<MUseItem::ItemType>(valueMap.at("type").asInt());
+        int hitId = valueMap.at("id").asInt();
+        
+        // objectIdを補正
+        if (AccountData::getInstance()->rogue_play_data_.item_count < 0) {
+            AccountData::getInstance()->rogue_play_data_.item_count = 0;
+        }
+        
+        if (itemType == MUseItem::ItemType::USE_ITEM || itemType == MUseItem::ItemType::GOLD) {
+            // 消費アイテム  or お金
+            
+            // Master取得
+            MUseItem mUseItem = MUseItemDao::getInstance()->selectById(hitId);
+            // ドロップアイテム情報を生成
+            int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
+            DropItemSprite::DropItemDto dropItemDto {
+                objectId,
+                mUseItem.getUseItemId(),
+                mUseItem.getUseItemType(),
+                mUseItem.getUseItemImageId(),
+                mUseItem.getUseItemName(),
+                false,
+                0
+            };
+            
+            // お金の場合、値を抽選して設定
+            if (itemType == MUseItem::ItemType::GOLD) {
+                int gold = GetRandom(rogueMapDatas.at("goldMin").asInt(), rogueMapDatas.at("goldMax").asInt());
+                dropItemDto.param = gold;
+            }
+            
+            // 配置
+            MapIndex mapIndex = tiled_map_layer->getFloorRandomMapIndex(false);
+            tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
+            
+            // objectIdを更新
+            AccountData::getInstance()->rogue_play_data_.item_count++;
+            
+        } else if (itemType == MUseItem::ItemType::EQUIP_WEAPON) {
+            // 武器
+            MWeapon mWeapon = MWeaponDao::getInstance()->selectById(hitId);
+            
+            int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
+            DropItemSprite::DropItemDto dropItemDto {
+                objectId,
+                mWeapon.getWeaponId(),
+                MUseItem::ItemType::EQUIP_WEAPON,
+                mWeapon.getWeaponImageId(),
+                mWeapon.getWeaponName(),
+                false,
+                0
+            };
+            
+            MapIndex mapIndex = tiled_map_layer->getFloorRandomMapIndex(false);
+            tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
+            
+            // objectIdを更新
+            AccountData::getInstance()->rogue_play_data_.item_count++;
+            
+        } else if (itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+            // 防具
+            MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(hitId);
+            
+            int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
+            DropItemSprite::DropItemDto dropItemDto {
+                objectId,
+                mAccessory.getAccessoryId(),
+                MUseItem::ItemType::EQUIP_ACCESSORY,
+                mAccessory.getAccessoryImageId(),
+                mAccessory.getAccessoryName(),
+                false,
+                0
+            };
+            
+            MapIndex mapIndex = tiled_map_layer->getFloorRandomMapIndex(false);
+            tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
+            
+            // objectIdを更新
+            AccountData::getInstance()->rogue_play_data_.item_count++;
+        }
+    }
+    hitValues.clear();
 }
 
 #pragma mark

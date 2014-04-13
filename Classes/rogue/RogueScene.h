@@ -190,6 +190,7 @@ private:
 
     // 配置
     void institutionEnemy(int probCount);
+    void institutionDropItem(int probCount);
     
     // 汎用
     const ValueMap getRogueMapData();

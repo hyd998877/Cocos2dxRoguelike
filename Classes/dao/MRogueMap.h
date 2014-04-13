@@ -53,23 +53,23 @@ namespace m_rogue_map{
             Value(ValueMap{ {"id", Value(1)}, {"prob", Value(8000)} })  // sura
         })},
         {"dropItemCount", Value(10)},
-        {"useItemIds", Value(ValueVector{
-            // 50%
-            Value(ValueMap{ {"type", Value(0)}, {"id", Value(0)}, {"prob", Value(5000)} }), // hazure
-            // 20%
-            Value(ValueMap{ {"type", Value(1)}, {"id", Value(1)}, {"prob", Value(1000)} }), // pt
-            Value(ValueMap{ {"type", Value(1)}, {"id", Value(2)}, {"prob", Value( 500)} }),
-            Value(ValueMap{ {"type", Value(1)}, {"id", Value(4)}, {"prob", Value( 300)} }), // et
-            Value(ValueMap{ {"type", Value(1)}, {"id", Value(5)}, {"prob", Value( 200)} }),
-            // 10%
-            Value(ValueMap{ {"type", Value(1)}, {"id", Value(7)}, {"prob", Value(1000)} }), // gold
-            // 10%
-            Value(ValueMap{ {"type", Value(2)}, {"id", Value(1)}, {"prob", Value( 600)} }),
-            Value(ValueMap{ {"type", Value(2)}, {"id", Value(2)}, {"prob", Value( 300)} }),
-            Value(ValueMap{ {"type", Value(2)}, {"id", Value(3)}, {"prob", Value( 100)} }),
-            // 10%
-            Value(ValueMap{ {"type", Value(3)}, {"id", Value(1)}, {"prob", Value( 800)} }),
-            Value(ValueMap{ {"type", Value(3)}, {"id", Value(2)}, {"prob", Value( 200)} }),
+        {"dropItemIds", Value(ValueVector{
+            // 60% ハズレ
+            Value(ValueMap{ {"type", Value( 0)}, {"id", Value(0)}, {"prob", Value(6000)} }), // hazure
+            //  8% 武器
+            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(3)}, {"prob", Value( 100)} }), // w
+            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(2)}, {"prob", Value( 200)} }), // w
+            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(1)}, {"prob", Value( 500)} }), // w
+            //  8% 防具
+            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(2)}, {"prob", Value( 200)} }), // a
+            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(1)}, {"prob", Value( 600)} }), // a
+            // 12% ゴールド
+            Value(ValueMap{ {"type", Value(10)}, {"id", Value(7)}, {"prob", Value(1200)} }), // gold
+            // 12% 消費アイテム
+            Value(ValueMap{ {"type", Value(20)}, {"id", Value(5)}, {"prob", Value( 100)} }), // et
+            Value(ValueMap{ {"type", Value(20)}, {"id", Value(4)}, {"prob", Value( 200)} }), // et
+            Value(ValueMap{ {"type", Value(20)}, {"id", Value(2)}, {"prob", Value( 300)} }), // pt
+            Value(ValueMap{ {"type", Value(20)}, {"id", Value(1)}, {"prob", Value( 600)} }), // pt
         })},
         {"goldMin", Value(100)},
         {"goldMax", Value(1000)}
