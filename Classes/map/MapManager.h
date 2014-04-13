@@ -66,6 +66,8 @@ typedef struct _DropMapItem : public MapItem {
     int seqNo;
     /** アイテムID */
     int itemId;
+    /** アイテムのパラメータ（装備なら+値 お金ならゴールド） */
+    int param;
 }DropMapItem;
 
 

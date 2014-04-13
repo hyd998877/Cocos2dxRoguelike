@@ -839,14 +839,12 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                 // ゴールドは別扱い
                 if (drop_item_dto->itemType == MUseItem::ItemType::GOLD) {
 
-                    // ゴールド値を乱数で決める
-                    // TODO: 乱数の範囲はフロア情報で管理する
-                    int gold = GetRandom(10, 999);
+                    // TODO: (kyokomi) 拾うSE再生
                     
                     // メッセージログ
-                    logMessage("%d%sを拾った。", gold, drop_item_dto->name.c_str());
+                    logMessage("%d%sを拾った。", drop_item_dto->param, drop_item_dto->name.c_str());
                     // ゴールドを加算
-                    actor_sprite->getActorDto()->gold += gold;
+                    actor_sprite->getActorDto()->gold += drop_item_dto->param;
                     
                     // Map上から削除する
                     rogue_map_layer->removeDropItemSprite(drop_item_sprite);
@@ -857,7 +855,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
                     if (getItemWindowLayer()->getItemList().size() < USE_ITEM_MAX) {
                         // ドロップアイテムを拾う
                         
-                        // TODO: 拾うSE再生
+                        // TODO: (kyokomi) 拾うSE再生
                         
                         // メッセージログ
                         logMessage("%sを拾った。", drop_item_dto->name.c_str());
