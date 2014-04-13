@@ -301,6 +301,7 @@
 		CE3704A718C3600900F0791B /* StringUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtil.h; sourceTree = "<group>"; };
 		CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
 		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
+		CE624BBF18F9607B0007FE58 /* MRogueMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRogueMap.h; sourceTree = "<group>"; };
 		CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageScene.cpp; sourceTree = "<group>"; };
 		CE68D3E418B9F9D0006CCA37 /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
 		CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueTMXTiledMap.cpp; sourceTree = "<group>"; };
@@ -313,6 +314,7 @@
 		CE73FB2318B0A3F1009273D0 /* test_master */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_master; sourceTree = "<group>"; };
 		CE7F54B218AF0AFD00BFD0DC /* NovelScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NovelScene.cpp; sourceTree = "<group>"; };
 		CE7F54B318AF0AFD00BFD0DC /* NovelScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NovelScene.h; sourceTree = "<group>"; };
+		CE81F77418FA2F19008E2F6F /* LotteryUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LotteryUtils.h; sourceTree = "<group>"; };
 		CE81F79518940AA900A8162B /* kaidan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kaidan.png; sourceTree = "<group>"; };
 		CE890F1918B0E26A0088A9BC /* MUseItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItem.cpp; sourceTree = "<group>"; };
 		CE890F1A18B0E26A0088A9BC /* MUseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItem.h; sourceTree = "<group>"; };
@@ -596,6 +598,7 @@
 			isa = PBXGroup;
 			children = (
 				CE3704A718C3600900F0791B /* StringUtil.h */,
+				CE81F77418FA2F19008E2F6F /* LotteryUtils.h */,
 			);
 			name = util;
 			path = ../Classes/util;
@@ -658,6 +661,7 @@
 				CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */,
 				CEAEE91418D5F46B0026D6B4 /* MMonster.h */,
 				CEAA20AE18DD13680057DE9C /* MPlayer.h */,
+				CE624BBF18F9607B0007FE58 /* MRogueMap.h */,
 			);
 			name = dao;
 			path = ../Classes/dao;

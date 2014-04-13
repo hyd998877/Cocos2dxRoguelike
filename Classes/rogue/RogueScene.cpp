@@ -10,6 +10,7 @@
 #include "RogueScene.h"
 // ------------------------------
 #include "CommonWindowUtil.h"
+#include "LotteryUtils.h"
 
 #include "TableViewTestLayer.h"
 
@@ -22,6 +23,7 @@
 #include "MAccessoryDao.h"
 #include "MMonster.h"
 #include "MPlayer.h"
+#include "MRogueMap.h"
 
 #include "AccountData.h"
 
@@ -213,21 +215,26 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ---------------------
     // 敵キャラ生成
     // ---------------------
-    ActorSprite::ActorDto enemy_dto1 = ActorSprite::createActorDto(m_monster::data_.at("1").asString());
-    enemy_dto1.equip = ActorSprite::createEquipDto();
-    ActorSprite::ActorDto enemy_dto2 = ActorSprite::createActorDto(m_monster::data_.at("2").asString());
-    enemy_dto2.equip = ActorSprite::createEquipDto();
-    ActorSprite::ActorDto enemy_dto3 = ActorSprite::createActorDto(m_monster::data_.at("3").asString());
-    enemy_dto3.equip = ActorSprite::createEquipDto();
+    // フロア情報のIndexを用意する（データがない場合は最終データで補正）
+    int floorIndex = rogue_play_data_.quest_id - 1;
+    if (m_rogue_map::datas_.size() <= floorIndex) {
+        floorIndex = m_rogue_map::datas_.size() - 1;
+    }
+    Value rogueMapData = m_rogue_map::datas_[floorIndex];
+    ValueMap rogueMapDatas = rogueMapData.asValueMap();
     
-    MapIndex enemyMapIndex1 = tiled_map_layer->getFloorRandomMapIndex(true);
-    tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto1, enemyMapIndex1);
-    
-    MapIndex enemyMapIndex2 = tiled_map_layer->getFloorRandomMapIndex(true);
-    tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto2, enemyMapIndex2);
-    
-    MapIndex enemyMapIndex3 = tiled_map_layer->getFloorRandomMapIndex(true);
-    tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto3, enemyMapIndex3);
+    int probCount = rogueMapDatas.at("mobCount").asInt();
+    ValueVector probList = rogueMapDatas.at("mobIds").asValueVector();
+    std::vector<int> hitIds = LotteryUtils::lot(probCount, probList);
+    if (hitIds.size() > 0) {
+        for (int hitId : hitIds) {
+            std::string hitIdStr = StringUtils::format("%d", hitId);
+            ActorSprite::ActorDto enemy_dto = ActorSprite::createActorDto(m_monster::data_.at(hitIdStr).asString());
+            enemy_dto.equip = ActorSprite::createEquipDto();
+            MapIndex enemyMapIndex = tiled_map_layer->getFloorRandomMapIndex(true);
+            tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto, enemyMapIndex);
+        }
+    }
     
     //-------------------------
     // アイテム配置
