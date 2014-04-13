@@ -13,8 +13,8 @@ class LotteryUtils
 {
 public:
     
-    static std::vector<int> lot(const int probCount, const ValueVector probList) {
-        std::vector<int> hitIds;
+    static ValueVector lotValues(const int probCount, const ValueVector probList) {
+        ValueVector hitValues = {};
         // 抽選合計値を求める（100%基準を作成）
         int probSum = 0;
         for (Value probData : probList) {
@@ -23,25 +23,35 @@ public:
         }
         
         for (int i = 0; i < probCount; i++) {
-            // モンスター抽選
-            int probTotal = 0;
+            // 抽選
+            int randomProbability = GetRandom(1, probSum);
+            
+            int tempProbability = 0;
             for (Value probData : probList) {
-                
                 ValueMap probDataMap = probData.asValueMap();
-                
-                int prob = probDataMap.at("prob").asInt();
-                probTotal += prob;
-                int randProb = GetRandom(1, probSum);
-                if (probTotal >= randProb) {
-                    
+                int prob = probData.asValueMap().at("prob").asInt();
+                tempProbability += prob;
+
+                if (tempProbability >= randomProbability) {
                     int probId = probDataMap.at("id").asInt();
                     if (probId > 0) {
                         // hit
-                        hitIds.push_back(probId);
+                        hitValues.push_back(Value(probDataMap));
                     }
+                    break;
                 }
             }
         }
+        return hitValues;
+    }
+    
+    static std::vector<int> lot(const int probCount, const ValueVector probList) {
+        std::vector<int> hitIds;
+        ValueVector hitValues = lotValues(probCount, probList);
+        for (auto value : hitValues) {
+            hitIds.push_back(value.asValueMap().at("id").asInt());
+        }
+        hitValues.clear();
         return hitIds;
     }
     

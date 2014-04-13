@@ -188,7 +188,11 @@ private:
     AlertDialogLayer* getCommonWindow();
     void hideCommonWindow();
 
+    // 配置
+    void institutionEnemy(int probCount);
+    
     // 汎用
+    const ValueMap getRogueMapData();
     ActorSprite* getPlayerActorSprite(int seqNo);
     ModalLayer* getModalLayer();
     RogueTMXTiledMap* getRogueMapLayer();

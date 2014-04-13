@@ -215,26 +215,8 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ---------------------
     // 敵キャラ生成
     // ---------------------
-    // フロア情報のIndexを用意する（データがない場合は最終データで補正）
-    int floorIndex = rogue_play_data_.quest_id - 1;
-    if (m_rogue_map::datas_.size() <= floorIndex) {
-        floorIndex = m_rogue_map::datas_.size() - 1;
-    }
-    Value rogueMapData = m_rogue_map::datas_[floorIndex];
-    ValueMap rogueMapDatas = rogueMapData.asValueMap();
-    
-    int probCount = rogueMapDatas.at("mobCount").asInt();
-    ValueVector probList = rogueMapDatas.at("mobIds").asValueVector();
-    std::vector<int> hitIds = LotteryUtils::lot(probCount, probList);
-    if (hitIds.size() > 0) {
-        for (int hitId : hitIds) {
-            std::string hitIdStr = StringUtils::format("%d", hitId);
-            ActorSprite::ActorDto enemy_dto = ActorSprite::createActorDto(m_monster::data_.at(hitIdStr).asString());
-            enemy_dto.equip = ActorSprite::createEquipDto();
-            MapIndex enemyMapIndex = tiled_map_layer->getFloorRandomMapIndex(true);
-            tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto, enemyMapIndex);
-        }
-    }
+    int probCount = getRogueMapData().at("mobCount").asInt();
+    institutionEnemy(probCount);
     
     //-------------------------
     // アイテム配置
@@ -551,7 +533,6 @@ void RogueScene::onEnterTransitionDidFinish() {
 void RogueScene::changeGameStatus(GameStatus gameStatus) {
     CCLOG("turn %d change gameStatus %d => %d", rogue_play_data_.turn_count, rogue_play_data_.game_status, gameStatus);
     
-    auto rogue_map_layer = getRogueMapLayer();
     auto pPlayer = getPlayerActorSprite(1);
     
     GameStatus beforeGameStatus = rogue_play_data_.game_status;
@@ -603,17 +584,11 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
         
         // 敵のリポップ
         
-        // ランダムなタイミングでランダムに湧く
-        int rand = GetRandom(1, 10); // 1%
-        if (rand == 1) {
-            MapIndex rePopIndex = rogue_map_layer->getFloorRandomMapIndex(true);
-            // 敵データ作成
-            int enemy_rand_id = GetRandom(1, 8);
-            ActorSprite::ActorDto enemyDto = ActorSprite::createActorDto(m_monster::data_.at(StringUtils::format("%d", enemy_rand_id)).asString());
-            enemyDto.equip = ActorSprite::createEquipDto();
-            
-            rePopIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
-            rogue_map_layer->tileSetEnemyActorMapItem(enemyDto, rePopIndex);
+        // ランダムなタイミング（毎ターン5%くらい）に湧く
+        int rand = GetRandom(1, 100);
+        if (rand <= 5) {
+            // 1体沸く
+            institutionEnemy(1);
         }
     }
     
@@ -1468,7 +1443,44 @@ void RogueScene::itemMappingAllShow() {
 }
 
 #pragma mark
+#pragma mark 配置
+
+// モンスター配置
+void RogueScene::institutionEnemy(int probCount) {
+    ValueMap rogueMapDatas = getRogueMapData();
+    
+    ValueVector probList = rogueMapDatas.at("mobIds").asValueVector();
+    std::vector<int> hitIds = LotteryUtils::lot(probCount, probList);
+    if (hitIds.size() <= 0) {
+        hitIds.clear();
+        return;
+    }
+    
+    auto tiled_map_layer = getRogueMapLayer();
+    
+    for (int hitId : hitIds) {
+        std::string hitIdStr = StringUtils::format("%d", hitId);
+        ActorSprite::ActorDto enemy_dto = ActorSprite::createActorDto(m_monster::data_.at(hitIdStr).asString());
+        enemy_dto.equip = ActorSprite::createEquipDto();
+        MapIndex enemyMapIndex = tiled_map_layer->getFloorRandomMapIndex(true);
+        tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto, enemyMapIndex);
+    }
+    hitIds.clear();
+}
+
+#pragma mark
 #pragma mark 汎用
+
+// ローグマップ基本データ取得
+const ValueMap RogueScene::getRogueMapData() {
+    // フロア情報のIndexを用意する（データがない場合は最終データで補正）
+    int questIndex = rogue_play_data_.quest_id - 1;
+    if (m_rogue_map::datas_.size() <= questIndex) {
+        questIndex = m_rogue_map::datas_.size() - 1;
+    }
+    Value rogueMapData = m_rogue_map::datas_[questIndex];
+    return rogueMapData.asValueMap();
+}
 
 ActorSprite* RogueScene::getPlayerActorSprite(int seqNo) {
     return static_cast<ActorSprite*>(getChildByTag(RogueScene::ActorPlayerTag + seqNo));
