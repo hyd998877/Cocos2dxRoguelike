@@ -12,7 +12,9 @@ using namespace rogue;
 
 RogueTMXTiledMap::RogueTMXTiledMap()
 :mini_map_layer_(nullptr),
-enemyCount_(0)
+enemyCount_(0),
+itemAllShow_(false),
+enemyAllShow_(false)
 {
 }
 
@@ -397,13 +399,16 @@ void RogueTMXTiledMap::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool
     if (pDropItemMapLayer) {
         for (auto pDropItemNode : pDropItemMapLayer->getChildren()) {
             bool isContains = floorInfoIndexRect.containsPoint(pDropItemNode->getPosition());
-            if (isRefresh || isContains) {
-                pDropItemNode->setVisible(isContains);
+            if (isRefresh || isContains || itemAllShow_) {
+                // 千里眼優先
+                bool settingVisible = itemAllShow_ ? true : isContains;
+                
+                pDropItemNode->setVisible(settingVisible);
                 
                 if (pBatchNode) {
                     auto pMiniDropItemNode = pBatchNode->getChildByTag(pDropItemNode->getTag());
                     if (pMiniDropItemNode) {
-                        pMiniDropItemNode->setVisible(isContains);
+                        pMiniDropItemNode->setVisible(settingVisible);
                     }
                 }
             }
@@ -413,6 +418,7 @@ void RogueTMXTiledMap::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool
     //階段
     auto pKaidan = this->getChildByTag(TiledMapTags::TiledMapObjectTag);
     if (pKaidan) {
+        // 階段は1回見えたら消えない
         if (!pKaidan->isVisible()) {
             bool isContains = floorInfoIndexRect.containsPoint(pKaidan->getPosition());
             if (isRefresh || isContains) {
@@ -433,13 +439,16 @@ void RogueTMXTiledMap::tiledMapItemLighting(const Rect& floorInfoIndexRect, bool
     if (pEnemyMapLayer) {
         for (auto pEnemyNode : pEnemyMapLayer->getChildren()) {
             bool isContains = floorInfoIndexRect.containsPoint(pEnemyNode->getPosition());
-            if (isRefresh || isContains) {
-                pEnemyNode->setVisible(isContains);
+            if (isRefresh || isContains || enemyAllShow_) {
+                // 地獄耳優先
+                bool settingVisible = enemyAllShow_ ? true : isContains;
+                
+                pEnemyNode->setVisible(settingVisible);
                 
                 if (pBatchNode) {
                     auto pMiniEnemyNode = pBatchNode->getChildByTag(pEnemyNode->getTag());
                     if (pMiniEnemyNode) {
-                        pMiniEnemyNode->setVisible(isContains);
+                        pMiniEnemyNode->setVisible(settingVisible);
                     }
                 }
             }

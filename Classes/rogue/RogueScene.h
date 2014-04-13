@@ -198,6 +198,10 @@ private:
     void rogueMapLighting();
     void showPlayerLighting(ActorSprite* actor_sprite);
     void hidePlayerLighting();
+    
+    // 呪文
+    void enemyMappingAllShow();
+    void itemMappingAllShow();
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__RogueScene__) */

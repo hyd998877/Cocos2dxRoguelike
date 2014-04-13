@@ -57,6 +57,15 @@ class RogueTMXTiledMap : public TMXTiledMap
         MiniMapLayerMapActorZOrder
     };
     
+private:
+    LayerColor* mini_map_layer_;
+    
+    int enemyCount_;
+    // 千里眼
+    bool itemAllShow_;
+    // 地獄耳
+    bool enemyAllShow_;
+    
 public:
     static RogueTMXTiledMap* create(const std::string& tmxFile);
     
@@ -98,16 +107,17 @@ public:
 
     LayerColor* getMiniMapLayer() { return mini_map_layer_; };
     
+    void setItemAllShow(bool isAllShow) { itemAllShow_ = isAllShow; };
+    void setEnemyAllShow(bool isAllShow) { enemyAllShow_ = isAllShow; };
+    
 protected:
     RogueTMXTiledMap();
-    ~RogueTMXTiledMap();
+    virtual ~RogueTMXTiledMap();
     
 private:
-    LayerColor* mini_map_layer_;
-    int enemyCount_;
-    
+
     void initRogue();
-    
+        
     SpriteBatchNode* getGridSpriteBatchNode();
     
     void moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex, MapDataType mapDataType, float animation_speed, CallFunc* moveFinishedCallFunc);

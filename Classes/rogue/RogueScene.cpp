@@ -427,18 +427,19 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     c_buttonPress->setOpacity(128);
     auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Ref* pSender) {
         CCLOG("Cボタンが押された！");
-        
-        this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Ref* pSender){
-            // OK
-            this->hideCommonWindow();
-            
-            // 画面遷移
-            this->changeScene(RogueScene::scene(rogue_play_data_.quest_id + 1));
-            
-        }, [this](Ref* pSender){
-            // NG
-            this->hideCommonWindow();
-        });
+
+        this->enemyMappingAllShow();
+//        this->showCommonWindow("階段です。\n　\n次の階に進みますか？", [this](Ref* pSender){
+//            // OK
+//            this->hideCommonWindow();
+//            
+//            // 画面遷移
+//            this->changeScene(RogueScene::scene(rogue_play_data_.quest_id + 1));
+//            
+//        }, [this](Ref* pSender){
+//            // NG
+//            this->hideCommonWindow();
+//        });
         
     });
     pC_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 3, rogu_map_layer->indexToPoint(10, 1).y));
@@ -1451,6 +1452,19 @@ void RogueScene::hidePlayerLighting() {
     if (rogue_player_light_base_layer) {
         rogue_player_light_base_layer->setVisible(false);
     }
+}
+
+#pragma mark
+#pragma mark 呪文
+
+void RogueScene::enemyMappingAllShow() {
+    getRogueMapLayer()->setEnemyAllShow(true);
+    rogueMapLighting();
+}
+
+void RogueScene::itemMappingAllShow() {
+    getRogueMapLayer()->setItemAllShow(true);
+    rogueMapLighting();
 }
 
 #pragma mark
