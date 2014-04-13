@@ -898,42 +898,48 @@ void RogueScene::attack() {
     // アニメーション
     pActorSprite->runAction(Sequence::create(pMove1, pMove2, CallFunc::create([this, pActorSprite, pEnemySprite](void) {
         if (pEnemySprite) {
-            auto player = pActorSprite->getActorDto();
-            auto enemy = pEnemySprite->getActorDto();
-            
-            // 攻撃開始
-            int damage = BattleLogic::exec(*player, *enemy);
-            // 攻撃イベント
-            logMessage("%sの攻撃: %sに%dのダメージ", player->name.c_str(), enemy->name.c_str(), damage);
-            // オーバーキル考慮しない
-            enemy->hitPoint = enemy->hitPoint - damage;
-            
-            // 敵の死亡判定
-            if (enemy->hitPoint <= 0) {
-                logMessage("%sを倒した。経験値%dを得た。", enemy->name.c_str(), enemy->exp);
-                
-                // TODO: (kyokomi) 経験値更新（計算式 適当）
-                player->exp += enemy->exp;
-                if (MLevelDao::getInstance()->checkLevelUp(player->lv, player->exp)) {
-                    player->lv++;
-                    auto mLevel = MLevelDao::getInstance()->selectById(player->lv);
-                    player->hitPointLimit += mLevel.getGrowHitPoint();
-                    
-                    // TODO: レベルアップ演出（SE？）
-                    
-                    logMessage("%sはレベル%dになった。", player->name.c_str(), player->lv);
-                    
-                    // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
-                    this->refreshStatusEquip(*player);
-                }
-                
-                // マップから消える
-                getRogueMapLayer()->removeEnemyActorSprite(pEnemySprite);
-            }
+            this->attackCallback(pActorSprite, pEnemySprite);
         }
         changeGameStatus(GameStatus::ENEMY_TURN);
-        
     }), NULL));
+}
+
+void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySprite) {
+    auto player = pActorSprite->getActorDto();
+    auto enemy = pEnemySprite->getActorDto();
+    
+    // 攻撃開始
+    int damage = BattleLogic::exec(*player, *enemy);
+    // 攻撃イベント
+    logMessage("%sの攻撃: %sに%dのダメージ", player->name.c_str(), enemy->name.c_str(), damage);
+    // オーバーキル考慮しない
+    enemy->hitPoint = enemy->hitPoint - damage;
+    
+    // 敵の死亡判定
+    if (enemy->hitPoint <= 0) {
+        logMessage("%sを倒した。経験値%dを得た。", enemy->name.c_str(), enemy->exp);
+        
+        // TODO: (kyokomi) 経験値更新（計算式 適当）
+        player->exp += enemy->exp;
+        if (MLevelDao::getInstance()->checkLevelUp(player->lv, player->exp)) {
+            player->lv++;
+            auto mLevel = MLevelDao::getInstance()->selectById(player->lv);
+            // パラメータUp
+            player->hitPointLimit += mLevel.getGrowHitPoint();
+            player->attackPoint += mLevel.getGrowAttackPoint();
+            player->defencePoint += mLevel.getGrowDefencePoint();
+            
+            // TODO: レベルアップ演出（SE？）
+            
+            logMessage("%sはレベル%dになった。", player->name.c_str(), player->lv);
+            
+            // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
+            this->refreshStatusEquip(*player);
+        }
+        
+        // マップから消える
+        getRogueMapLayer()->removeEnemyActorSprite(pEnemySprite);
+    }
 }
 
 #pragma mark
