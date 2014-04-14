@@ -12,5 +12,6 @@ proj.android/build
 
 modules/libcocos
 
+proj.ios_mac/Cocos2dRogueLike.xcodeproj/project.xcworkspace/xcuserdata/m00206-yokomichi.xcuserdatad
 project.xcworkspace
 proj.ios_mac/Cocos2dRogueLike.xcodeproj/xcuserdata/kyokomi.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
