@@ -8,9 +8,9 @@
 
 #include "DropItemSprite.h"
 
-#include "StringUtil.h"
+#include "AppMacros.h"
 
-using namespace cocos2d;
+USING_NS_CC;
 
 DropItemSprite::DropItemSprite()
 {

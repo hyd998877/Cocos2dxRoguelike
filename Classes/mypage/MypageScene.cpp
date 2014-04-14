@@ -17,6 +17,8 @@
 
 #include "AccountData.h"
 
+NS_ROGUE_BEGIN
+
 MypageScene::MypageScene()
 {
 }
@@ -190,3 +192,4 @@ void MypageScene::initGlobalMenu()
     this->addChild(black_layer);
 }
 
+NS_ROGUE_END

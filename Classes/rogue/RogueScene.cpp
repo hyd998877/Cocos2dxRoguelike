@@ -30,6 +30,8 @@
 
 #include "MypageScene.h"
 
+NS_ROGUE_BEGIN
+
 // プロトタイプ宣言
 std::size_t f_r(const std::string& s, char c)
 {
@@ -1508,3 +1510,4 @@ RogueTMXTiledMap* RogueScene::getRogueMapLayer() {
     return static_cast<RogueTMXTiledMap*>(this->getChildByTag(RogueScene::TiledMapLayerTag));
 }
 
+NS_ROGUE_END

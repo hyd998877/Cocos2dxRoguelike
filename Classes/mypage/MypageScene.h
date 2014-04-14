@@ -10,9 +10,12 @@
 #define __Cocos2dRogueLike__MypageScene__
 
 #include "cocos2d.h"
+#include "AppMacros.h"
 
 USING_NS_CC;
 using namespace std;
+
+NS_ROGUE_BEGIN
 
 class MypageScene : public Layer
 {
@@ -22,13 +25,15 @@ private:
     
 public:
     MypageScene();
-    ~MypageScene();
+    virtual ~MypageScene();
     
-    virtual bool init();
+    bool init();
     
     static Scene* scene();
     
     CREATE_FUNC(MypageScene);
 };
+
+NS_ROGUE_END
 
 #endif /* defined(__Cocos2dRogueLike__MypageScene__) */

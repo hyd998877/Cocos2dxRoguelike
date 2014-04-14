@@ -17,6 +17,8 @@
 #include "ActorSprite.h"
 #include "DropItemSprite.h"
 
+NS_ROGUE_BEGIN
+
 class AccountData
 {
 public:
@@ -24,7 +26,7 @@ public:
     static AccountData* getInstance();
     
     // --- ローグプレイ情報 ---
-    RogueScene::RoguePlayData rogue_play_data_;
+    RogueLikeGame::RogueScene::RoguePlayData rogue_play_data_;
     
     // --- プレイヤー情報 ---
     ActorSprite::ActorDto player_actor_;
@@ -129,5 +131,7 @@ private:
     
     void init();
 };
+
+NS_ROGUE_END
 
 #endif /* defined(__Cocos2dxSRPGQuest__AccountData__) */

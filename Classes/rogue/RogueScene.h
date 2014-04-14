@@ -21,10 +21,10 @@
 
 USING_NS_CC;
 
-using namespace rogue;
-
 #define MINI_MAP_SCALE (4.16f / GAME_SCALE)
 
+NS_ROGUE_BEGIN
+    
 class RogueScene : public cocos2d::Layer
 {
 public:
@@ -209,5 +209,7 @@ private:
     void enemyMappingAllShow();
     void itemMappingAllShow();
 };
+
+NS_ROGUE_END
 
 #endif /* defined(__Cocos2dxSRPGQuest__RogueScene__) */

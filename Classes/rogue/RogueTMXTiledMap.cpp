@@ -8,7 +8,7 @@
 
 #include "RogueTMXTiledMap.h"
 
-using namespace rogue;
+NS_ROGUE_BEGIN
 
 RogueTMXTiledMap::RogueTMXTiledMap()
 :mini_map_layer_(nullptr),
@@ -737,3 +737,5 @@ MapIndex RogueTMXTiledMap::mapIndexToTileIndex(int mapIndex_x, int mapIndex_y) {
     tileIndex.y = this->getMapSize().height - mapIndex_y - 1;
     return tileIndex;
 }
+
+NS_ROGUE_END
