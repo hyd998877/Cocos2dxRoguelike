@@ -180,8 +180,10 @@ private:
     Vector<MenuItem*> createKeypadMenuItemArray();
     Vector<MenuItem*> createButtonMenuItemArray();
     MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
-    ModalLayer* createFloorTitleCutInLayer(int quest_id);
-    ModalLayer* createGameOverCutInLayer();
+    
+    // カットイン再生
+    void playFloorTitleCutIn(int questId);
+    void playGameOverCutIn();
     
     // アイテムリスト
     void showItemList();

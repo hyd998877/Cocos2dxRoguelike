@@ -13,6 +13,14 @@
 class LayerActionUtils
 {
 public:
+    static void runCutInActionFadeOut(cocos2d::Node * node, const float duration, const std::function<void(void)> callback) {
+        node->runAction(createCutInActionFadeOut(node, duration, callback));
+    }
+    
+    static void runCutInActionFadeInOut(cocos2d::Node * node, const float duration, const std::function<void(void)> callback) {
+        node->runAction(createCutInActionFadeInOut(node, duration, callback));
+    }
+    
     static cocos2d::ActionInterval* createCutInActionFadeOut(cocos2d::Node * node, const float duration, const std::function<void(void)> callback) {
         return cocos2d::Sequence::create(cocos2d::CallFunc::create([node, duration, callback]() {
             auto listener = static_cast<cocos2d::EventListenerTouchOneByOne*>(EventListenerTouchOneByOne::create());

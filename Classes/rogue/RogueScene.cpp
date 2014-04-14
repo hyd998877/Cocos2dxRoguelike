@@ -101,7 +101,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ---------------------
     // フロア開始カットイン表示
     // ---------------------
-    this->addChild(createFloorTitleCutInLayer(rogue_play_data_.quest_id), RogueScene::CutInLayerZOrder);
+    playFloorTitleCutIn(rogue_play_data_.quest_id);
     
     // ---------------------
     // タイルマップを生成
@@ -391,56 +391,53 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     return resultArray;
 }
 
+// --------------------------
+// TODO: CutInクラス作ってcreateしてattachしてrunする感じがいい気がする
+// --------------------------
 // floorTitleカットインを生成する
 // タッチイベントでフェードアウトしてremoveする
 // private
-ModalLayer* RogueScene::createFloorTitleCutInLayer(int quest_id) {
-    auto win_size = Director::getInstance()->getWinSize();
-    const int floor_title_font_size = 47;
+void RogueScene::playFloorTitleCutIn(int quest_id) {
+    auto winSize = Director::getInstance()->getWinSize();
+    const int floorTitleFontSize = 47;
     
-    auto modal_layer = ModalLayer::create(Color3B::BLACK, 0);
+    auto modalLayer = ModalLayer::create(Color3B::BLACK, 0);
     
     // 真っ黒の全画面で中心にフロア名 N層 と表示され　タップするとフェードアウトして消える
-    auto floor_title_cutin_layer = LayerColor::create(Color4B::BLACK);
-    floor_title_cutin_layer->setContentSize(win_size);
+    auto floorTitleCutInLayer = LayerColor::create(Color4B::BLACK);
+    floorTitleCutInLayer->setContentSize(winSize);
     // テキスト中央
     // TODO: (kyokomi) タイトルはdaoからとってくる予定
-    auto floor_title_text = StringUtils::format("初心者の洞窟 %d層", quest_id);
-    auto floor_title_text_label = Label::create(floor_title_text, GAME_FONT(floor_title_font_size), GAME_FONT_SIZE(floor_title_font_size));
-    floor_title_text_label->setPosition(Point(floor_title_cutin_layer->getContentSize().width / 2, floor_title_cutin_layer->getContentSize().height / 2));
-    floor_title_cutin_layer->addChild(floor_title_text_label);
+    auto floorTitleText = StringUtils::format("初心者の洞窟 %d層", quest_id);
+    auto floorTitleTextLabel = Label::create(floorTitleText, GAME_FONT(floorTitleFontSize), GAME_FONT_SIZE(floorTitleFontSize));
+    floorTitleTextLabel->setPosition(Point(floorTitleCutInLayer->getContentSize().width / 2, floorTitleCutInLayer->getContentSize().height / 2));
+    floorTitleCutInLayer->addChild(floorTitleTextLabel);
 
-    floor_title_cutin_layer->runAction(LayerActionUtils::createCutInActionFadeOut(floor_title_cutin_layer, 1.5f, [this, modal_layer]() {
-        modal_layer->setVisible(false);
-        modal_layer->removeAllChildrenWithCleanup(true);
-    }));
-    modal_layer->addChild(floor_title_cutin_layer);
-    
-    return modal_layer;
+    this->addChild(modalLayer, RogueScene::CutInLayerZOrder);
+
+    LayerActionUtils::runCutInActionFadeOut(floorTitleCutInLayer, 1.5f, [this, modalLayer]() {
+        modalLayer->setVisible(false);
+        modalLayer->removeAllChildrenWithCleanup(true);
+    });
+    modalLayer->addChild(floorTitleCutInLayer);
 }
 
 // gameoverカットインを生成する
-ModalLayer* RogueScene::createGameOverCutInLayer() {
-    
-    auto win_size = Director::getInstance()->getWinSize();
-    
+void RogueScene::playGameOverCutIn() {
+    auto winSize = Director::getInstance()->getWinSize();
     auto modalLayer = ModalLayer::create(Color3B::BLACK, 255);
-    
-    // ---------------
-    
-    // TODO: (kyokomi) 画像は一般公開できないので注意
+
+    // TODO: (kyokomi) この画像は一般公開できないので注意
     auto gameOverSprite = Sprite::create("game_over.jpg");
-    gameOverSprite->setPosition(Point(win_size.width / 2, win_size.height / 2));
-    gameOverSprite->runAction(LayerActionUtils::createCutInActionFadeInOut(gameOverSprite, 2.0f, [this, modalLayer]() {
+    gameOverSprite->setPosition(Point(winSize.width / 2, winSize.height / 2));
+    modalLayer->addChild(gameOverSprite, RogueScene::CutInLayerZOrder);
+    
+    LayerActionUtils::runCutInActionFadeInOut(gameOverSprite, 2.0f, [this, modalLayer]() {
         modalLayer->setVisible(false);
         modalLayer->removeAllChildrenWithCleanup(true);
         // マイページへ
         this->changeScene(MypageScene::scene());
-    }));
-    // ---------------
-    modalLayer->addChild(gameOverSprite);
-    
-    return modalLayer;
+    });
 }
 
 void RogueScene::onEnter() {
@@ -470,8 +467,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
     
     if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
         // ゲームオーバーの演出
-        auto game_over_layer = createGameOverCutInLayer();
-        this->addChild(game_over_layer, RogueScene::CutInLayerZOrder);
+        playGameOverCutIn();
         return;
         
     } else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
