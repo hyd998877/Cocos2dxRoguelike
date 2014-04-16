@@ -134,12 +134,12 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     CCLOG("init %s", string.c_str());
     
     // 本文テキスト
-    auto textLabel = Label::create("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
+    auto textLabel = Label::createWithTTF("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
     textLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     textLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
     
     textLabel->setColor(Color3B::WHITE);
-    textLabel->setPosition(Point(textLabel->getFontSize() / 2 + textLabel->getContentSize().width / 2, textLayer->getContentSize().height - textLabel->getContentSize().height / 2 - textLabel->getFontSize() / 2));
+    textLabel->setPosition(Point(textLabel->getSystemFontSize() / 2 + textLabel->getContentSize().width / 2, textLayer->getContentSize().height - textLabel->getContentSize().height / 2 - textLabel->getSystemFontSize() / 2));
 
     textLayer->addChild(textLabel, kZOrder_TextLayer, kTag_TextLayer_textLabel);
     
@@ -150,11 +150,11 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     nameTextLayer->setPosition(Point(textLayer->getPositionX(), textLayer->getPositionY() + textLayer->getContentSize().height + nameTextLayer->getContentSize().height * 0.05));
     this->addChild(nameTextLayer, kZOrder_TextLayer, kTag_TextLayer_name);
     // 名前テキスト
-    auto nameTextLabel = Label::create("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
+    auto nameTextLabel = Label::createWithTTF("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
     nameTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     nameTextLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
 //    nameTextLabel->setColor(Color3B::GREEN);
-    nameTextLabel->setPosition(Point(nameTextLabel->getFontSize() / 2 + nameTextLabel->getContentSize().width / 2, nameTextLayer->getContentSize().height - nameTextLabel->getContentSize().height / 2 - nameTextLabel->getFontSize() / 2));
+    nameTextLabel->setPosition(Point(nameTextLabel->getSystemFontSize() / 2 + nameTextLabel->getContentSize().width / 2, nameTextLayer->getContentSize().height - nameTextLabel->getContentSize().height / 2 - nameTextLabel->getSystemFontSize() / 2));
     nameTextLayer->addChild(nameTextLabel, kZOrder_TextLayer, kTag_TextLayer_nameTextLabel);
     
     CommonWindowUtil::attachWindowWaku(nameTextLayer);
@@ -222,7 +222,7 @@ void NovelScene::dispText(string text)
         // テキストをすすめる
         auto pTextLabel = dynamic_cast<Label*>(pTextLayer->getChildByTag(kTag_TextLayer_textLabel));
         pTextLabel->setString(text.c_str());
-        pTextLabel->setPosition(Point(pTextLabel->getFontSize() / 2 + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height - pTextLabel->getContentSize().height / 2 - pTextLabel->getFontSize() / 2));
+        pTextLabel->setPosition(Point(pTextLabel->getSystemFontSize() / 2 + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height - pTextLabel->getContentSize().height / 2 - pTextLabel->getSystemFontSize() / 2));
     }
 }
 
@@ -234,7 +234,7 @@ void NovelScene::dispName(string name)
         // テキストをすすめる
         auto nameTextLabel = dynamic_cast<Label*>(pLayer->getChildByTag(kTag_TextLayer_nameTextLabel));
         nameTextLabel->setString(name.c_str());
-        nameTextLabel->setPosition(Point(nameTextLabel->getFontSize() / 2 + nameTextLabel->getContentSize().width / 2, pLayer->getContentSize().height / 2));
+        nameTextLabel->setPosition(Point(nameTextLabel->getSystemFontSize() / 2 + nameTextLabel->getContentSize().width / 2, pLayer->getContentSize().height / 2));
     }
 }
 

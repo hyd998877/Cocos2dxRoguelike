@@ -12,15 +12,9 @@
 #include "cocos2d.h"
 #include "extensions/cocos-ext.h"
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #define MISAKI_FONT "fonts/misaki_gothic.ttf"
 #define PIXEL_MPLUS_10_FONT "fonts/PixelMplus10-Regular.ttf"
 #define PIXEL_MPLUS_12_FONT "fonts/PixelMplus12-Regular.ttf"
-#else
-#define MISAKI_FONT "MisakiGothic"
-#define PIXEL_MPLUS_10_FONT "PixelMplus10-Regular"
-#define PIXEL_MPLUS_12_FONT "PixelMplus12-Regular"
-#endif
 
 #define NS_ROGUE_BEGIN                     namespace RogueLikeGame {
 #define NS_ROGUE_END                       }

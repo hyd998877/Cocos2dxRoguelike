@@ -125,7 +125,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     statusLayer->setPosition(Point(0, win_size.height - statusLayer->getContentSize().height));
     
     // あとで更新するやつ
-    auto sampleText = Label::create(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+    auto sampleText = Label::createWithTTF(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
     
     sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
     statusLayer->addChild(sampleText);
@@ -175,8 +175,8 @@ bool RogueScene::initWithQuestId(int quest_id) {
     CommonWindowUtil::attachWindowWaku(pGameLogLayer);
     
     int baseFontSize = 20;
-    auto pLogTextLabel = Label::create("", GAME_FONT(baseFontSize), GAME_FONT_SIZE(baseFontSize), Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
-    pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getFontSize() / 4));
+    auto pLogTextLabel = Label::createWithTTF("", GAME_FONT(baseFontSize), GAME_FONT_SIZE(baseFontSize), Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
+    pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getSystemFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getSystemFontSize() / 4));
     pGameLogLayer->addChild(pLogTextLabel);
     
     this->addChild(pGameLogLayer, RogueScene::GameLogLayerZOrder, RogueScene::GameLogLayerTag);
@@ -411,7 +411,7 @@ void RogueScene::playFloorTitleCutIn(int quest_id) {
     // テキスト中央
     // TODO: (kyokomi) タイトルはdaoからとってくる予定
     auto floorTitleText = StringUtils::format("初心者の洞窟 %d層", quest_id);
-    auto floorTitleTextLabel = Label::create(floorTitleText, GAME_FONT(floorTitleFontSize), GAME_FONT_SIZE(floorTitleFontSize));
+    auto floorTitleTextLabel = Label::createWithTTF(floorTitleText, GAME_FONT(floorTitleFontSize), GAME_FONT_SIZE(floorTitleFontSize));
     floorTitleTextLabel->setPosition(Point(floorTitleCutInLayer->getContentSize().width / 2, floorTitleCutInLayer->getContentSize().height / 2));
     floorTitleCutInLayer->addChild(floorTitleTextLabel);
 
@@ -978,7 +978,7 @@ void RogueScene::logMessage(const char * pszFormat, ...) {
         pGameLogText->setString(pMessage->getCString());
         pGameLogText->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
         pGameLogText->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
-        pGameLogText->setPosition(Point(pGameLogText->getFontSize() / 4 + pGameLogText->getContentSize().width / 2, pGameLogNode->getContentSize().height - pGameLogText->getContentSize().height / 2 - pGameLogText->getFontSize() / 4));
+        pGameLogText->setPosition(Point(pGameLogText->getSystemFontSize() / 4 + pGameLogText->getContentSize().width / 2, pGameLogNode->getContentSize().height - pGameLogText->getContentSize().height / 2 - pGameLogText->getSystemFontSize() / 4));
     }
 }
 
@@ -1114,7 +1114,7 @@ void RogueScene::showItemList() {
         const int font_size = 20;
         
         // 並び替えボタン
-        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::create("並び替え", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this, item_window_layer](Ref* ref) {
+        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF("並び替え", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this, item_window_layer](Ref* ref) {
             // 並び替え
             item_window_layer->sortItemList();
             item_window_layer->reloadItemList();
@@ -1122,7 +1122,7 @@ void RogueScene::showItemList() {
         sort_menu_item_label->setPosition(Point(item_window_layer->getContentSize().width, item_window_layer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
         
         // 閉じるボタン
-        auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::create("とじる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this](Ref* ref) {
+        auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF("とじる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this](Ref* ref) {
             // 閉じる
             this->hideItemList();
         });

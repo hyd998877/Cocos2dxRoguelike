@@ -36,7 +36,7 @@ bool LabelSprite::initWithLabel(const std::string& pszFileName, const std::strin
     {
         return false;
     }
-    m_pLabel = Label::create(string, fontName, fontSize);
+    m_pLabel = Label::createWithTTF(string, fontName, fontSize);
     if (m_pLabel == NULL)
     {
         return false;
