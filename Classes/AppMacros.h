@@ -12,17 +12,11 @@
 #include "cocos2d.h"
 #include "extensions/cocos-ext.h"
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #define MISAKI_FONT "fonts/misaki_gothic.ttf"
 #define PIXEL_MPLUS_10_FONT "fonts/PixelMplus10-Regular.ttf"
 #define PIXEL_MPLUS_12_FONT "fonts/PixelMplus12-Regular.ttf"
-#else
-#define MISAKI_FONT "MisakiGothic"
-#define PIXEL_MPLUS_10_FONT "PixelMplus10-Regular"
-#define PIXEL_MPLUS_12_FONT "PixelMplus12-Regular"
-#endif
 
-#define NS_ROGUE_BEGIN                     namespace rogue {
+#define NS_ROGUE_BEGIN                     namespace RogueLikeGame {
 #define NS_ROGUE_END                       }
 
 //#define GAME_SCALE (1)
@@ -59,6 +53,22 @@ const static std::string GAME_FONT(int fontSize)
         return "";
     }
 }
+
+class StringUtil
+{
+public:
+    static std::vector<std::string> split(std::string&& s)
+    {
+        std::vector<std::string> res;
+        size_t current = 0, found;
+        while((found = s.find_first_of(',', current)) != std::string::npos){
+            res.push_back(std::string(s, current, found - current));
+            current = found + 1;
+        }
+        res.push_back(std::string(s, current, s.size() - current));
+        return res;
+    }
+};
 
 #define EVENT_COME_TO_FOREGROUND_ROGUE "EVENT_COME_TO_FOREGROUND_ROGUE"
 

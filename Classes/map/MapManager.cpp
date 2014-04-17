@@ -366,6 +366,7 @@ void MapManager::removeMapItem(MapItem* pRemoveMapItem)
         DropMapItem noneMapItem = createNoneMapItem<DropMapItem>(pRemoveMapItem->mapIndex.x, pRemoveMapItem->mapIndex.y);
         noneMapItem.seqNo = 0;
         noneMapItem.itemId = 0;
+        noneMapItem.param = 0;
         map_data_.map_drop_item_data_array[pRemoveMapItem->mapIndex.x][pRemoveMapItem->mapIndex.y] = noneMapItem;
     }
     DEBUG_LOG_MAP_ITEM_LAYER();

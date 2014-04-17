@@ -54,7 +54,7 @@ bool SRPGScene::init()
     Point baseMenuPoint = Point(0, 24);
     
     // グリッド表示/非表示
-    auto pMenuItem1 = MenuItemLabel::create(Label::create("A", "", 24), [this](Ref *pSender) {
+    auto pMenuItem1 = MenuItemLabel::create(Label::createWithTTF("A", "", 24), [this](Ref *pSender) {
         //ログ出力
         auto pMapLayer = static_cast<SRPGMapLayer*>(this->getChildByTag(SRPGScene::kSRPGMapLayerTag));
         if (pMapLayer)
@@ -68,7 +68,7 @@ bool SRPGScene::init()
     pMenuItem1->setColor(Color3B::RED);
     pMenuItem1->setPosition(pMenuItem1->getContentSize().width * 0.5, pMenuItem1->getContentSize().height * 0.5);
 
-    auto pMenuItem2 = MenuItemLabel::create(Label::create("B", "", 24), [this](Ref *pSender) {
+    auto pMenuItem2 = MenuItemLabel::create(Label::createWithTTF("B", "", 24), [this](Ref *pSender) {
         //ログ出力
         CCLOG("menuItem2が押された！");
         auto pMapLayer = static_cast<SRPGMapLayer*>(this->getChildByTag(SRPGScene::kSRPGMapLayerTag));
@@ -77,7 +77,7 @@ bool SRPGScene::init()
     pMenuItem2->setColor(Color3B::RED);
     pMenuItem2->setPosition(pMenuItem2->getContentSize().width * 0.5, pMenuItem1->getContentSize().height * 0.5 + pMenuItem1->getPositionY() + pMenuItem2->getContentSize().height * 0.5);
 
-    auto pMenuItem3 = MenuItemLabel::create(Label::create("C", "", 24), [this](Ref *pSender) {
+    auto pMenuItem3 = MenuItemLabel::create(Label::createWithTTF("C", "", 24), [this](Ref *pSender) {
         //ログ出力
         CCLOG("menuItem3が押された！");
         auto pMapLayer = static_cast<SRPGMapLayer*>(this->getChildByTag(SRPGScene::kSRPGMapLayerTag));

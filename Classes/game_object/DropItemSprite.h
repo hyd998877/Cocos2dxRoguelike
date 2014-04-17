@@ -39,6 +39,9 @@ public:
         // status
         bool isEquip;
         
+        // 装備なら+値 ゴールドはお金
+        int param;
+        
         // 武器、防具優先ソート
         static bool const compare_dropItem_weapon_with_accessory(const _DropItemDto& o1, const _DropItemDto& o2) {
             // 装備優先

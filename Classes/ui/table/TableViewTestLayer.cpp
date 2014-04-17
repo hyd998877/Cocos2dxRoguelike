@@ -117,9 +117,9 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) 
         item_image_sprite->setPosition(Point(item_image_sprite->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         text_layer->addChild(item_image_sprite);
         
-        auto text_label = Label::create(table_item.labelText, GAME_FONT(kDetailFontSize), GAME_FONT_SIZE(kDetailFontSize));
+        auto text_label = Label::createWithTTF(table_item.labelText, GAME_FONT(kDetailFontSize), GAME_FONT_SIZE(kDetailFontSize));
         text_label->setColor(table_item.textColor);
-        text_label->setPosition(Point(text_label->getFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
+        text_label->setPosition(Point(text_label->getSystemFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         text_label->setTag(TableViewTestLayer::ItemTextLabelTag);
 
         text_label->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
@@ -135,7 +135,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) 
         
         auto text_label = static_cast<Label*>(text_layer->getChildByTag(TableViewTestLayer::ItemTextLabelTag));
         text_label->setString(table_item.labelText);
-        text_label->setPosition(Point(text_label->getFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
+        text_label->setPosition(Point(text_label->getSystemFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         text_label->setColor(table_item.textColor);
         
         // タッチ中を更新

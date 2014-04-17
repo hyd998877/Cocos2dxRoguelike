@@ -21,10 +21,10 @@
 
 USING_NS_CC;
 
-using namespace rogue;
-
 #define MINI_MAP_SCALE (4.16f / GAME_SCALE)
 
+NS_ROGUE_BEGIN
+    
 class RogueScene : public cocos2d::Layer
 {
 public:
@@ -137,6 +137,7 @@ private:
         CommonWindowZOrder,
         CutInLayerZOrder,
         ModalLayerZOrder,
+        BlackLayerZOrder
     };
 
     // ゲーム管理 save
@@ -168,27 +169,32 @@ private:
     // タッチイベント系
     void touchEventExec(cocos2d::Point touchPoint);
     void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
+    void touchKaidan();
+    void touchDropItem(const DropMapItem& drop_map_item);
     
     void attack();
+    void attackCallback(ActorSprite* player, ActorSprite* enemy);
     
     // UI関連
     void logMessage(const char * pszFormat, ...);
     Vector<MenuItem*> createKeypadMenuItemArray();
     Vector<MenuItem*> createButtonMenuItemArray();
     MenuItem* createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback);
-    ModalLayer* createFloorTitleCutInLayer(int quest_id);
-    ModalLayer* createGameOverCutInLayer();
+    
+    // カットイン再生
+    void playFloorTitleCutIn(int questId);
+    void playGameOverCutIn();
     
     // アイテムリスト
     void showItemList();
     void hideItemList();
     
-    // 共通ウィンドウ
-    void showCommonWindow(std::string titleText, const ccMenuCallback& okMenuItemCallback, const ccMenuCallback& ngMenuItemCallback);
-    AlertDialogLayer* getCommonWindow();
-    void hideCommonWindow();
-
+    // 配置
+    void institutionEnemy(int probCount);
+    void institutionDropItem(int probCount);
+    
     // 汎用
+    const ValueMap getRogueMapData();
     ActorSprite* getPlayerActorSprite(int seqNo);
     ModalLayer* getModalLayer();
     RogueTMXTiledMap* getRogueMapLayer();
@@ -198,6 +204,12 @@ private:
     void rogueMapLighting();
     void showPlayerLighting(ActorSprite* actor_sprite);
     void hidePlayerLighting();
+    
+    // 呪文
+    void enemyMappingAllShow();
+    void itemMappingAllShow();
 };
+
+NS_ROGUE_END
 
 #endif /* defined(__Cocos2dxSRPGQuest__RogueScene__) */

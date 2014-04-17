@@ -8,6 +8,8 @@
 
 #include "AccountData.h"
 
+NS_ROGUE_BEGIN
+
 static AccountData *s_account_data_instance;
 
 // シングルトン
@@ -121,4 +123,4 @@ void AccountData::reset()
     item_list_.clear();
 }
 
-
+NS_ROGUE_END

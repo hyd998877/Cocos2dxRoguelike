@@ -87,13 +87,14 @@
 		CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */; };
 		CE93B450188156C700825FD1 /* LabelSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B434188156C700825FD1 /* LabelSprite.cpp */; };
 		CE93B451188156C700825FD1 /* MenuItemSelectLabelSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */; };
-		CE93B452188156C700825FD1 /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B438188156C700825FD1 /* ModalLayer.cpp */; };
 		CE93B454188156C700825FD1 /* TableViewTestLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */; };
 		CE93B4BF188156FC00825FD1 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A4188156FC00825FD1 /* fonts */; };
 		CE93B4C0188156FC00825FD1 /* grid32.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A5188156FC00825FD1 /* grid32.png */; };
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
 		CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */; };
+		CEB138A018FAE7140086AC69 /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */; };
+		CEB138A118FAE7140086AC69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CEB1389F18FAE7140086AC69 /* README.md */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
 		CECE37AD18B9A08C0086C8A0 /* bg in Resources */ = {isa = PBXBuildFile; fileRef = CECE37AC18B9A08C0086C8A0 /* bg */; };
 		CECE37B518B9A6EA0086C8A0 /* battle in Resources */ = {isa = PBXBuildFile; fileRef = CECE37B418B9A6EA0086C8A0 /* battle */; };
@@ -298,9 +299,9 @@
 		CE33EF6518B0E92D006C4B13 /* MUseItemDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItemDao.h; sourceTree = "<group>"; };
 		CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessoryDao.cpp; sourceTree = "<group>"; };
 		CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessoryDao.h; sourceTree = "<group>"; };
-		CE3704A718C3600900F0791B /* StringUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtil.h; sourceTree = "<group>"; };
 		CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
 		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
+		CE624BBF18F9607B0007FE58 /* MRogueMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRogueMap.h; sourceTree = "<group>"; };
 		CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageScene.cpp; sourceTree = "<group>"; };
 		CE68D3E418B9F9D0006CCA37 /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
 		CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueTMXTiledMap.cpp; sourceTree = "<group>"; };
@@ -313,6 +314,7 @@
 		CE73FB2318B0A3F1009273D0 /* test_master */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_master; sourceTree = "<group>"; };
 		CE7F54B218AF0AFD00BFD0DC /* NovelScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NovelScene.cpp; sourceTree = "<group>"; };
 		CE7F54B318AF0AFD00BFD0DC /* NovelScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NovelScene.h; sourceTree = "<group>"; };
+		CE81F77418FA2F19008E2F6F /* LotteryUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LotteryUtils.h; sourceTree = "<group>"; };
 		CE81F79518940AA900A8162B /* kaidan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kaidan.png; sourceTree = "<group>"; };
 		CE890F1918B0E26A0088A9BC /* MUseItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItem.cpp; sourceTree = "<group>"; };
 		CE890F1A18B0E26A0088A9BC /* MUseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItem.h; sourceTree = "<group>"; };
@@ -350,8 +352,6 @@
 		CE93B435188156C700825FD1 /* LabelSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelSprite.h; sourceTree = "<group>"; };
 		CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuItemSelectLabelSprite.cpp; sourceTree = "<group>"; };
 		CE93B437188156C700825FD1 /* MenuItemSelectLabelSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemSelectLabelSprite.h; sourceTree = "<group>"; };
-		CE93B438188156C700825FD1 /* ModalLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModalLayer.cpp; sourceTree = "<group>"; };
-		CE93B439188156C700825FD1 /* ModalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalLayer.h; sourceTree = "<group>"; };
 		CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TableViewTestLayer.cpp; sourceTree = "<group>"; };
 		CE93B43E188156C700825FD1 /* TableViewTestLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewTestLayer.h; sourceTree = "<group>"; };
 		CE93B4A4188156FC00825FD1 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
@@ -362,6 +362,10 @@
 		CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
 		CEAA20AE18DD13680057DE9C /* MPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayer.h; sourceTree = "<group>"; };
 		CEAEE91418D5F46B0026D6B4 /* MMonster.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMonster.h; sourceTree = "<group>"; };
+		CEB1389818FAD9030086AC69 /* LayerActionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerActionUtils.h; sourceTree = "<group>"; };
+		CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModalLayer.cpp; sourceTree = "<group>"; };
+		CEB1389E18FAE7140086AC69 /* ModalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalLayer.h; sourceTree = "<group>"; };
+		CEB1389F18FAE7140086AC69 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
 		CECE37AC18B9A08C0086C8A0 /* bg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bg; sourceTree = "<group>"; };
 		CECE37B418B9A6EA0086C8A0 /* battle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = battle; sourceTree = "<group>"; };
@@ -441,6 +445,7 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CEB1389C18FAE7140086AC69 /* layers_nodes */,
 				CE795BEF18C329D8007B2286 /* common */,
 				CE3704A618C3600900F0791B /* util */,
 				CE68D3DC18B9F9BB006CCA37 /* mypage */,
@@ -595,7 +600,8 @@
 		CE3704A618C3600900F0791B /* util */ = {
 			isa = PBXGroup;
 			children = (
-				CE3704A718C3600900F0791B /* StringUtil.h */,
+				CEB1389818FAD9030086AC69 /* LayerActionUtils.h */,
+				CE81F77418FA2F19008E2F6F /* LotteryUtils.h */,
 			);
 			name = util;
 			path = ../Classes/util;
@@ -658,6 +664,7 @@
 				CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */,
 				CEAEE91418D5F46B0026D6B4 /* MMonster.h */,
 				CEAA20AE18DD13680057DE9C /* MPlayer.h */,
+				CE624BBF18F9607B0007FE58 /* MRogueMap.h */,
 			);
 			name = dao;
 			path = ../Classes/dao;
@@ -751,8 +758,6 @@
 				CE93B435188156C700825FD1 /* LabelSprite.h */,
 				CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */,
 				CE93B437188156C700825FD1 /* MenuItemSelectLabelSprite.h */,
-				CE93B438188156C700825FD1 /* ModalLayer.cpp */,
-				CE93B439188156C700825FD1 /* ModalLayer.h */,
 				CE93B43A188156C700825FD1 /* table */,
 				CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */,
 				CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */,
@@ -770,6 +775,17 @@
 				CE93B43E188156C700825FD1 /* TableViewTestLayer.h */,
 			);
 			path = table;
+			sourceTree = "<group>";
+		};
+		CEB1389C18FAE7140086AC69 /* layers_nodes */ = {
+			isa = PBXGroup;
+			children = (
+				CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */,
+				CEB1389E18FAE7140086AC69 /* ModalLayer.h */,
+				CEB1389F18FAE7140086AC69 /* README.md */,
+			);
+			name = layers_nodes;
+			path = ../Classes/layers_nodes;
 			sourceTree = "<group>";
 		};
 		CEF46A6318B8740500F887CA /* battle */ = {
@@ -959,6 +975,7 @@
 				CECE37B518B9A6EA0086C8A0 /* battle in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
+				CEB138A118FAE7140086AC69 /* README.md in Resources */,
 				CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */,
 				CECE37AD18B9A08C0086C8A0 /* bg in Resources */,
 				CE0D522B188A507F00ECB309 /* icon_set in Resources */,
@@ -1016,6 +1033,7 @@
 				CE93B447188156C700825FD1 /* BattleLogic.cpp in Sources */,
 				CE93B44C188156C700825FD1 /* RogueScene.cpp in Sources */,
 				CE8D50EC18EB66710078046F /* Joystick.cpp in Sources */,
+				CEB138A018FAE7140086AC69 /* ModalLayer.cpp in Sources */,
 				CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */,
 				CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */,
 				CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */,
@@ -1035,7 +1053,6 @@
 				CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */,
 				CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */,
 				CE7F54B418AF0AFD00BFD0DC /* NovelScene.cpp in Sources */,
-				CE93B452188156C700825FD1 /* ModalLayer.cpp in Sources */,
 				CE890F2718B0E2A60088A9BC /* MAccessory.cpp in Sources */,
 				CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,

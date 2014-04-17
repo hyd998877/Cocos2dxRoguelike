@@ -8,9 +8,9 @@
 
 #include "DropItemSprite.h"
 
-#include "StringUtil.h"
+#include "AppMacros.h"
 
-using namespace cocos2d;
+USING_NS_CC;
 
 DropItemSprite::DropItemSprite()
 {
@@ -88,13 +88,14 @@ DropItemSprite::DropItemDto* DropItemSprite::getDropItemDto()
 
 std::string DropItemSprite::dropItemToString(const DropItemDto& drop_item)
 {
-    return StringUtils::format("%ld,%d,%d,%d,%s,%d",
+    return StringUtils::format("%ld,%d,%d,%d,%s,%d,%d",
                                drop_item.objectId,
                                drop_item.itemId,
                                drop_item.itemType,
                                drop_item.imageResId,
                                drop_item.name.c_str(),
-                               drop_item.isEquip
+                               drop_item.isEquip,
+                               drop_item.param
                                );
 }
 
@@ -103,7 +104,7 @@ DropItemSprite::DropItemDto DropItemSprite::createDropItemDto(std::string data_s
     std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
     int index = 0;
     
-    if (data_string_array.size() != 6) {
+    if (data_string_array.size() != 7) {
         return {0l, 0, MUseItem::ItemType::NONE, 0, "", false};
     }
     
@@ -114,7 +115,7 @@ DropItemSprite::DropItemDto DropItemSprite::createDropItemDto(std::string data_s
     res_dto.imageResId = atoi(data_string_array[index].c_str()); index++;
     res_dto.name       = data_string_array[index];               index++;
     res_dto.isEquip    = static_cast<bool>(atoi(data_string_array[index].c_str())); index++;
-    
+    res_dto.param      = atoi(data_string_array[index].c_str()); index++;
     return res_dto;
 }
 

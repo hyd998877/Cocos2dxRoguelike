@@ -12,11 +12,11 @@
 #include "cocos2d.h"
 
 #include "MapManager.h"
-#include "StringUtil.h"
+#include "AppMacros.h"
 
 USING_NS_CC;
 
-class ActorSprite  : public cocos2d::Sprite
+class ActorSprite  : public Sprite
 {
 public:
     

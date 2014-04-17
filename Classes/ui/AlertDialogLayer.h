@@ -10,6 +10,7 @@
 #define __Cocos2dRogueLike__AlertDialogLayer__
 
 #include "CommonWindowUtil.h"
+#include "ModalLayer.h"
 
 class AlertDialogLayer : public cocos2d::LayerColor
 {
@@ -17,12 +18,6 @@ private:
     cocos2d::ccMenuCallback m_okMenuItemCallback;
     cocos2d::ccMenuCallback m_ngMenuItemCallback;
 protected:
-    enum Tag {
-        TitleTextTag          = 10000,
-        MenuTag               = 20000,
-        OK_MenuItemLabelTag   = 21000,
-        NG_MenuItemLabelTag   = 22000,
-    };
     
 public:
     AlertDialogLayer()
@@ -31,25 +26,24 @@ public:
     {
         
     };
-    ~AlertDialogLayer();
+    virtual ~AlertDialogLayer()
+    {
+        m_okMenuItemCallback = nullptr;
+        m_ngMenuItemCallback = nullptr;
+    }
     
-    virtual bool initWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText);
+    bool initWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText);
+    
+    static ModalLayer* createWithContentSizeModal(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText, const cocos2d::ccMenuCallback& okCallback, const cocos2d::ccMenuCallback& ngCallback);
     static AlertDialogLayer* createWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText);
     
-    void setOkMenuItemCallback(const cocos2d::ccMenuCallback& callback)
-    {
+    void setOkMenuItemCallback(const cocos2d::ccMenuCallback& callback) {
         m_okMenuItemCallback = callback;
     }
     
-    void setNgMenuItemCallback(const cocos2d::ccMenuCallback& callback)
-    {
+    void setNgMenuItemCallback(const cocos2d::ccMenuCallback& callback) {
         m_ngMenuItemCallback = callback;
     }
-    
-    void setTitleText(const std::string& text);
-    
-    void setOkText(const std::string& text);
-    void setNgText(const std::string& text);
 };
 
 #endif /* defined(__Cocos2dRogueLike__AlertDialogLayer__) */
