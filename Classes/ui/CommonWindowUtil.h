@@ -15,7 +15,7 @@
 class CommonWindowUtil
 {
 public:
-    static cocos2d::Point createPointCenter(const cocos2d::Node& baseNode, const cocos2d::Size& winSize);
+    static cocos2d::Point createPointCenter(const cocos2d::Size& baseNodeSize, const cocos2d::Size& targetNodeSize);
     
     static cocos2d::extension::Scale9Sprite* createWindowWaku();
     static cocos2d::extension::Scale9Sprite* createWindowWaku(cocos2d::Node* pNode);

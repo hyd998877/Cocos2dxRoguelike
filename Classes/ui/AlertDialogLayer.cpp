@@ -19,7 +19,7 @@ ModalLayer* AlertDialogLayer::createWithContentSizeModal(Size contentSize, std::
     // アラートダイアログ生成
     auto alertDialogLayer = createWithContentSize(contentSize, titleText, okText, ngText);
     // モーダルの中心に配置
-    alertDialogLayer->setPosition(CommonWindowUtil::createPointCenter(*alertDialogLayer, modalLayer->getContentSize()));
+    alertDialogLayer->setPosition(CommonWindowUtil::createPointCenter(alertDialogLayer->getContentSize(), modalLayer->getContentSize()));
     // OKボタン押した時の処理と閉じる
     alertDialogLayer->setOkMenuItemCallback([modalLayer, okCallback](Ref *ref) {
         okCallback(ref);
