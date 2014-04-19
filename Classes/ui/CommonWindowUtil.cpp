@@ -15,6 +15,10 @@ cocos2d::Point CommonWindowUtil::createPointCenter(const cocos2d::Size& baseNode
     return cocos2d::Point(targetNodeSize.width / 2 - baseNodeSize.width / 2,
                           targetNodeSize.height / 2 - baseNodeSize.height / 2);
 }
+
+cocos2d::Point CommonWindowUtil::createPointCenterXTopY(const cocos2d::Size& baseNodeSize, const cocos2d::Size& targetNodeSize) {
+    return cocos2d::Point(targetNodeSize.width / 2 - baseNodeSize.width / 2,
+                          targetNodeSize.height / 1 - baseNodeSize.height / 2);
 }
 
 #pragma mark
