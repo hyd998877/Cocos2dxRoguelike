@@ -103,7 +103,7 @@ cocos2d::Layer* CommonWindowUtil::createSpriteWithLabelLayer(cocos2d::Size layer
     sprite->setTag(1);// TODO: (kyokomi)とりあえず...サーセン
     equipWeaponLayer->addChild(sprite);
     
-    auto textLabel = cocos2d::Label::create(text, gameFontName, gameFontSize);
+    auto textLabel = cocos2d::Label::createWithTTF(text, gameFontName, gameFontSize);
     textLabel->setPosition(cocos2d::Point(equipWeaponLayer->getContentSize().width * 0.5 + textLabel->getContentSize().width / 2, equipWeaponLayer->getContentSize().height / 2));
     textLabel->setTag(2);// TODO: (kyokomi)とりあえず...サーセン
     equipWeaponLayer->addChild(textLabel);
