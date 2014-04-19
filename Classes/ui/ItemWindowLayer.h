@@ -60,8 +60,8 @@ private:
     void setItemDetail(long itemListIndex);
     void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
     
-    Label* createDetailTitleLabel(const Node* base, std::string text, float fontSize, float heightPointProportion);
-    Label* createDetailTextLabel(const Node* base, std::string text, float fontSize, float heightPointProportion);
+    Label* createDetailTitleLabel(const Node* base, std::string text, float heightPointProportion);
+    Label* createDetailTextLabel(const Node* base, std::string text, float heightPointProportion);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ItemWindowLayer__) */

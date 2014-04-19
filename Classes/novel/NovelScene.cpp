@@ -124,17 +124,16 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     // -----------------------------
     
     // 本文
-    const int font_size = 20;
     LayerColor * textLayer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), winSize.width, winSize.height * 0.25);
     textLayer->setPosition(Point::ZERO);
     this->addChild(textLayer, kZOrder_TextLayer, kTag_TextLayer);
 
     // test
-    std::string string = StringUtils::format("w = %f.1 h = %f.1 f = %d", winSize.width, winSize.height, font_size);
+    std::string string = StringUtils::format("w = %f.1 h = %f.1", winSize.width, winSize.height);
     CCLOG("init %s", string.c_str());
     
     // 本文テキスト
-    auto textLabel = Label::createWithTTF("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
+    auto textLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "");
     textLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     textLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
     
@@ -150,7 +149,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     nameTextLayer->setPosition(Point(textLayer->getPositionX(), textLayer->getPositionY() + textLayer->getContentSize().height + nameTextLayer->getContentSize().height * 0.05));
     this->addChild(nameTextLayer, kZOrder_TextLayer, kTag_TextLayer_name);
     // 名前テキスト
-    auto nameTextLabel = Label::createWithTTF("", GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
+    auto nameTextLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "");
     nameTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     nameTextLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
 //    nameTextLabel->setColor(Color3B::GREEN);
@@ -343,6 +342,8 @@ void NovelScene::changeBackgroundAnimation(const string& imgFilePath)
 
 void NovelScene::makeSelectSpriteButton(const string& str1, int next1Id, const string& str2, int next2Id)
 {
+    // TODO: (kyokomi)選択肢は廃止
+#if 0
     Size winSize = Director::getInstance()->getWinSize();
     
     Menu* pMenu = (Menu*) this->getChildByTag(kTag_MenuSelect);
@@ -378,6 +379,7 @@ void NovelScene::makeSelectSpriteButton(const string& str1, int next1Id, const s
         pMenu->setPosition(Point::ZERO);
         this->addChild(pMenu, kZOrder_MenuSelect, kTag_MenuSelect);
     }
+#endif
 }
 
 

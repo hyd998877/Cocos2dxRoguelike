@@ -101,29 +101,27 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     pItemDetailLayer->setPosition(Point(contentSize.width / 2 + padding, 0));
     pItemDetailLayer->setTag(ItemDetailLayerTag);
     
-    const int title_font_size = 20;
-    const int detail_font_size = 20;
     // アイテム名
-    auto pItemNameTitleLabel = createDetailTitleLabel(pItemDetailLayer, "なまえ", title_font_size, 1.00f);
+    auto pItemNameTitleLabel = createDetailTitleLabel(pItemDetailLayer, "なまえ", 1.00f);
     pItemDetailLayer->addChild(pItemNameTitleLabel);
     // アイテム名 内容
-    auto pItemNameLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_NAME_DEFAULT, detail_font_size, 0.80f);
+    auto pItemNameLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_NAME_DEFAULT, 0.80f);
     pItemNameLabel->setTag(ItemWindowLayer::ItemNameTag);
     pItemDetailLayer->addChild(pItemNameLabel);
     
     // アイテム説明
-    auto pItemDetailTitleLabel = createDetailTitleLabel(pItemDetailLayer, "せつめい", title_font_size, 0.70f);
+    auto pItemDetailTitleLabel = createDetailTitleLabel(pItemDetailLayer, "せつめい", 0.70f);
     pItemDetailLayer->addChild(pItemDetailTitleLabel);
     // アイテム説明 内容
-    auto pItemDetailLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_DETAIL_DEFAULT, detail_font_size, 0.50f);
+    auto pItemDetailLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_DETAIL_DEFAULT, 0.50f);
     pItemDetailLabel->setTag(ItemWindowLayer::ItemDetailTag);
     pItemDetailLayer->addChild(pItemDetailLabel);
     
     // アイテムパラメータ
-    auto paramTitleLabel = createDetailTitleLabel(pItemDetailLayer, "つよさ", title_font_size, 0.40f);
+    auto paramTitleLabel = createDetailTitleLabel(pItemDetailLayer, "つよさ", 0.40f);
     pItemDetailLayer->addChild(paramTitleLabel);
     // アイテムパラメータ 内容
-    auto paramTextLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_PARAM_DEFAULT, detail_font_size, 0.25f);
+    auto paramTextLabel = createDetailTextLabel(pItemDetailLayer, ITEM_LAYER_PARAM_DEFAULT, 0.25f);
     paramTextLabel->setTag(ItemWindowLayer::ItemParamTag);
     pItemDetailLayer->addChild(paramTextLabel);
     
@@ -140,7 +138,8 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     this->addChild(pItemDetailLayer);
     
     // アイテム個数
-    auto item_count_label = Label::createWithTTF(StringUtils::format("%d/%d", 0, USE_ITEM_MAX), GAME_FONT(title_font_size), GAME_FONT_SIZE(title_font_size));
+    auto item_count_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(),
+                                                 StringUtils::format("%d/%d", 0, USE_ITEM_MAX));
     item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
     item_count_label->setTag(ItemWindowLayer::ItemCountLabelTag);
     this->addChild(item_count_label);
@@ -149,20 +148,19 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
 }
 
 // pointProportion （height * 0.5とかのやつ）
-Label* ItemWindowLayer::createDetailTitleLabel(const Node* base, std::string text, float fontSize, float heightPointProportion) {
-    auto titleLabel = Label::createWithTTF(text, GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
+Label* ItemWindowLayer::createDetailTitleLabel(const Node* base, std::string text, float heightPointProportion) {
+    auto titleLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), text);
     titleLabel->setColor(Color3B::GRAY);
     titleLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     titleLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
-    titleLabel->setPosition(Point(
-                                            titleLabel->getContentSize().width / 2 + titleLabel->getSystemFontSize() / 2,
-                                            base->getContentSize().height * heightPointProportion - titleLabel->getContentSize().height / 2 - titleLabel->getSystemFontSize() / 2));
+    titleLabel->setPosition(Point(titleLabel->getContentSize().width / 2 + titleLabel->getSystemFontSize() / 2,
+                                  base->getContentSize().height * heightPointProportion - titleLabel->getContentSize().height / 2 - titleLabel->getSystemFontSize() / 2));
     return titleLabel;
 }
 
 // pointProportion （height * 0.5とかのやつ）
-Label* ItemWindowLayer::createDetailTextLabel(const Node* base, std::string text, float fontSize, float heightPointProportion) {
-    auto textLabel = Label::createWithTTF(text, GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
+Label* ItemWindowLayer::createDetailTextLabel(const Node* base, std::string text, float heightPointProportion) {
+    auto textLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), text);
     textLabel->setColor(Color3B::WHITE);
     textLabel->setPosition(Point(base->getContentSize().width / 2, base->getContentSize().height * heightPointProportion));
     return textLabel;
@@ -170,14 +168,12 @@ Label* ItemWindowLayer::createDetailTextLabel(const Node* base, std::string text
 
 Menu* ItemWindowLayer::initCreateMenu() {
     
-    const int font_size = 20;
-    
     // -----------------------------
     // メニューボタン
     const Size WAKU_PADDING = Size(8, 4);
     
     // 捨てるボタン
-    auto pMenuItemDrop = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF("すてる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
+    auto pMenuItemDrop = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "すてる"), WAKU_PADDING, [this](Ref *pSeneder) {
         
         // hoge
         CCLOG("item drop menu pressed");
@@ -198,7 +194,7 @@ Menu* ItemWindowLayer::initCreateMenu() {
     pMenuItemDrop->setTag(ItemWindowLayer::ItemDetailMenuDropTag);
     
     // 使用ボタン
-    auto pMenuItemUse = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF("つかう", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
+    auto pMenuItemUse = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "つかう"), WAKU_PADDING, [this](Ref *pSeneder) {
         
         // hoge
         CCLOG("item use menu pressed");
@@ -218,7 +214,7 @@ Menu* ItemWindowLayer::initCreateMenu() {
     pMenuItemUse->setTag(ItemWindowLayer::ItemDetailMenuUseTag);
     
     // 装備（する/はずす）ボタン
-    auto pMenuItemEquip = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF("そうび", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), WAKU_PADDING, [this](Ref *pSeneder) {
+    auto pMenuItemEquip = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "そうび"), WAKU_PADDING, [this](Ref *pSeneder) {
         
         CCLOG("item equip menu pressed");
         if (show_item_detail_idx_ < 0) {

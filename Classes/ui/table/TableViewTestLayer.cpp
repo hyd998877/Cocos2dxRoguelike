@@ -80,9 +80,6 @@ Size TableViewTestLayer::tableCellSizeForIndex(TableView *table, long idx) {
 
 TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) {
     
-    // 本文テキスト
-    const int kDetailFontSize = 20;
-    
     Size content_size = getContentSize();
     TableLayout table_item;
     
@@ -117,7 +114,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) 
         item_image_sprite->setPosition(Point(item_image_sprite->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         text_layer->addChild(item_image_sprite);
         
-        auto text_label = Label::createWithTTF(table_item.labelText, GAME_FONT(kDetailFontSize), GAME_FONT_SIZE(kDetailFontSize));
+        auto text_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), table_item.labelText);
         text_label->setColor(table_item.textColor);
         text_label->setPosition(Point(text_label->getSystemFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
         text_label->setTag(TableViewTestLayer::ItemTextLabelTag);

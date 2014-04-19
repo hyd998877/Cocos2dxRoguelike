@@ -56,18 +56,16 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     CommonWindowUtil::attachWindowWaku(this);
     
     // タイトル内容
-    const int font_size = 20;
-    auto pTitle = Label::createWithTTF(titleText, GAME_FONT(font_size), GAME_FONT_SIZE(font_size));
+    auto pTitle = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), titleText);
     pTitle->setPosition(Point(this->getContentSize().width * 0.5, this->getContentSize().height * 0.75));
     this->addChild(pTitle);
     
     // --------------
     // ボタン生成
-    const int ButtonFontSize = 32;
     const Size WAKU_PADDING = Size(8, 4);
     
     // OKボタン
-    auto pOkMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(okText, GAME_FONT(ButtonFontSize), GAME_FONT_SIZE(ButtonFontSize)), WAKU_PADDING, [this](Ref *pSender) {
+    auto pOkMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), okText), WAKU_PADDING, [this](Ref *pSender) {
         if (m_okMenuItemCallback) {
             this->m_okMenuItemCallback(pSender);
         }
@@ -75,7 +73,7 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     pOkMenuItemLabel->setPosition(Point(this->getContentSize().width * 0.25, pOkMenuItemLabel->getContentSize().height));
     
     // NGボタン
-    auto pNgMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(ngText, GAME_FONT(ButtonFontSize), GAME_FONT_SIZE(ButtonFontSize)), WAKU_PADDING, [this](Ref *pSender) {
+    auto pNgMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), ngText), WAKU_PADDING, [this](Ref *pSender) {
         if (m_ngMenuItemCallback) {
             this->m_ngMenuItemCallback(pSender);
         }

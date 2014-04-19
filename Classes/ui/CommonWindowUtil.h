@@ -26,7 +26,7 @@ public:
     
     static cocos2d::MenuItemLabel* createMenuItemLabelWaku(cocos2d::Label* pLabel, cocos2d::Size wakuPadding, const cocos2d::ccMenuCallback& callback);
     
-    static cocos2d::Layer* createSpriteWithLabelLayer(cocos2d::Size layerSize, std::string spriteFrameFileName, std::string text, std::string gameFontName, float gameFontSize);
+    static cocos2d::Layer* createSpriteWithLabelLayer(const cocos2d::Size& layerSize, const std::string& spriteFrameFileName, const cocos2d::TTFConfig& ttfConfig, const std::string& text);
 };
 
 #endif /* defined(__Cocos2dRogueLike__CommonWindowUtil__) */
