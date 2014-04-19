@@ -62,6 +62,7 @@
 		CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6418B0E92D006C4B13 /* MUseItemDao.cpp */; };
 		CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */; };
 		CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */; };
+		CE5E7FDF1902809F00A90F81 /* SystemMenuLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5E7FDD1902809F00A90F81 /* SystemMenuLayer.cpp */; };
 		CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */; };
 		CE6C2DF618D572FC0042FA93 /* RogueTMXTiledMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */; };
 		CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE6E644B18DB33CF0008C116 /* game_over.jpg */; };
@@ -301,6 +302,8 @@
 		CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessoryDao.h; sourceTree = "<group>"; };
 		CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
 		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
+		CE5E7FDD1902809F00A90F81 /* SystemMenuLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemMenuLayer.cpp; sourceTree = "<group>"; };
+		CE5E7FDE1902809F00A90F81 /* SystemMenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemMenuLayer.h; sourceTree = "<group>"; };
 		CE624BBF18F9607B0007FE58 /* MRogueMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRogueMap.h; sourceTree = "<group>"; };
 		CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageScene.cpp; sourceTree = "<group>"; };
 		CE68D3E418B9F9D0006CCA37 /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
@@ -750,6 +753,8 @@
 		CE93B431188156C700825FD1 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				CE5E7FDD1902809F00A90F81 /* SystemMenuLayer.cpp */,
+				CE5E7FDE1902809F00A90F81 /* SystemMenuLayer.h */,
 				CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */,
 				CE93B433188156C700825FD1 /* ItemWindowLayer.h */,
 				CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */,
@@ -1038,6 +1043,7 @@
 				CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */,
 				CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */,
 				CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */,
+				CE5E7FDF1902809F00A90F81 /* SystemMenuLayer.cpp in Sources */,
 				CE93B44B188156C700825FD1 /* SRPGScene.cpp in Sources */,
 				CE93B450188156C700825FD1 /* LabelSprite.cpp in Sources */,
 				CE9297C0188BCC9700568EE1 /* MLevel.cpp in Sources */,
