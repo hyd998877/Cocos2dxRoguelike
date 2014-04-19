@@ -1,5 +1,7 @@
 # Cocos2d-xでローグライクゲームをつくる
 
+[![](https://dply.me/ks7a9w/button/small)](https://dply.me/ks7a9w#install)
+
 ほとんどテストコードみたいな感じで、とりあえずモック完成を目指しているのであまり参考にならないソースです。
 
 もともとSRPGゲーム作ってたのですが、現在はローグライクゲーム開発にシフトしてます。
@@ -21,11 +23,6 @@
 - First Seed Materia（元REFMAP） （http://www.tekepon.net/fsm）
 
 **「このアプリは、上記の画像提供元の画像素材を使用しています。このアプリで使用されている画像を、このゲームを遊ぶ以外の用途には使用しないで下さい」**
-
-
-## β版DL
-
-[DeployGate](https://dply.me/ks7a9w)
 
 
 ## 開発状況

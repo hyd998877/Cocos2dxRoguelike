@@ -1,3 +1,6 @@
 [submodule "Classes/layers_nodes"]
 	path = Classes/layers_nodes
 	url = https://github.com/kyokomi/Cocos2dxModalLayer.git
+[submodule "cocos2d"]
+	path = cocos2d
+	url = https://github.com/kyokomi/cocosNew_cocos2d.git

@@ -11,8 +11,14 @@
 #pragma mark
 #pragma mark 汎用
 
-cocos2d::Point CommonWindowUtil::createPointCenter(const cocos2d::Node& baseNode, const cocos2d::Size& winSize) {
-    return cocos2d::Point(winSize.width / 2 - baseNode.getContentSize().width / 2, winSize.height / 2 - baseNode.getContentSize().height / 2);
+cocos2d::Point CommonWindowUtil::createPointCenter(const cocos2d::Size& baseNodeSize, const cocos2d::Size& targetNodeSize) {
+    return cocos2d::Point(targetNodeSize.width / 2 - baseNodeSize.width / 2,
+                          targetNodeSize.height / 2 - baseNodeSize.height / 2);
+}
+
+cocos2d::Point CommonWindowUtil::createPointCenterXTopY(const cocos2d::Size& baseNodeSize, const cocos2d::Size& targetNodeSize) {
+    return cocos2d::Point(targetNodeSize.width / 2 - baseNodeSize.width / 2,
+                          targetNodeSize.height / 1 - baseNodeSize.height / 2);
 }
 
 #pragma mark
@@ -87,7 +93,7 @@ cocos2d::extension::Scale9Sprite* CommonWindowUtil::createWindowWaku(cocos2d::Si
 #pragma mark sprite
 
 // TODO: (kyokomi) ちゃんと専用クラスつくらないとダメだこりゃ（SpriteとTextの更新でtagはイケてない）
-cocos2d::Layer* CommonWindowUtil::createSpriteWithLabelLayer(cocos2d::Size layerSize, std::string spriteFrameFileName, std::string text, std::string gameFontName, float gameFontSize) {
+cocos2d::Layer* CommonWindowUtil::createSpriteWithLabelLayer(const cocos2d::Size& layerSize, const std::string& spriteFrameFileName, const cocos2d::TTFConfig& ttfConfig, const std::string& text) {
     auto equipWeaponLayer = cocos2d::LayerColor::create(cocos2d::Color4B::BLACK);
     equipWeaponLayer->setOpacity(128);
     equipWeaponLayer->setContentSize(layerSize);
@@ -103,7 +109,7 @@ cocos2d::Layer* CommonWindowUtil::createSpriteWithLabelLayer(cocos2d::Size layer
     sprite->setTag(1);// TODO: (kyokomi)とりあえず...サーセン
     equipWeaponLayer->addChild(sprite);
     
-    auto textLabel = cocos2d::Label::create(text, gameFontName, gameFontSize);
+    auto textLabel = cocos2d::Label::createWithTTF(ttfConfig, text);
     textLabel->setPosition(cocos2d::Point(equipWeaponLayer->getContentSize().width * 0.5 + textLabel->getContentSize().width / 2, equipWeaponLayer->getContentSize().height / 2));
     textLabel->setTag(2);// TODO: (kyokomi)とりあえず...サーセン
     equipWeaponLayer->addChild(textLabel);

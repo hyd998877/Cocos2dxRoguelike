@@ -119,13 +119,13 @@ bool RogueScene::initWithQuestId(int quest_id) {
     //-------------------------
     // ステータスバー？
     //-------------------------
-    const float StatusBarFontSize = 32;
     auto statusLayer = LayerColor::create(Color4B::BLACK);
     statusLayer->setContentSize(Size(win_size.width, win_size.height / 7));
     statusLayer->setPosition(Point(0, win_size.height - statusLayer->getContentSize().height));
     
     // あとで更新するやつ
-    auto sampleText = Label::createWithTTF(" --F Lv-- HP ---/--- 満腹度 ---/---          - G", GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+    auto sampleText = Label::createWithTTF(FontUtils::getTitleFontTTFConfig(),
+                                           " --F Lv-- HP ---/--- 満腹度 ---/---          - G");
     
     sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
     statusLayer->addChild(sampleText);
@@ -136,7 +136,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         attackPoint += actor_dto.equip.weaponStr;
     }
     std::string attackPointText = StringUtils::format("%3d", attackPoint);
-    auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", attackPointText, GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+    auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), attackPointText);
     // 2つあるうちの左側なので2かけてます
     {
         equipWeaponLayer->getChildByTag(1)->setVisible(false);
@@ -153,7 +153,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         defencePoint += actor_dto.equip.accessoryDef;
     }
     std::string defencePointText = StringUtils::format("%3d", defencePoint);
-    auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", defencePointText, GAME_FONT(StatusBarFontSize), GAME_FONT_SIZE(StatusBarFontSize));
+    auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), defencePointText);
     {
         equipAccessoryLayer->getChildByTag(1)->setVisible(false);
         float pointX = statusLayer->getContentSize().width - equipAccessoryLayer->getContentSize().width;
@@ -174,8 +174,9 @@ bool RogueScene::initWithQuestId(int quest_id) {
     
     CommonWindowUtil::attachWindowWaku(pGameLogLayer);
     
-    int baseFontSize = 20;
-    auto pLogTextLabel = Label::createWithTTF("", GAME_FONT(baseFontSize), GAME_FONT_SIZE(baseFontSize), Size::ZERO, TextHAlignment::LEFT, TextVAlignment::TOP);
+    auto pLogTextLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "");
+    pLogTextLabel->setDimensions(0, 0);
+    pLogTextLabel->setAlignment(TextHAlignment::LEFT, TextVAlignment::TOP);
     pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getSystemFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getSystemFontSize() / 4));
     pGameLogLayer->addChild(pLogTextLabel);
     
@@ -401,7 +402,6 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
 // private
 void RogueScene::playFloorTitleCutIn(int quest_id) {
     auto winSize = Director::getInstance()->getWinSize();
-    const int floorTitleFontSize = 47;
     
     auto modalLayer = ModalLayer::create(Color3B::BLACK, 0);
     
@@ -411,7 +411,7 @@ void RogueScene::playFloorTitleCutIn(int quest_id) {
     // テキスト中央
     // TODO: (kyokomi) タイトルはdaoからとってくる予定
     auto floorTitleText = StringUtils::format("初心者の洞窟 %d層", quest_id);
-    auto floorTitleTextLabel = Label::createWithTTF(floorTitleText, GAME_FONT(floorTitleFontSize), GAME_FONT_SIZE(floorTitleFontSize));
+    auto floorTitleTextLabel = Label::createWithTTF(FontUtils::getStrongFontTTFConfig(), floorTitleText);
     floorTitleTextLabel->setPosition(Point(floorTitleCutInLayer->getContentSize().width / 2, floorTitleCutInLayer->getContentSize().height / 2));
     floorTitleCutInLayer->addChild(floorTitleTextLabel);
 
@@ -1111,10 +1111,8 @@ void RogueScene::showItemList() {
         
         // ---- button -----
         
-        const int font_size = 20;
-        
         // 並び替えボタン
-        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF("並び替え", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this, item_window_layer](Ref* ref) {
+        auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "並び替え"), Size(12, 4), [this, item_window_layer](Ref* ref) {
             // 並び替え
             item_window_layer->sortItemList();
             item_window_layer->reloadItemList();
@@ -1122,7 +1120,7 @@ void RogueScene::showItemList() {
         sort_menu_item_label->setPosition(Point(item_window_layer->getContentSize().width, item_window_layer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
         
         // 閉じるボタン
-        auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF("とじる", GAME_FONT(font_size), GAME_FONT_SIZE(font_size)), Size(12, 4), [this](Ref* ref) {
+        auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "とじる"), Size(12, 4), [this](Ref* ref) {
             // 閉じる
             this->hideItemList();
         });

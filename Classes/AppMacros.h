@@ -12,10 +12,6 @@
 #include "cocos2d.h"
 #include "extensions/cocos-ext.h"
 
-#define MISAKI_FONT "fonts/misaki_gothic.ttf"
-#define PIXEL_MPLUS_10_FONT "fonts/PixelMplus10-Regular.ttf"
-#define PIXEL_MPLUS_12_FONT "fonts/PixelMplus12-Regular.ttf"
-
 #define NS_ROGUE_BEGIN                     namespace RogueLikeGame {
 #define NS_ROGUE_END                       }
 
@@ -34,23 +30,43 @@ static Resource xlargeResource = { cocos2d::Size(2048, 1536), "resources-xlarge"
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 577);
 
-// 最適なフォント取得
-const static int GAME_FONT_SIZE(int font_size) {
-    return (int)((float)font_size * GAME_SCALE);
-}
-
-const static std::string GAME_FONT(int fontSize)
-{
-    fontSize = GAME_FONT_SIZE(fontSize);
-    if (fontSize % 8 == 0) {
-        return MISAKI_FONT;
-    } else if (fontSize % 10 == 0) {
-        return PIXEL_MPLUS_10_FONT;
-    } else if (fontSize % 12 == 0) {
-        return PIXEL_MPLUS_12_FONT;
-    } else {
-        CCLOG("font_size = %d", fontSize);
-        return "";
+namespace FontUtils {
+    const std::string MisakiFont       = "fonts/misaki_gothic.ttf";
+    const std::string PixelMpkus10Font = "fonts/PixelMplus10-Regular.ttf";
+    const std::string PixelMpkus12Font = "fonts/PixelMplus12-Regular.ttf";
+    
+    // 最適なフォント取得
+    const static int GAME_FONT_SIZE(int font_size) {
+        return (int)((float)font_size * GAME_SCALE);
+    }
+    const static std::string GAME_FONT(int fontSize)
+    {
+        fontSize = GAME_FONT_SIZE(fontSize);
+        if (fontSize % 8 == 0) {
+            return MisakiFont;
+        } else if (fontSize % 10 == 0) {
+            return PixelMpkus10Font;
+        } else if (fontSize % 12 == 0) {
+            return PixelMpkus12Font;
+        } else {
+            CCLOG("font_size = %d", fontSize);
+            return "";
+        }
+    }
+    
+    const static cocos2d::TTFConfig getDefaultFontTTFConfig(const int& fontSize = 20)
+    {
+        return cocos2d::TTFConfig(FontUtils::GAME_FONT(fontSize).c_str(), FontUtils::GAME_FONT_SIZE(fontSize));
+    }
+    const static cocos2d::TTFConfig getTitleFontTTFConfig()
+    {
+        const int fontSize = 32;
+        return getDefaultFontTTFConfig(fontSize);
+    }
+    const static cocos2d::TTFConfig getStrongFontTTFConfig()
+    {
+        const int fontSize = 47;
+        return getDefaultFontTTFConfig(fontSize);
     }
 }
 
