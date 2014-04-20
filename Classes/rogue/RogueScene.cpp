@@ -364,85 +364,7 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     c_buttonPress->setOpacity(128);
     auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Ref* pSender) {
         CCLOG("Cボタンが押された！");
-
-        auto modalLayer = ModalLayer::create();
-        
-        Size win_size = Director::getInstance()->getWinSize();
-        std::list<SystemMenuLayer::SystemMenuButtonInfo> menuButtonInfoList;
-        SystemMenuLayer::SystemMenuButtonInfo menu1("あああ", [modalLayer]() {
-            CCLOG("Menu1ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        SystemMenuLayer::SystemMenuButtonInfo menu2("だだだ", [modalLayer]() {
-            CCLOG("Menu2ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        SystemMenuLayer::SystemMenuButtonInfo menu3("ほげげ", [modalLayer]() {
-            CCLOG("Menu3ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        SystemMenuLayer::SystemMenuButtonInfo menu4("あいう", [modalLayer]() {
-            CCLOG("Menu4ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        SystemMenuLayer::SystemMenuButtonInfo menu5("ドーン", [modalLayer]() {
-            CCLOG("Menu5ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        SystemMenuLayer::SystemMenuButtonInfo menu6("ぼたん", [modalLayer]() {
-            CCLOG("Menu6ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        SystemMenuLayer::SystemMenuButtonInfo menu7("おおお", [modalLayer]() {
-            CCLOG("Menu4ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        SystemMenuLayer::SystemMenuButtonInfo menu8("いいい", [modalLayer]() {
-            CCLOG("Menu5ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        SystemMenuLayer::SystemMenuButtonInfo menu9("かかか", [modalLayer]() {
-            CCLOG("Menu6ボタンが押された！");
-            modalLayer->setVisible(false);
-            modalLayer->removeAllChildrenWithCleanup(true);
-        });
-        
-        menuButtonInfoList.push_back(menu1);
-        menuButtonInfoList.push_back(menu2);
-        menuButtonInfoList.push_back(menu3);
-        menuButtonInfoList.push_back(menu4);
-        menuButtonInfoList.push_back(menu5);
-        menuButtonInfoList.push_back(menu6);
-        menuButtonInfoList.push_back(menu7);
-        menuButtonInfoList.push_back(menu8);
-        menuButtonInfoList.push_back(menu9);
-        
-        auto systemMenuLayer = SystemMenuLayer::create(win_size * 0.5, "testtesttesttest");
-        systemMenuLayer->setPosition(CommonWindowUtil::createPointCenter(systemMenuLayer, modalLayer));
-        systemMenuLayer->setMenuButtonList(menuButtonInfoList);
-        
-        modalLayer->addChild(systemMenuLayer);
-        this->addChild(modalLayer, RogueScene::ModalLayerZOrder);
-#if 0
-        // 千里眼、地獄耳デバッグ用
-        this->enemyMappingAllShow();
-        this->itemMappingAllShow();
-        
-        Size win_size = Director::getInstance()->getWinSize();
-        auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "あきらめますか？", "はい", "いいえ", [this](Ref *ref) {
-            // 画面遷移
-            this->changeScene(RogueScene::scene(rogue_play_data_.quest_id + 1));
-        }, [](Ref *ref) {});
-        this->addChild(alertDialog, RogueScene::ModalLayerZOrder);
-#endif
+        this->showSystemMenu();
     });
     pC_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 3, rogu_map_layer->indexToPoint(10, 1).y));
     pC_MenuButton->setTag(RogueScene::C_ButtonMenuTag);
@@ -1211,6 +1133,100 @@ void RogueScene::hideItemList() {
     auto modal_layer = getModalLayer();
     if (modal_layer) {
         modal_layer->setVisible(false);
+    }
+}
+
+void RogueScene::showSystemMenu() {
+    
+    auto systemMenuModalLayer = dynamic_cast<ModalLayer*>(this->getChildByTag(Tags::SystemMenuWindowTag));
+    if (systemMenuModalLayer) {
+        systemMenuModalLayer->setVisible(true);
+    } else {
+        systemMenuModalLayer = ModalLayer::create();
+        Size win_size = Director::getInstance()->getWinSize();
+        std::list<SystemMenuLayer::SystemMenuButtonInfo> menuButtonInfoList;
+        
+        // TODO: (kyokomi) デバッグ用
+        SystemMenuLayer::SystemMenuButtonInfo menu1("千里眼", [this, systemMenuModalLayer]() {
+            CCLOG("Menu1ボタンが押された！");
+            
+            this->logMessage("千里眼を発動した。");
+            
+            this->itemMappingAllShow();
+            
+            this->hideSystemMenu();
+        });
+        
+        // TODO: (kyokomi) デバッグ用
+        SystemMenuLayer::SystemMenuButtonInfo menu2("地獄耳", [this, systemMenuModalLayer]() {
+            CCLOG("Menu2ボタンが押された！");
+            
+            this->logMessage("地獄耳を発動した。");
+            
+            this->enemyMappingAllShow();
+            
+            this->hideSystemMenu();
+        });
+        
+        // TODO: (kyokomi) デバッグ用
+        SystemMenuLayer::SystemMenuButtonInfo menu3("階　段", [this, systemMenuModalLayer]() {
+            CCLOG("Menu3ボタンが押された！");
+            this->touchKaidan();
+            
+            this->hideSystemMenu();
+        });
+        
+        // TODO: (kyokomi) セーブ消去未実装
+        SystemMenuLayer::SystemMenuButtonInfo menu4("脱　出", [this, systemMenuModalLayer]() {
+            CCLOG("Menu4ボタンが押された！");
+            Size win_size = Director::getInstance()->getWinSize();
+            auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "あきらめますか？", "はい", "いいえ", [this](Ref *ref) {
+                // TODO: セーブ消去
+                
+                // ゲームオーバー
+                this->changeGameStatus(GameStatus::GAME_OVER);
+                
+            }, [this](Ref *ref) {
+                this->showSystemMenu();
+            });
+            this->addChild(alertDialog, ZOrders::ModalLayerZOrder);
+            
+            this->hideSystemMenu();
+        });
+        
+        // TODO: (kyokomi) 足元処理未実装
+        SystemMenuLayer::SystemMenuButtonInfo menu5("足 元", [this, systemMenuModalLayer]() {
+            CCLOG("Menu5ボタンが押された！");
+            
+            this->logMessage("足元は何もありません。");
+            
+            this->hideSystemMenu();
+        });
+        SystemMenuLayer::SystemMenuButtonInfo menu6("とじる", [this, systemMenuModalLayer]() {
+            CCLOG("Menu6ボタンが押された！");
+            this->hideSystemMenu();
+        });
+        
+        menuButtonInfoList.push_back(menu1);
+        menuButtonInfoList.push_back(menu2);
+        menuButtonInfoList.push_back(menu3);
+        menuButtonInfoList.push_back(menu4);
+        menuButtonInfoList.push_back(menu5);
+        menuButtonInfoList.push_back(menu6);
+        
+        auto systemMenuLayer = SystemMenuLayer::create(win_size * 0.5, "その他・システムメニュー");
+        systemMenuLayer->setPosition(CommonWindowUtil::createPointCenter(systemMenuLayer, systemMenuModalLayer));
+        systemMenuLayer->setMenuButtonList(menuButtonInfoList);
+        
+        systemMenuModalLayer->addChild(systemMenuLayer);
+        this->addChild(systemMenuModalLayer, ZOrders::ModalLayerZOrder, Tags::SystemMenuWindowTag);
+    }
+}
+
+void RogueScene::hideSystemMenu() {
+    auto systemMenuModalLayer = dynamic_cast<ModalLayer*>(this->getChildByTag(Tags::SystemMenuWindowTag));
+    if (systemMenuModalLayer) {
+        systemMenuModalLayer->setVisible(false);
     }
 }
 
