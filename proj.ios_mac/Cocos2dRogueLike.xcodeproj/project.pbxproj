@@ -93,6 +93,7 @@
 		CE93B4C0188156FC00825FD1 /* grid32.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A5188156FC00825FD1 /* grid32.png */; };
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
+		CE964B3F19037B4800F1CE61 /* LabelRPG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE964B3D19037B4800F1CE61 /* LabelRPG.cpp */; };
 		CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */; };
 		CEB138A018FAE7140086AC69 /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */; };
 		CEB138A118FAE7140086AC69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CEB1389F18FAE7140086AC69 /* README.md */; };
@@ -361,6 +362,8 @@
 		CE93B4A5188156FC00825FD1 /* grid32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid32.png; sourceTree = "<group>"; };
 		CE93B4AD188156FC00825FD1 /* menu_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_button.png; sourceTree = "<group>"; };
 		CE93B4AF188156FC00825FD1 /* tmx */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tmx; sourceTree = "<group>"; };
+		CE964B3D19037B4800F1CE61 /* LabelRPG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelRPG.cpp; sourceTree = "<group>"; };
+		CE964B3E19037B4800F1CE61 /* LabelRPG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelRPG.h; sourceTree = "<group>"; };
 		CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonWindowUtil.cpp; sourceTree = "<group>"; };
 		CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
 		CEAA20AE18DD13680057DE9C /* MPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayer.h; sourceTree = "<group>"; };
@@ -785,6 +788,8 @@
 		CEB1389C18FAE7140086AC69 /* layers_nodes */ = {
 			isa = PBXGroup;
 			children = (
+				CE964B3D19037B4800F1CE61 /* LabelRPG.cpp */,
+				CE964B3E19037B4800F1CE61 /* LabelRPG.h */,
 				CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */,
 				CEB1389E18FAE7140086AC69 /* ModalLayer.h */,
 				CEB1389F18FAE7140086AC69 /* README.md */,
@@ -1055,6 +1060,7 @@
 				CE93B444188156C700825FD1 /* AccountData.cpp in Sources */,
 				CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
+				CE964B3F19037B4800F1CE61 /* LabelRPG.cpp in Sources */,
 				CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */,
 				CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */,
 				CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */,
