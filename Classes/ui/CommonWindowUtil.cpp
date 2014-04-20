@@ -11,6 +11,9 @@
 #pragma mark
 #pragma mark 汎用
 
+cocos2d::Point CommonWindowUtil::createPointCenter(cocos2d::Node* baseNode, cocos2d::Node* targetNode) {
+    return createPointCenter(baseNode->getContentSize(), targetNode->getContentSize());
+}
 cocos2d::Point CommonWindowUtil::createPointCenter(const cocos2d::Size& baseNodeSize, const cocos2d::Size& targetNodeSize) {
     return cocos2d::Point(targetNodeSize.width / 2 - baseNodeSize.width / 2,
                           targetNodeSize.height / 2 - baseNodeSize.height / 2);
@@ -18,7 +21,7 @@ cocos2d::Point CommonWindowUtil::createPointCenter(const cocos2d::Size& baseNode
 
 cocos2d::Point CommonWindowUtil::createPointCenterXTopY(const cocos2d::Size& baseNodeSize, const cocos2d::Size& targetNodeSize) {
     return cocos2d::Point(targetNodeSize.width / 2 - baseNodeSize.width / 2,
-                          targetNodeSize.height / 1 - baseNodeSize.height / 2);
+                          targetNodeSize.height- baseNodeSize.height);
 }
 
 #pragma mark

@@ -15,6 +15,7 @@
 class CommonWindowUtil
 {
 public:
+    static cocos2d::Point createPointCenter(cocos2d::Node* baseNode, cocos2d::Node* targetNode);
     static cocos2d::Point createPointCenter(const cocos2d::Size& baseNodeSize, const cocos2d::Size& targetNodeSize);
     static cocos2d::Point createPointCenterXTopY(const cocos2d::Size& baseNodeSize, const cocos2d::Size& targetNodeSize);
     

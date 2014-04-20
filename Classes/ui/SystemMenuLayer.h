@@ -19,15 +19,23 @@ public:
     struct SystemMenuButtonInfo {
         std::string buttonText;
         SystemMenuButtonCallback systemMenuButtonCallback;
+        
+        SystemMenuButtonInfo(const std::string& text, const SystemMenuButtonCallback& callback)
+        :buttonText(text)
+        ,systemMenuButtonCallback(callback)
+        {
+            
+        }
     };
     SystemMenuLayer();
-    ~SystemMenuLayer();
+    virtual ~SystemMenuLayer();
     
-    bool init(const cocos2d::Size& contentSize, const std::string& titleText, const std::list<SystemMenuButtonInfo> menuButtonInfoList, const cocos2d::Color3B& color, const GLubyte& opacity);
-    static SystemMenuLayer* create(const cocos2d::Size& contentSize, const std::string& titleText, const std::list<SystemMenuButtonInfo> menuButtonInfoList, const cocos2d::Color3B& color = cocos2d::Color3B::BLACK, const GLubyte& opacity = 192);
+    bool init(const cocos2d::Size& contentSize, const std::string& titleText, const cocos2d::Color3B& color, const GLubyte& opacity);
+    static SystemMenuLayer* create(const cocos2d::Size& contentSize, const std::string& titleText, const cocos2d::Color3B& color = cocos2d::Color3B::BLACK, const GLubyte& opacity = 192);
+    void setMenuButtonList(const std::list<SystemMenuButtonInfo> menuButtonInfoList);
 private:
     void initCreateTitleLabel(const std::string& titleText);
-    void initCreateMenuList(const std::list<SystemMenuButtonInfo> menuButtonInfoList);
+    
 };
 
 

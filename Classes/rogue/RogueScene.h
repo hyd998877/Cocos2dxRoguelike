@@ -111,6 +111,7 @@ private:
         GameLogLayerTag           = 210000,
         ItemListWindowTag         = 220000,
         CommonWindowTag           = 230000,
+        SystemMenuWindowTag       = 240000,
         KeypadMenuTag             = 300000,
         ButtonMenuTag             = 310000,
         A_ButtonMenuTag           = 310001,
@@ -135,6 +136,7 @@ private:
         MenuLayerZOrder,
         ItemListLayerZOrder,
         CommonWindowZOrder,
+        SystemMEnuWindowZOrder,
         CutInLayerZOrder,
         ModalLayerZOrder,
         BlackLayerZOrder
@@ -188,6 +190,9 @@ private:
     // アイテムリスト
     void showItemList();
     void hideItemList();
+    // システムメニュ
+    void showSystemMenu();
+    void hideSystemMenu();
     
     // 配置
     void institutionEnemy(int probCount);
