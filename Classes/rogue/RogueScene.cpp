@@ -115,7 +115,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     auto tiled_map_layer = RogueTMXTiledMap::create(StringUtils::format("tmx/quest_%d.tmx", rogue_play_data_.floor_id));
 
     tiled_map_layer->setPosition(Point::ZERO);
-    this->addChild(tiled_map_layer, RogueScene::TiledMapLayerZOrder, RogueScene::TiledMapLayerTag);
+    this->addChild(tiled_map_layer, ZOrders::TiledMapLayerZOrder, Tags::TiledMapLayerTag);
     
     //-------------------------
     // ステータスバー？
@@ -144,7 +144,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
         float pointX = statusLayer->getContentSize().width - (equipWeaponLayer->getContentSize().width * 2);
         float pointY = (statusLayer->getContentSize().height / 2 + equipWeaponLayer->getContentSize().height / 2) * -1;
         equipWeaponLayer->setPosition(cocos2d::Point(pointX, pointY));
-        equipWeaponLayer->setTag(RogueScene::StatusBarEquipWeaponTag);
+        equipWeaponLayer->setTag(Tags::StatusBarEquipWeaponTag);
         statusLayer->addChild(equipWeaponLayer);
     }
     
@@ -160,11 +160,11 @@ bool RogueScene::initWithQuestId(int quest_id) {
         float pointX = statusLayer->getContentSize().width - equipAccessoryLayer->getContentSize().width;
         float pointY = (statusLayer->getContentSize().height / 2 + equipAccessoryLayer->getContentSize().height / 2) * -1;
         equipAccessoryLayer->setPosition(cocos2d::Point(pointX, pointY));
-        equipAccessoryLayer->setTag(RogueScene::StatusBarEquipAccessoryTag);
+        equipAccessoryLayer->setTag(Tags::StatusBarEquipAccessoryTag);
         statusLayer->addChild(equipAccessoryLayer);
     }
     
-    this->addChild(statusLayer, RogueScene::StatusBarLayerZOrder, RogueScene::StatusBarLayerTag);
+    this->addChild(statusLayer, ZOrders::StatusBarLayerZOrder, Tags::StatusBarLayerTag);
     
     //-------------------------
     // ゲームログ表示
@@ -181,7 +181,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getSystemFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getSystemFontSize() / 4));
     pGameLogLayer->addChild(pLogTextLabel);
     
-    this->addChild(pGameLogLayer, RogueScene::GameLogLayerZOrder, RogueScene::GameLogLayerTag);
+    this->addChild(pGameLogLayer, ZOrders::GameLogLayerZOrder, Tags::GameLogLayerTag);
     
     // ------------------------
     // ミニマップ
@@ -189,7 +189,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     auto mini_map_layer = tiled_map_layer->getMiniMapLayer();
     // ステータスバーの下くらい
     mini_map_layer->setPosition(0, mini_map_layer->getPositionY() + win_size.height - mini_map_layer->getContentSize().height - statusLayer->getContentSize().height);
-    this->addChild(mini_map_layer, RogueScene::MiniMapLayerZOrder, RogueScene::MiniMapLayerTag);
+    this->addChild(mini_map_layer, ZOrders::MiniMapLayerZOrder, Tags::MiniMapLayerTag);
     
     // ------------------------
     // イベントリ作成
@@ -212,7 +212,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     actor_sprite->setPosition(tiled_map_layer->indexToPoint(base_actor_index));
     actor_sprite->runBottomAction();
     // プレイヤーは画面中心にくるのでmapLayerに追加しない
-    this->addChild(actor_sprite, RogueScene::ActorPlayerZOrder, (RogueScene::ActorPlayerTag + actor_map_item.seqNo));
+    this->addChild(actor_sprite, ZOrders::ActorPlayerZOrder, (Tags::ActorPlayerTag + actor_map_item.seqNo));
     // マップに追加
     tiled_map_layer->setPlayerActorMapItem(actor_sprite->getActorMapItem(), actor_sprite->getTag());
     
@@ -237,12 +237,12 @@ bool RogueScene::initWithQuestId(int quest_id) {
     auto keypadMenuArray = createKeypadMenuItemArray();
     auto pMenu = Menu::createWithArray(keypadMenuArray);
     pMenu->setPosition(Point::ZERO);
-    this->addChild(pMenu, RogueScene::MenuLayerZOrder, RogueScene::KeypadMenuTag);
+    this->addChild(pMenu, ZOrders::MenuLayerZOrder, Tags::KeypadMenuTag);
 
     auto buttondMenuArray = createButtonMenuItemArray();
     auto pMenuButton = Menu::createWithArray(buttondMenuArray);
     pMenuButton->setPosition(Point::ZERO);
-    this->addChild(pMenuButton, RogueScene::MenuLayerZOrder, RogueScene::ButtonMenuTag);
+    this->addChild(pMenuButton, ZOrders::MenuLayerZOrder, Tags::ButtonMenuTag);
     
     // ---------------------------------
     // プレイヤーの先行
@@ -346,7 +346,7 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     Size base_tile_size = rogu_map_layer->getTileSize();
     
     pA_MenuButton->setPosition(Point(win_size.width - base_tile_size.width, rogu_map_layer->indexToPoint(12, 1).y));
-    pA_MenuButton->setTag(RogueScene::A_ButtonMenuTag);
+    pA_MenuButton->setTag(Tags::A_ButtonMenuTag);
     resultArray.pushBack(pA_MenuButton);
     
     auto b_button = Sprite::create("ui/b_button.png");
@@ -356,7 +356,7 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
         CCLOG("Bボタンが押された！");
     });
     pB_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 2, rogu_map_layer->indexToPoint(11, 0).y));
-    pB_MenuButton->setTag(RogueScene::B_ButtonMenuTag);
+    pB_MenuButton->setTag(Tags::B_ButtonMenuTag);
     resultArray.pushBack(pB_MenuButton);
     
     auto c_button = Sprite::create("ui/c_button.png");
@@ -367,7 +367,7 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
         this->showSystemMenu();
     });
     pC_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 3, rogu_map_layer->indexToPoint(10, 1).y));
-    pC_MenuButton->setTag(RogueScene::C_ButtonMenuTag);
+    pC_MenuButton->setTag(Tags::C_ButtonMenuTag);
     resultArray.pushBack(pC_MenuButton);
     
     auto d_button = Sprite::create("ui/d_button.png");
@@ -375,10 +375,10 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     d_buttonPress->setOpacity(128);
     auto pD_MenuButton = MenuItemSprite::create(d_button, d_buttonPress, [this](Ref* pSender) {
         CCLOG("Dボタンが押された！");
-        showItemList();
+        this->showItemList();
     });
     pD_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 2, rogu_map_layer->indexToPoint(11, 2).y));
-    pD_MenuButton->setTag(RogueScene::D_ButtonMenuTag);
+    pD_MenuButton->setTag(Tags::D_ButtonMenuTag);
     resultArray.pushBack(pD_MenuButton);
     
     return resultArray;
@@ -405,7 +405,7 @@ void RogueScene::playFloorTitleCutIn(int quest_id) {
     floorTitleTextLabel->setPosition(Point(floorTitleCutInLayer->getContentSize().width / 2, floorTitleCutInLayer->getContentSize().height / 2));
     floorTitleCutInLayer->addChild(floorTitleTextLabel);
 
-    this->addChild(modalLayer, RogueScene::CutInLayerZOrder);
+    this->addChild(modalLayer, ZOrders::CutInLayerZOrder);
 
     LayerActionUtils::runCutInActionFadeOut(floorTitleCutInLayer, 1.5f, [this, modalLayer]() {
         modalLayer->setVisible(false);
@@ -422,7 +422,7 @@ void RogueScene::playGameOverCutIn() {
     // TODO: (kyokomi) この画像は一般公開できないので注意
     auto gameOverSprite = Sprite::create("game_over.jpg");
     gameOverSprite->setPosition(Point(winSize.width / 2, winSize.height / 2));
-    modalLayer->addChild(gameOverSprite, RogueScene::CutInLayerZOrder);
+    modalLayer->addChild(gameOverSprite, ZOrders::CutInLayerZOrder);
     
     LayerActionUtils::runCutInActionFadeInOut(gameOverSprite, 2.0f, [this, modalLayer]() {
         modalLayer->setVisible(false);
@@ -517,16 +517,16 @@ void RogueScene::changeScene(Scene* scene) {
     auto modal = ModalLayer::create();
     modal->setColor(Color3B::BLACK);
     modal->setOpacity(255);
-    this->addChild(modal, RogueScene::BlackLayerZOrder);
+    this->addChild(modal, ZOrders::BlackLayerZOrder);
     
     auto trans = TransitionProgressOutIn::create(1.0f, scene);
     Director::getInstance()->replaceScene(trans);
 }
 
 float RogueScene::getAnimationSpeed() {
-    auto pMenu = getChildByTag(RogueScene::ButtonMenuTag);
+    auto pMenu = getChildByTag(Tags::ButtonMenuTag);
     if (pMenu) {
-        auto pB_ButtonMenuItem = static_cast<MenuItem*>(pMenu->getChildByTag(RogueScene::B_ButtonMenuTag));
+        auto pB_ButtonMenuItem = static_cast<MenuItem*>(pMenu->getChildByTag(Tags::B_ButtonMenuTag));
         if (pB_ButtonMenuItem && pB_ButtonMenuItem->isSelected()) {
             return 0.0f;
         }
@@ -835,7 +835,7 @@ void RogueScene::touchKaidan() {
         this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
         
     }, [](Ref *ref) {});
-    this->addChild(alertDialog, RogueScene::ModalLayerZOrder);
+    this->addChild(alertDialog, ZOrders::ModalLayerZOrder);
 }
 
 void RogueScene::attack() {
@@ -937,7 +937,7 @@ void RogueScene::logMessage(const char * pszFormat, ...) {
     
     CCLOG("logMessage: %s", buf);
     
-    auto pGameLogNode = getChildByTag(RogueScene::GameLogLayerTag);
+    auto pGameLogNode = getChildByTag(Tags::GameLogLayerTag);
     // とりあえず子要素がないなら無理
     if (!pGameLogNode || pGameLogNode->getChildrenCount() <= 0) {
         return;
@@ -1232,7 +1232,7 @@ void RogueScene::hideSystemMenu() {
 
 void RogueScene::refreshStatus() {
     
-    auto pStatusBarLayer = getChildByTag(RogueScene::StatusBarLayerTag);
+    auto pStatusBarLayer = getChildByTag(Tags::StatusBarLayerTag);
     if (!pStatusBarLayer) {
         return;
     }
@@ -1276,10 +1276,10 @@ void RogueScene::refreshStatus() {
 // 装備状態更新
 void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
     
-    auto statusLayer = dynamic_cast<Layer*>(getChildByTag(RogueScene::StatusBarLayerTag));
+    auto statusLayer = dynamic_cast<Layer*>(getChildByTag(Tags::StatusBarLayerTag));
     if (statusLayer) {
         // 武器
-        auto equipWeaponLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(RogueScene::StatusBarEquipWeaponTag));
+        auto equipWeaponLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(Tags::StatusBarEquipWeaponTag));
         if (equipWeaponLayer) {
             // TODO: (kyokomi) とりあえず...サーセン
             const int SpriteTag = 1;
@@ -1307,7 +1307,7 @@ void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
         }
         
         // 防具
-        auto equipAccessoryLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(RogueScene::StatusBarEquipAccessoryTag));
+        auto equipAccessoryLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(Tags::StatusBarEquipAccessoryTag));
         if (equipAccessoryLayer) {
             // TODO: (kyokomi) とりあえず...サーセン
             const int SpriteTag = 1;
@@ -1370,32 +1370,32 @@ void RogueScene::showPlayerLighting(ActorSprite* actor_sprite) {
     
     auto winSize = Director::getInstance()->getWinSize();
     
-    auto base_layer = dynamic_cast<LayerColor*>(this->getChildByTag(RogueScene::RoguePlayerLightBaseTag));
+    auto base_layer = dynamic_cast<LayerColor*>(this->getChildByTag(Tags::RoguePlayerLightBaseTag));
     if (base_layer) {
         base_layer->setVisible(true);
     } else {
         base_layer = LayerColor::create();
-        this->addChild(base_layer, RogueScene::RoguePlayerLightBaseZOrder, RogueScene::RoguePlayerLightBaseTag);
+        this->addChild(base_layer, ZOrders::RoguePlayerLightBaseZOrder, Tags::RoguePlayerLightBaseTag);
     }
     
     // フロントレイヤーにマップを暗くするやつを設定
-    auto mask_layer = dynamic_cast<LayerColor*>(base_layer->getChildByTag(RogueScene::RoguePlayerLightMaskTag));
+    auto mask_layer = dynamic_cast<LayerColor*>(base_layer->getChildByTag(Tags::RoguePlayerLightMaskTag));
     if (mask_layer) {
         mask_layer->setVisible(true);
     } else {
         mask_layer = LayerColor::create(Color4B(0,0,0,128));
         mask_layer->setContentSize(winSize);
         mask_layer->setPosition(Point::ZERO);
-        base_layer->addChild(mask_layer, RogueScene::RoguePlayerLightMaskZOrder, RogueScene::RoguePlayerLightMaskTag);
+        base_layer->addChild(mask_layer, ZOrders::RoguePlayerLightMaskZOrder, Tags::RoguePlayerLightMaskTag);
     }
     
-    auto light_draw = dynamic_cast<DrawNode*>(mask_layer->getChildByTag(RogueScene::RoguePlayerLightTag));
+    auto light_draw = dynamic_cast<DrawNode*>(mask_layer->getChildByTag(Tags::RoguePlayerLightTag));
     if (light_draw) {
         light_draw->setVisible(true);
     } else {
         light_draw = DrawNode::create();
         light_draw->drawDot(actor_sprite->getPosition(), getRogueMapLayer()->getTileSize().width * 3.0f / 2.0f, Color4F::WHITE);
-        mask_layer->addChild(light_draw, RogueScene::RoguePlayerLightZOrder, RogueScene::RoguePlayerLightTag);
+        mask_layer->addChild(light_draw, ZOrders::RoguePlayerLightZOrder, Tags::RoguePlayerLightTag);
         
         BlendFunc blend;
         blend.src = GL_DST_COLOR;
@@ -1405,7 +1405,7 @@ void RogueScene::showPlayerLighting(ActorSprite* actor_sprite) {
 }
 
 void RogueScene::hidePlayerLighting() {
-    auto rogue_player_light_base_layer = this->getChildByTag(RogueScene::RoguePlayerLightBaseTag);
+    auto rogue_player_light_base_layer = this->getChildByTag(Tags::RoguePlayerLightBaseTag);
     if (rogue_player_light_base_layer) {
         rogue_player_light_base_layer->setVisible(false);
     }
@@ -1566,30 +1566,30 @@ const ValueMap RogueScene::getRogueMapData() {
 }
 
 ActorSprite* RogueScene::getPlayerActorSprite(int seqNo) {
-    return static_cast<ActorSprite*>(getChildByTag(RogueScene::ActorPlayerTag + seqNo));
+    return static_cast<ActorSprite*>(getChildByTag(Tags::ActorPlayerTag + seqNo));
 }
 
 ItemWindowLayer* RogueScene::getItemWindowLayer() {
     auto pModalLayer = getModalLayer();
-    return static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(RogueScene::ItemListWindowTag));
+    return static_cast<ItemWindowLayer*>(pModalLayer->getChildByTag(Tags::ItemListWindowTag));
 }
 
 // TODO: (kyokomi)これイマイチ。ItemWindowとCommonWindowで共用しちゃってる
 ModalLayer* RogueScene::getModalLayer() {
     // モーダルレイヤー作成
-    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(RogueScene::ModalLayerTag));
+    auto pModalLayer = static_cast<ModalLayer*>(this->getChildByTag(Tags::ModalLayerTag));
     if (pModalLayer) {
         //pModalLayer->setVisible(true);
     } else {
         pModalLayer = ModalLayer::create();
-        this->addChild(pModalLayer, RogueScene::ModalLayerZOrder, RogueScene::ModalLayerTag);
+        this->addChild(pModalLayer, ZOrders::ModalLayerZOrder, Tags::ModalLayerTag);
     }
     
     return pModalLayer;
 }
 
 RogueTMXTiledMap* RogueScene::getRogueMapLayer() {
-    return static_cast<RogueTMXTiledMap*>(this->getChildByTag(RogueScene::TiledMapLayerTag));
+    return static_cast<RogueTMXTiledMap*>(this->getChildByTag(Tags::TiledMapLayerTag));
 }
 
 NS_ROGUE_END
