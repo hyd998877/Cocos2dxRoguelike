@@ -29,7 +29,7 @@ class RogueScene : public cocos2d::Layer
 {
 public:
     // ゲームステート
-    enum GameStatus {
+    enum class GameStatus {
         INIT              = 0,
         PLAYER_TURN       = 10,
         PLAYER_ACTION     = 11,

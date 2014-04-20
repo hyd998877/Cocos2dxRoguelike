@@ -1021,7 +1021,7 @@ void RogueScene::showItemList() {
                     this->logMessage("%sを床においた。", drop_item.name.c_str());
                     
                     // ターン消費
-                    this->changeGameStatus(RogueScene::ENEMY_TURN);
+                    this->changeGameStatus(GameStatus::ENEMY_TURN);
                 }
             }
             
@@ -1043,7 +1043,7 @@ void RogueScene::showItemList() {
             this->hideItemList();
             
             // ターン消費
-            this->changeGameStatus(RogueScene::ENEMY_TURN);
+            this->changeGameStatus(GameStatus::ENEMY_TURN);
         });
         
         item_window_layer->setItemEquipMenuCallback([this, item_window_layer](Ref* ref, DropItemSprite::DropItemDto drop_item) {
@@ -1094,10 +1094,10 @@ void RogueScene::showItemList() {
             this->hideItemList();
             
             // ターン消費
-            this->changeGameStatus(RogueScene::ENEMY_TURN);
+            this->changeGameStatus(GameStatus::ENEMY_TURN);
         });
         
-        item_list_modal_layer->addChild(item_window_layer, RogueScene::ItemListLayerZOrder, RogueScene::ItemListWindowTag);
+        item_list_modal_layer->addChild(item_window_layer, ZOrders::ItemListLayerZOrder, Tags::ItemListWindowTag);
         
         // ---- button -----
         
@@ -1254,10 +1254,10 @@ void RogueScene::refreshStatus() {
         // TODO: 死亡判定ここで？
         if (pPlayerDto->hitPoint == 0) {
             logMessage("%sは死亡した。", pPlayerDto->name.c_str());
-            changeGameStatus(RogueScene::GameStatus::GAME_OVER);
+            changeGameStatus(GameStatus::GAME_OVER);
         } else if (pPlayerDto->magicPoint == 0) {
             logMessage("%sは空腹で倒れた。", pPlayerDto->name.c_str());
-            changeGameStatus(RogueScene::GameStatus::GAME_OVER);
+            changeGameStatus(GameStatus::GAME_OVER);
         } else {
             // 残りHPで文字色を変える
             float hitPointDiv = (float)pPlayerDto->hitPoint / (float)pPlayerDto->hitPointLimit;
