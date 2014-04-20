@@ -86,7 +86,7 @@ void SystemMenuLayer::setMenuButtonList(const std::list<SystemMenuButtonInfo> me
     
     Size gridSize;
     int count = menu->getChildrenCount();
-    if (count != 8 || count != 7 || count != 5 || count != 0) {
+    if (count == 8 || count == 7 || count == 5 || count == 0) {
         // 8個 無理
         // 7個 無理
         // 5個 無理
