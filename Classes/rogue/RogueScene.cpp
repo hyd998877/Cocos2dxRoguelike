@@ -14,6 +14,7 @@
 #include "LotteryUtils.h"
 
 #include "TableViewTestLayer.h"
+#include "SystemMenuLayer.h"
 
 #include "ItemLogic.h"
 #include "BattleLogic.h"
@@ -364,7 +365,12 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Ref* pSender) {
         CCLOG("Cボタンが押された！");
 
+        Size win_size = Director::getInstance()->getWinSize();
+        std::list<SystemMenuLayer::SystemMenuButtonInfo> menuButtonInfoList;
+        auto systemMenuLayer = ModalLayer::createWithAttachCenterPosition(SystemMenuLayer::create(win_size * 0.5, "testtesttesttest", menuButtonInfoList));
+        this->addChild(systemMenuLayer, RogueScene::ModalLayerZOrder);
         // 千里眼、地獄耳デバッグ用
+#if 0
         this->enemyMappingAllShow();
         this->itemMappingAllShow();
         
@@ -374,7 +380,7 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
             this->changeScene(RogueScene::scene(rogue_play_data_.quest_id + 1));
         }, [](Ref *ref) {});
         this->addChild(alertDialog, RogueScene::ModalLayerZOrder);
-        
+#endif
     });
     pC_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 3, rogu_map_layer->indexToPoint(10, 1).y));
     pC_MenuButton->setTag(RogueScene::C_ButtonMenuTag);

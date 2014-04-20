@@ -14,6 +14,7 @@
 #include "TableViewTestLayer.h"
 
 #include "CommonWindowUtil.h"
+#include "LabelRPG.h"
 
 using namespace std;
 using namespace cocos2d;
@@ -133,12 +134,13 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     CCLOG("init %s", string.c_str());
     
     // 本文テキスト
-    auto textLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "");
+    auto textLabel = LabelRPG::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "");
     textLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     textLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
     
     textLabel->setColor(Color3B::WHITE);
-    textLabel->setPosition(Point(textLabel->getSystemFontSize() / 2 + textLabel->getContentSize().width / 2, textLayer->getContentSize().height - textLabel->getContentSize().height / 2 - textLabel->getSystemFontSize() / 2));
+    textLabel->setOriginalPosition(Point(0, textLayer->getContentSize().height));
+//    textLabel->setPosition(Point(textLabel->getSystemFontSize() / 2 + textLabel->getContentSize().width / 2, textLayer->getContentSize().height - textLabel->getContentSize().height / 2 - textLabel->getSystemFontSize() / 2));
 
     textLayer->addChild(textLabel, kZOrder_TextLayer, kTag_TextLayer_textLabel);
     
@@ -215,19 +217,18 @@ void NovelScene::onTouchEnded(Touch *pTouch, Event *pEvent)
 
 void NovelScene::dispText(string text)
 {
-    Layer* pTextLayer = (Layer*) this->getChildByTag(kTag_TextLayer);
+    auto pTextLayer = dynamic_cast<Layer*>(this->getChildByTag(kTag_TextLayer));
     if (pTextLayer)
     {
         // テキストをすすめる
-        auto pTextLabel = dynamic_cast<Label*>(pTextLayer->getChildByTag(kTag_TextLayer_textLabel));
-        pTextLabel->setString(text.c_str());
-        pTextLabel->setPosition(Point(pTextLabel->getSystemFontSize() / 2 + pTextLabel->getContentSize().width / 2, pTextLayer->getContentSize().height - pTextLabel->getContentSize().height / 2 - pTextLabel->getSystemFontSize() / 2));
+        auto pTextLabel = dynamic_cast<LabelRPG*>(pTextLayer->getChildByTag(kTag_TextLayer_textLabel));
+        pTextLabel->setStringWithRunText(text, 0.05f);
     }
 }
 
 void NovelScene::dispName(string name)
 {
-    Layer* pLayer = (Layer*) this->getChildByTag(kTag_TextLayer_name);
+    auto pLayer = dynamic_cast<Layer*>(this->getChildByTag(kTag_TextLayer_name));
     if (pLayer)
     {
         // テキストをすすめる
