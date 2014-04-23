@@ -423,6 +423,7 @@ void RogueScene::playGameOverCutIn() {
     auto gameOverSprite = Sprite::create("game_over.jpg");
     gameOverSprite->setPosition(Point(winSize.width / 2, winSize.height / 2));
     modalLayer->addChild(gameOverSprite, ZOrders::CutInLayerZOrder);
+    this->addChild(modalLayer, ZOrders::ModalLayerZOrder);
     
     LayerActionUtils::runCutInActionFadeInOut(gameOverSprite, 2.0f, [this, modalLayer]() {
         modalLayer->setVisible(false);
