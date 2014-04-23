@@ -1195,7 +1195,7 @@ void RogueScene::showSystemMenu() {
         });
         
         // TODO: (kyokomi) 足元処理未実装
-        SystemMenuLayer::SystemMenuButtonInfo menu5("足 元", [this, systemMenuModalLayer]() {
+        SystemMenuLayer::SystemMenuButtonInfo menu5("足　元", [this, systemMenuModalLayer]() {
             CCLOG("Menu5ボタンが押された！");
             
             this->logMessage("足元は何もありません。");
