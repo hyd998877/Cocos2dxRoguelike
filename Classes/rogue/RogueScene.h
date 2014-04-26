@@ -57,7 +57,7 @@ public:
         
     } RoguePlayData;
     
-    static RoguePlayData createRoguePlayData(std::string data_string)
+    static RoguePlayData createRoguePlayData(std::string data_string = "")
     {
         std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
         if (data_string_array.size() != 7) {

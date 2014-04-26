@@ -459,6 +459,10 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
     }
     
     if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
+        
+        // セーブ消去
+        AccountData::getInstance()->reset();
+        
         // ゲームオーバーの演出
         playGameOverCutIn();
         return;
@@ -1182,7 +1186,6 @@ void RogueScene::showSystemMenu() {
             CCLOG("Menu4ボタンが押された！");
             Size win_size = Director::getInstance()->getWinSize();
             auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "あきらめますか？", "はい", "いいえ", [this](Ref *ref) {
-                // TODO: セーブ消去
                 
                 // ゲームオーバー
                 this->changeGameStatus(GameStatus::GAME_OVER);
