@@ -2,6 +2,8 @@
 
 [![](https://dply.me/ks7a9w/button/small)](https://dply.me/ks7a9w#install)
 
+[課題のショートカット](https://bitbucket.org/kyokomi/cocos2droguelike/issues?status=open&status=new&sort=component)
+
 ほとんどテストコードみたいな感じで、とりあえずモック完成を目指しているのであまり参考にならないソースです。
 
 もともとSRPGゲーム作ってたのですが、現在はローグライクゲーム開発にシフトしてます。
