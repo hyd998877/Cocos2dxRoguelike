@@ -219,13 +219,13 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // ---------------------
     // 敵キャラ生成
     // ---------------------
-    int probCount = getRogueMapData().at("mobCount").asInt();
+    int probCount = getRogueMapData().at(m_rogue_map::MobCount).asInt();
     institutionEnemy(probCount);
     
     //-------------------------
     // アイテム配置
     //-------------------------
-    int dropItemCount = getRogueMapData().at("dropItemCount").asInt();
+    int dropItemCount = getRogueMapData().at(m_rogue_map::DropItemCount).asInt();
     institutionDropItem(dropItemCount);
     
     // -------------------------------
@@ -1404,7 +1404,7 @@ void RogueScene::itemMappingAllShow() {
 void RogueScene::institutionEnemy(int probCount) {
     ValueMap rogueMapDatas = getRogueMapData();
     
-    ValueVector probList = rogueMapDatas.at("mobIds").asValueVector();
+    ValueVector probList = rogueMapDatas.at(m_rogue_map::MobIds).asValueVector();
     std::vector<int> hitIds = LotteryUtils::lot(probCount, probList);
     if (hitIds.size() <= 0) {
         hitIds.clear();
@@ -1426,7 +1426,7 @@ void RogueScene::institutionEnemy(int probCount) {
 void RogueScene::institutionDropItem(int probCount) {
     ValueMap rogueMapDatas = getRogueMapData();
     
-    ValueVector probList = rogueMapDatas.at("dropItemIds").asValueVector();
+    ValueVector probList = rogueMapDatas.at(m_rogue_map::DropItemIds).asValueVector();
     ValueVector hitValues = LotteryUtils::lotValues(probCount, probList);
     if (hitValues.size() <= 0) {
         hitValues.clear();
@@ -1439,8 +1439,8 @@ void RogueScene::institutionDropItem(int probCount) {
         
         ValueMap valueMap = hitValue.asValueMap();
         
-        MUseItem::ItemType itemType = static_cast<MUseItem::ItemType>(valueMap.at("type").asInt());
-        int hitId = valueMap.at("id").asInt();
+        MUseItem::ItemType itemType = static_cast<MUseItem::ItemType>(valueMap.at(m_rogue_map::ItemType).asInt());
+        int hitId = valueMap.at(m_rogue_map::Id).asInt();
         
         // objectIdを補正
         if (AccountData::getInstance()->rogue_play_data_.item_count < 0) {
@@ -1466,7 +1466,8 @@ void RogueScene::institutionDropItem(int probCount) {
             
             // お金の場合、値を抽選して設定
             if (itemType == MUseItem::ItemType::GOLD) {
-                int gold = GetRandom(rogueMapDatas.at("goldMin").asInt(), rogueMapDatas.at("goldMax").asInt());
+                int gold = GetRandom(rogueMapDatas.at(m_rogue_map::GoldMin).asInt(),
+                                     rogueMapDatas.at(m_rogue_map::GoldMax).asInt());
                 dropItemDto.param = gold;
             }
             

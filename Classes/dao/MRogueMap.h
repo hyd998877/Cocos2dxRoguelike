@@ -43,79 +43,93 @@
  }
  */
 namespace m_rogue_map{
+    const std::string MobCount = "mobCount";
+    const std::string MobIds = "mobIds";
+    const std::string DropItemCount = "dropItemCount";
+    const std::string DropItemIds = "dropItemIds";
+    
+    const std::string Id = "id";
+    const std::string Prob = "prob";
+    const std::string DropProb = "dropProb";
+    const std::string ItemType = "type";
+    
+    const std::string GoldMin = "goldMin";
+    const std::string GoldMax = "goldMax";
+    
+    
     
     const static ValueMap floor1_{
-        {"mobCount", Value(4)},
-        {"mobIds", Value(ValueVector{
+        {MobCount, Value(4)},
+        {MobIds, Value(ValueVector{
             // 20%
-            Value(ValueMap{ {"id", Value(0)}, {"prob", Value(2000)} }), // hazure
+            Value(ValueMap{ {Id, Value(0)}, {Prob, Value(2000)}, {DropProb, Value(0)} }), // hazure
             // 80%
-            Value(ValueMap{ {"id", Value(1)}, {"prob", Value(8000)} })  // sura
+            Value(ValueMap{ {Id, Value(1)}, {Prob, Value(8000)}, {DropProb, Value(1000)} })  // sura
         })},
-        {"dropItemCount", Value(10)},
-        {"dropItemIds", Value(ValueVector{
+        {DropItemCount, Value(10)},
+        {DropItemIds, Value(ValueVector{
             // 60% ハズレ
-            Value(ValueMap{ {"type", Value( 0)}, {"id", Value(0)}, {"prob", Value(6000)} }), // hazure
+            Value(ValueMap{ {ItemType, Value( 0)}, {Id, Value(0)}, {Prob, Value(6000)} }), // hazure
             //  8% 武器
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(3)}, {"prob", Value( 100)} }), // w
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(2)}, {"prob", Value( 200)} }), // w
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(1)}, {"prob", Value( 500)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(3)}, {Prob, Value( 100)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(2)}, {Prob, Value( 200)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(1)}, {Prob, Value( 500)} }), // w
             //  8% 防具
-            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(2)}, {"prob", Value( 200)} }), // a
-            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(1)}, {"prob", Value( 600)} }), // a
+            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(2)}, {Prob, Value( 200)} }), // a
+            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(1)}, {Prob, Value( 600)} }), // a
             // 12% ゴールド
-            Value(ValueMap{ {"type", Value(10)}, {"id", Value(7)}, {"prob", Value(1200)} }), // gold
+            Value(ValueMap{ {ItemType, Value(10)}, {Id, Value(7)}, {Prob, Value(1200)} }), // gold
             // 12% 消費アイテム
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(5)}, {"prob", Value( 100)} }), // et
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(4)}, {"prob", Value( 200)} }), // et
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(2)}, {"prob", Value( 300)} }), // pt
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(1)}, {"prob", Value( 600)} }), // pt
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(5)}, {Prob, Value( 100)} }), // et
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(4)}, {Prob, Value( 200)} }), // et
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(2)}, {Prob, Value( 300)} }), // pt
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(1)}, {Prob, Value( 600)} }), // pt
         })},
-        {"goldMin", Value(100)},
-        {"goldMax", Value(1000)}
+        {GoldMin, Value(100)},
+        {GoldMax, Value(1000)}
     };
 
     const static ValueMap floor2_{
-        {"mobCount", Value(5)},
-        {"mobIds", Value(ValueVector{
+        {MobCount, Value(5)},
+        {MobIds, Value(ValueVector{
             // 20%
-            Value(ValueMap{ {"id", Value(0)}, {"prob", Value(2000)} }), // hazure
+            Value(ValueMap{ {Id, Value(0)}, {Prob, Value(2000)}, {DropProb, Value(0)} }), // hazure
             // 40%
-            Value(ValueMap{ {"id", Value(1)}, {"prob", Value(4000)} }),  // sura
+            Value(ValueMap{ {Id, Value(1)}, {Prob, Value(4000)}, {DropProb, Value(1000)} }),  // sura
             // 20%
-            Value(ValueMap{ {"id", Value(2)}, {"prob", Value(2000)} }),  // youhei
+            Value(ValueMap{ {Id, Value(2)}, {Prob, Value(2000)}, {DropProb, Value(1000)} }),  // youhei
             // 20%
-            Value(ValueMap{ {"id", Value(3)}, {"prob", Value(2000)} }),  // youkan
+            Value(ValueMap{ {Id, Value(3)}, {Prob, Value(2000)}, {DropProb, Value(1000)} }),  // youkan
         })},
-        {"dropItemCount", Value(10)},
-        {"dropItemIds", Value(ValueVector{
+        {DropItemCount, Value(10)},
+        {DropItemIds, Value(ValueVector{
             // 60% ハズレ
-            Value(ValueMap{ {"type", Value( 0)}, {"id", Value(0)}, {"prob", Value(6000)} }), // hazure
+            Value(ValueMap{ {ItemType, Value( 0)}, {Id, Value(0)}, {Prob, Value(6000)} }), // hazure
             //  8% 武器
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(6)}, {"prob", Value(  10)} }), // w
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(5)}, {"prob", Value(  40)} }), // w
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(4)}, {"prob", Value( 100)} }), // w
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(3)}, {"prob", Value( 100)} }), // w
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(2)}, {"prob", Value( 150)} }), // w
-            Value(ValueMap{ {"type", Value( 1)}, {"id", Value(1)}, {"prob", Value( 400)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(6)}, {Prob, Value(  10)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(5)}, {Prob, Value(  40)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(4)}, {Prob, Value( 100)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(3)}, {Prob, Value( 100)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(2)}, {Prob, Value( 150)} }), // w
+            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(1)}, {Prob, Value( 400)} }), // w
             //  8% 防具
-            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(6)}, {"prob", Value(  10)} }), // a
-            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(5)}, {"prob", Value(  40)} }), // a
-            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(3)}, {"prob", Value( 150)} }), // a
-            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(2)}, {"prob", Value( 200)} }), // a
-            Value(ValueMap{ {"type", Value( 2)}, {"id", Value(1)}, {"prob", Value( 400)} }), // a
+            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(6)}, {Prob, Value(  10)} }), // a
+            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(5)}, {Prob, Value(  40)} }), // a
+            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(3)}, {Prob, Value( 150)} }), // a
+            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(2)}, {Prob, Value( 200)} }), // a
+            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(1)}, {Prob, Value( 400)} }), // a
             // 12% ゴールド
-            Value(ValueMap{ {"type", Value(10)}, {"id", Value(7)}, {"prob", Value(1200)} }), // gold
+            Value(ValueMap{ {ItemType, Value(10)}, {Id, Value(7)}, {Prob, Value(1200)} }), // gold
             // 12% 消費アイテム
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(6)}, {"prob", Value( 100)} }), // et
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(5)}, {"prob", Value( 100)} }), // et
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(4)}, {"prob", Value( 300)} }), // et
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(3)}, {"prob", Value( 100)} }), // pt
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(2)}, {"prob", Value( 100)} }), // pt
-            Value(ValueMap{ {"type", Value(20)}, {"id", Value(1)}, {"prob", Value( 500)} }), // pt
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(6)}, {Prob, Value( 100)} }), // et
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(5)}, {Prob, Value( 100)} }), // et
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(4)}, {Prob, Value( 300)} }), // et
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(3)}, {Prob, Value( 100)} }), // pt
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(2)}, {Prob, Value( 100)} }), // pt
+            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(1)}, {Prob, Value( 500)} }), // pt
         })},
-        {"goldMin", Value(100)},
-        {"goldMax", Value(2000)}
+        {GoldMin, Value(100)},
+        {GoldMax, Value(2000)}
     };
     
     const static ValueVector datas_{
@@ -130,7 +144,7 @@ namespace m_rogue_map{
         Value(floor2_),
         Value(floor2_),
         Value(floor2_),
-        // 10
+        // 10〜
         Value(floor2_)
     };
 }
