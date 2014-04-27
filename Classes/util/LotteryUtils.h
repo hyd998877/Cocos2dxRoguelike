@@ -79,6 +79,14 @@ namespace RogueLikeGame {
             return hitValues;
         }
         
+        static const int lot(const cocos2d::ValueVector probList) {
+            auto ids = lot(1, probList);
+            if (ids.empty()) {
+                return 0;
+            }
+            return ids.at(0);
+        }
+        
         static const std::vector<int> lot(const int probCount, const cocos2d::ValueVector probList) {
             std::vector<int> hitIds;
             
