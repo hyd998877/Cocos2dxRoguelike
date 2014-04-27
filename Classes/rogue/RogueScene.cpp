@@ -88,7 +88,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     ActorDto actor_dto;
     // 不一致の場合初期化
     if (AccountData::getInstance()->rogue_play_data_.quest_id != quest_id) {
-        AccountData::getInstance()->reset();
+        AccountData::getInstance()->resetRoguePlayData();
         rogue_play_data_.quest_id = quest_id;
         // デフォルトステータス
         actor_dto = ActorDto::createActorDto(m_player::data_.at("1").asString());
@@ -459,7 +459,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
     
     if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
         // セーブ消去
-        AccountData::getInstance()->reset();
+        AccountData::getInstance()->resetAll();
         // ゲームオーバーの演出
         playGameOverCutIn();
         return;

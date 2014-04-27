@@ -153,7 +153,7 @@ void MypageScene::initGlobalMenu()
         
         comment_label->setString("まだ未実装です！");
         
-        AccountData::getInstance()->reset();
+        AccountData::getInstance()->resetAll();
     });
     
     auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "の　べ　る"), WAKU_PADDING, [this](Ref * pSeneder) {
