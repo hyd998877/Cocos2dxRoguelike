@@ -463,7 +463,13 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
         // ゲームオーバーの演出
         playGameOverCutIn();
         return;
-        
+    } else if (rogue_play_data_.game_status == GameStatus::ESCAPE) {
+        // セーブ消去
+        AccountData::getInstance()->resetRoguePlayData();
+        // マイページへ
+        changeScene(MypageScene::scene());
+        return;
+            
     } else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
         && rogue_play_data_.game_status == GameStatus::ENEMY_TURN) {
         // 敵のターン開始時
@@ -1180,17 +1186,31 @@ void RogueScene::showSystemMenu() {
             
             this->hideSystemMenu();
         });
-        SystemMenuLayer::SystemMenuButtonInfo menu6("とじる", [this, systemMenuModalLayer]() {
-            CCLOG("Menu6ボタンが押された！");
-            this->hideSystemMenu();
-        });
         
         menuButtonInfoList.push_back(menu1);
         menuButtonInfoList.push_back(menu2);
         menuButtonInfoList.push_back(menu3);
         menuButtonInfoList.push_back(menu4);
         menuButtonInfoList.push_back(menu5);
-        menuButtonInfoList.push_back(menu6);
+        menuButtonInfoList.push_back(SystemMenuLayer::SystemMenuButtonInfo("未設定", [this, systemMenuModalLayer]() {
+            CCLOG("Menu6ボタンが押された！");
+            this->hideSystemMenu();
+        }));
+        menuButtonInfoList.push_back(SystemMenuLayer::SystemMenuButtonInfo("持ち帰", [this, systemMenuModalLayer]() {
+            CCLOG("Menu7ボタンが押された！");
+            
+            this->changeGameStatus(GameStatus::ESCAPE);
+            
+            this->hideSystemMenu();
+        }));
+        menuButtonInfoList.push_back(SystemMenuLayer::SystemMenuButtonInfo("未設定", [this, systemMenuModalLayer]() {
+            CCLOG("Menu8ボタンが押された！");
+            this->hideSystemMenu();
+        }));
+        menuButtonInfoList.push_back(SystemMenuLayer::SystemMenuButtonInfo("とじる", [this, systemMenuModalLayer]() {
+            CCLOG("Menu9ボタンが押された！");
+            this->hideSystemMenu();
+        }));
         
         auto systemMenuLayer = SystemMenuLayer::create(win_size * 0.5, "その他・システムメニュー");
         systemMenuLayer->setPosition(CommonWindowUtil::createPointCenter(systemMenuLayer, systemMenuModalLayer));

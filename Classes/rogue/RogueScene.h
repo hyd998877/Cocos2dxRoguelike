@@ -36,6 +36,7 @@ public:
         PLAYER_NO_ACTION  = 12,
         ENEMY_TURN        = 20,
         ENEMY_ACTION      = 21,
+        ESCAPE            = 98,
         GAME_OVER         = 99,
     };
     
