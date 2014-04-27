@@ -148,12 +148,12 @@ void MypageScene::initGlobalMenu()
         }
     });
     
-    auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "そ　う　こ"), WAKU_PADDING, [this](Ref * pSeneder) {
-        auto comment_label = dynamic_cast<Label*>(this->getChildByTag(10)->getChildByTag(100));
-        
-        comment_label->setString("まだ未実装です！");
-        
-        AccountData::getInstance()->resetAll();
+    auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "そ　う　こ"), WAKU_PADDING, [this](Ref *ref) {
+        // アイテムリストを設定
+        Size winSize = Director::getInstance()->getWinSize();
+        auto itemWindowLayer = ItemWindow::createItemWindowLayer(winSize * 0.8, AccountData::getInstance()->item_list_);
+        itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
+        this->addChild(itemWindowLayer, 99999);
     });
     
     auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "の　べ　る"), WAKU_PADDING, [this](Ref *ref) {

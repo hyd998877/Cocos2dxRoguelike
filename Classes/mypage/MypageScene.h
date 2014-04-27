@@ -11,6 +11,7 @@
 
 #include "cocos2d.h"
 #include "AppMacros.h"
+#include "ItemWindow.h"
 
 USING_NS_CC;
 using namespace std;
