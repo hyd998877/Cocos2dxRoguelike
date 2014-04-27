@@ -107,6 +107,11 @@ public:
     static std::list<MapIndex> createRelatedMapIndexList(MapIndex baseMapIndex);
     static MapIndex checkTouchEventIndex(const MapIndex& target_map_index, const MapIndex& touch_point_map_index);
     
+    static bool isMapIndexEmpty(const MapIndex& mapIndex) {
+        MapIndex emptyMapIndex = createMapIndexEmpty();
+        return (mapIndex.x == emptyMapIndex.x && mapIndex.y == emptyMapIndex.y && mapIndex.moveDictType == emptyMapIndex.moveDictType) ? true : false;
+    }
+    static MapIndex createMapIndexEmpty() { return {-1, -1, MoveDirectionType::MOVE_NONE}; }
 private:
     // マップデータ save
     MapData map_data_;
@@ -124,8 +129,8 @@ public:
     void addObstacle(MapIndex* pMapIndex);
     void removeMapItem(MapItem* pRemoveMapItem);
     
-    ActorMapItem* getActorMapItem(const MapIndex* pMapIndex);
-    MapItem* getMapItem(const MapIndex* pMapIndex);
+    ActorMapItem* getActorMapItem(const MapIndex& pMapIndex);
+    MapItem* getMapItem(const MapIndex& pMapIndex);
     ActorMapItem* getActorMapItemById(int seqNo);
     DropMapItem* getDropMapItem(const MapIndex* pMapIndex);
     

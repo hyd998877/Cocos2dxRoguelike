@@ -339,11 +339,11 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
 {
     // グリッド選択
     CCLOG("executeMapIndex mapIdx x = %d y = %d grid selected", mapIndex.x, mapIndex.y);
-    auto pActorMapItem = MapManager::getInstance()->getActorMapItem(&mapIndex);
+    auto pActorMapItem = MapManager::getInstance()->getActorMapItem(mapIndex);
     CCLOG("mapDataType = %d", pActorMapItem->mapDataType);
     if (pActorMapItem->mapDataType == MapDataType::PLAYER)
     {
-        auto pActorMapItem = MapManager::getInstance()->getActorMapItem(&mapIndex);
+        auto pActorMapItem = MapManager::getInstance()->getActorMapItem(mapIndex);
         // 移動可能範囲のリストを作成
         std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
         // 移動可能範囲を表示
@@ -354,7 +354,7 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
         return;
     }
     
-    auto pMapItem = MapManager::getInstance()->getMapItem(&mapIndex);
+    auto pMapItem = MapManager::getInstance()->getMapItem(mapIndex);
     if (pMapItem->mapDataType == MapDataType::MOVE_DIST)
     {
         auto pActorSprite = findActorSprite(1);

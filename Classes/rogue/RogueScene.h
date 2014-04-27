@@ -196,7 +196,7 @@ private:
     
     // 配置
     void institutionEnemy(int probCount);
-    void institutionDropItem(int probCount);
+    void institutionDropItem(int probCount, const MapIndex& mapIndex = MapManager::createMapIndexEmpty());
     
     // 汎用
     const ValueMap getRogueMapData();

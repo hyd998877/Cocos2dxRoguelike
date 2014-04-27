@@ -72,7 +72,7 @@ void RogueTMXTiledMap::initRogue() {
             } else {
                 // ミニマップ更新
                 int tag = 10000 * x + 100 * y;
-                addMiniMapItem(MapManager::getInstance()->getMapItem(&tileMapIndex), tag);
+                addMiniMapItem(MapManager::getInstance()->getMapItem(tileMapIndex), tag);
             }
         }
     }
@@ -154,7 +154,7 @@ ActorMapItem RogueTMXTiledMap::startPlayerRandomPosition(ActorDto& actor_dto, co
 bool RogueTMXTiledMap::tileSetEnemyActorMapItem(ActorDto enemyActorDto, MapIndex mapIndex) {
     
     // すでにプレイヤーが置いてある場合は置けない
-    if (MapManager::getInstance()->getActorMapItem(&mapIndex)->mapDataType != MapDataType::NONE) {
+    if (MapManager::getInstance()->getActorMapItem(mapIndex)->mapDataType != MapDataType::NONE) {
         return false;
     }
     
@@ -200,6 +200,12 @@ void RogueTMXTiledMap::removeEnemyActorSprite(ActorSprite* pEnemySprite) {
 }
 
 bool RogueTMXTiledMap::tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, MapIndex mapIndex) {
+    
+    // 配置
+    if (MapManager::isMapIndexEmpty(mapIndex)) {
+        mapIndex = getFloorRandomMapIndex(false);
+    }
+    
     // すでにアイテムが置いてある場合は置けない
     if (MapManager::getInstance()->getDropMapItem(&mapIndex)->mapDataType != MapDataType::NONE) {
         return false;
@@ -625,33 +631,48 @@ MapIndex RogueTMXTiledMap::getRandomMapIndex(bool isColision, bool isActor, bool
             }
         }
         
-        // マップ上を確認
-        auto randTargetMapItem = MapManager::getInstance()->getMapItem(&randMapIndex);
-        
         // 部屋単位
-        if (isFloor) {
-            auto rect = getTileMapFloorInfo(randMapIndex);
-            if (Rect::ZERO.equals(rect)) {
-                // とれなかったらリトライ
-                continue;
-            }
+        if (isFloor && !isFloorMapIndex(randMapIndex)) {
+            continue;
         }
         
-        if (isActor) {
-            // アイテムの上もOK
-            if (randTargetMapItem->mapDataType == MapDataType::NONE || randTargetMapItem->mapDataType == MapDataType::MAP_ITEM) {
-                // OK
-                break;
-            }
-        } else {
-            // NONEのみ
-            if (randTargetMapItem->mapDataType == MapDataType::NONE) {
-                // OK
-                break;
-            }
+        // マップ上を確認
+        if (isActor && !isActorInstMapIndex(randMapIndex)) {
+            continue;
+        } else if (!isDropItemInstMapIndex(randMapIndex)) {
+            continue;
         }
+        
+        break;
     }
     return randMapIndex;
+}
+
+bool RogueTMXTiledMap::isFloorMapIndex(const MapIndex& mapIndex) {
+    auto rect = getTileMapFloorInfo(mapIndex);
+    if (!Rect::ZERO.equals(rect)) {
+        return true;
+    }
+    return false;
+}
+
+bool RogueTMXTiledMap::isActorInstMapIndex(const MapIndex& mapIndex) {
+    auto targetMapItem = MapManager::getInstance()->getMapItem(mapIndex);
+    
+    // アイテムの上もOK
+    if (targetMapItem->mapDataType == MapDataType::NONE || targetMapItem->mapDataType == MapDataType::MAP_ITEM) {
+        return true;
+    }
+    return false;
+}
+
+bool RogueTMXTiledMap::isDropItemInstMapIndex(const MapIndex& mapIndex) {
+    auto targetMapItem = MapManager::getInstance()->getMapItem(mapIndex);
+    
+    if (targetMapItem->mapDataType == MapDataType::NONE) {
+        return true;
+    }
+    return false;
 }
 
 bool RogueTMXTiledMap::isTiledMapColisionLayer(MapIndex touchPointMapIndex) {

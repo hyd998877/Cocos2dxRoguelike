@@ -610,7 +610,7 @@ void RogueScene::enemyTurn() {
                 logMessage("壁ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
                 pEnemySprite->getActorMapItem()->moveDone = true;
                 
-            } else if (MapManager::getInstance()->getActorMapItem(&moveMapIndex)->mapDataType == MapDataType::ENEMY) {
+            } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex)->mapDataType == MapDataType::ENEMY) {
                 
                 if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, moveMapIndex)) {
                     //logMessage("待機 seqNo = %d (%d, %d)");
@@ -619,7 +619,7 @@ void RogueScene::enemyTurn() {
                 }
                 pEnemySprite->getActorMapItem()->moveDone = true;
                 
-            } else if (MapManager::getInstance()->getActorMapItem(&moveMapIndex)->mapDataType == MapDataType::PLAYER) {
+            } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex)->mapDataType == MapDataType::PLAYER) {
                 // 移動中のステータスへ
                 changeGameStatus(GameStatus::ENEMY_ACTION);
                 
@@ -719,7 +719,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     actor_sprite->getActorMapItem()->mapIndex.moveDictType = addMoveIndex.moveDictType;
     
     // 敵をタッチした
-    auto enemy_map_item = MapManager::getInstance()->getActorMapItem(&touchPointMapIndex);
+    auto enemy_map_item = MapManager::getInstance()->getActorMapItem(touchPointMapIndex);
     if (enemy_map_item->mapDataType == MapDataType::ENEMY) {
         // 向きだけ変えてターン経過しない
         return;
@@ -736,7 +736,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
         
         changeGameStatus(GameStatus::PLAYER_NO_ACTION);
 
-        auto touch_point_map_item = MapManager::getInstance()->getMapItem(&touchPointMapIndex);
+        auto touch_point_map_item = MapManager::getInstance()->getMapItem(touchPointMapIndex);
         
         // 移動処理
         rogue_map_layer->movePlayerMap(actor_sprite, addMoveIndex, getAnimationSpeed(), CallFunc::create([this, touch_point_map_item](void) {
@@ -862,7 +862,7 @@ void RogueScene::attack() {
 
     ActorSprite* pEnemySprite = NULL;
     // 敵をタッチした
-    auto pEnemyMapItem = MapManager::getInstance()->getActorMapItem(&attackMapIndex);
+    auto pEnemyMapItem = MapManager::getInstance()->getActorMapItem(attackMapIndex);
     if (pEnemyMapItem->mapDataType == MapDataType::ENEMY) {
         pEnemySprite = rogue_map_layer->getEnemyActorSprite(pEnemyMapItem->seqNo);
     } else {
@@ -1423,7 +1423,7 @@ void RogueScene::institutionEnemy(int probCount) {
 }
 
 // アイテム配置
-void RogueScene::institutionDropItem(int probCount) {
+void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* = MapManager::createMapIndexEmpty() */) {
     ValueMap rogueMapDatas = getRogueMapData();
     
     ValueVector probList = rogueMapDatas.at(m_rogue_map::DropItemIds).asValueVector();
@@ -1472,7 +1472,6 @@ void RogueScene::institutionDropItem(int probCount) {
             }
             
             // 配置
-            MapIndex mapIndex = tiled_map_layer->getFloorRandomMapIndex(false);
             tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
             
             // objectIdを更新
@@ -1493,7 +1492,6 @@ void RogueScene::institutionDropItem(int probCount) {
                 0
             };
             
-            MapIndex mapIndex = tiled_map_layer->getFloorRandomMapIndex(false);
             tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
             
             // objectIdを更新
@@ -1514,7 +1512,6 @@ void RogueScene::institutionDropItem(int probCount) {
                 0
             };
             
-            MapIndex mapIndex = tiled_map_layer->getFloorRandomMapIndex(false);
             tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
             
             // objectIdを更新

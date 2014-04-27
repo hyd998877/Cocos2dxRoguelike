@@ -102,7 +102,7 @@ std::list<MapIndex> MapManager::createMovePointList(MapIndex moveFromMapIndex, M
     map_data_.map_move_point_list.clear();
     
     // 移動先を取得
-    MapItem* moveFromMapItem = getMapItem(&moveFromMapIndex);
+    MapItem* moveFromMapItem = getMapItem(moveFromMapIndex);
     
     // 経路探索(再帰呼び出し)
     findMovePointList(moveFromMapItem->mapIndex.x, moveFromMapItem->mapIndex.y, moveFromMapItem->moveDist, moveToMapItem);
@@ -164,7 +164,7 @@ MapItem MapManager::searchTargetMapItem(std::list<MapIndex> searchMapIndexList)
     
     for (MapIndex mapIndex : searchMapIndexList)
     {
-        auto pMapItem = getMapItem(&mapIndex);
+        auto pMapItem = getMapItem(mapIndex);
         if (pMapItem->mapDataType == MapDataType::MOVE_DIST)
         {
             if (targetMoveDistMapItem.moveDist < pMapItem->moveDist)
@@ -221,7 +221,7 @@ bool MapManager::chkMove(int mapPointX, int mapPointY, int dist)
     assert(vaildateInit());
     
     MapIndex mapIndex = {mapPointX, mapPointY, MoveDirectionType::MOVE_NONE};
-    MapItem* mapItem = getMapItem(&mapIndex);
+    MapItem* mapItem = getMapItem(mapIndex);
     if (mapItem->mapDataType == MapDataType::NONE ||
         mapItem->mapDataType == MapDataType::MAP_ITEM ||
         mapItem->mapDataType == MapDataType::KAIDAN ||
@@ -237,7 +237,7 @@ bool MapManager::chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataTyp
     assert(vaildateInit());
     
     MapIndex mapIndex = {mapPointX, mapPointY, MoveDirectionType::MOVE_NONE};
-    MapItem* mapItem = getMapItem(&mapIndex);
+    MapItem* mapItem = getMapItem(mapIndex);
     if (mapItem->mapDataType == MapDataType::OBSTACLE) {
         return false;
     }
@@ -392,27 +392,27 @@ const std::vector<std::vector<bool>> MapManager::getMappingData()
  * カーソル、オブジェクト、ドロップアイテムの順番に探します。
  * @param pMapIndex 座標
  */
-MapItem* MapManager::getMapItem(const MapIndex* pMapIndex)
+MapItem* MapManager::getMapItem(const MapIndex& pMapIndex)
 {
     assert(vaildateInit());
     
-    if (map_data_.map_cursor_data_array[pMapIndex->x][pMapIndex->y].mapDataType == MapDataType::NONE)
+    if (map_data_.map_cursor_data_array[pMapIndex.x][pMapIndex.y].mapDataType == MapDataType::NONE)
     {
         auto pActorMapItem = getActorMapItem(pMapIndex);
         if (pActorMapItem->mapDataType == MapDataType::NONE)
         {
-           return &(map_data_.map_drop_item_data_array[pMapIndex->x][pMapIndex->y]);
+           return &(map_data_.map_drop_item_data_array[pMapIndex.x][pMapIndex.y]);
         }
         return pActorMapItem;
     }
-    return &(map_data_.map_cursor_data_array[pMapIndex->x][pMapIndex->y]);
+    return &(map_data_.map_cursor_data_array[pMapIndex.x][pMapIndex.y]);
 }
 
-ActorMapItem* MapManager::getActorMapItem(const MapIndex* pMapIndex)
+ActorMapItem* MapManager::getActorMapItem(const MapIndex& pMapIndex)
 {
     assert(vaildateInit());
     
-    return &(map_data_.map_object_data_array[pMapIndex->x][pMapIndex->y]);
+    return &(map_data_.map_object_data_array[pMapIndex.x][pMapIndex.y]);
 }
 
 ActorMapItem* MapManager::getActorMapItemById(int seqNo) {
@@ -465,7 +465,7 @@ void MapManager::findMovePointList(int moveX, int moveY, int moveDist, MapItem* 
     MapIndex moveMapIndex;
     moveMapIndex.x = moveX;
     moveMapIndex.y = moveY;
-    MapItem* mapItem = getMapItem(&moveMapIndex);
+    MapItem* mapItem = getMapItem(moveMapIndex);
     if (mapItem && mapItem != moveToMapItem) {
         // タップした位置のdistの次はどこか探す
         moveDist++;

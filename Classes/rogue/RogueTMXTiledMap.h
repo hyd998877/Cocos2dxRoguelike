@@ -90,6 +90,10 @@ public:
     
     MapIndex getFloorRandomMapIndex(bool isActor);
     MapIndex getRandomMapIndex(bool isColision, bool isActor);
+    
+    bool isFloorMapIndex(const MapIndex& mapIndex);
+    bool isActorInstMapIndex(const MapIndex& mapIndex);
+    bool isDropItemInstMapIndex(const MapIndex& mapIndex);
     bool isTiledMapColisionLayer(MapIndex touchPointMapIndex);
     bool isMapLayerOver(MapIndex touchPointMapIndex);
     DrawNode* createGridDraw();
