@@ -902,6 +902,11 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
             this->refreshStatusEquip(*player);
         }
         
+        // 敵のドロップ確率を抽選してアイテムの抽選（TODO: とりあえず一律3%）
+        if (LotteryUtils::isHit(300)) {
+            // アイテムdrop
+            institutionDropItem(1, pEnemySprite->getActorMapItem()->mapIndex);
+        }
         // マップから消える
         getRogueMapLayer()->removeEnemyActorSprite(pEnemySprite);
     }
