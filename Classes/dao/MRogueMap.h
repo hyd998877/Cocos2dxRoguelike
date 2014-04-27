@@ -55,7 +55,7 @@ namespace m_rogue_map{
     
     const std::string GoldMin = "goldMin";
     const std::string GoldMax = "goldMax";
-    
+    const std::string DropItemUpValueLimits = "dropItemUpValueLimits";
     
     
     const static ValueMap floor1_{
@@ -85,8 +85,20 @@ namespace m_rogue_map{
             Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(2)}, {Prob, Value( 300)} }), // pt
             Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(1)}, {Prob, Value( 600)} }), // pt
         })},
-        {GoldMin, Value(100)},
-        {GoldMax, Value(1000)}
+        {GoldMin, Value( 100)},
+        {GoldMax, Value(1000)},
+        {DropItemUpValueLimits, Value(ValueVector{
+            // 70%  +0
+            Value(ValueMap{ {Id, Value(0)}, {Prob, Value(7000)} }),
+            // 10%  +1
+            Value(ValueMap{ {Id, Value(1)}, {Prob, Value(1000)} }),
+            // 10%  +2
+            Value(ValueMap{ {Id, Value(2)}, {Prob, Value(1000)} }),
+            //  5%  +3
+            Value(ValueMap{ {Id, Value(3)}, {Prob, Value( 500)} }),
+            //  5%  +4
+            Value(ValueMap{ {Id, Value(4)}, {Prob, Value( 500)} }),
+        })}
     };
 
     const static ValueMap floor2_{
@@ -128,8 +140,20 @@ namespace m_rogue_map{
             Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(2)}, {Prob, Value( 100)} }), // pt
             Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(1)}, {Prob, Value( 500)} }), // pt
         })},
-        {GoldMin, Value(100)},
-        {GoldMax, Value(2000)}
+        {GoldMin, Value( 100)},
+        {GoldMax, Value(2000)},
+        {DropItemUpValueLimits, Value(ValueVector{
+            // 70%  +0
+            Value(ValueMap{ {Id, Value(0)}, {Prob, Value(7000)} }),
+            // 10%  +1
+            Value(ValueMap{ {Id, Value(1)}, {Prob, Value(1000)} }),
+            // 10%  +2
+            Value(ValueMap{ {Id, Value(2)}, {Prob, Value(1000)} }),
+            //  5%  +3
+            Value(ValueMap{ {Id, Value(3)}, {Prob, Value( 500)} }),
+            //  5%  +4
+            Value(ValueMap{ {Id, Value(4)}, {Prob, Value( 500)} }),
+        })}
     };
     
     const static ValueVector datas_{

@@ -79,6 +79,14 @@ public:
                 return false;
             }
         }
+        
+        static std::string createItemName(const _DropItemDto& dropItemDto) {
+            std::string itemNameText(dropItemDto.name);
+            if (dropItemDto.param > 0) {
+                itemNameText.append(StringUtils::format(" + %d", dropItemDto.param));
+            }
+            return itemNameText;
+        }
     } DropItemDto;
     
     static std::string createItemImageFileName(int itemResId)

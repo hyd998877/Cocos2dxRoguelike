@@ -80,7 +80,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
         // touched DropItemDto
         auto it = item_dto_list_.begin();
         std::advance(it, touchedIdx);
-        auto dropItemDto = (DropItemSprite::DropItemDto) *it;
+        auto dropItemDto = static_cast<DropItemSprite::DropItemDto>(*it);
         
         this->setItemDetail(&dropItemDto);
         
@@ -283,7 +283,7 @@ void ItemWindowLayer::reloadItemList() {
         for (DropItemSprite::DropItemDto dropItem : item_dto_list_) {
             TableViewTestLayer::TableLayout layout = {
                 DropItemSprite::createItemImageFileName(dropItem.imageResId),
-                dropItem.name,
+                DropItemSprite::DropItemDto::createItemName(dropItem),
                 dropItem.isEquip ? Color3B::YELLOW : Color3B::WHITE // 装備中は黄文字
             };
             itemNameList.push_back(layout);
@@ -334,10 +334,11 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
                 pItemNameLabel->setString(ITEM_LAYER_NAME_DEFAULT);
             } else {
                 // TODO: とりあえず装備中で文言かえる
+                std::string itemNameText = DropItemSprite::DropItemDto::createItemName(*pDropItemDto);
                 if (pDropItemDto->isEquip) {
-                    pItemNameLabel->setString(StringUtils::format("%s(装備中)", pDropItemDto->name.c_str()));
+                    pItemNameLabel->setString(StringUtils::format("%s (装備中)", itemNameText.c_str()));
                 } else {
-                    pItemNameLabel->setString(pDropItemDto->name);
+                    pItemNameLabel->setString(itemNameText);
                 }
             }
         }
@@ -369,10 +370,12 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
             } else {
                 if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON) {
                     MWeapon weapon = MWeaponDao::getInstance()->selectById(pDropItemDto->itemId);
-                    pItemParamlLabel->setString(StringUtils::format("攻撃力: %3d", weapon.getAttackPoint()));
+                    int totalParam = weapon.getAttackPoint() + pDropItemDto->param;
+                    pItemParamlLabel->setString(StringUtils::format("攻撃力: %3d", totalParam));
                 } else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     MAccessory accessory = MAccessoryDao::getInstance()->selectById(pDropItemDto->itemId);
-                    pItemParamlLabel->setString(StringUtils::format("防御力: %3d", accessory.getDefensePoint()));
+                    int totalParam = accessory.getDefensePoint() + pDropItemDto->param;
+                    pItemParamlLabel->setString(StringUtils::format("防御力: %3d", totalParam));
                 } else if (pDropItemDto->itemType != MUseItem::ItemType::NONE) {
                     MUseItem useItem = MUseItemDao::getInstance()->selectById(pDropItemDto->itemId);
                     pItemParamlLabel->setString(StringUtils::format("効果: %3d", useItem.getUseItemParam()));

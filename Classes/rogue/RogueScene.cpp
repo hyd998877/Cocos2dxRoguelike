@@ -790,7 +790,7 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
             // TODO: (kyokomi) 拾うSE再生
             
             // メッセージログ
-            logMessage("%sを拾った。", drop_item_dto->name.c_str());
+            logMessage("%sを拾った。", DropItemSprite::DropItemDto::createItemName(*drop_item_dto).c_str());
             
             // イベントリに追加する
             getItemWindowLayer()->addItemList(*drop_item_dto);
@@ -799,7 +799,7 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
             rogue_map_layer->removeDropItemSprite(drop_item_sprite);
         } else {
             // アイテム所持数限界
-            logMessage("持ち物が一杯で、\n%sを拾えなかった。", drop_item_dto->name.c_str());
+            logMessage("持ち物が一杯で、\n%sを拾えなかった。", DropItemSprite::DropItemDto::createItemName(*drop_item_dto).c_str());
         }
     }
 }
@@ -982,7 +982,7 @@ void RogueScene::showItemList() {
             
             // すでにアイテムが置いてある場合は置けない
             if (MapManager::getInstance()->getDropMapItem(&player_sprite->getActorMapItem()->mapIndex)->mapDataType != MapDataType::NONE) {
-                this->logMessage("%sを床におけなかった。", drop_item.name.c_str());
+                this->logMessage("%sを床におけなかった。", DropItemSprite::DropItemDto::createItemName(drop_item).c_str());
                 // アイテムを戻す
                 this->getItemWindowLayer()->addItemList(drop_item);
                 
@@ -1005,7 +1005,7 @@ void RogueScene::showItemList() {
                 // アイテムをマップのプ
                 // レイヤーの足元に置く
                 if (this->getRogueMapLayer()->tileSetDropMapItem(drop_item, player_sprite->getActorMapItem()->mapIndex)) {
-                    this->logMessage("%sを床においた。", drop_item.name.c_str());
+                    this->logMessage("%sを床においた。", DropItemSprite::DropItemDto::createItemName(drop_item).c_str());
                     
                     // ターン消費
                     this->changeGameStatus(GameStatus::ENEMY_TURN);
@@ -1054,7 +1054,7 @@ void RogueScene::showItemList() {
                     MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(drop_item.itemId);
                     player_sprite->getActorDto()->equipAccessory(drop_item.objectId, drop_item.param, mAccessory);
                 }
-                this->logMessage("%sを装備した。", drop_item.name.c_str());
+                this->logMessage("%sを装備した。", DropItemSprite::DropItemDto::createItemName(drop_item).c_str());
             } else {
                 if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
                     // 武器解除
@@ -1063,7 +1063,7 @@ void RogueScene::showItemList() {
                     // 防具装備
                     player_sprite->getActorDto()->equipReleaseAccessory();
                 }
-                this->logMessage("%sの装備をはずした。", drop_item.name.c_str());
+                this->logMessage("%sの装備をはずした。", DropItemSprite::DropItemDto::createItemName(drop_item).c_str());
             }
             
             // 装備解除、装備によってステータス変動するためステータスバーを更新
@@ -1452,6 +1452,17 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             AccountData::getInstance()->rogue_play_data_.item_count = 0;
         }
         
+        // 武器、防具の+値やゴールド値を決定する
+        int param = 0;
+        if (itemType == MUseItem::ItemType::GOLD) {
+            int gold = GetRandom(rogueMapDatas.at(m_rogue_map::GoldMin).asInt(),
+                                 rogueMapDatas.at(m_rogue_map::GoldMax).asInt());
+            param = gold;
+        } else if (itemType == MUseItem::ItemType::EQUIP_WEAPON || itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+            auto dropItemUpValueLimits = getRogueMapData().at(m_rogue_map::DropItemUpValueLimits).asValueVector();
+            param = LotteryUtils::lot(dropItemUpValueLimits);
+        }
+        
         if (itemType == MUseItem::ItemType::USE_ITEM || itemType == MUseItem::ItemType::GOLD) {
             // 消費アイテム  or お金
             
@@ -1466,15 +1477,8 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
                 mUseItem.getUseItemImageId(),
                 mUseItem.getUseItemName(),
                 false,
-                0
+                param
             };
-            
-            // お金の場合、値を抽選して設定
-            if (itemType == MUseItem::ItemType::GOLD) {
-                int gold = GetRandom(rogueMapDatas.at(m_rogue_map::GoldMin).asInt(),
-                                     rogueMapDatas.at(m_rogue_map::GoldMax).asInt());
-                dropItemDto.param = gold;
-            }
             
             // 配置
             tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
@@ -1494,7 +1498,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
                 mWeapon.getWeaponImageId(),
                 mWeapon.getWeaponName(),
                 false,
-                0
+                param
             };
             
             tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
@@ -1514,7 +1518,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
                 mAccessory.getAccessoryImageId(),
                 mAccessory.getAccessoryName(),
                 false,
-                0
+                param
             };
             
             tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
