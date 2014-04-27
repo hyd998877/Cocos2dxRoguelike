@@ -69,9 +69,9 @@ private:
 public:
     static RogueTMXTiledMap* create(const std::string& tmxFile);
     
-    ActorMapItem startPlayerRandomPosition(ActorSprite::ActorDto& actor_dto, const MapIndex& base_actor_index);
+    ActorMapItem startPlayerRandomPosition(ActorDto& actor_dto, const MapIndex& base_actor_index);
     void setPlayerActorMapItem(ActorMapItem* actor_map_item, int tag);
-    bool tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, MapIndex mapIndex);
+    bool tileSetEnemyActorMapItem(ActorDto enemyActorDto, MapIndex mapIndex);
     void removeEnemyActorSprite(ActorSprite* pEnemySprite);
     bool tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, MapIndex mapIndex);
     void removeDropItemSprite(DropItemSprite* pDropItemSprite);

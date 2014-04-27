@@ -57,8 +57,9 @@ void AccountData::save()
     
     ValueMap save_data{
         {"rogue_play_data", Value(RogueScene::roguePlayDataToString(rogue_play_data_))},
-        {"player_actor", Value(ActorSprite::actorToString(player_actor_))},
-        {"player_actor.equip", Value(ActorSprite::actorEquipToString(player_actor_.equip))},
+        {"player_actor", Value(player_actor_.actorToString())},
+        {"player_actor.weapon_equip", Value(player_actor_.getWeaponEquip().actorEquipToString())},
+        {"player_actor.accessory_equip", Value(player_actor_.getAccessoryEquip().actorEquipToString())},
         {"item_list", Value(save_item_list)}
     };
     
@@ -88,14 +89,21 @@ void AccountData::load()
     std::string player_actor_data_str = player_actor_data_value.asString();
     if (player_actor_data_str.size() > 0)
     {
-        player_actor_ = ActorSprite::createActorDto(player_actor_data_str);
+        player_actor_ = ActorDto::createActorDto(player_actor_data_str);
     }
     
-    Value player_actor_equip_data_value = save_data.at("player_actor.equip");
-    std::string player_actor_equip_data_str = player_actor_equip_data_value.asString();
-    if (player_actor_equip_data_str.size() > 0)
+    Value player_actor_weapon_equip_data_value = save_data.at("player_actor.weapon_equip");
+    std::string player_actor_weapon_equip_data_str = player_actor_weapon_equip_data_value.asString();
+    if (player_actor_weapon_equip_data_str.size() > 0)
     {
-        player_actor_.equip = ActorSprite::createEquipDto(player_actor_equip_data_str);
+        player_actor_.setWeaponEquip(ActorEquipDto::createEquipDto(player_actor_weapon_equip_data_str));
+    }
+    
+    Value player_actor_accessory_equip_data_value = save_data.at("player_actor.accessory_equip");
+    std::string player_actor_accessory_equip_data_str = player_actor_accessory_equip_data_value.asString();
+    if (player_actor_accessory_equip_data_str.size() > 0)
+    {
+        player_actor_.setAccessoryEquip(ActorEquipDto::createEquipDto(player_actor_accessory_equip_data_str));
     }
     
     ValueVector item_list_value = save_data.at("item_list").asValueVector();
@@ -119,7 +127,7 @@ void AccountData::reset()
     remove(save_file_path.c_str());
     
     rogue_play_data_ = RogueScene::createRoguePlayData("");
-    player_actor_ = ActorSprite::createDto();
+    player_actor_ = ActorDto();
     item_list_.clear();
 }
 

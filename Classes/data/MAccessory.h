@@ -23,20 +23,13 @@
 class MAccessory
 {
 public:
-    MAccessory(int accessoryId, int accessoryImageId, std::string accessoryName, std::string accessoryDetail, int defensePoint)
-    {
-        _accessoryId = accessoryId;
-        _accessoryImageId = accessoryImageId;
-        _accessoryName = accessoryName;
-        _accessoryDetail = accessoryDetail;
-        _defensePoint = defensePoint;
-    };
+    MAccessory(int accessoryId, int accessoryImageId, std::string accessoryName, std::string accessoryDetail, int defensePoint);
     
-    const int getAccessoryId() {return _accessoryId;}
-    const int getAccessoryImageId() {return _accessoryImageId;}
-    const std::string getAccessoryName() {return _accessoryName;}
-    const std::string getAccessoryDetail() {return _accessoryDetail;}
-    const int getDefensePoint() {return _defensePoint;}
+    const int getAccessoryId() const {return _accessoryId;}
+    const int getAccessoryImageId() const {return _accessoryImageId;}
+    const std::string getAccessoryName() const {return _accessoryName;}
+    const std::string getAccessoryDetail() const {return _accessoryDetail;}
+    const int getDefensePoint() const {return _defensePoint;}
     
 private:
     int _accessoryId;

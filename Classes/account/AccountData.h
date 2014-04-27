@@ -29,7 +29,7 @@ public:
     RogueLikeGame::RogueScene::RoguePlayData rogue_play_data_;
     
     // --- プレイヤー情報 ---
-    ActorSprite::ActorDto player_actor_;
+    ActorDto player_actor_;
     
     // --- インベントリ ---
     // 所持品、装備状態
@@ -50,7 +50,7 @@ public:
 private:
     AccountData()
     :rogue_play_data_({0, 0, RogueScene::GameStatus::INIT, 0, 0, 0}),
-    player_actor_(ActorSprite::createDto()),
+    player_actor_(ActorDto()),
     item_list_(std::list<DropItemSprite::DropItemDto>())
     {
     };

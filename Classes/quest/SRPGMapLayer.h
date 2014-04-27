@@ -86,7 +86,7 @@ private:
     void visibleMapCursor(MapDataType mapDataType, bool visible);
     
     // アクター追加
-    ActorMapItem* addActor(MapDataType pMapDataType, int pSeqNo, int pMapPointX, int pMapPointY, ActorSprite::ActorDto pActorDto);
+    ActorMapItem* addActor(MapDataType pMapDataType, int pSeqNo, int pMapPointX, int pMapPointY, ActorDto pActorDto);
     // アクター検索
     ActorSprite* findActorSprite(int seqNo);
     

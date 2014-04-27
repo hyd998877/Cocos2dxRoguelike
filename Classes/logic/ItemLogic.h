@@ -18,7 +18,7 @@ class ItemLogic
 private:
     
 public:
-    static std::string use(int itemId, ActorSprite::ActorDto* pUseActorDto);
+    static std::string use(int itemId, ActorDto* pUseActorDto);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ItemLogic__) */

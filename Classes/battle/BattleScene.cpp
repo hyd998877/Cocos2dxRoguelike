@@ -53,8 +53,7 @@ bool BattleScene::init()
     this->addChild(bgFront);
     
     // ActorSpriteを配置
-    ActorSprite::ActorDto actorDto = ActorSprite::createDto();
-    actorDto.playerId = 4;
+    ActorDto actorDto = ActorDto(4);
     auto pActorSprite = ActorSprite::createWithActorDto(actorDto, 1);
     pActorSprite->setPosition(Point(winSize.width * 0.85, winSize.height / 2));
     this->addChild(pActorSprite, 102, 1);
@@ -73,8 +72,7 @@ bool BattleScene::init()
     weapon->addChild(weaponEffect, 1, 4);
     
     // ActorSpriteを配置
-    ActorSprite::ActorDto enemyDto = ActorSprite::createDto();
-    enemyDto.playerId = 5;
+    ActorDto enemyDto = ActorDto(5);
     auto enemySprite = ActorSprite::createWithActorDto(enemyDto, 1);
     enemySprite->setPosition(Point(winSize.width * 0.15, winSize.height / 2));
     this->addChild(enemySprite, 101, 2);

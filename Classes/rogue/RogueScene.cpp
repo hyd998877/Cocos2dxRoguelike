@@ -85,14 +85,13 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // データロード
     AccountData::getInstance()->load();
     
-    ActorSprite::ActorDto actor_dto;
+    ActorDto actor_dto;
     // 不一致の場合初期化
     if (AccountData::getInstance()->rogue_play_data_.quest_id != quest_id) {
         AccountData::getInstance()->reset();
         rogue_play_data_.quest_id = quest_id;
         // デフォルトステータス
-        actor_dto = ActorSprite::createActorDto(m_player::data_.at("1").asString());
-        actor_dto.equip = ActorSprite::createEquipDto();
+        actor_dto = ActorDto::createActorDto(m_player::data_.at("1").asString());
     } else {
         // ロード処理
         rogue_play_data_ = AccountData::getInstance()->rogue_play_data_;
@@ -132,9 +131,9 @@ bool RogueScene::initWithQuestId(int quest_id) {
     statusLayer->addChild(sampleText);
     
     // 装備情報（武器）ステータスバーの下
-    int attackPoint = actor_dto.attackPoint;
-    if (actor_dto.equip.weaponId > 0) {
-        attackPoint += actor_dto.equip.weaponStr;
+    int attackPoint = actor_dto.getAttackPoint();
+    if (actor_dto.isEquipWeapon()) {
+        attackPoint += actor_dto.getWeaponEquip().getTotalParam();
     }
     std::string attackPointText = StringUtils::format("%3d", attackPoint);
     auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), attackPointText);
@@ -149,9 +148,9 @@ bool RogueScene::initWithQuestId(int quest_id) {
     }
     
     // 装備情報（防具）ステータスバーの下
-    int defencePoint = actor_dto.defencePoint;
-    if (actor_dto.equip.accessoryId > 0) {
-        defencePoint += actor_dto.equip.accessoryDef;
+    int defencePoint = actor_dto.getDefencePoint();
+    if (actor_dto.isEquipAccessory()) {
+        defencePoint += actor_dto.getAccessoryEquip().getTotalParam();
     }
     std::string defencePointText = StringUtils::format("%3d", defencePoint);
     auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), defencePointText);
@@ -459,10 +458,8 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
     }
     
     if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
-        
         // セーブ消去
         AccountData::getInstance()->reset();
-        
         // ゲームオーバーの演出
         playGameOverCutIn();
         return;
@@ -476,8 +473,9 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
     } else if (rogue_play_data_.game_status == GameStatus::PLAYER_NO_ACTION) {
         rogue_play_data_.no_action_count++;
     } else if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
-        // カーソルはクリアする
+        
         MapManager::getInstance()->clearCursor();
+
         // ターン数を進める
         rogue_play_data_.turn_count++;
         
@@ -486,23 +484,15 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
         
         // 10ターンに1空腹度が減るという
         if (rogue_play_data_.turn_count % 10 == 0) {
-            if (pPlayerDto->magicPoint > 0)
-            {
-                pPlayerDto->magicPoint--;
-            }
+            pPlayerDto->countDownMagicPoint();
         }
         // 無行動が4ターン続くとHPが回復
         if (rogue_play_data_.no_action_count == 4) {
             rogue_play_data_.no_action_count = 0;
-            
-            if (pPlayerDto->hitPointLimit > pPlayerDto->hitPoint)
-            {
-                pPlayerDto->hitPoint++;
-            }
+            pPlayerDto->countUpHitPoint();
         }
         
         // 敵のリポップ
-        
         // ランダムなタイミング（毎ターン5%くらい）に湧く
         int rand = GetRandom(1, 100);
         if (rand <= 5) {
@@ -645,13 +635,9 @@ void RogueScene::enemyTurn() {
                                         
                     int damage = BattleLogic::exec(*enemy, *player);
                     // 攻撃イベント
-                    this->logMessage("%sの攻撃: %sに%dダメージ", enemy->name.c_str(), player->name.c_str(), damage);
+                    this->logMessage("%sの攻撃: %sに%dダメージ", enemy->getName().c_str(), player->getName().c_str(), damage);
                     // オーバーキル判定
-                    if (player->hitPoint < damage) {
-                        player->hitPoint = 0;
-                    } else {
-                        player->hitPoint = player->hitPoint - damage;
-                    }
+                    player->damageHitPoint(damage);
                     
                     // プレイヤーステータス更新と死亡判定
                     this->refreshStatus();
@@ -790,7 +776,7 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
         // メッセージログ
         logMessage("%d%sを拾った。", drop_item_dto->param, drop_item_dto->name.c_str());
         // ゴールドを加算
-        actor_sprite->getActorDto()->gold += drop_item_dto->param;
+        actor_sprite->getActorDto()->addGold(drop_item_dto->param);
         
         // Map上から削除する
         rogue_map_layer->removeDropItemSprite(drop_item_sprite);
@@ -899,27 +885,18 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
     // 攻撃開始
     int damage = BattleLogic::exec(*player, *enemy);
     // 攻撃イベント
-    logMessage("%sの攻撃: %sに%dのダメージ", player->name.c_str(), enemy->name.c_str(), damage);
-    // オーバーキル考慮しない
-    enemy->hitPoint = enemy->hitPoint - damage;
-    
+    logMessage("%sの攻撃: %sに%dのダメージ", player->getName().c_str(), enemy->getName().c_str(), damage);
     // 敵の死亡判定
-    if (enemy->hitPoint <= 0) {
-        logMessage("%sを倒した。経験値%dを得た。", enemy->name.c_str(), enemy->exp);
+    bool isDead = enemy->damageHitPoint(damage);
+    if (isDead) {
         
+        logMessage("%sを倒した。経験値%dを得た。", enemy->getName().c_str(), enemy->getExp());
         // TODO: (kyokomi) 経験値更新（計算式 適当）
-        player->exp += enemy->exp;
-        if (MLevelDao::getInstance()->checkLevelUp(player->lv, player->exp)) {
-            player->lv++;
-            auto mLevel = MLevelDao::getInstance()->selectById(player->lv);
-            // パラメータUp
-            player->hitPointLimit += mLevel.getGrowHitPoint();
-            player->attackPoint += mLevel.getGrowAttackPoint();
-            player->defencePoint += mLevel.getGrowDefencePoint();
+        if (player->growExpAndLevelUpCheck(enemy->getExp())) {
             
             // TODO: レベルアップ演出（SE？）
             
-            logMessage("%sはレベル%dになった。", player->name.c_str(), player->lv);
+            logMessage("%sはレベル%dになった。", player->getName().c_str(), player->getLv());
             
             // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
             this->refreshStatusEquip(*player);
@@ -1011,9 +988,9 @@ void RogueScene::showItemList() {
                     drop_item.isEquip = false;
                     
                     if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
-                        player_sprite->equipReleaseWeapon();
+                        player_sprite->getActorDto()->equipReleaseWeapon();
                     } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
-                        player_sprite->equipReleaseAccessory();
+                        player_sprite->getActorDto()->equipReleaseAccessory();
                     }
                     
                     // 装備変更でステータス更新
@@ -1059,35 +1036,27 @@ void RogueScene::showItemList() {
             if (drop_item.isEquip) {
                 if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
                     // 解除
-                    item_window_layer->setItemEquip(player_sprite->getActorDto()->equip.weaponObjectId, false);
+                    item_window_layer->setItemEquip(player_sprite->getActorDto()->getWeaponEquip().getObjectId(), false);
 
                     // 武器装備
-                    MWeapon weapon_master = MWeaponDao::getInstance()->selectById(drop_item.itemId);
-                    player_sprite->getActorDto()->equip.weaponObjectId = drop_item.objectId;
-                    player_sprite->getActorDto()->equip.weaponId       = weapon_master.getWeaponId();
-                    player_sprite->getActorDto()->equip.weaponImgResId = weapon_master.getWeaponImageId();
-                    player_sprite->getActorDto()->equip.weaponName     = weapon_master.getWeaponName();
-                    player_sprite->getActorDto()->equip.weaponStr      = weapon_master.getAttackPoint();
+                    MWeapon mWeapon = MWeaponDao::getInstance()->selectById(drop_item.itemId);
+                    player_sprite->getActorDto()->equipWeapon(drop_item.objectId, drop_item.param, mWeapon);
                     
                 } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     // 解除
-                    item_window_layer->setItemEquip(player_sprite->getActorDto()->equip.accessoryObjectId, false);
+                    item_window_layer->setItemEquip(player_sprite->getActorDto()->getAccessoryEquip().getObjectId(), false);
                     // 防具装備
-                    MAccessory accessory_master = MAccessoryDao::getInstance()->selectById(drop_item.itemId);
-                    player_sprite->getActorDto()->equip.accessoryObjectId = drop_item.objectId;
-                    player_sprite->getActorDto()->equip.accessoryId       = accessory_master.getAccessoryId();
-                    player_sprite->getActorDto()->equip.accessoryImgResId = accessory_master.getAccessoryImageId();
-                    player_sprite->getActorDto()->equip.accessoryName     = accessory_master.getAccessoryName();
-                    player_sprite->getActorDto()->equip.accessoryDef      = accessory_master.getDefensePoint();
+                    MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(drop_item.itemId);
+                    player_sprite->getActorDto()->equipAccessory(drop_item.objectId, drop_item.param, mAccessory);
                 }
                 this->logMessage("%sを装備した。", drop_item.name.c_str());
             } else {
                 if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
                     // 武器解除
-                    player_sprite->equipReleaseWeapon();
+                    player_sprite->getActorDto()->equipReleaseWeapon();
                 } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     // 防具装備
-                    player_sprite->equipReleaseAccessory();
+                    player_sprite->getActorDto()->equipReleaseAccessory();
                 }
                 this->logMessage("%sの装備をはずした。", drop_item.name.c_str());
             }
@@ -1249,23 +1218,23 @@ void RogueScene::refreshStatus() {
         auto pPlayerDto = pPlayerSprite->getActorDto();
         int floor = rogue_play_data_.quest_id; // フロア情報（クエストID=フロア数でいい？)
         // 作成
-        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G", floor, pPlayerDto->lv, pPlayerDto->hitPoint, pPlayerDto->hitPointLimit, pPlayerDto->magicPoint, pPlayerDto->magicPointLimit, pPlayerDto->gold);
+        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G", floor, pPlayerDto->getLv(), pPlayerDto->getHitPoint(), pPlayerDto->getHitPointLimit(), pPlayerDto->getMagicPoint(), pPlayerDto->getMagicPointLimit(), pPlayerDto->getGold());
         
         auto pLabelText = static_cast<Label*>(pStatusText);
         pLabelText->setString(pStr->getCString());
         pLabelText->setPositionX(pLabelText->getContentSize().width / 2);
         
         // TODO: 死亡判定ここで？
-        if (pPlayerDto->hitPoint == 0) {
-            logMessage("%sは死亡した。", pPlayerDto->name.c_str());
+        if (pPlayerDto->getHitPoint() == 0) {
+            logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
             changeGameStatus(GameStatus::GAME_OVER);
-        } else if (pPlayerDto->magicPoint == 0) {
-            logMessage("%sは空腹で倒れた。", pPlayerDto->name.c_str());
+        } else if (pPlayerDto->getMagicPoint() == 0) {
+            logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
             changeGameStatus(GameStatus::GAME_OVER);
         } else {
             // 残りHPで文字色を変える
-            float hitPointDiv = (float)pPlayerDto->hitPoint / (float)pPlayerDto->hitPointLimit;
-            float mpDiv = (float)pPlayerDto->magicPoint / (float)pPlayerDto->magicPointLimit;
+            float hitPointDiv = (float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit();
+            float mpDiv = (float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit();
             if (hitPointDiv <= 0.25 || mpDiv <= 0.10) {
                 pLabelText->setColor(Color3B::RED);
             } else if (hitPointDiv <= 0.50 || mpDiv <= 0.30) {
@@ -1278,7 +1247,7 @@ void RogueScene::refreshStatus() {
 }
 
 // 装備状態更新
-void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
+void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
     
     auto statusLayer = dynamic_cast<Layer*>(getChildByTag(Tags::StatusBarLayerTag));
     if (statusLayer) {
@@ -1291,8 +1260,8 @@ void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
             // TODO: (kyokomi) とりあえず...サーセン
             const int LabelTag = 2;
             auto label = dynamic_cast<Label*>(equipWeaponLayer->getChildByTag(LabelTag));
-            if (actorDto.equip.weaponId > 0) {
-                std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.equip.weaponImgResId);
+            if (actorDto.isEquipWeapon()) {
+                std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.getWeaponEquip().getImgResId());
                 auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
                 if (!equipSpriteFrame) {
                     equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
@@ -1300,12 +1269,12 @@ void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
                 }
                 sprite->setVisible(true);
                 sprite->setSpriteFrame(equipSpriteFrame);
-                std::string labelText = StringUtils::format("%3d", actorDto.attackPoint + actorDto.equip.weaponStr);
+                std::string labelText = StringUtils::format("%3d", actorDto.getAttackPoint() + actorDto.getWeaponEquip().getTotalParam());
                 label->setString(labelText);
             } else {
                 sprite->setVisible(false);
                 
-                std::string labelText = StringUtils::format("%3d", actorDto.attackPoint);
+                std::string labelText = StringUtils::format("%3d", actorDto.getAttackPoint());
                 label->setString(labelText);
             }
         }
@@ -1320,8 +1289,8 @@ void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
             const int LabelTag = 2;
             auto label = dynamic_cast<Label*>(equipAccessoryLayer->getChildByTag(LabelTag));
         
-            if (actorDto.equip.accessoryId > 0) {
-                std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.equip.accessoryImgResId);
+            if (actorDto.isEquipAccessory()) {
+                std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.getAccessoryEquip().getImgResId());
                 auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
                 if (!equipSpriteFrame) {
                     equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
@@ -1330,12 +1299,12 @@ void RogueScene::refreshStatusEquip(const ActorSprite::ActorDto& actorDto) {
                 sprite->setVisible(true);
                 sprite->setSpriteFrame(equipSpriteFrame);
                 
-                std::string labelText = StringUtils::format("%3d", actorDto.defencePoint + actorDto.equip.accessoryDef);
+                std::string labelText = StringUtils::format("%3d", actorDto.getDefencePoint() + actorDto.getAccessoryEquip().getTotalParam());
                 label->setString(labelText);
             } else {
                 sprite->setVisible(false);
                 
-                std::string labelText = StringUtils::format("%3d", actorDto.defencePoint);
+                std::string labelText = StringUtils::format("%3d", actorDto.getDefencePoint());
                 label->setString(labelText);
             }
         }
@@ -1446,8 +1415,7 @@ void RogueScene::institutionEnemy(int probCount) {
     
     for (int hitId : hitIds) {
         std::string hitIdStr = StringUtils::format("%d", hitId);
-        ActorSprite::ActorDto enemy_dto = ActorSprite::createActorDto(m_monster::data_.at(hitIdStr).asString());
-        enemy_dto.equip = ActorSprite::createEquipDto();
+        ActorDto enemy_dto = ActorDto::createActorDto(m_monster::data_.at(hitIdStr).asString());
         MapIndex enemyMapIndex = tiled_map_layer->getFloorRandomMapIndex(true);
         tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto, enemyMapIndex);
     }

@@ -166,7 +166,7 @@ private:
     float getAnimationSpeed();
     void changeScene(cocos2d::Scene* scene);
     void refreshStatus();
-    void refreshStatusEquip(const ActorSprite::ActorDto& actorDto);
+    void refreshStatusEquip(const ActorDto& actorDto);
     
     // タッチイベント系
     void touchEventExec(cocos2d::Point touchPoint);

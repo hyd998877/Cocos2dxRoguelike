@@ -10,14 +10,14 @@
 #define __Cocos2dxSRPGQuest__BattleLogic__
 
 #include <iostream>
-#include "ActorSprite.h"
+#include "ActorDto.h"
 
 class BattleLogic
 {
 private:
     
 public:
-    static int exec(const ActorSprite::ActorDto& from, const ActorSprite::ActorDto& to);
+    static int exec(const ActorDto& from, const ActorDto& to);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__BattleLogic__) */

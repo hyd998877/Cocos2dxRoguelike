@@ -95,6 +95,8 @@
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
 		CE964B3F19037B4800F1CE61 /* LabelRPG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE964B3D19037B4800F1CE61 /* LabelRPG.cpp */; };
 		CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */; };
+		CEA7DD2C190C859D00EBA0BB /* ActorEquipDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA7DD2A190C859D00EBA0BB /* ActorEquipDto.cpp */; };
+		CEA7DD31190C9B2000EBA0BB /* ActorDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA7DD2F190C9B2000EBA0BB /* ActorDto.cpp */; };
 		CEB138A018FAE7140086AC69 /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */; };
 		CEB138A118FAE7140086AC69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CEB1389F18FAE7140086AC69 /* README.md */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
@@ -366,6 +368,10 @@
 		CE964B3E19037B4800F1CE61 /* LabelRPG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelRPG.h; sourceTree = "<group>"; };
 		CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonWindowUtil.cpp; sourceTree = "<group>"; };
 		CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
+		CEA7DD2A190C859D00EBA0BB /* ActorEquipDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorEquipDto.cpp; sourceTree = "<group>"; };
+		CEA7DD2B190C859D00EBA0BB /* ActorEquipDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorEquipDto.h; sourceTree = "<group>"; };
+		CEA7DD2F190C9B2000EBA0BB /* ActorDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorDto.cpp; sourceTree = "<group>"; };
+		CEA7DD30190C9B2000EBA0BB /* ActorDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorDto.h; sourceTree = "<group>"; };
 		CEAA20AE18DD13680057DE9C /* MPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayer.h; sourceTree = "<group>"; };
 		CEAEE91418D5F46B0026D6B4 /* MMonster.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMonster.h; sourceTree = "<group>"; };
 		CEB1389818FAD9030086AC69 /* LayerActionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerActionUtils.h; sourceTree = "<group>"; };
@@ -691,6 +697,10 @@
 			children = (
 				CE93B415188156C700825FD1 /* ActorSprite.cpp */,
 				CE93B416188156C700825FD1 /* ActorSprite.h */,
+				CEA7DD2A190C859D00EBA0BB /* ActorEquipDto.cpp */,
+				CEA7DD2B190C859D00EBA0BB /* ActorEquipDto.h */,
+				CEA7DD2F190C9B2000EBA0BB /* ActorDto.cpp */,
+				CEA7DD30190C9B2000EBA0BB /* ActorDto.h */,
 			);
 			name = actor;
 			path = ../Classes/actor;
@@ -1044,9 +1054,11 @@
 				CE93B44C188156C700825FD1 /* RogueScene.cpp in Sources */,
 				CE8D50EC18EB66710078046F /* Joystick.cpp in Sources */,
 				CEB138A018FAE7140086AC69 /* ModalLayer.cpp in Sources */,
+				CEA7DD31190C9B2000EBA0BB /* ActorDto.cpp in Sources */,
 				CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */,
 				CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */,
 				CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */,
+				CEA7DD2C190C859D00EBA0BB /* ActorEquipDto.cpp in Sources */,
 				CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */,
 				CE5E7FDF1902809F00A90F81 /* SystemMenuLayer.cpp in Sources */,
 				CE93B44B188156C700825FD1 /* SRPGScene.cpp in Sources */,

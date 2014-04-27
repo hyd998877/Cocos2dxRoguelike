@@ -95,10 +95,10 @@ bool SRPGMapLayer::init()
     // ---------------------
     // アクターを生成
     // ---------------------
-    ActorSprite::ActorDto actorDto;
-    actorDto.attackRange = 1;
-    actorDto.movePoint = 5;
-    actorDto.playerId = 4;
+    ActorDto actorDto(4);
+//    actorDto.attackRange = 1;
+//    actorDto.movePoint = 5;
+//    actorDto.playerId = 4;
     ActorMapItem* pActorMapItem = addActor(MapDataType::PLAYER, 1, 5, 5, actorDto);
     
     // 移動可能範囲のリストを作成
@@ -236,7 +236,7 @@ void SRPGMapLayer::visibleMapCursor(MapDataType mapDataType, bool visible)
 /**
  * アクター追加.
  */
-ActorMapItem* SRPGMapLayer::addActor(MapDataType pMapDataType, int pSeqNo, int pMapPointX, int pMapPointY, ActorSprite::ActorDto pActorDto)
+ActorMapItem* SRPGMapLayer::addActor(MapDataType pMapDataType, int pSeqNo, int pMapPointX, int pMapPointY, ActorDto pActorDto)
 {
     Size winSize = Director::getInstance()->getWinSize();
     
@@ -253,8 +253,8 @@ ActorMapItem* SRPGMapLayer::addActor(MapDataType pMapDataType, int pSeqNo, int p
     // マップデータを作成
     ActorMapItem actorMapItem;
     actorMapItem.seqNo = pSeqNo;
-    actorMapItem.attackDist = pActorDto.attackRange;
-    actorMapItem.moveDist = pActorDto.movePoint;
+    actorMapItem.attackDist = pActorDto.getAttackRange();
+    actorMapItem.moveDist = pActorDto.getMovePoint();
     
     actorMapItem.mapIndex = mapIndex;
     actorMapItem.mapDataType = pMapDataType;

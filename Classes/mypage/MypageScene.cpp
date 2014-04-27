@@ -84,10 +84,16 @@ bool MypageScene::init()
     RogueScene::RoguePlayData rogue_play_data = AccountData::getInstance()->rogue_play_data_;
     if (rogue_play_data.quest_id != 0)
     {
-        ActorSprite::ActorDto player_data = AccountData::getInstance()->player_actor_;
+        ActorDto player_data = AccountData::getInstance()->player_actor_;
         // セーブデータあり
         std::string save_text = StringUtils::format("セーブデータがあるわ。\n\n%s（%d F）\n\nLv %d exp %d HP %d/%d 所持金 %d G",
-                                                    "初心者の洞窟", rogue_play_data.quest_id, player_data.lv, player_data.exp, player_data.hitPoint, player_data.hitPointLimit, player_data.gold);
+                                                    "初心者の洞窟",
+                                                    rogue_play_data.quest_id,
+                                                    player_data.getLv(),
+                                                    player_data.getExp(),
+                                                    player_data.getHitPoint(),
+                                                    player_data.getHitPointLimit(),
+                                                    player_data.getGold());
         comment_label->setString(save_text);
     }
     

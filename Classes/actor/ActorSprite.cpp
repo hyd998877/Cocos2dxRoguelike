@@ -29,12 +29,12 @@ bool ActorSprite::initWithActorDto(ActorDto actorDto, int typeId)
     m_nowTypeId = typeId;
     
     // ActorのSpriteFrameのplistをキャッシュ
-    auto spriteFramePlistName = StringUtils::format("actor/%d/actor_%d_%d.plist", m_actorDto.playerId, m_actorDto.playerId, typeId);
+    auto spriteFramePlistName = StringUtils::format("actor/%d/actor_%d_%d.plist", m_actorDto.getPlayerId(), m_actorDto.getPlayerId(), typeId);
     CCLOG("initWithActorDto = %s", spriteFramePlistName.c_str());
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile(spriteFramePlistName);
     
     // Spriteを生成
-    auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.playerId, typeId, "bottom", 1);
+    auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.getPlayerId(), typeId, "bottom", 1);
     if ( !Sprite::initWithSpriteFrameName(spriteFrameName) )
     {
         return false;
@@ -56,14 +56,14 @@ void ActorSprite::changeSpriteFrame(int typeId, std::string frameName)
         
         // ActorのSpriteFrameのplistをキャッシュ
         auto spriteFramePlistName = StringUtils::format("actor/%d/actor_%d_%d.plist",
-                                                        m_actorDto.playerId, m_actorDto.playerId, typeId);
+                                                        m_actorDto.getPlayerId(), m_actorDto.getPlayerId(), typeId);
         CCLOG("changeSpriteFrame = %s", spriteFramePlistName.c_str());
         if (!SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFramePlistName))
         {
             SpriteFrameCache::getInstance()->addSpriteFramesWithFile(spriteFramePlistName);
         }
     }
-    auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.playerId, typeId, frameName.c_str(), 1);
+    auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.getPlayerId(), typeId, frameName.c_str(), 1);
     CCLOG("changeSpriteFrame spriteFrameName = %s", spriteFrameName.c_str());
     auto spriteFrame = Sprite::createWithSpriteFrameName(spriteFrameName);
     this->setTexture(spriteFrame->getTexture());
@@ -111,37 +111,9 @@ ActorMapItem* ActorSprite::getActorMapItem()
     return &m_actorMapItem;
 }
 
-ActorSprite::ActorDto* ActorSprite::getActorDto()
+ActorDto* ActorSprite::getActorDto()
 {
     return &m_actorDto;
-}
-
-void ActorSprite::equipWeapon(long objectId, int weaponId)
-{
-    // TODO: マスターデータの仕組みが必要
-}
-
-void ActorSprite::equipReleaseWeapon()
-{
-    m_actorDto.equip.weaponObjectId = 0;
-    m_actorDto.equip.weaponId       = 0;
-    m_actorDto.equip.weaponImgResId = 0;
-    m_actorDto.equip.weaponName     = "";
-    m_actorDto.equip.weaponStr      = 0;
-}
-
-void ActorSprite::equipAccessory(long objectId, int accessoryId)
-{
-    // TODO: マスターデータの仕組みが必要
-}
-
-void ActorSprite::equipReleaseAccessory()
-{
-    m_actorDto.equip.accessoryObjectId = 0;
-    m_actorDto.equip.accessoryId       = 0;
-    m_actorDto.equip.accessoryImgResId = 0;
-    m_actorDto.equip.accessoryName     = "";
-    m_actorDto.equip.accessoryDef      = 0;
 }
 
 void ActorSprite::runMoveAction(MapIndex moveMapIndex)
@@ -217,22 +189,22 @@ void ActorSprite::runTopAction()
 
 FiniteTimeAction* ActorSprite::createBottomActorAnimate()
 {
-    return createActorAnimate(m_actorDto.playerId, "bottom");
+    return createActorAnimate(m_actorDto.getPlayerId(), "bottom");
 }
 
 FiniteTimeAction* ActorSprite::createLeftActorAnimate()
 {
-    return createActorAnimate(m_actorDto.playerId, "left");
+    return createActorAnimate(m_actorDto.getPlayerId(), "left");
 }
 
 FiniteTimeAction* ActorSprite::createRightActorAnimate()
 {
-    return createActorAnimate(m_actorDto.playerId, "right");
+    return createActorAnimate(m_actorDto.getPlayerId(), "right");
 }
 
 FiniteTimeAction* ActorSprite::createTopActorAnimate()
 {
-    return createActorAnimate(m_actorDto.playerId, "top");
+    return createActorAnimate(m_actorDto.getPlayerId(), "top");
 }
 
 FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, std::string frameName)
@@ -256,118 +228,4 @@ FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, int typeId, std::
     pAnimation->setLoops(-1);
     
     return Animate::create(pAnimation);
-}
-
-// static
-
-ActorSprite::ActorEquipDto ActorSprite::createEquipDto()
-{
-    ActorSprite::ActorEquipDto equipDto;
-    equipDto.weaponObjectId    = 0;
-    equipDto.weaponId          = 0;
-    equipDto.weaponName        = "";
-    equipDto.weaponImgResId    = 0;
-    equipDto.weaponStr         = 0;
-    equipDto.accessoryId       = 0;
-    equipDto.accessoryObjectId = 0;
-    equipDto.accessoryName     = "";
-    equipDto.accessoryImgResId = 0;
-    equipDto.accessoryDef      = 0;
-    return equipDto;
-}
-
-ActorSprite::ActorEquipDto ActorSprite::createEquipDto(std::string data_string)
-{
-    std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
-    int index = 0;
-
-    if (data_string_array.size() != 10) {
-        return createEquipDto();
-    }
-    
-    ActorSprite::ActorEquipDto equipDto;
-    
-    equipDto.weaponObjectId    = atoi(data_string_array[index].c_str()); index++;
-    equipDto.weaponId          = atoi(data_string_array[index].c_str()); index++;
-    equipDto.weaponName        = data_string_array[index];               index++;
-    equipDto.weaponImgResId    = atoi(data_string_array[index].c_str()); index++;
-    equipDto.weaponStr         = atoi(data_string_array[index].c_str()); index++;
-
-    equipDto.accessoryObjectId = atoi(data_string_array[index].c_str()); index++;
-    equipDto.accessoryId       = atoi(data_string_array[index].c_str()); index++;
-    equipDto.accessoryName     = data_string_array[index];               index++;
-    equipDto.accessoryImgResId = atoi(data_string_array[index].c_str()); index++;
-    equipDto.accessoryDef      = atoi(data_string_array[index].c_str()); index++;
-    return equipDto;
-}
-
-ActorSprite::ActorDto ActorSprite::createDto()
-{
-    ActorSprite::ActorDto actorDto;
-    /** プレイヤーを一意に識別するID. */
-    actorDto.playerId = 0;
-    /** キャライメージのID. */
-    actorDto.imageResId = 0;
-    /** 顔画像のデフォルトID. */
-    actorDto.faceImgId = 0;
-    /** キャラ名. */
-    actorDto.name = "";
-    /** 攻撃力. */
-    actorDto.attackPoint = 0;
-    /** 防御力. */
-    actorDto.defencePoint = 0;
-    /** レベル. */
-    actorDto.lv = 0;
-    /** 経験値. */
-    actorDto.exp = 0;
-    /** 次のレベルまでの経験値 */
-    actorDto.nextExp = 0;
-    /** HP. */
-    actorDto.hitPoint = 0;
-    /** HP最大値. */
-    actorDto.hitPointLimit = 0;
-    /** MP. */
-    actorDto.magicPoint = 0;
-    /** MP最大値. */
-    actorDto.magicPointLimit = 0;
-    /** 移動力(ステータス表示用). */
-    actorDto.movePoint = 0;
-    /** 攻撃範囲(ステータス表示用). */
-    actorDto.attackRange = 0;
-    /** 装備. */
-    actorDto.equip = ActorSprite::createEquipDto();
-    /** 所持ゴールド */
-    actorDto.gold = 0;
-    
-    return actorDto;
-}
-
-ActorSprite::ActorDto ActorSprite::createActorDto(std::string data_string)
-{
-    std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
-    int index = 0;
-    
-    if (data_string_array.size() != 16) {
-        return createDto();
-    }
-    
-    ActorSprite::ActorDto actor_dto;
-    
-    actor_dto.playerId        = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.imageResId      = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.faceImgId       = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.name            = data_string_array[index];               index++;
-    actor_dto.attackPoint     = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.defencePoint    = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.lv              = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.exp             = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.nextExp         = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.hitPoint        = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.hitPointLimit   = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.magicPoint      = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.magicPointLimit = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.movePoint       = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.attackRange     = atoi(data_string_array[index].c_str()); index++;
-    actor_dto.gold            = atoi(data_string_array[index].c_str()); index++;
-    return actor_dto;
 }

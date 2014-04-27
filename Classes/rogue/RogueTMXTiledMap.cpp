@@ -123,7 +123,7 @@ void RogueTMXTiledMap::setPlayerActorMapItem(ActorMapItem* actor_map_item, int t
     addMiniMapItem(actor_map_item, tag);
 }
 
-ActorMapItem RogueTMXTiledMap::startPlayerRandomPosition(ActorSprite::ActorDto& actor_dto, const MapIndex& base_actor_index) {
+ActorMapItem RogueTMXTiledMap::startPlayerRandomPosition(ActorDto& actor_dto, const MapIndex& base_actor_index) {
     ActorMapItem actorMapItem;
     
     actorMapItem.mapDataType = MapDataType::PLAYER;
@@ -132,8 +132,8 @@ ActorMapItem RogueTMXTiledMap::startPlayerRandomPosition(ActorSprite::ActorDto& 
     playerRandMapIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
     actorMapItem.mapIndex = playerRandMapIndex;
     actorMapItem.seqNo = 1;
-    actorMapItem.moveDist = actor_dto.movePoint;
-    actorMapItem.attackDist = actor_dto.attackRange;
+    actorMapItem.moveDist = actor_dto.getMovePoint();
+    actorMapItem.attackDist = actor_dto.getAttackRange();
     actorMapItem.moveDone = false;
     actorMapItem.attackDone = false;
     
@@ -151,7 +151,7 @@ ActorMapItem RogueTMXTiledMap::startPlayerRandomPosition(ActorSprite::ActorDto& 
     return actorMapItem;
 }
 
-bool RogueTMXTiledMap::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActorDto, MapIndex mapIndex) {
+bool RogueTMXTiledMap::tileSetEnemyActorMapItem(ActorDto enemyActorDto, MapIndex mapIndex) {
     
     // すでにプレイヤーが置いてある場合は置けない
     if (MapManager::getInstance()->getActorMapItem(&mapIndex)->mapDataType != MapDataType::NONE) {
@@ -166,8 +166,8 @@ bool RogueTMXTiledMap::tileSetEnemyActorMapItem(ActorSprite::ActorDto enemyActor
     enemyMapItem.mapDataType = MapDataType::ENEMY;
     enemyMapItem.mapIndex = mapIndex;
     enemyMapItem.seqNo = enemyCount_;
-    enemyMapItem.moveDist = enemyActorDto.movePoint;
-    enemyMapItem.attackDist = enemyActorDto.attackRange;
+    enemyMapItem.moveDist = enemyActorDto.getMovePoint();
+    enemyMapItem.attackDist = enemyActorDto.getAttackRange();
     enemyMapItem.moveDone = false;
     enemyMapItem.attackDone = false;
     
