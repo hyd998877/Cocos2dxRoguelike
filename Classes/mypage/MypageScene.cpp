@@ -116,14 +116,14 @@ void MypageScene::initGlobalMenu()
     // メニュー
     const Size WAKU_PADDING = Size(8, 8);
     
-    auto item_menu1 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "すてーたす"), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu1 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "すてーたす"), WAKU_PADDING, [this](Ref *ref) {
         auto comment_label = dynamic_cast<Label*>(this->getChildByTag(10)->getChildByTag(100));
         
         comment_label->setString("この画面は、ユーザー自身のステータスを\n表示する予定です。");
     });
     item_menu1->setColor(Color3B::GREEN);
     
-    auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "くえ　すと"), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "くえ　すと"), WAKU_PADDING, [this](Ref *ref) {
         
         CCLOG("tappedMenuItem3");
         
@@ -156,7 +156,7 @@ void MypageScene::initGlobalMenu()
         AccountData::getInstance()->resetAll();
     });
     
-    auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "の　べ　る"), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "の　べ　る"), WAKU_PADDING, [this](Ref *ref) {
         
         Scene* scene = NovelScene::scene(1, 0, [this]() {
             CCLOG("novel end");
@@ -168,14 +168,14 @@ void MypageScene::initGlobalMenu()
         Director::getInstance()->replaceScene(trans);
     });
     
-    auto item_menu5 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "ば　と　る"), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu5 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "ば　と　る"), WAKU_PADDING, [this](Ref *ref) {
         
         Scene* scene = BattleScene::scene();
         TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
         Director::getInstance()->replaceScene(trans);
     });
     
-    auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "て　す　と"), WAKU_PADDING, [this](Ref * pSeneder) {
+    auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "て　す　と"), WAKU_PADDING, [this](Ref *ref) {
         
         Scene* scene = SRPGScene::scene();
         TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);

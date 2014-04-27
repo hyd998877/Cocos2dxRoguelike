@@ -19,10 +19,6 @@ NS_ROGUE_BEGIN
 
 class MypageScene : public Layer
 {
-private:
-    /** グロナビ生成 */
-    void initGlobalMenu();
-    
 public:
     MypageScene();
     virtual ~MypageScene();
@@ -32,6 +28,9 @@ public:
     static Scene* scene();
     
     CREATE_FUNC(MypageScene);
+private:
+    /** グロナビ生成 */
+    void initGlobalMenu();
 };
 
 NS_ROGUE_END
