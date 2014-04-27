@@ -28,6 +28,19 @@ namespace RogueLikeGame {
     class LotteryUtils
     {
     public:
+        static int getRandomProb(int min, int probSum) {
+            return min + (int)(rand()*(probSum-min+1.0)/(1.0+RAND_MAX));
+        }
+        
+        static bool isHit(int prob, int probMax = 10000) {
+            int lot = getRandomProb(1, probMax);
+            if (lot <= prob) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
         static const cocos2d::ValueVector lotValues(const int probCount, const cocos2d::ValueVector probList) {
             cocos2d::ValueVector hitValues;
             
@@ -45,8 +58,7 @@ namespace RogueLikeGame {
             
             for (int i = 0; i < probCount; i++) {
                 // 抽選
-                const int min = 1;
-                int randomProbability = min + (int)(rand()*(probSum-min+1.0)/(1.0+RAND_MAX));
+                int randomProbability = getRandomProb(1, probSum);
                 
                 int tempProbability = 0;
                 for (auto probData : probList) {
