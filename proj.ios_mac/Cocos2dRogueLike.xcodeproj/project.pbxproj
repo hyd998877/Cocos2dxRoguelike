@@ -102,6 +102,7 @@
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
 		CECE37AD18B9A08C0086C8A0 /* bg in Resources */ = {isa = PBXBuildFile; fileRef = CECE37AC18B9A08C0086C8A0 /* bg */; };
 		CECE37B518B9A6EA0086C8A0 /* battle in Resources */ = {isa = PBXBuildFile; fileRef = CECE37B418B9A6EA0086C8A0 /* battle */; };
+		CECFA314191297860009B547 /* ItemWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CECFA312191297860009B547 /* ItemWindow.cpp */; };
 		CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEF46A6418B8741300F887CA /* BattleScene.cpp */; };
 		CEF46A6818B87A0200F887CA /* actor in Resources */ = {isa = PBXBuildFile; fileRef = CEF46A6718B87A0200F887CA /* actor */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
@@ -381,6 +382,8 @@
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
 		CECE37AC18B9A08C0086C8A0 /* bg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bg; sourceTree = "<group>"; };
 		CECE37B418B9A6EA0086C8A0 /* battle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = battle; sourceTree = "<group>"; };
+		CECFA312191297860009B547 /* ItemWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindow.cpp; sourceTree = "<group>"; };
+		CECFA313191297860009B547 /* ItemWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindow.h; sourceTree = "<group>"; };
 		CEF46A6418B8741300F887CA /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScene.cpp; sourceTree = "<group>"; };
 		CEF46A6518B8741300F887CA /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
 		CEF46A6718B87A0200F887CA /* actor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = actor; sourceTree = "<group>"; };
@@ -766,6 +769,8 @@
 		CE93B431188156C700825FD1 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				CECFA312191297860009B547 /* ItemWindow.cpp */,
+				CECFA313191297860009B547 /* ItemWindow.h */,
 				CE5E7FDD1902809F00A90F81 /* SystemMenuLayer.cpp */,
 				CE5E7FDE1902809F00A90F81 /* SystemMenuLayer.h */,
 				CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */,
@@ -1080,6 +1085,7 @@
 				CE890F2718B0E2A60088A9BC /* MAccessory.cpp in Sources */,
 				CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
+				CECFA314191297860009B547 /* ItemWindow.cpp in Sources */,
 				CE73FB2218B0A073009273D0 /* MWeapon.cpp in Sources */,
 				CE890F1B18B0E26A0088A9BC /* MUseItem.cpp in Sources */,
 				CE93B448188156C700825FD1 /* ItemLogic.cpp in Sources */,
