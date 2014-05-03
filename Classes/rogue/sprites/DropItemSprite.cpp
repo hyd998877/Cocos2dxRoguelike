@@ -9,6 +9,7 @@
 #include "DropItemSprite.h"
 
 #include "AppMacros.h"
+#include "StringUtils.h"
 
 USING_NS_CC;
 
@@ -88,7 +89,7 @@ DropItemSprite::DropItemDto* DropItemSprite::getDropItemDto()
 
 std::string DropItemSprite::dropItemToString(const DropItemDto& drop_item)
 {
-    return StringUtils::format("%ld,%d,%d,%d,%s,%d,%d",
+    return cocos2d::StringUtils::format("%ld,%d,%d,%d,%s,%d,%d",
                                drop_item.objectId,
                                drop_item.itemId,
                                drop_item.itemType,
@@ -101,7 +102,7 @@ std::string DropItemSprite::dropItemToString(const DropItemDto& drop_item)
 
 DropItemSprite::DropItemDto DropItemSprite::createDropItemDto(std::string data_string)
 {
-    std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
+    std::vector<std::string> data_string_array = GameCore::StringUtils::split(std::move(data_string));
     int index = 0;
     
     if (data_string_array.size() != 7) {

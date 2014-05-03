@@ -29,12 +29,12 @@ bool ActorSprite::initWithActorDto(ActorDto actorDto, int typeId)
     m_nowTypeId = typeId;
     
     // ActorのSpriteFrameのplistをキャッシュ
-    auto spriteFramePlistName = StringUtils::format("actor/%d/actor_%d_%d.plist", m_actorDto.getPlayerId(), m_actorDto.getPlayerId(), typeId);
+    auto spriteFramePlistName = cocos2d::StringUtils::format("actor/%d/actor_%d_%d.plist", m_actorDto.getPlayerId(), m_actorDto.getPlayerId(), typeId);
     CCLOG("initWithActorDto = %s", spriteFramePlistName.c_str());
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile(spriteFramePlistName);
     
     // Spriteを生成
-    auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.getPlayerId(), typeId, "bottom", 1);
+    auto spriteFrameName = cocos2d::StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.getPlayerId(), typeId, "bottom", 1);
     if ( !Sprite::initWithSpriteFrameName(spriteFrameName) )
     {
         return false;
@@ -55,7 +55,7 @@ void ActorSprite::changeSpriteFrame(int typeId, std::string frameName)
         m_nowTypeId = typeId;
         
         // ActorのSpriteFrameのplistをキャッシュ
-        auto spriteFramePlistName = StringUtils::format("actor/%d/actor_%d_%d.plist",
+        auto spriteFramePlistName = cocos2d::StringUtils::format("actor/%d/actor_%d_%d.plist",
                                                         m_actorDto.getPlayerId(), m_actorDto.getPlayerId(), typeId);
         CCLOG("changeSpriteFrame = %s", spriteFramePlistName.c_str());
         if (!SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFramePlistName))
@@ -63,7 +63,7 @@ void ActorSprite::changeSpriteFrame(int typeId, std::string frameName)
             SpriteFrameCache::getInstance()->addSpriteFramesWithFile(spriteFramePlistName);
         }
     }
-    auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.getPlayerId(), typeId, frameName.c_str(), 1);
+    auto spriteFrameName = cocos2d::StringUtils::format("actor_%d_%d_%s_%d.jpg", m_actorDto.getPlayerId(), typeId, frameName.c_str(), 1);
     CCLOG("changeSpriteFrame spriteFrameName = %s", spriteFrameName.c_str());
     auto spriteFrame = Sprite::createWithSpriteFrameName(spriteFrameName);
     this->setTexture(spriteFrame->getTexture());
@@ -215,12 +215,12 @@ FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, std::string frame
 FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, int typeId, std::string frameName)
 {
     auto pAnimation = Animation::create();
-    auto startSpriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", actorId, typeId, frameName.c_str(), 2);
+    auto startSpriteFrameName = cocos2d::StringUtils::format("actor_%d_%d_%s_%d.jpg", actorId, typeId, frameName.c_str(), 2);
     auto pStartFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName(startSpriteFrameName);
     pAnimation->addSpriteFrame(pStartFrame);
     for (int i = 0; i < 3; i++)
     {
-        auto spriteFrameName = StringUtils::format("actor_%d_%d_%s_%d.jpg", actorId, typeId, frameName.c_str(), (i + 1));
+        auto spriteFrameName = cocos2d::StringUtils::format("actor_%d_%d_%s_%d.jpg", actorId, typeId, frameName.c_str(), (i + 1));
         auto pFrame = SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName);
         pAnimation->addSpriteFrame(pFrame);
     }

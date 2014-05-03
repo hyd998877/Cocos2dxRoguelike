@@ -7,8 +7,9 @@
 //
 
 #include "ActorEquipDto.h"
-#include "AppMacros.h"
-#include "cocos2d.h"
+#include "StringUtils.h"
+
+using namespace GameCore;
 
 ActorEquipDto::ActorEquipDto(const long objectId_,
                              const int itemId_,
@@ -28,7 +29,7 @@ ActorEquipDto::ActorEquipDto(const long objectId_,
 
 ActorEquipDto ActorEquipDto::createEquipDto(const std::string data_string) {
     
-    std::vector<std::string> data_string_array = StringUtil::split(std::string(data_string));
+    std::vector<std::string> data_string_array = StringUtils::split(std::string(data_string));
     if (data_string_array.size() != ActorEquipDto::SplitCount) {
         return ActorEquipDto();
     }
@@ -47,7 +48,7 @@ ActorEquipDto ActorEquipDto::createEquipDto(const std::string data_string) {
 }
 
 std::string ActorEquipDto::actorEquipToString() const {
-    return cocos2d::StringUtils::format("%ld,%d,%s,%d,%d,%d",
+    return StringUtils::format("%ld,%d,%s,%d,%d,%d",
                                objectId_,
                                itemId_,
                                name_.c_str(),

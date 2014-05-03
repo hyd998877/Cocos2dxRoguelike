@@ -7,10 +7,12 @@
 //
 
 #include "ActorDto.h"
-#include "AppMacros.h"
-#include "cocos2d.h"
 
 #include "MLevelDao.h"
+
+#include "StringUtils.h"
+
+using namespace GameCore;
 
 ActorDto::ActorDto(int playerId,
                    int imageResId,
@@ -54,7 +56,7 @@ ActorDto::ActorDto(int playerId,
 }
 
 std::string ActorDto::actorToString() {
-    return cocos2d::StringUtils::format("%d,%d,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+    return StringUtils::format("%d,%d,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
                                playerId_,
                                imageResId_,
                                faceImgId_,
@@ -76,7 +78,7 @@ std::string ActorDto::actorToString() {
 
 ActorDto ActorDto::createActorDto(const std::string data_string)
 {
-    std::vector<std::string> data_string_array = StringUtil::split(std::string(data_string));
+    std::vector<std::string> data_string_array = StringUtils::split(std::string(data_string));
     int index = 0;
     
     if (data_string_array.size() != 16) {

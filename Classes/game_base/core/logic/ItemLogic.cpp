@@ -7,9 +7,12 @@
 //
 
 #include "ItemLogic.h"
+
 #include "MUseItemDao.h"
 
-USING_NS_CC;
+#include "StringUtils.h"
+
+using namespace GameCore;
 
 // value
 // itemType

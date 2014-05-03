@@ -19,6 +19,8 @@
 #include "ModalLayer.h"
 #include "RogueTMXTiledMap.h"
 
+#include "StringUtils.h"
+
 USING_NS_CC;
 
 #define MINI_MAP_SCALE (4.16f / GAME_SCALE)
@@ -60,7 +62,7 @@ public:
     
     static RoguePlayData createRoguePlayData(std::string data_string = "")
     {
-        std::vector<std::string> data_string_array = StringUtil::split(std::move(data_string));
+        std::vector<std::string> data_string_array = GameCore::StringUtils::split(std::move(data_string));
         if (data_string_array.size() != 7) {
             return {0, 0, GameStatus::INIT, 0, 0, 0};
         }
@@ -79,7 +81,7 @@ public:
     
     static std::string const roguePlayDataToString(const RoguePlayData& data)
     {
-        return StringUtils::format("%d,%d,%d,%d,%d,%d,%d",
+        return cocos2d::StringUtils::format("%d,%d,%d,%d,%d,%d,%d",
                                    data.quest_id,
                                    data.floor_id,
                                    data.game_status,

@@ -86,7 +86,7 @@ void RogueTMXTiledMap::initRogue() {
     // floor_%dは、部屋の明かり用Layerなので隠す
     int floor_count = 1;
     while (true) {
-        auto floor_layer = this->getLayer(StringUtils::format("floor_%d", floor_count));
+        auto floor_layer = this->getLayer(cocos2d::StringUtils::format("floor_%d", floor_count));
         if (!floor_layer) {
             break;
         }

@@ -59,7 +59,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     // アイテム一覧レイヤー（左側）
     std::list<TableViewTestLayer::TableLayout> itemNameList;
     for (DropItemSprite::DropItemDto dropItem : item_dto_list_) {
-        TableViewTestLayer::TableLayout layout = {StringUtils::format("item_%d.png", dropItem.imageResId), dropItem.name};
+        TableViewTestLayer::TableLayout layout = {cocos2d::StringUtils::format("item_%d.png", dropItem.imageResId), dropItem.name};
         
         itemNameList.push_back(layout);
     }
@@ -139,7 +139,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     
     // アイテム個数
     auto item_count_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(),
-                                                 StringUtils::format("%d/%d", 0, USE_ITEM_MAX));
+                                                 cocos2d::StringUtils::format("%d/%d", 0, USE_ITEM_MAX));
     item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
     item_count_label->setTag(ItemWindowLayer::ItemCountLabelTag);
     this->addChild(item_count_label);
@@ -292,7 +292,7 @@ void ItemWindowLayer::reloadItemList() {
         
         auto item_count_label = static_cast<Label*>(this->getChildByTag(ItemWindowLayer::ItemCountLabelTag));
         if (item_count_label) {
-            item_count_label->setString(StringUtils::format("所持数 %d/%d", (int)item_dto_list_.size(), USE_ITEM_MAX));
+            item_count_label->setString(cocos2d::StringUtils::format("所持数 %d/%d", (int)item_dto_list_.size(), USE_ITEM_MAX));
             item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
             if (item_dto_list_.size() >= USE_ITEM_MAX) {
                 item_count_label->setColor(Color3B::RED);
@@ -336,7 +336,7 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
                 // TODO: とりあえず装備中で文言かえる
                 std::string itemNameText = DropItemSprite::DropItemDto::createItemName(*pDropItemDto);
                 if (pDropItemDto->isEquip) {
-                    pItemNameLabel->setString(StringUtils::format("%s (装備中)", itemNameText.c_str()));
+                    pItemNameLabel->setString(cocos2d::StringUtils::format("%s (装備中)", itemNameText.c_str()));
                 } else {
                     pItemNameLabel->setString(itemNameText);
                 }
@@ -371,14 +371,14 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
                 if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON) {
                     MWeapon weapon = MWeaponDao::getInstance()->selectById(pDropItemDto->itemId);
                     int totalParam = weapon.getAttackPoint() + pDropItemDto->param;
-                    pItemParamlLabel->setString(StringUtils::format("攻撃力: %3d", totalParam));
+                    pItemParamlLabel->setString(cocos2d::StringUtils::format("攻撃力: %3d", totalParam));
                 } else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     MAccessory accessory = MAccessoryDao::getInstance()->selectById(pDropItemDto->itemId);
                     int totalParam = accessory.getDefensePoint() + pDropItemDto->param;
-                    pItemParamlLabel->setString(StringUtils::format("防御力: %3d", totalParam));
+                    pItemParamlLabel->setString(cocos2d::StringUtils::format("防御力: %3d", totalParam));
                 } else if (pDropItemDto->itemType != MUseItem::ItemType::NONE) {
                     MUseItem useItem = MUseItemDao::getInstance()->selectById(pDropItemDto->itemId);
-                    pItemParamlLabel->setString(StringUtils::format("効果: %3d", useItem.getUseItemParam()));
+                    pItemParamlLabel->setString(cocos2d::StringUtils::format("効果: %3d", useItem.getUseItemParam()));
                 }
             }
         }

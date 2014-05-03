@@ -38,7 +38,7 @@ NovelScene::~NovelScene()
 void NovelScene::initNovelJson(int sceneNo, int novelIndex)
 {
     // jsonファイル読み込み
-    auto novelJsonFileData = FileUtils::getInstance()->getDataFromFile(StringUtils::format("novel/json/scene_%03d.json", sceneNo));
+    auto novelJsonFileData = FileUtils::getInstance()->getDataFromFile(cocos2d::StringUtils::format("novel/json/scene_%03d.json", sceneNo));
     Json* json = Json_create((char *)novelJsonFileData.getBytes());
     m_novelJson = Json_getItem(json, "novel");
     novelJsonFileData.clear();
@@ -128,7 +128,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     this->addChild(textLayer, kZOrder_TextLayer, kTag_TextLayer);
 
     // test
-    std::string string = StringUtils::format("w = %f.1 h = %f.1", winSize.width, winSize.height);
+    std::string string = cocos2d::StringUtils::format("w = %f.1 h = %f.1", winSize.width, winSize.height);
     CCLOG("init %s", string.c_str());
     
     // 本文テキスト
@@ -138,7 +138,6 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     
     textLabel->setColor(Color3B::WHITE);
     textLabel->setOriginalPosition(Point(0, textLayer->getContentSize().height));
-//    textLabel->setPosition(Point(textLabel->getSystemFontSize() / 2 + textLabel->getContentSize().width / 2, textLayer->getContentSize().height - textLabel->getContentSize().height / 2 - textLabel->getSystemFontSize() / 2));
 
     textLayer->addChild(textLabel, kZOrder_TextLayer, kTag_TextLayer_textLabel);
     
@@ -152,7 +151,6 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     auto nameTextLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "");
     nameTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
     nameTextLabel->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
-//    nameTextLabel->setColor(Color3B::GREEN);
     nameTextLabel->setPosition(Point(nameTextLabel->getSystemFontSize() / 2 + nameTextLabel->getContentSize().width / 2, nameTextLayer->getContentSize().height - nameTextLabel->getContentSize().height / 2 - nameTextLabel->getSystemFontSize() / 2));
     nameTextLayer->addChild(nameTextLabel, kZOrder_TextLayer, kTag_TextLayer_nameTextLabel);
     

@@ -149,7 +149,7 @@ void AccountData::resetAll() {
 #pragma mark 汎用
 
 std::string AccountData::createQuestSaveDetailText() const {
-    return StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %d G",
+    return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %d G",
                         "初心者の洞窟",
                         this->rogue_play_data_.quest_id,
                         this->player_actor_.getLv(),

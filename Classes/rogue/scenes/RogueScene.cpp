@@ -111,7 +111,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     // TODO: (kyokomi)ランダムなマップIDを指定する
     rogue_play_data_.floor_id = 2;
     
-    auto tiled_map_layer = RogueTMXTiledMap::create(StringUtils::format("tmx/quest_%d.tmx", rogue_play_data_.floor_id));
+    auto tiled_map_layer = RogueTMXTiledMap::create(cocos2d::StringUtils::format("tmx/quest_%d.tmx", rogue_play_data_.floor_id));
 
     tiled_map_layer->setPosition(Point::ZERO);
     this->addChild(tiled_map_layer, ZOrders::TiledMapLayerZOrder, Tags::TiledMapLayerTag);
@@ -135,7 +135,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     if (actor_dto.isEquipWeapon()) {
         attackPoint += actor_dto.getWeaponEquip().getTotalParam();
     }
-    std::string attackPointText = StringUtils::format("%3d", attackPoint);
+    std::string attackPointText = cocos2d::StringUtils::format("%3d", attackPoint);
     auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), attackPointText);
     // 2つあるうちの左側なので2かけてます
     {
@@ -152,7 +152,7 @@ bool RogueScene::initWithQuestId(int quest_id) {
     if (actor_dto.isEquipAccessory()) {
         defencePoint += actor_dto.getAccessoryEquip().getTotalParam();
     }
-    std::string defencePointText = StringUtils::format("%3d", defencePoint);
+    std::string defencePointText = cocos2d::StringUtils::format("%3d", defencePoint);
     auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), defencePointText);
     {
         equipAccessoryLayer->getChildByTag(1)->setVisible(false);
@@ -399,7 +399,7 @@ void RogueScene::playFloorTitleCutIn(int quest_id) {
     floorTitleCutInLayer->setContentSize(winSize);
     // テキスト中央
     // TODO: (kyokomi) タイトルはdaoからとってくる予定
-    auto floorTitleText = StringUtils::format("初心者の洞窟 %d層", quest_id);
+    auto floorTitleText = cocos2d::StringUtils::format("初心者の洞窟 %d層", quest_id);
     auto floorTitleTextLabel = Label::createWithTTF(FontUtils::getStrongFontTTFConfig(), floorTitleText);
     floorTitleTextLabel->setPosition(Point(floorTitleCutInLayer->getContentSize().width / 2, floorTitleCutInLayer->getContentSize().height / 2));
     floorTitleCutInLayer->addChild(floorTitleTextLabel);
@@ -1294,12 +1294,12 @@ void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
                 }
                 sprite->setVisible(true);
                 sprite->setSpriteFrame(equipSpriteFrame);
-                std::string labelText = StringUtils::format("%3d", actorDto.getAttackPoint() + actorDto.getWeaponEquip().getTotalParam());
+                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getAttackPoint() + actorDto.getWeaponEquip().getTotalParam());
                 label->setString(labelText);
             } else {
                 sprite->setVisible(false);
                 
-                std::string labelText = StringUtils::format("%3d", actorDto.getAttackPoint());
+                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getAttackPoint());
                 label->setString(labelText);
             }
         }
@@ -1324,12 +1324,12 @@ void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
                 sprite->setVisible(true);
                 sprite->setSpriteFrame(equipSpriteFrame);
                 
-                std::string labelText = StringUtils::format("%3d", actorDto.getDefencePoint() + actorDto.getAccessoryEquip().getTotalParam());
+                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getDefencePoint() + actorDto.getAccessoryEquip().getTotalParam());
                 label->setString(labelText);
             } else {
                 sprite->setVisible(false);
                 
-                std::string labelText = StringUtils::format("%3d", actorDto.getDefencePoint());
+                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getDefencePoint());
                 label->setString(labelText);
             }
         }
@@ -1439,7 +1439,7 @@ void RogueScene::institutionEnemy(int probCount) {
     auto tiled_map_layer = getRogueMapLayer();
     
     for (int hitId : hitIds) {
-        std::string hitIdStr = StringUtils::format("%d", hitId);
+        std::string hitIdStr = cocos2d::StringUtils::format("%d", hitId);
         ActorDto enemy_dto = ActorDto::createActorDto(m_monster::data_.at(hitIdStr).asString());
         MapIndex enemyMapIndex = tiled_map_layer->getFloorRandomMapIndex(true);
         tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto, enemyMapIndex);

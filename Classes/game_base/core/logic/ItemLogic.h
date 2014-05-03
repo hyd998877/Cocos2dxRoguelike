@@ -9,9 +9,10 @@
 #ifndef __Cocos2dxSRPGQuest__ItemLogic__
 #define __Cocos2dxSRPGQuest__ItemLogic__
 
-#include "cocos2d.h"
-#include "ActorSprite.h"
-#include "DropItemSprite.h"
+#include <string.h>
+#include <string>
+
+#include "ActorDto.h"
 
 class ItemLogic
 {

@@ -70,7 +70,7 @@ namespace FontUtils {
     }
 }
 
-class StringUtil
+class StringUtils
 {
 public:
     static std::vector<std::string> split(std::string&& s)

@@ -9,8 +9,6 @@
 #ifndef __Cocos2dRogueLike__MUseItemDao__
 #define __Cocos2dRogueLike__MUseItemDao__
 
-#include <iostream>
-
 #include <list>
 
 #include "MUseItem.h"

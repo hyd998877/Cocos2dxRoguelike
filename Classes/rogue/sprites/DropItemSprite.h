@@ -83,7 +83,7 @@ public:
         static std::string createItemName(const _DropItemDto& dropItemDto) {
             std::string itemNameText(dropItemDto.name);
             if (dropItemDto.param > 0) {
-                itemNameText.append(StringUtils::format(" + %d", dropItemDto.param));
+                itemNameText.append(cocos2d::StringUtils::format(" + %d", dropItemDto.param));
             }
             return itemNameText;
         }
