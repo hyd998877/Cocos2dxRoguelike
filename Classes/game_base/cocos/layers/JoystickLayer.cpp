@@ -1,5 +1,5 @@
 //
-//  Joystick.cpp
+//  JoystickLayer.cpp
 //  Cocos2dRogueLike
 //
 //  Created by kyokomi on 2014/04/02.
@@ -10,10 +10,10 @@
 // TODO: 円のpositionがうまく指定できない
 // TODO: スティックの移動をスムーズにできない
 
-#include "Joystick.h"
+#include "JoystickLayer.h"
 
-Joystick* Joystick::create() {
-    auto ret = new Joystick();
+JoystickLayer* JoystickLayer::create() {
+    auto ret = new JoystickLayer();
     if (ret && ret->init()) {
         ret->autorelease();
     } else {
@@ -22,7 +22,7 @@ Joystick* Joystick::create() {
     return ret;
 }
 
-bool Joystick::init() {
+bool JoystickLayer::init() {
     
     if (Layer::init()) {
         
@@ -47,10 +47,10 @@ bool Joystick::init() {
         auto touchListener = EventListenerTouchOneByOne::create();
         touchListener->setSwallowTouches(true);
         
-        touchListener->onTouchBegan = CC_CALLBACK_2(Joystick::onTouchBegan, this);
-        touchListener->onTouchMoved = CC_CALLBACK_2(Joystick::onTouchMoved, this);
-        touchListener->onTouchEnded = CC_CALLBACK_2(Joystick::onTouchEnded, this);
-        touchListener->onTouchCancelled = CC_CALLBACK_2(Joystick::onTouchCancelled, this);
+        touchListener->onTouchBegan = CC_CALLBACK_2(JoystickLayer::onTouchBegan, this);
+        touchListener->onTouchMoved = CC_CALLBACK_2(JoystickLayer::onTouchMoved, this);
+        touchListener->onTouchEnded = CC_CALLBACK_2(JoystickLayer::onTouchEnded, this);
+        touchListener->onTouchCancelled = CC_CALLBACK_2(JoystickLayer::onTouchCancelled, this);
         
         this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
         
@@ -59,7 +59,7 @@ bool Joystick::init() {
     return false;
 }
 
-bool Joystick::onTouchBegan(Touch* touch, Event* event) {
+bool JoystickLayer::onTouchBegan(Touch* touch, Event* event) {
     
     Point touch_location = this->convertToNodeSpace(touch->getLocation());
     
@@ -83,7 +83,7 @@ bool Joystick::onTouchBegan(Touch* touch, Event* event) {
     return true;
 }
 
-void Joystick::onTouchEnded(Touch* touch, Event* event) {
+void JoystickLayer::onTouchEnded(Touch* touch, Event* event) {
     
     // DrawNode非表示
     auto draw = getChildByTag(1);
@@ -94,7 +94,7 @@ void Joystick::onTouchEnded(Touch* touch, Event* event) {
     // 覚えていたタッチ位置を初期化
     touch_start_point_ = Point::ZERO;
 }
-void Joystick::onTouchCancelled(Touch* touch, Event* event) {
+void JoystickLayer::onTouchCancelled(Touch* touch, Event* event) {
 
     // DrawNode非表示
     auto draw = getChildByTag(1);
@@ -105,7 +105,7 @@ void Joystick::onTouchCancelled(Touch* touch, Event* event) {
     // 覚えていたタッチ位置を初期化
     touch_start_point_ = Point::ZERO;
 }
-void Joystick::onTouchMoved(Touch* touch, Event* event) {
+void JoystickLayer::onTouchMoved(Touch* touch, Event* event) {
     
     Point touch_location = this->convertToNodeSpace(touch->getLocation());
     
@@ -125,6 +125,6 @@ void Joystick::onTouchMoved(Touch* touch, Event* event) {
 
 }
 
-Joystick::~Joystick() {
+JoystickLayer::~JoystickLayer() {
     
 }

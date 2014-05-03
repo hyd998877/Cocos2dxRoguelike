@@ -59,51 +59,48 @@
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
 		CE2F8A3F18AF28E5001B457C /* novel in Resources */ = {isa = PBXBuildFile; fileRef = CE2F8A3D18AF28E5001B457C /* novel */; };
-		CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6418B0E92D006C4B13 /* MUseItemDao.cpp */; };
-		CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */; };
-		CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */; };
-		CE5E7FDF1902809F00A90F81 /* SystemMenuLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5E7FDD1902809F00A90F81 /* SystemMenuLayer.cpp */; };
-		CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */; };
-		CE6C2DF618D572FC0042FA93 /* RogueTMXTiledMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */; };
+		CE626DE81914BEF6005925DC /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D721914BEF6005925DC /* BattleScene.cpp */; };
+		CE626DE91914BEF6005925DC /* LabelRPG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D791914BEF6005925DC /* LabelRPG.cpp */; };
+		CE626DEA1914BEF6005925DC /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */; };
+		CE626DEB1914BEF6005925DC /* ItemWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D7E1914BEF6005925DC /* ItemWindow.cpp */; };
+		CE626DEC1914BEF6005925DC /* ItemWindowLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D801914BEF6005925DC /* ItemWindowLayer.cpp */; };
+		CE626DED1914BEF6005925DC /* JoystickLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D821914BEF6005925DC /* JoystickLayer.cpp */; };
+		CE626DEE1914BEF6005925DC /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D841914BEF6005925DC /* ModalLayer.cpp */; };
+		CE626DEF1914BEF6005925DC /* SystemMenuLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D861914BEF6005925DC /* SystemMenuLayer.cpp */; };
+		CE626DF01914BEF6005925DC /* TableViewTestLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D881914BEF6005925DC /* TableViewTestLayer.cpp */; };
+		CE626DF11914BEF6005925DC /* ActorSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D8C1914BEF6005925DC /* ActorSprite.cpp */; };
+		CE626DF21914BEF6005925DC /* CommonWindowUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D8F1914BEF6005925DC /* CommonWindowUtil.cpp */; };
+		CE626DF31914BEF6005925DC /* MAccessoryDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D941914BEF6005925DC /* MAccessoryDao.cpp */; };
+		CE626DF41914BEF6005925DC /* MLevelDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D961914BEF6005925DC /* MLevelDao.cpp */; };
+		CE626DF51914BEF6005925DC /* MUseItemDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D981914BEF6005925DC /* MUseItemDao.cpp */; };
+		CE626DF61914BEF6005925DC /* MWeaponDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D9A1914BEF6005925DC /* MWeaponDao.cpp */; };
+		CE626DF71914BEF6005925DC /* MAccessory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D9D1914BEF6005925DC /* MAccessory.cpp */; };
+		CE626DF81914BEF6005925DC /* MLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D9F1914BEF6005925DC /* MLevel.cpp */; };
+		CE626DF91914BEF6005925DC /* MUseItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DA41914BEF6005925DC /* MUseItem.cpp */; };
+		CE626DFA1914BEF6005925DC /* MWeapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DA61914BEF6005925DC /* MWeapon.cpp */; };
+		CE626DFB1914BEF6005925DC /* ActorDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DA91914BEF6005925DC /* ActorDto.cpp */; };
+		CE626DFC1914BEF6005925DC /* ActorEquipDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DAB1914BEF6005925DC /* ActorEquipDto.cpp */; };
+		CE626DFD1914BEF6005925DC /* BattleLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DAE1914BEF6005925DC /* BattleLogic.cpp */; };
+		CE626DFE1914BEF6005925DC /* ItemLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DB01914BEF6005925DC /* ItemLogic.cpp */; };
+		CE626DFF1914BEF6005925DC /* MapManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DB21914BEF6005925DC /* MapManager.cpp */; };
+		CE626E001914BEF6005925DC /* NovelScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DBD1914BEF6005925DC /* NovelScene.cpp */; };
+		CE626E011914BEF6005925DC /* AccountData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DC41914BEF6005925DC /* AccountData.cpp */; };
+		CE626E041914BEF6005925DC /* RogueTMXTiledMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DCD1914BEF6005925DC /* RogueTMXTiledMap.cpp */; };
+		CE626E061914BEF6005925DC /* MypageScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DD31914BEF6005925DC /* MypageScene.cpp */; };
+		CE626E071914BEF6005925DC /* RogueScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DD51914BEF6005925DC /* RogueScene.cpp */; };
+		CE626E081914BEF6005925DC /* DropItemSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DD81914BEF6005925DC /* DropItemSprite.cpp */; };
+		CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DE01914BEF6005925DC /* SRPGMapLayer.cpp */; };
+		CE626E0A1914BEF6005925DC /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DE41914BEF6005925DC /* SRPGScene.cpp */; };
 		CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE6E644B18DB33CF0008C116 /* game_over.jpg */; };
-		CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */; };
-		CE73FB2218B0A073009273D0 /* MWeapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE73FB2018B0A073009273D0 /* MWeapon.cpp */; };
 		CE73FB2418B0A3F1009273D0 /* test_master in Resources */ = {isa = PBXBuildFile; fileRef = CE73FB2318B0A3F1009273D0 /* test_master */; };
-		CE7F54B418AF0AFD00BFD0DC /* NovelScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE7F54B218AF0AFD00BFD0DC /* NovelScene.cpp */; };
 		CE81F79618940AA900A8162B /* kaidan.png in Resources */ = {isa = PBXBuildFile; fileRef = CE81F79518940AA900A8162B /* kaidan.png */; };
-		CE890F1B18B0E26A0088A9BC /* MUseItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE890F1918B0E26A0088A9BC /* MUseItem.cpp */; };
-		CE890F2718B0E2A60088A9BC /* MAccessory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE890F2518B0E2A60088A9BC /* MAccessory.cpp */; };
-		CE8D50EC18EB66710078046F /* Joystick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE8D50EA18EB66710078046F /* Joystick.cpp */; };
-		CE9297C0188BCC9700568EE1 /* MLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9297BE188BCC9700568EE1 /* MLevel.cpp */; };
-		CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */; };
-		CE93B444188156C700825FD1 /* AccountData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B412188156C700825FD1 /* AccountData.cpp */; };
-		CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B415188156C700825FD1 /* ActorSprite.cpp */; };
-		CE93B446188156C700825FD1 /* DropItemSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B419188156C700825FD1 /* DropItemSprite.cpp */; };
-		CE93B447188156C700825FD1 /* BattleLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B41C188156C700825FD1 /* BattleLogic.cpp */; };
-		CE93B448188156C700825FD1 /* ItemLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B41E188156C700825FD1 /* ItemLogic.cpp */; };
-		CE93B449188156C700825FD1 /* MapManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B421188156C700825FD1 /* MapManager.cpp */; };
-		CE93B44A188156C700825FD1 /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B424188156C700825FD1 /* SRPGMapLayer.cpp */; };
-		CE93B44B188156C700825FD1 /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B427188156C700825FD1 /* SRPGScene.cpp */; };
-		CE93B44C188156C700825FD1 /* RogueScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B42A188156C700825FD1 /* RogueScene.cpp */; };
-		CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */; };
-		CE93B450188156C700825FD1 /* LabelSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B434188156C700825FD1 /* LabelSprite.cpp */; };
-		CE93B451188156C700825FD1 /* MenuItemSelectLabelSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */; };
-		CE93B454188156C700825FD1 /* TableViewTestLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */; };
 		CE93B4BF188156FC00825FD1 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A4188156FC00825FD1 /* fonts */; };
 		CE93B4C0188156FC00825FD1 /* grid32.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A5188156FC00825FD1 /* grid32.png */; };
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
-		CE964B3F19037B4800F1CE61 /* LabelRPG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE964B3D19037B4800F1CE61 /* LabelRPG.cpp */; };
-		CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */; };
-		CEA7DD2C190C859D00EBA0BB /* ActorEquipDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA7DD2A190C859D00EBA0BB /* ActorEquipDto.cpp */; };
-		CEA7DD31190C9B2000EBA0BB /* ActorDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA7DD2F190C9B2000EBA0BB /* ActorDto.cpp */; };
-		CEB138A018FAE7140086AC69 /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */; };
-		CEB138A118FAE7140086AC69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CEB1389F18FAE7140086AC69 /* README.md */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
 		CECE37AD18B9A08C0086C8A0 /* bg in Resources */ = {isa = PBXBuildFile; fileRef = CECE37AC18B9A08C0086C8A0 /* bg */; };
 		CECE37B518B9A6EA0086C8A0 /* battle in Resources */ = {isa = PBXBuildFile; fileRef = CECE37B418B9A6EA0086C8A0 /* battle */; };
-		CECFA314191297860009B547 /* ItemWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CECFA312191297860009B547 /* ItemWindow.cpp */; };
-		CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEF46A6418B8741300F887CA /* BattleScene.cpp */; };
 		CEF46A6818B87A0200F887CA /* actor in Resources */ = {isa = PBXBuildFile; fileRef = CEF46A6718B87A0200F887CA /* actor */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
@@ -300,92 +297,87 @@
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
 		CE2F8A3D18AF28E5001B457C /* novel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = novel; sourceTree = "<group>"; };
-		CE33EF6418B0E92D006C4B13 /* MUseItemDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItemDao.cpp; sourceTree = "<group>"; };
-		CE33EF6518B0E92D006C4B13 /* MUseItemDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItemDao.h; sourceTree = "<group>"; };
-		CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessoryDao.cpp; sourceTree = "<group>"; };
-		CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessoryDao.h; sourceTree = "<group>"; };
-		CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
-		CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
-		CE5E7FDD1902809F00A90F81 /* SystemMenuLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemMenuLayer.cpp; sourceTree = "<group>"; };
-		CE5E7FDE1902809F00A90F81 /* SystemMenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemMenuLayer.h; sourceTree = "<group>"; };
-		CE624BBF18F9607B0007FE58 /* MRogueMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRogueMap.h; sourceTree = "<group>"; };
-		CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageScene.cpp; sourceTree = "<group>"; };
-		CE68D3E418B9F9D0006CCA37 /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
-		CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueTMXTiledMap.cpp; sourceTree = "<group>"; };
-		CE6C2DF518D572FC0042FA93 /* RogueTMXTiledMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RogueTMXTiledMap.h; sourceTree = "<group>"; };
+		CE626D721914BEF6005925DC /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScene.cpp; sourceTree = "<group>"; };
+		CE626D731914BEF6005925DC /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
+		CE626D791914BEF6005925DC /* LabelRPG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelRPG.cpp; sourceTree = "<group>"; };
+		CE626D7A1914BEF6005925DC /* LabelRPG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelRPG.h; sourceTree = "<group>"; };
+		CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
+		CE626D7D1914BEF6005925DC /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
+		CE626D7E1914BEF6005925DC /* ItemWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindow.cpp; sourceTree = "<group>"; };
+		CE626D7F1914BEF6005925DC /* ItemWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindow.h; sourceTree = "<group>"; };
+		CE626D801914BEF6005925DC /* ItemWindowLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindowLayer.cpp; sourceTree = "<group>"; };
+		CE626D811914BEF6005925DC /* ItemWindowLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindowLayer.h; sourceTree = "<group>"; };
+		CE626D821914BEF6005925DC /* JoystickLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JoystickLayer.cpp; sourceTree = "<group>"; };
+		CE626D831914BEF6005925DC /* JoystickLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoystickLayer.h; sourceTree = "<group>"; };
+		CE626D841914BEF6005925DC /* ModalLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModalLayer.cpp; sourceTree = "<group>"; };
+		CE626D851914BEF6005925DC /* ModalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalLayer.h; sourceTree = "<group>"; };
+		CE626D861914BEF6005925DC /* SystemMenuLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemMenuLayer.cpp; sourceTree = "<group>"; };
+		CE626D871914BEF6005925DC /* SystemMenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemMenuLayer.h; sourceTree = "<group>"; };
+		CE626D881914BEF6005925DC /* TableViewTestLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TableViewTestLayer.cpp; sourceTree = "<group>"; };
+		CE626D891914BEF6005925DC /* TableViewTestLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewTestLayer.h; sourceTree = "<group>"; };
+		CE626D8C1914BEF6005925DC /* ActorSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorSprite.cpp; sourceTree = "<group>"; };
+		CE626D8D1914BEF6005925DC /* ActorSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorSprite.h; sourceTree = "<group>"; };
+		CE626D8F1914BEF6005925DC /* CommonWindowUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonWindowUtil.cpp; sourceTree = "<group>"; };
+		CE626D901914BEF6005925DC /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
+		CE626D911914BEF6005925DC /* LayerActionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerActionUtils.h; sourceTree = "<group>"; };
+		CE626D941914BEF6005925DC /* MAccessoryDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessoryDao.cpp; sourceTree = "<group>"; };
+		CE626D951914BEF6005925DC /* MAccessoryDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessoryDao.h; sourceTree = "<group>"; };
+		CE626D961914BEF6005925DC /* MLevelDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevelDao.cpp; sourceTree = "<group>"; };
+		CE626D971914BEF6005925DC /* MLevelDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevelDao.h; sourceTree = "<group>"; };
+		CE626D981914BEF6005925DC /* MUseItemDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItemDao.cpp; sourceTree = "<group>"; };
+		CE626D991914BEF6005925DC /* MUseItemDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItemDao.h; sourceTree = "<group>"; };
+		CE626D9A1914BEF6005925DC /* MWeaponDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeaponDao.cpp; sourceTree = "<group>"; };
+		CE626D9B1914BEF6005925DC /* MWeaponDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeaponDao.h; sourceTree = "<group>"; };
+		CE626D9D1914BEF6005925DC /* MAccessory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessory.cpp; sourceTree = "<group>"; };
+		CE626D9E1914BEF6005925DC /* MAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessory.h; sourceTree = "<group>"; };
+		CE626D9F1914BEF6005925DC /* MLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevel.cpp; sourceTree = "<group>"; };
+		CE626DA01914BEF6005925DC /* MLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevel.h; sourceTree = "<group>"; };
+		CE626DA11914BEF6005925DC /* MMonster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMonster.h; sourceTree = "<group>"; };
+		CE626DA21914BEF6005925DC /* MPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayer.h; sourceTree = "<group>"; };
+		CE626DA31914BEF6005925DC /* MRogueMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRogueMap.h; sourceTree = "<group>"; };
+		CE626DA41914BEF6005925DC /* MUseItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItem.cpp; sourceTree = "<group>"; };
+		CE626DA51914BEF6005925DC /* MUseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItem.h; sourceTree = "<group>"; };
+		CE626DA61914BEF6005925DC /* MWeapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeapon.cpp; sourceTree = "<group>"; };
+		CE626DA71914BEF6005925DC /* MWeapon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeapon.h; sourceTree = "<group>"; };
+		CE626DA91914BEF6005925DC /* ActorDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorDto.cpp; sourceTree = "<group>"; };
+		CE626DAA1914BEF6005925DC /* ActorDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorDto.h; sourceTree = "<group>"; };
+		CE626DAB1914BEF6005925DC /* ActorEquipDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorEquipDto.cpp; sourceTree = "<group>"; };
+		CE626DAC1914BEF6005925DC /* ActorEquipDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorEquipDto.h; sourceTree = "<group>"; };
+		CE626DAE1914BEF6005925DC /* BattleLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleLogic.cpp; sourceTree = "<group>"; };
+		CE626DAF1914BEF6005925DC /* BattleLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleLogic.h; sourceTree = "<group>"; };
+		CE626DB01914BEF6005925DC /* ItemLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemLogic.cpp; sourceTree = "<group>"; };
+		CE626DB11914BEF6005925DC /* ItemLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemLogic.h; sourceTree = "<group>"; };
+		CE626DB21914BEF6005925DC /* MapManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapManager.cpp; sourceTree = "<group>"; };
+		CE626DB31914BEF6005925DC /* MapManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapManager.h; sourceTree = "<group>"; };
+		CE626DB51914BEF6005925DC /* LotteryUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LotteryUtils.h; sourceTree = "<group>"; };
+		CE626DBD1914BEF6005925DC /* NovelScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NovelScene.cpp; sourceTree = "<group>"; };
+		CE626DBE1914BEF6005925DC /* NovelScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NovelScene.h; sourceTree = "<group>"; };
+		CE626DC41914BEF6005925DC /* AccountData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AccountData.cpp; sourceTree = "<group>"; };
+		CE626DC51914BEF6005925DC /* AccountData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountData.h; sourceTree = "<group>"; };
+		CE626DC61914BEF6005925DC /* MRogueMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRogueMap.h; sourceTree = "<group>"; };
+		CE626DCD1914BEF6005925DC /* RogueTMXTiledMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueTMXTiledMap.cpp; sourceTree = "<group>"; };
+		CE626DCE1914BEF6005925DC /* RogueTMXTiledMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RogueTMXTiledMap.h; sourceTree = "<group>"; };
+		CE626DD31914BEF6005925DC /* MypageScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageScene.cpp; sourceTree = "<group>"; };
+		CE626DD41914BEF6005925DC /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
+		CE626DD51914BEF6005925DC /* RogueScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueScene.cpp; sourceTree = "<group>"; };
+		CE626DD61914BEF6005925DC /* RogueScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RogueScene.h; sourceTree = "<group>"; };
+		CE626DD81914BEF6005925DC /* DropItemSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DropItemSprite.cpp; sourceTree = "<group>"; };
+		CE626DD91914BEF6005925DC /* DropItemSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropItemSprite.h; sourceTree = "<group>"; };
+		CE626DE01914BEF6005925DC /* SRPGMapLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SRPGMapLayer.cpp; sourceTree = "<group>"; };
+		CE626DE11914BEF6005925DC /* SRPGMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGMapLayer.h; sourceTree = "<group>"; };
+		CE626DE41914BEF6005925DC /* SRPGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SRPGScene.cpp; sourceTree = "<group>"; };
+		CE626DE51914BEF6005925DC /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
 		CE6E644B18DB33CF0008C116 /* game_over.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = game_over.jpg; sourceTree = "<group>"; };
-		CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeaponDao.cpp; sourceTree = "<group>"; };
-		CE73FB1E18B0A064009273D0 /* MWeaponDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeaponDao.h; sourceTree = "<group>"; };
-		CE73FB2018B0A073009273D0 /* MWeapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeapon.cpp; sourceTree = "<group>"; };
-		CE73FB2118B0A073009273D0 /* MWeapon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeapon.h; sourceTree = "<group>"; };
 		CE73FB2318B0A3F1009273D0 /* test_master */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_master; sourceTree = "<group>"; };
-		CE7F54B218AF0AFD00BFD0DC /* NovelScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NovelScene.cpp; sourceTree = "<group>"; };
-		CE7F54B318AF0AFD00BFD0DC /* NovelScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NovelScene.h; sourceTree = "<group>"; };
-		CE81F77418FA2F19008E2F6F /* LotteryUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LotteryUtils.h; sourceTree = "<group>"; };
 		CE81F79518940AA900A8162B /* kaidan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kaidan.png; sourceTree = "<group>"; };
-		CE890F1918B0E26A0088A9BC /* MUseItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItem.cpp; sourceTree = "<group>"; };
-		CE890F1A18B0E26A0088A9BC /* MUseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItem.h; sourceTree = "<group>"; };
-		CE890F2518B0E2A60088A9BC /* MAccessory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessory.cpp; sourceTree = "<group>"; };
-		CE890F2618B0E2A60088A9BC /* MAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessory.h; sourceTree = "<group>"; };
-		CE8D50EA18EB66710078046F /* Joystick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Joystick.cpp; sourceTree = "<group>"; };
-		CE8D50EB18EB66710078046F /* Joystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Joystick.h; sourceTree = "<group>"; };
-		CE9297BE188BCC9700568EE1 /* MLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevel.cpp; sourceTree = "<group>"; };
-		CE9297BF188BCC9700568EE1 /* MLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevel.h; sourceTree = "<group>"; };
-		CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevelDao.cpp; sourceTree = "<group>"; };
-		CE9297C4188BCE7A00568EE1 /* MLevelDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevelDao.h; sourceTree = "<group>"; };
-		CE93B412188156C700825FD1 /* AccountData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AccountData.cpp; sourceTree = "<group>"; };
-		CE93B413188156C700825FD1 /* AccountData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountData.h; sourceTree = "<group>"; };
-		CE93B415188156C700825FD1 /* ActorSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorSprite.cpp; sourceTree = "<group>"; };
-		CE93B416188156C700825FD1 /* ActorSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorSprite.h; sourceTree = "<group>"; };
 		CE93B417188156C700825FD1 /* AppMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppMacros.h; path = ../Classes/AppMacros.h; sourceTree = "<group>"; };
-		CE93B419188156C700825FD1 /* DropItemSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DropItemSprite.cpp; sourceTree = "<group>"; };
-		CE93B41A188156C700825FD1 /* DropItemSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropItemSprite.h; sourceTree = "<group>"; };
-		CE93B41C188156C700825FD1 /* BattleLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleLogic.cpp; sourceTree = "<group>"; };
-		CE93B41D188156C700825FD1 /* BattleLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleLogic.h; sourceTree = "<group>"; };
-		CE93B41E188156C700825FD1 /* ItemLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemLogic.cpp; sourceTree = "<group>"; };
-		CE93B41F188156C700825FD1 /* ItemLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemLogic.h; sourceTree = "<group>"; };
-		CE93B421188156C700825FD1 /* MapManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapManager.cpp; sourceTree = "<group>"; };
-		CE93B422188156C700825FD1 /* MapManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapManager.h; sourceTree = "<group>"; };
-		CE93B424188156C700825FD1 /* SRPGMapLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SRPGMapLayer.cpp; sourceTree = "<group>"; };
-		CE93B425188156C700825FD1 /* SRPGMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGMapLayer.h; sourceTree = "<group>"; };
-		CE93B426188156C700825FD1 /* SRPGMapMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGMapMacro.h; sourceTree = "<group>"; };
-		CE93B427188156C700825FD1 /* SRPGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SRPGScene.cpp; sourceTree = "<group>"; };
-		CE93B428188156C700825FD1 /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
-		CE93B42A188156C700825FD1 /* RogueScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueScene.cpp; sourceTree = "<group>"; };
-		CE93B42B188156C700825FD1 /* RogueScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RogueScene.h; sourceTree = "<group>"; };
-		CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindowLayer.cpp; sourceTree = "<group>"; };
-		CE93B433188156C700825FD1 /* ItemWindowLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindowLayer.h; sourceTree = "<group>"; };
-		CE93B434188156C700825FD1 /* LabelSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelSprite.cpp; sourceTree = "<group>"; };
-		CE93B435188156C700825FD1 /* LabelSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelSprite.h; sourceTree = "<group>"; };
-		CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuItemSelectLabelSprite.cpp; sourceTree = "<group>"; };
-		CE93B437188156C700825FD1 /* MenuItemSelectLabelSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemSelectLabelSprite.h; sourceTree = "<group>"; };
-		CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TableViewTestLayer.cpp; sourceTree = "<group>"; };
-		CE93B43E188156C700825FD1 /* TableViewTestLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewTestLayer.h; sourceTree = "<group>"; };
 		CE93B4A4188156FC00825FD1 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		CE93B4A5188156FC00825FD1 /* grid32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid32.png; sourceTree = "<group>"; };
 		CE93B4AD188156FC00825FD1 /* menu_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_button.png; sourceTree = "<group>"; };
 		CE93B4AF188156FC00825FD1 /* tmx */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tmx; sourceTree = "<group>"; };
-		CE964B3D19037B4800F1CE61 /* LabelRPG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelRPG.cpp; sourceTree = "<group>"; };
-		CE964B3E19037B4800F1CE61 /* LabelRPG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelRPG.h; sourceTree = "<group>"; };
-		CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonWindowUtil.cpp; sourceTree = "<group>"; };
-		CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonWindowUtil.h; sourceTree = "<group>"; };
-		CEA7DD2A190C859D00EBA0BB /* ActorEquipDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorEquipDto.cpp; sourceTree = "<group>"; };
-		CEA7DD2B190C859D00EBA0BB /* ActorEquipDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorEquipDto.h; sourceTree = "<group>"; };
-		CEA7DD2F190C9B2000EBA0BB /* ActorDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorDto.cpp; sourceTree = "<group>"; };
-		CEA7DD30190C9B2000EBA0BB /* ActorDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorDto.h; sourceTree = "<group>"; };
-		CEAA20AE18DD13680057DE9C /* MPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayer.h; sourceTree = "<group>"; };
-		CEAEE91418D5F46B0026D6B4 /* MMonster.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMonster.h; sourceTree = "<group>"; };
-		CEB1389818FAD9030086AC69 /* LayerActionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerActionUtils.h; sourceTree = "<group>"; };
-		CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModalLayer.cpp; sourceTree = "<group>"; };
-		CEB1389E18FAE7140086AC69 /* ModalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalLayer.h; sourceTree = "<group>"; };
-		CEB1389F18FAE7140086AC69 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
 		CECE37AC18B9A08C0086C8A0 /* bg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bg; sourceTree = "<group>"; };
 		CECE37B418B9A6EA0086C8A0 /* battle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = battle; sourceTree = "<group>"; };
-		CECFA312191297860009B547 /* ItemWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindow.cpp; sourceTree = "<group>"; };
-		CECFA313191297860009B547 /* ItemWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindow.h; sourceTree = "<group>"; };
-		CEF46A6418B8741300F887CA /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScene.cpp; sourceTree = "<group>"; };
-		CEF46A6518B8741300F887CA /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
 		CEF46A6718B87A0200F887CA /* actor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = actor; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -460,22 +452,11 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				CEB1389C18FAE7140086AC69 /* layers_nodes */,
-				CE795BEF18C329D8007B2286 /* common */,
-				CE3704A618C3600900F0791B /* util */,
-				CE68D3DC18B9F9BB006CCA37 /* mypage */,
-				CEF46A6318B8740500F887CA /* battle */,
-				CE7F54B118AF0AFC00BFD0DC /* novel */,
-				CE9297C2188BCE7100568EE1 /* dao */,
-				CE9297BD188BCC5B00568EE1 /* data */,
-				CE93B411188156C700825FD1 /* account */,
-				CE93B414188156C700825FD1 /* actor */,
-				CE93B418188156C700825FD1 /* game_object */,
-				CE93B41B188156C700825FD1 /* logic */,
-				CE93B420188156C700825FD1 /* map */,
-				CE93B423188156C700825FD1 /* quest */,
-				CE93B429188156C700825FD1 /* rogue */,
-				CE93B431188156C700825FD1 /* ui */,
+				CE626D6B1914BEF6005925DC /* battle */,
+				CE626D761914BEF6005925DC /* game_base */,
+				CE626DB61914BEF6005925DC /* novel */,
+				CE626DC11914BEF6005925DC /* rogue */,
+				CE626DDB1914BEF6005925DC /* srpg */,
 				1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */,
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 				CE93B417188156C700825FD1 /* AppMacros.h */,
@@ -612,215 +593,466 @@
 			path = ../Resources;
 			sourceTree = "<group>";
 		};
-		CE3704A618C3600900F0791B /* util */ = {
+		CE626D6B1914BEF6005925DC /* battle */ = {
 			isa = PBXGroup;
 			children = (
-				CEB1389818FAD9030086AC69 /* LayerActionUtils.h */,
-				CE81F77418FA2F19008E2F6F /* LotteryUtils.h */,
+				CE626D6C1914BEF6005925DC /* dao */,
+				CE626D6D1914BEF6005925DC /* data */,
+				CE626D6E1914BEF6005925DC /* dto */,
+				CE626D6F1914BEF6005925DC /* layers */,
+				CE626D701914BEF6005925DC /* logic */,
+				CE626D711914BEF6005925DC /* scenes */,
+				CE626D741914BEF6005925DC /* sprites */,
+				CE626D751914BEF6005925DC /* util */,
 			);
-			name = util;
-			path = ../Classes/util;
+			name = battle;
+			path = ../Classes/battle;
 			sourceTree = "<group>";
 		};
-		CE68D3DC18B9F9BB006CCA37 /* mypage */ = {
-			isa = PBXGroup;
-			children = (
-				CE68D3E318B9F9D0006CCA37 /* MypageScene.cpp */,
-				CE68D3E418B9F9D0006CCA37 /* MypageScene.h */,
-			);
-			name = mypage;
-			path = ../Classes/mypage;
-			sourceTree = "<group>";
-		};
-		CE795BEF18C329D8007B2286 /* common */ = {
+		CE626D6C1914BEF6005925DC /* dao */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			name = common;
-			path = ../Classes/common;
+			path = dao;
 			sourceTree = "<group>";
 		};
-		CE7F54B118AF0AFC00BFD0DC /* novel */ = {
+		CE626D6D1914BEF6005925DC /* data */ = {
 			isa = PBXGroup;
 			children = (
-				CE7F54B218AF0AFD00BFD0DC /* NovelScene.cpp */,
-				CE7F54B318AF0AFD00BFD0DC /* NovelScene.h */,
+			);
+			path = data;
+			sourceTree = "<group>";
+		};
+		CE626D6E1914BEF6005925DC /* dto */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = dto;
+			sourceTree = "<group>";
+		};
+		CE626D6F1914BEF6005925DC /* layers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = layers;
+			sourceTree = "<group>";
+		};
+		CE626D701914BEF6005925DC /* logic */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = logic;
+			sourceTree = "<group>";
+		};
+		CE626D711914BEF6005925DC /* scenes */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D721914BEF6005925DC /* BattleScene.cpp */,
+				CE626D731914BEF6005925DC /* BattleScene.h */,
+			);
+			path = scenes;
+			sourceTree = "<group>";
+		};
+		CE626D741914BEF6005925DC /* sprites */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = sprites;
+			sourceTree = "<group>";
+		};
+		CE626D751914BEF6005925DC /* util */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		CE626D761914BEF6005925DC /* game_base */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D771914BEF6005925DC /* cocos */,
+				CE626D921914BEF6005925DC /* core */,
+			);
+			name = game_base;
+			path = ../Classes/game_base;
+			sourceTree = "<group>";
+		};
+		CE626D771914BEF6005925DC /* cocos */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D781914BEF6005925DC /* labels */,
+				CE626D7B1914BEF6005925DC /* layers */,
+				CE626D8A1914BEF6005925DC /* scenes */,
+				CE626D8B1914BEF6005925DC /* sprites */,
+				CE626D8E1914BEF6005925DC /* util */,
+			);
+			path = cocos;
+			sourceTree = "<group>";
+		};
+		CE626D781914BEF6005925DC /* labels */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D791914BEF6005925DC /* LabelRPG.cpp */,
+				CE626D7A1914BEF6005925DC /* LabelRPG.h */,
+			);
+			path = labels;
+			sourceTree = "<group>";
+		};
+		CE626D7B1914BEF6005925DC /* layers */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */,
+				CE626D7D1914BEF6005925DC /* AlertDialogLayer.h */,
+				CE626D7E1914BEF6005925DC /* ItemWindow.cpp */,
+				CE626D7F1914BEF6005925DC /* ItemWindow.h */,
+				CE626D801914BEF6005925DC /* ItemWindowLayer.cpp */,
+				CE626D811914BEF6005925DC /* ItemWindowLayer.h */,
+				CE626D821914BEF6005925DC /* JoystickLayer.cpp */,
+				CE626D831914BEF6005925DC /* JoystickLayer.h */,
+				CE626D841914BEF6005925DC /* ModalLayer.cpp */,
+				CE626D851914BEF6005925DC /* ModalLayer.h */,
+				CE626D861914BEF6005925DC /* SystemMenuLayer.cpp */,
+				CE626D871914BEF6005925DC /* SystemMenuLayer.h */,
+				CE626D881914BEF6005925DC /* TableViewTestLayer.cpp */,
+				CE626D891914BEF6005925DC /* TableViewTestLayer.h */,
+			);
+			path = layers;
+			sourceTree = "<group>";
+		};
+		CE626D8A1914BEF6005925DC /* scenes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = scenes;
+			sourceTree = "<group>";
+		};
+		CE626D8B1914BEF6005925DC /* sprites */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D8C1914BEF6005925DC /* ActorSprite.cpp */,
+				CE626D8D1914BEF6005925DC /* ActorSprite.h */,
+			);
+			path = sprites;
+			sourceTree = "<group>";
+		};
+		CE626D8E1914BEF6005925DC /* util */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D8F1914BEF6005925DC /* CommonWindowUtil.cpp */,
+				CE626D901914BEF6005925DC /* CommonWindowUtil.h */,
+				CE626D911914BEF6005925DC /* LayerActionUtils.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		CE626D921914BEF6005925DC /* core */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D931914BEF6005925DC /* dao */,
+				CE626D9C1914BEF6005925DC /* data */,
+				CE626DA81914BEF6005925DC /* dto */,
+				CE626DAD1914BEF6005925DC /* logic */,
+				CE626DB41914BEF6005925DC /* util */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		CE626D931914BEF6005925DC /* dao */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D941914BEF6005925DC /* MAccessoryDao.cpp */,
+				CE626D951914BEF6005925DC /* MAccessoryDao.h */,
+				CE626D961914BEF6005925DC /* MLevelDao.cpp */,
+				CE626D971914BEF6005925DC /* MLevelDao.h */,
+				CE626D981914BEF6005925DC /* MUseItemDao.cpp */,
+				CE626D991914BEF6005925DC /* MUseItemDao.h */,
+				CE626D9A1914BEF6005925DC /* MWeaponDao.cpp */,
+				CE626D9B1914BEF6005925DC /* MWeaponDao.h */,
+			);
+			path = dao;
+			sourceTree = "<group>";
+		};
+		CE626D9C1914BEF6005925DC /* data */ = {
+			isa = PBXGroup;
+			children = (
+				CE626D9D1914BEF6005925DC /* MAccessory.cpp */,
+				CE626D9E1914BEF6005925DC /* MAccessory.h */,
+				CE626D9F1914BEF6005925DC /* MLevel.cpp */,
+				CE626DA01914BEF6005925DC /* MLevel.h */,
+				CE626DA11914BEF6005925DC /* MMonster.h */,
+				CE626DA21914BEF6005925DC /* MPlayer.h */,
+				CE626DA31914BEF6005925DC /* MRogueMap.h */,
+				CE626DA41914BEF6005925DC /* MUseItem.cpp */,
+				CE626DA51914BEF6005925DC /* MUseItem.h */,
+				CE626DA61914BEF6005925DC /* MWeapon.cpp */,
+				CE626DA71914BEF6005925DC /* MWeapon.h */,
+			);
+			path = data;
+			sourceTree = "<group>";
+		};
+		CE626DA81914BEF6005925DC /* dto */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DA91914BEF6005925DC /* ActorDto.cpp */,
+				CE626DAA1914BEF6005925DC /* ActorDto.h */,
+				CE626DAB1914BEF6005925DC /* ActorEquipDto.cpp */,
+				CE626DAC1914BEF6005925DC /* ActorEquipDto.h */,
+			);
+			path = dto;
+			sourceTree = "<group>";
+		};
+		CE626DAD1914BEF6005925DC /* logic */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DAE1914BEF6005925DC /* BattleLogic.cpp */,
+				CE626DAF1914BEF6005925DC /* BattleLogic.h */,
+				CE626DB01914BEF6005925DC /* ItemLogic.cpp */,
+				CE626DB11914BEF6005925DC /* ItemLogic.h */,
+				CE626DB21914BEF6005925DC /* MapManager.cpp */,
+				CE626DB31914BEF6005925DC /* MapManager.h */,
+			);
+			path = logic;
+			sourceTree = "<group>";
+		};
+		CE626DB41914BEF6005925DC /* util */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DB51914BEF6005925DC /* LotteryUtils.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		CE626DB61914BEF6005925DC /* novel */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DB71914BEF6005925DC /* dao */,
+				CE626DB81914BEF6005925DC /* data */,
+				CE626DB91914BEF6005925DC /* dto */,
+				CE626DBA1914BEF6005925DC /* layers */,
+				CE626DBB1914BEF6005925DC /* logic */,
+				CE626DBC1914BEF6005925DC /* scenes */,
+				CE626DBF1914BEF6005925DC /* sprites */,
+				CE626DC01914BEF6005925DC /* util */,
 			);
 			name = novel;
 			path = ../Classes/novel;
 			sourceTree = "<group>";
 		};
-		CE9297BD188BCC5B00568EE1 /* data */ = {
+		CE626DB71914BEF6005925DC /* dao */ = {
 			isa = PBXGroup;
 			children = (
-				CE9297BE188BCC9700568EE1 /* MLevel.cpp */,
-				CE9297BF188BCC9700568EE1 /* MLevel.h */,
-				CE73FB2018B0A073009273D0 /* MWeapon.cpp */,
-				CE73FB2118B0A073009273D0 /* MWeapon.h */,
-				CE890F1918B0E26A0088A9BC /* MUseItem.cpp */,
-				CE890F1A18B0E26A0088A9BC /* MUseItem.h */,
-				CE890F2518B0E2A60088A9BC /* MAccessory.cpp */,
-				CE890F2618B0E2A60088A9BC /* MAccessory.h */,
 			);
-			name = data;
-			path = ../Classes/data;
+			path = dao;
 			sourceTree = "<group>";
 		};
-		CE9297C2188BCE7100568EE1 /* dao */ = {
+		CE626DB81914BEF6005925DC /* data */ = {
 			isa = PBXGroup;
 			children = (
-				CE9297C3188BCE7A00568EE1 /* MLevelDao.cpp */,
-				CE9297C4188BCE7A00568EE1 /* MLevelDao.h */,
-				CE73FB1D18B0A064009273D0 /* MWeaponDao.cpp */,
-				CE73FB1E18B0A064009273D0 /* MWeaponDao.h */,
-				CE33EF6418B0E92D006C4B13 /* MUseItemDao.cpp */,
-				CE33EF6518B0E92D006C4B13 /* MUseItemDao.h */,
-				CE33EF6D18B0EA6F006C4B13 /* MAccessoryDao.cpp */,
-				CE33EF6E18B0EA6F006C4B13 /* MAccessoryDao.h */,
-				CEAEE91418D5F46B0026D6B4 /* MMonster.h */,
-				CEAA20AE18DD13680057DE9C /* MPlayer.h */,
-				CE624BBF18F9607B0007FE58 /* MRogueMap.h */,
 			);
-			name = dao;
-			path = ../Classes/dao;
+			path = data;
 			sourceTree = "<group>";
 		};
-		CE93B411188156C700825FD1 /* account */ = {
+		CE626DB91914BEF6005925DC /* dto */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B412188156C700825FD1 /* AccountData.cpp */,
-				CE93B413188156C700825FD1 /* AccountData.h */,
 			);
-			name = account;
-			path = ../Classes/account;
+			path = dto;
 			sourceTree = "<group>";
 		};
-		CE93B414188156C700825FD1 /* actor */ = {
+		CE626DBA1914BEF6005925DC /* layers */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B415188156C700825FD1 /* ActorSprite.cpp */,
-				CE93B416188156C700825FD1 /* ActorSprite.h */,
-				CEA7DD2A190C859D00EBA0BB /* ActorEquipDto.cpp */,
-				CEA7DD2B190C859D00EBA0BB /* ActorEquipDto.h */,
-				CEA7DD2F190C9B2000EBA0BB /* ActorDto.cpp */,
-				CEA7DD30190C9B2000EBA0BB /* ActorDto.h */,
 			);
-			name = actor;
-			path = ../Classes/actor;
+			path = layers;
 			sourceTree = "<group>";
 		};
-		CE93B418188156C700825FD1 /* game_object */ = {
+		CE626DBB1914BEF6005925DC /* logic */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B419188156C700825FD1 /* DropItemSprite.cpp */,
-				CE93B41A188156C700825FD1 /* DropItemSprite.h */,
 			);
-			name = game_object;
-			path = ../Classes/game_object;
+			path = logic;
 			sourceTree = "<group>";
 		};
-		CE93B41B188156C700825FD1 /* logic */ = {
+		CE626DBC1914BEF6005925DC /* scenes */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B41C188156C700825FD1 /* BattleLogic.cpp */,
-				CE93B41D188156C700825FD1 /* BattleLogic.h */,
-				CE93B41E188156C700825FD1 /* ItemLogic.cpp */,
-				CE93B41F188156C700825FD1 /* ItemLogic.h */,
+				CE626DBD1914BEF6005925DC /* NovelScene.cpp */,
+				CE626DBE1914BEF6005925DC /* NovelScene.h */,
 			);
-			name = logic;
-			path = ../Classes/logic;
+			path = scenes;
 			sourceTree = "<group>";
 		};
-		CE93B420188156C700825FD1 /* map */ = {
+		CE626DBF1914BEF6005925DC /* sprites */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B421188156C700825FD1 /* MapManager.cpp */,
-				CE93B422188156C700825FD1 /* MapManager.h */,
 			);
-			name = map;
-			path = ../Classes/map;
+			path = sprites;
 			sourceTree = "<group>";
 		};
-		CE93B423188156C700825FD1 /* quest */ = {
+		CE626DC01914BEF6005925DC /* util */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B424188156C700825FD1 /* SRPGMapLayer.cpp */,
-				CE93B425188156C700825FD1 /* SRPGMapLayer.h */,
-				CE93B426188156C700825FD1 /* SRPGMapMacro.h */,
-				CE93B427188156C700825FD1 /* SRPGScene.cpp */,
-				CE93B428188156C700825FD1 /* SRPGScene.h */,
 			);
-			name = quest;
-			path = ../Classes/quest;
+			path = util;
 			sourceTree = "<group>";
 		};
-		CE93B429188156C700825FD1 /* rogue */ = {
+		CE626DC11914BEF6005925DC /* rogue */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B42A188156C700825FD1 /* RogueScene.cpp */,
-				CE93B42B188156C700825FD1 /* RogueScene.h */,
-				CE6C2DF418D572FC0042FA93 /* RogueTMXTiledMap.cpp */,
-				CE6C2DF518D572FC0042FA93 /* RogueTMXTiledMap.h */,
+				CE626DC21914BEF6005925DC /* dao */,
+				CE626DC31914BEF6005925DC /* data */,
+				CE626DC71914BEF6005925DC /* dto */,
+				CE626DCC1914BEF6005925DC /* layers */,
+				CE626DD11914BEF6005925DC /* logic */,
+				CE626DD21914BEF6005925DC /* scenes */,
+				CE626DD71914BEF6005925DC /* sprites */,
+				CE626DDA1914BEF6005925DC /* util */,
 			);
 			name = rogue;
 			path = ../Classes/rogue;
 			sourceTree = "<group>";
 		};
-		CE93B431188156C700825FD1 /* ui */ = {
+		CE626DC21914BEF6005925DC /* dao */ = {
 			isa = PBXGroup;
 			children = (
-				CECFA312191297860009B547 /* ItemWindow.cpp */,
-				CECFA313191297860009B547 /* ItemWindow.h */,
-				CE5E7FDD1902809F00A90F81 /* SystemMenuLayer.cpp */,
-				CE5E7FDE1902809F00A90F81 /* SystemMenuLayer.h */,
-				CE93B432188156C700825FD1 /* ItemWindowLayer.cpp */,
-				CE93B433188156C700825FD1 /* ItemWindowLayer.h */,
-				CE4E5C0F18953B04000EA1BE /* AlertDialogLayer.cpp */,
-				CE4E5C1018953B04000EA1BE /* AlertDialogLayer.h */,
-				CE93B434188156C700825FD1 /* LabelSprite.cpp */,
-				CE93B435188156C700825FD1 /* LabelSprite.h */,
-				CE93B436188156C700825FD1 /* MenuItemSelectLabelSprite.cpp */,
-				CE93B437188156C700825FD1 /* MenuItemSelectLabelSprite.h */,
-				CE93B43A188156C700825FD1 /* table */,
-				CE9FB2CA1894D94000E5DB0D /* CommonWindowUtil.cpp */,
-				CE9FB2CB1894D94000E5DB0D /* CommonWindowUtil.h */,
-				CE8D50EA18EB66710078046F /* Joystick.cpp */,
-				CE8D50EB18EB66710078046F /* Joystick.h */,
 			);
-			name = ui;
-			path = ../Classes/ui;
+			path = dao;
 			sourceTree = "<group>";
 		};
-		CE93B43A188156C700825FD1 /* table */ = {
+		CE626DC31914BEF6005925DC /* data */ = {
 			isa = PBXGroup;
 			children = (
-				CE93B43D188156C700825FD1 /* TableViewTestLayer.cpp */,
-				CE93B43E188156C700825FD1 /* TableViewTestLayer.h */,
+				CE626DC41914BEF6005925DC /* AccountData.cpp */,
+				CE626DC51914BEF6005925DC /* AccountData.h */,
+				CE626DC61914BEF6005925DC /* MRogueMap.h */,
 			);
-			path = table;
+			path = data;
 			sourceTree = "<group>";
 		};
-		CEB1389C18FAE7140086AC69 /* layers_nodes */ = {
+		CE626DC71914BEF6005925DC /* dto */ = {
 			isa = PBXGroup;
 			children = (
-				CE964B3D19037B4800F1CE61 /* LabelRPG.cpp */,
-				CE964B3E19037B4800F1CE61 /* LabelRPG.h */,
-				CEB1389D18FAE7140086AC69 /* ModalLayer.cpp */,
-				CEB1389E18FAE7140086AC69 /* ModalLayer.h */,
-				CEB1389F18FAE7140086AC69 /* README.md */,
 			);
-			name = layers_nodes;
-			path = ../Classes/layers_nodes;
+			path = dto;
 			sourceTree = "<group>";
 		};
-		CEF46A6318B8740500F887CA /* battle */ = {
+		CE626DCC1914BEF6005925DC /* layers */ = {
 			isa = PBXGroup;
 			children = (
-				CEF46A6418B8741300F887CA /* BattleScene.cpp */,
-				CEF46A6518B8741300F887CA /* BattleScene.h */,
+				CE626DCD1914BEF6005925DC /* RogueTMXTiledMap.cpp */,
+				CE626DCE1914BEF6005925DC /* RogueTMXTiledMap.h */,
 			);
-			name = battle;
-			path = ../Classes/battle;
+			path = layers;
+			sourceTree = "<group>";
+		};
+		CE626DD11914BEF6005925DC /* logic */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = logic;
+			sourceTree = "<group>";
+		};
+		CE626DD21914BEF6005925DC /* scenes */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DD31914BEF6005925DC /* MypageScene.cpp */,
+				CE626DD41914BEF6005925DC /* MypageScene.h */,
+				CE626DD51914BEF6005925DC /* RogueScene.cpp */,
+				CE626DD61914BEF6005925DC /* RogueScene.h */,
+			);
+			path = scenes;
+			sourceTree = "<group>";
+		};
+		CE626DD71914BEF6005925DC /* sprites */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DD81914BEF6005925DC /* DropItemSprite.cpp */,
+				CE626DD91914BEF6005925DC /* DropItemSprite.h */,
+			);
+			path = sprites;
+			sourceTree = "<group>";
+		};
+		CE626DDA1914BEF6005925DC /* util */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		CE626DDB1914BEF6005925DC /* srpg */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DDC1914BEF6005925DC /* dao */,
+				CE626DDD1914BEF6005925DC /* data */,
+				CE626DDE1914BEF6005925DC /* dto */,
+				CE626DDF1914BEF6005925DC /* layers */,
+				CE626DE21914BEF6005925DC /* logic */,
+				CE626DE31914BEF6005925DC /* scenes */,
+				CE626DE61914BEF6005925DC /* sprites */,
+				CE626DE71914BEF6005925DC /* util */,
+			);
+			name = srpg;
+			path = ../Classes/srpg;
+			sourceTree = "<group>";
+		};
+		CE626DDC1914BEF6005925DC /* dao */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = dao;
+			sourceTree = "<group>";
+		};
+		CE626DDD1914BEF6005925DC /* data */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = data;
+			sourceTree = "<group>";
+		};
+		CE626DDE1914BEF6005925DC /* dto */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = dto;
+			sourceTree = "<group>";
+		};
+		CE626DDF1914BEF6005925DC /* layers */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DE01914BEF6005925DC /* SRPGMapLayer.cpp */,
+				CE626DE11914BEF6005925DC /* SRPGMapLayer.h */,
+			);
+			path = layers;
+			sourceTree = "<group>";
+		};
+		CE626DE21914BEF6005925DC /* logic */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = logic;
+			sourceTree = "<group>";
+		};
+		CE626DE31914BEF6005925DC /* scenes */ = {
+			isa = PBXGroup;
+			children = (
+				CE626DE41914BEF6005925DC /* SRPGScene.cpp */,
+				CE626DE51914BEF6005925DC /* SRPGScene.h */,
+			);
+			path = scenes;
+			sourceTree = "<group>";
+		};
+		CE626DE61914BEF6005925DC /* sprites */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = sprites;
+			sourceTree = "<group>";
+		};
+		CE626DE71914BEF6005925DC /* util */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1000,7 +1232,6 @@
 				CECE37B518B9A6EA0086C8A0 /* battle in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
-				CEB138A118FAE7140086AC69 /* README.md in Resources */,
 				CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */,
 				CECE37AD18B9A08C0086C8A0 /* bg in Resources */,
 				CE0D522B188A507F00ECB309 /* icon_set in Resources */,
@@ -1052,44 +1283,42 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE626DF01914BEF6005925DC /* TableViewTestLayer.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
-				CE93B446188156C700825FD1 /* DropItemSprite.cpp in Sources */,
-				CE93B449188156C700825FD1 /* MapManager.cpp in Sources */,
-				CE93B447188156C700825FD1 /* BattleLogic.cpp in Sources */,
-				CE93B44C188156C700825FD1 /* RogueScene.cpp in Sources */,
-				CE8D50EC18EB66710078046F /* Joystick.cpp in Sources */,
-				CEB138A018FAE7140086AC69 /* ModalLayer.cpp in Sources */,
-				CEA7DD31190C9B2000EBA0BB /* ActorDto.cpp in Sources */,
-				CE73FB1F18B0A064009273D0 /* MWeaponDao.cpp in Sources */,
-				CEF46A6618B8741300F887CA /* BattleScene.cpp in Sources */,
-				CE9297C5188BCE7A00568EE1 /* MLevelDao.cpp in Sources */,
-				CEA7DD2C190C859D00EBA0BB /* ActorEquipDto.cpp in Sources */,
-				CE33EF6F18B0EA6F006C4B13 /* MAccessoryDao.cpp in Sources */,
-				CE5E7FDF1902809F00A90F81 /* SystemMenuLayer.cpp in Sources */,
-				CE93B44B188156C700825FD1 /* SRPGScene.cpp in Sources */,
-				CE93B450188156C700825FD1 /* LabelSprite.cpp in Sources */,
-				CE9297C0188BCC9700568EE1 /* MLevel.cpp in Sources */,
-				CE93B451188156C700825FD1 /* MenuItemSelectLabelSprite.cpp in Sources */,
+				CE626DFD1914BEF6005925DC /* BattleLogic.cpp in Sources */,
+				CE626DE81914BEF6005925DC /* BattleScene.cpp in Sources */,
+				CE626DF41914BEF6005925DC /* MLevelDao.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
-				CE93B454188156C700825FD1 /* TableViewTestLayer.cpp in Sources */,
-				CE9FB2CC1894D94000E5DB0D /* CommonWindowUtil.cpp in Sources */,
-				CE6C2DF618D572FC0042FA93 /* RogueTMXTiledMap.cpp in Sources */,
-				CE93B444188156C700825FD1 /* AccountData.cpp in Sources */,
-				CE93B44F188156C700825FD1 /* ItemWindowLayer.cpp in Sources */,
+				CE626DED1914BEF6005925DC /* JoystickLayer.cpp in Sources */,
+				CE626DEA1914BEF6005925DC /* AlertDialogLayer.cpp in Sources */,
+				CE626E081914BEF6005925DC /* DropItemSprite.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
-				CE964B3F19037B4800F1CE61 /* LabelRPG.cpp in Sources */,
-				CE68D3E518B9F9D0006CCA37 /* MypageScene.cpp in Sources */,
-				CE33EF6618B0E92D006C4B13 /* MUseItemDao.cpp in Sources */,
-				CE93B445188156C700825FD1 /* ActorSprite.cpp in Sources */,
-				CE7F54B418AF0AFD00BFD0DC /* NovelScene.cpp in Sources */,
-				CE890F2718B0E2A60088A9BC /* MAccessory.cpp in Sources */,
-				CE4E5C1118953B04000EA1BE /* AlertDialogLayer.cpp in Sources */,
+				CE626DEE1914BEF6005925DC /* ModalLayer.cpp in Sources */,
+				CE626E041914BEF6005925DC /* RogueTMXTiledMap.cpp in Sources */,
+				CE626DF11914BEF6005925DC /* ActorSprite.cpp in Sources */,
+				CE626DF61914BEF6005925DC /* MWeaponDao.cpp in Sources */,
+				CE626DFF1914BEF6005925DC /* MapManager.cpp in Sources */,
+				CE626DF81914BEF6005925DC /* MLevel.cpp in Sources */,
+				CE626E001914BEF6005925DC /* NovelScene.cpp in Sources */,
+				CE626DF21914BEF6005925DC /* CommonWindowUtil.cpp in Sources */,
+				CE626DFB1914BEF6005925DC /* ActorDto.cpp in Sources */,
+				CE626E011914BEF6005925DC /* AccountData.cpp in Sources */,
+				CE626DFC1914BEF6005925DC /* ActorEquipDto.cpp in Sources */,
+				CE626DF51914BEF6005925DC /* MUseItemDao.cpp in Sources */,
+				CE626DFE1914BEF6005925DC /* ItemLogic.cpp in Sources */,
+				CE626DEF1914BEF6005925DC /* SystemMenuLayer.cpp in Sources */,
+				CE626DEC1914BEF6005925DC /* ItemWindowLayer.cpp in Sources */,
+				CE626DE91914BEF6005925DC /* LabelRPG.cpp in Sources */,
+				CE626E071914BEF6005925DC /* RogueScene.cpp in Sources */,
+				CE626E061914BEF6005925DC /* MypageScene.cpp in Sources */,
+				CE626DF71914BEF6005925DC /* MAccessory.cpp in Sources */,
+				CE626DEB1914BEF6005925DC /* ItemWindow.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
-				CECFA314191297860009B547 /* ItemWindow.cpp in Sources */,
-				CE73FB2218B0A073009273D0 /* MWeapon.cpp in Sources */,
-				CE890F1B18B0E26A0088A9BC /* MUseItem.cpp in Sources */,
-				CE93B448188156C700825FD1 /* ItemLogic.cpp in Sources */,
-				CE93B44A188156C700825FD1 /* SRPGMapLayer.cpp in Sources */,
+				CE626DFA1914BEF6005925DC /* MWeapon.cpp in Sources */,
+				CE626DF91914BEF6005925DC /* MUseItem.cpp in Sources */,
+				CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */,
+				CE626E0A1914BEF6005925DC /* SRPGScene.cpp in Sources */,
+				CE626DF31914BEF6005925DC /* MAccessoryDao.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

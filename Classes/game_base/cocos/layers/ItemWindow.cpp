@@ -18,9 +18,8 @@ ModalLayer* ItemWindow::createItemWindowLayer(cocos2d::Size contentSize, std::li
     auto itemWindowLayer = ItemWindowLayer::createWithContentSize(contentSize);
     itemWindowLayer->setItemList(itemList);
     itemWindowLayer->reloadItemList();
-    itemWindowLayer->setPosition(Point(contentSize.width / 2 - itemWindowLayer->getContentSize().width / 2,
-                                         contentSize.height /2 - itemWindowLayer->getContentSize().height / 2));
-    itemWindowLayer->setItemDropMenuCallback([modalLayer](Ref* ref, DropItemSprite::DropItemDto drop_item) {
+    itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer->getContentSize(), contentSize));
+    itemWindowLayer->setItemDropMenuCallback([modalLayer, itemWindowLayer](Ref* ref, DropItemSprite::DropItemDto drop_item) {
         CCLOG("RogueScene::itemDropMenuCallback");
         
 //            auto player_sprite = getPlayerActorSprite(1);

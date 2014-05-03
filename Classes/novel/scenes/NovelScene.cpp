@@ -9,8 +9,6 @@
 #include "AppMacros.h"
 #include "NovelScene.h"
 // -----------------------------
-#include "LabelSprite.h"
-#include "MenuItemSelectLabelSprite.h"
 #include "TableViewTestLayer.h"
 
 #include "CommonWindowUtil.h"
@@ -391,6 +389,7 @@ void NovelScene::menuSelectCallback(cocos2d::Ref *pSender)
         return;
     }
     
+#if 0
 //    AudioUtil::playBtnSE();
     
     this->getChildByTag(kTag_MenuSelect)->setVisible(false);
@@ -400,6 +399,8 @@ void NovelScene::menuSelectCallback(cocos2d::Ref *pSender)
     dispText(menuItem->m_labelText);
     
     m_textIndex++;
+#endif
+    
 }
 
 
