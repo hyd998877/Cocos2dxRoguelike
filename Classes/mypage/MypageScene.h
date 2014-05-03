@@ -21,15 +21,16 @@ NS_ROGUE_BEGIN
 class MypageScene : public Layer
 {
 public:
+    static Scene* scene();
+private:
     MypageScene();
     virtual ~MypageScene();
     
     bool init();
-    
-    static Scene* scene();
-    
+    void initMyPage();
+
     CREATE_FUNC(MypageScene);
-private:
+    
     /** グロナビ生成 */
     void initGlobalMenu();
 };

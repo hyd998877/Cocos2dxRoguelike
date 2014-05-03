@@ -41,10 +41,35 @@ bool MypageScene::init()
     {
         return false;
     }
-    Size win_size = Director::getInstance()->getWinSize();
 
-    // 背景表示
-    // TODO: とりあえずなし
+    // セーブあり
+    if (AccountData::getInstance()->isQuestSaveData()) {
+        Size win_size = Director::getInstance()->getWinSize();
+        
+        std::string saveTitle = "前回プレイしたデータが残っています。\n再開しますか？";
+        std::string saveDetail = AccountData::getInstance()->createQuestSaveDetailText();
+        std::string dialogTitle = saveTitle + "\n\n" + saveDetail + "\n\n※いいえを選択すると、\n所持していたアイテムは消えます";
+        
+        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(win_size*0.6, dialogTitle, "はい", "いいえ", [](Ref *ref) {
+            auto scene = RogueScene::scene(AccountData::getInstance()->rogue_play_data_.quest_id);
+            auto trans = TransitionProgressOutIn::create(1, scene);
+            Director::getInstance()->replaceScene(trans);
+        }, [this](Ref *ref) {
+            AccountData::getInstance()->resetRoguePlayData();
+            this->initMyPage();
+        });
+        this->addChild(dialogLayer);
+        
+    } else {
+        initMyPage();
+    }
+
+    return true;
+}
+
+void MypageScene::initMyPage()
+{
+    Size win_size = Director::getInstance()->getWinSize();
     
     // キャラ表示
     auto actor_sprite = Sprite::create("novel/actor4_novel_s_0.png");
@@ -80,23 +105,6 @@ bool MypageScene::init()
     comment_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
     comment_label->setTag(100); // TODO: とりあえず
     comment_layer->addChild(comment_label);
-    
-    RogueScene::RoguePlayData rogue_play_data = AccountData::getInstance()->rogue_play_data_;
-    if (rogue_play_data.quest_id != 0)
-    {
-        ActorDto player_data = AccountData::getInstance()->player_actor_;
-        // セーブデータあり
-        std::string save_text = StringUtils::format("セーブデータがあるわ。\n\n%s（%d F）\n\nLv %d exp %d HP %d/%d 所持金 %d G",
-                                                    "初心者の洞窟",
-                                                    rogue_play_data.quest_id,
-                                                    player_data.getLv(),
-                                                    player_data.getExp(),
-                                                    player_data.getHitPoint(),
-                                                    player_data.getHitPointLimit(),
-                                                    player_data.getGold());
-        comment_label->setString(save_text);
-    }
-    
     comment_label->setPosition(Point(comment_layer->getContentSize().width / 2, comment_layer->getContentSize().height / 2));
     
     // 枠
@@ -104,8 +112,6 @@ bool MypageScene::init()
     
     // グロナビ生成
     initGlobalMenu();
-
-    return true;
 }
 
 /**
@@ -127,25 +133,15 @@ void MypageScene::initGlobalMenu()
         
         CCLOG("tappedMenuItem3");
         
-        RogueScene::RoguePlayData rogue_play_data = AccountData::getInstance()->rogue_play_data_;
-        if (rogue_play_data.quest_id > 0)
-        {
-            auto scene = RogueScene::scene(rogue_play_data.quest_id);
+        Scene* scene = NovelScene::scene(2, 0, [this]() {
+            CCLOG("novel2 end");
+            int play_quest_id = 1;
+            auto scene = RogueScene::scene(play_quest_id);
             auto trans = TransitionProgressOutIn::create(1, scene);
             Director::getInstance()->replaceScene(trans);
-        }
-        else
-        {
-            Scene* scene = NovelScene::scene(2, 0, [this]() {
-                CCLOG("novel2 end");
-                int play_quest_id = 1;
-                auto scene = RogueScene::scene(play_quest_id);
-                auto trans = TransitionProgressOutIn::create(1, scene);
-                Director::getInstance()->replaceScene(trans);
-            });
-            TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
-            Director::getInstance()->replaceScene(trans);
-        }
+        });
+        TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
+        Director::getInstance()->replaceScene(trans);
     });
     
     auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "そ　う　こ"), WAKU_PADDING, [this](Ref *ref) {

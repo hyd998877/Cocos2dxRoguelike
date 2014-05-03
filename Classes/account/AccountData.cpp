@@ -144,6 +144,35 @@ void AccountData::resetAll() {
     remoteSaveFile();
 }
 
+
+#pragma mark
+#pragma mark 汎用
+
+std::string AccountData::createQuestSaveDetailText() const {
+    return StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %d G",
+                        "初心者の洞窟",
+                        this->rogue_play_data_.quest_id,
+                        this->player_actor_.getLv(),
+                        this->player_actor_.getExp(),
+                        this->player_actor_.getHitPoint(),
+                        this->player_actor_.getHitPointLimit(),
+                        this->player_actor_.getGold());
+}
+
+
+#pragma mark
+#pragma mark チェック系
+
+bool AccountData::isQuestSaveData() const {
+    if (this->rogue_play_data_.quest_id > 0) {
+        return true;
+    }
+    return false;
+}
+
+
+///////////////////////////////////////////////
+
 static std::string createSaveFilePath() {
     return FileUtils::getInstance()->getWritablePath() + "save_data.plist";
 }

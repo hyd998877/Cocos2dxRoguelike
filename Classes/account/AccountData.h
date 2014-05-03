@@ -47,6 +47,10 @@ public:
     void save();
     void resetRoguePlayData();
     void resetAll();
+    
+    std::string createQuestSaveDetailText() const;
+    // チェック系
+    bool isQuestSaveData() const;
 private:
     
     AccountData()
