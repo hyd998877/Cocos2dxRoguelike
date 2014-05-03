@@ -27,6 +27,7 @@ private:
     virtual ~MypageScene();
     
     bool init();
+    void initQuestSave();
     void initMyPage();
 
     CREATE_FUNC(MypageScene);

@@ -44,27 +44,31 @@ bool MypageScene::init()
 
     // セーブあり
     if (AccountData::getInstance()->isQuestSaveData()) {
-        Size win_size = Director::getInstance()->getWinSize();
-        
-        std::string saveTitle = "前回プレイしたデータが残っています。\n再開しますか？";
-        std::string saveDetail = AccountData::getInstance()->createQuestSaveDetailText();
-        std::string dialogTitle = saveTitle + "\n\n" + saveDetail + "\n\n※いいえを選択すると、\n所持していたアイテムは消えます";
-        
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(win_size*0.6, dialogTitle, "はい", "いいえ", [](Ref *ref) {
-            auto scene = RogueScene::scene(AccountData::getInstance()->rogue_play_data_.quest_id);
-            auto trans = TransitionProgressOutIn::create(1, scene);
-            Director::getInstance()->replaceScene(trans);
-        }, [this](Ref *ref) {
-            AccountData::getInstance()->resetRoguePlayData();
-            this->initMyPage();
-        });
-        this->addChild(dialogLayer);
-        
+        initQuestSave();
     } else {
         initMyPage();
     }
 
     return true;
+}
+
+void MypageScene::initQuestSave()
+{
+    Size win_size = Director::getInstance()->getWinSize();
+    
+    std::string saveTitle = "前回プレイしたデータが残っています。\n再開しますか？";
+    std::string saveDetail = AccountData::getInstance()->createQuestSaveDetailText();
+    std::string dialogTitle = saveTitle + "\n\n" + saveDetail + "\n\n※いいえを選択すると、\n所持していたアイテムは消えます";
+    
+    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(win_size*0.6, dialogTitle, "はい", "いいえ", [](Ref *ref) {
+        auto scene = RogueScene::scene(AccountData::getInstance()->rogue_play_data_.quest_id);
+        auto trans = TransitionProgressOutIn::create(1, scene);
+        Director::getInstance()->replaceScene(trans);
+    }, [this](Ref *ref) {
+        AccountData::getInstance()->resetRoguePlayData();
+        this->initMyPage();
+    });
+    this->addChild(dialogLayer);
 }
 
 void MypageScene::initMyPage()
