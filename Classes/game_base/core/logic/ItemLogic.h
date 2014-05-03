@@ -20,6 +20,7 @@ private:
     
 public:
     static std::string use(int itemId, ActorDto* pUseActorDto);
+    static std::string createItemImageFileName(int itemResId);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ItemLogic__) */

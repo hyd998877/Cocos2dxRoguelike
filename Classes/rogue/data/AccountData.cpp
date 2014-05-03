@@ -8,6 +8,8 @@
 
 #include "AccountData.h"
 
+#include "MRogueMap.h"
+
 NS_ROGUE_BEGIN
 
 static std::string createSaveFilePath();
@@ -45,11 +47,11 @@ void AccountData::save()
     ValueVector save_item_list;
     
     auto it = item_list_.begin();
-    for (int i = 0; i < USE_ITEM_MAX; i++)
+    for (int i = 0; i < m_rogue_map::USE_ITEM_MAX; i++)
     {
         if (it != item_list_.end())
         {
-            auto item_str = DropItemSprite::dropItemToString(*(it));
+            auto item_str = (*(it)).itemDtoToString();
             it++;
             
             save_item_list.push_back(Value(item_str));
@@ -112,7 +114,7 @@ void AccountData::load()
     for (Value item_value : item_list_value) {
         std::string item_data_str = item_value.asString();
         if (item_data_str.size() > 0) {
-            auto item = DropItemSprite::createDropItemDto(item_data_str);
+            auto item = ItemDto::createItemDtoWithString(item_data_str);
             item_list_.push_back(item);
         }
     }
@@ -127,7 +129,7 @@ void AccountData::resetRoguePlayData() {
     // TODO: ここじゃない感がある。装備全解除
     auto it = item_list_.begin();
     while (it != item_list_.end()) {
-        (*it).isEquip = false;
+        (*it).setEquip(false);
         it++;
     }
     

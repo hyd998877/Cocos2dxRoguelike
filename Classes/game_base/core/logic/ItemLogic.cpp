@@ -29,3 +29,8 @@ std::string ItemLogic::use(int itemId, ActorDto* pUseActorDto)
     }
     return "";
 }
+
+std::string ItemLogic::createItemImageFileName(int itemResId)
+{
+    return StringUtils::format("icon_set/item_%d.png", itemResId % 10000);
+}

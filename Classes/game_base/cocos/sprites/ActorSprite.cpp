@@ -106,9 +106,22 @@ void ActorSprite::setActorMapItem(ActorMapItem actorMapItem)
     m_actorMapItem = actorMapItem;
 }
 
-ActorMapItem* ActorSprite::getActorMapItem()
+const ActorMapItem& ActorSprite::getActorMapItem() const
 {
-    return &m_actorMapItem;
+    return m_actorMapItem;
+}
+void ActorSprite::moveDone(bool done)
+{
+    m_actorMapItem.moveDone = done;
+}
+void ActorSprite::attackDone(bool done)
+{
+    m_actorMapItem.attackDone = done;
+}
+void ActorSprite::done(bool done)
+{
+    moveDone(done);
+    attackDone(done);
 }
 
 ActorDto* ActorSprite::getActorDto()
@@ -123,6 +136,9 @@ void ActorSprite::runMoveAction(MapIndex moveMapIndex)
         CCLOG("移動なし");
         return;
     }
+    
+    this->m_actorMapItem.mapIndex.moveDictType = moveMapIndex.moveDictType;
+    
     // キャラの向きを変更
     if (moveMapIndex.moveDictType == MOVE_DOWN)
     {

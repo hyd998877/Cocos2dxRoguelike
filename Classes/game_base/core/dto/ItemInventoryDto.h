@@ -12,14 +12,14 @@
 #include <string>
 #include <list>
 
-#include "DropItemSprite.h"
+#include "ItemDto.h"
 
 #include "StringUtils.h"
 
 class ItemInventoryDto
 {
 public:
-    typedef std::list<DropItemSprite::DropItemDto> ItemList;
+    typedef std::list<ItemDto> ItemList;
     
     ItemInventoryDto(std::string name, int size, ItemList itemList = ItemList());
     virtual ~ItemInventoryDto();

@@ -548,7 +548,8 @@ void RogueScene::enemyTurn() {
         int rand = GetRandom(2, 2);
         if (rand == 1) {
             auto pEnemySprite = rogue_map_layer->getEnemyActorSprite(enemyMapItem.seqNo);
-            pEnemySprite->getActorMapItem()->moveDone = true;
+            // TODO: MapManagerも更新する必要がある
+            pEnemySprite->moveDone();
             
             // とどまる
             logMessage("様子を見ている seqNo = %d", enemyMapItem.seqNo);
@@ -557,7 +558,7 @@ void RogueScene::enemyTurn() {
             auto pPlayerActorSprite = getPlayerActorSprite(1);
             
             // プレイヤーの周辺で最もコストが低い箇所へ移動
-            auto playerMapIndex = pPlayerActorSprite->getActorMapItem()->mapIndex;
+            auto playerMapIndex = pPlayerActorSprite->getActorMapItem().mapIndex;
             std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(playerMapIndex);
             
             // そもそもプレイヤーが隣接しているかチェック
@@ -573,7 +574,7 @@ void RogueScene::enemyTurn() {
             MapIndex moveMapIndex = enemyMapItem.mapIndex;
             if (isPlayerAttack) {
                 // 攻撃
-                moveMapIndex =pPlayerActorSprite->getActorMapItem()->mapIndex;
+                moveMapIndex =pPlayerActorSprite->getActorMapItem().mapIndex;
                 
             } else {
                 // 移動可能な経路情報を設定
@@ -584,8 +585,7 @@ void RogueScene::enemyTurn() {
                 
                 // 移動リスト作成
                 if (targetMoveDistMapItem.mapDataType == MapDataType::MOVE_DIST) {
-                    std::list<MapIndex> moveList = MapManager::getInstance()->createMovePointList(targetMoveDistMapItem.mapIndex,
-                                                                                    &enemyMapItem);
+                    std::list<MapIndex> moveList = MapManager::getInstance()->createMovePointList(targetMoveDistMapItem.mapIndex, enemyMapItem);
                     std::list<MapIndex>::iterator it = moveList.begin();
                     it++;
                     moveMapIndex = *it; // 2件目を取得(1件目は自分なので）
@@ -597,35 +597,34 @@ void RogueScene::enemyTurn() {
             // 移動有無関係なく向きは変える
             auto pEnemySprite = rogue_map_layer->getEnemyActorSprite(enemyMapItem.seqNo);
             MapIndex addMoveIndex = {
-                moveMapIndex.x - pEnemySprite->getActorMapItem()->mapIndex.x,
-                moveMapIndex.y - pEnemySprite->getActorMapItem()->mapIndex.y,
-                MapManager::getInstance()->checkMoveDirectionType(moveMapIndex, pEnemySprite->getActorMapItem()->mapIndex)
+                moveMapIndex.x - pEnemySprite->getActorMapItem().mapIndex.x,
+                moveMapIndex.y - pEnemySprite->getActorMapItem().mapIndex.y,
+                MapManager::getInstance()->checkMoveDirectionType(moveMapIndex, pEnemySprite->getActorMapItem().mapIndex)
             };
             pEnemySprite->runMoveAction(addMoveIndex);
             // 行動前にする
-            pEnemySprite->getActorMapItem()->moveDone = false;
-            pEnemySprite->getActorMapItem()->attackDone = false;
+            pEnemySprite->done(false);
             
             if (rogue_map_layer->isMapLayerOver(moveMapIndex)) {
                 
                 CCLOG("移動不可 seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
-                pEnemySprite->getActorMapItem()->moveDone = true;
+                pEnemySprite->moveDone();
                 
             } else if (rogue_map_layer->isTiledMapColisionLayer(moveMapIndex)) {
                 
                 logMessage("壁ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
-                pEnemySprite->getActorMapItem()->moveDone = true;
+                pEnemySprite->moveDone();
                 
-            } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex)->mapDataType == MapDataType::ENEMY) {
+            } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::ENEMY) {
                 
                 if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, moveMapIndex)) {
                     //logMessage("待機 seqNo = %d (%d, %d)");
                 } else {
                     logMessage("敵ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
                 }
-                pEnemySprite->getActorMapItem()->moveDone = true;
+                pEnemySprite->moveDone();
                 
-            } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex)->mapDataType == MapDataType::PLAYER) {
+            } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::PLAYER) {
                 // 移動中のステータスへ
                 changeGameStatus(GameStatus::ENEMY_ACTION);
                 
@@ -648,7 +647,7 @@ void RogueScene::enemyTurn() {
                     // プレイヤーステータス更新と死亡判定
                     this->refreshStatus();
                     
-                    pEnemySprite->getActorMapItem()->attackDone = true;
+                    pEnemySprite->attackDone();
                     
                     checkEnmeyTurnEnd();
                     
@@ -660,7 +659,7 @@ void RogueScene::enemyTurn() {
                 // 移動開始
                 rogue_map_layer->moveEnemyMap(enemyMapItem.seqNo, addMoveIndex, getAnimationSpeed(),CallFunc::create([this, pEnemySprite]() {
                     // 移動終わり
-                    pEnemySprite->getActorMapItem()->moveDone = true;
+                    pEnemySprite->moveDone();
                     
                     checkEnmeyTurnEnd();
                 }));
@@ -676,7 +675,7 @@ void RogueScene::checkEnmeyTurnEnd() {
     for (ActorMapItem enemyMapItem : enemyList) {
         auto pEnemySprite = getRogueMapLayer()->getEnemyActorSprite(enemyMapItem.seqNo);
         auto pEnemyMapItem = pEnemySprite->getActorMapItem();
-        if (!pEnemyMapItem->moveDone && !pEnemyMapItem->attackDone) {
+        if (!pEnemyMapItem.moveDone && !pEnemyMapItem.attackDone) {
             isTurnEnd = false;
             break;
         }
@@ -707,7 +706,7 @@ void RogueScene::touchEventExec(cocos2d::Point touchPoint) {
     
     // タッチした位置が有効なIndexか判定
     auto actor_map_item = getPlayerActorSprite(1)->getActorMapItem();
-    MapIndex add_move_index = MapManager::checkTouchEventIndex(actor_map_item->mapIndex, touch_point_map_index);
+    MapIndex add_move_index = MapManager::checkTouchEventIndex(actor_map_item.mapIndex, touch_point_map_index);
     if (add_move_index.x == 0 && add_move_index.y == 0) {
         // タッチ判定とみなさない
         CCLOG("有効じゃない");
@@ -722,11 +721,10 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     // キャラの向きを変更
     auto actor_sprite = getPlayerActorSprite(1);
     actor_sprite->runMoveAction(addMoveIndex);
-    actor_sprite->getActorMapItem()->mapIndex.moveDictType = addMoveIndex.moveDictType;
     
     // 敵をタッチした
     auto enemy_map_item = MapManager::getInstance()->getActorMapItem(touchPointMapIndex);
-    if (enemy_map_item->mapDataType == MapDataType::ENEMY) {
+    if (enemy_map_item.mapDataType == MapDataType::ENEMY) {
         // 向きだけ変えてターン経過しない
         return;
     }
@@ -748,12 +746,12 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
         rogue_map_layer->movePlayerMap(actor_sprite, addMoveIndex, getAnimationSpeed(), CallFunc::create([this, touch_point_map_item](void) {
             
             // アイテムに重なったときの拾う処理
-            if (touch_point_map_item->mapDataType == MapDataType::MAP_ITEM) {
+            if (touch_point_map_item.mapDataType == MapDataType::MAP_ITEM) {
                 // item
-                auto drop_map_item = static_cast<DropMapItem*>(touch_point_map_item);
-                this->touchDropItem(*drop_map_item);
+                auto dropMapItem = MapManager::getInstance()->getDropMapItem(touch_point_map_item.mapIndex);
+                this->touchDropItem(dropMapItem);
                 
-            } else if (touch_point_map_item->mapDataType == MapDataType::KAIDAN) {
+            } else if (touch_point_map_item.mapDataType == MapDataType::KAIDAN) {
                 // 階段
                 this->touchKaidan();
             }
@@ -772,17 +770,17 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
     
     // itemを取得
     auto drop_item_sprite = rogue_map_layer->getDropItemSprite(drop_map_item.seqNo);
-    auto drop_item_dto = drop_item_sprite->getDropItemDto();
+    auto itemDto = drop_item_sprite->getItemDto();
     
     // ゴールドは別扱い
-    if (drop_item_dto->itemType == MUseItem::ItemType::GOLD) {
+    if (itemDto.getItemType() == MUseItem::ItemType::GOLD) {
         
         // TODO: (kyokomi) 拾うSE再生
         
         // メッセージログ
-        logMessage("%d%sを拾った。", drop_item_dto->param, drop_item_dto->name.c_str());
+        logMessage("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
         // ゴールドを加算
-        actor_sprite->getActorDto()->addGold(drop_item_dto->param);
+        actor_sprite->getActorDto()->addGold(itemDto.getParam());
         
         // Map上から削除する
         rogue_map_layer->removeDropItemSprite(drop_item_sprite);
@@ -790,22 +788,22 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
     } else {
         // ゴールド以外はインベントリへ
         
-        if (getItemWindowLayer()->getItemList().size() < USE_ITEM_MAX) {
+        if (getItemWindowLayer()->getItemList().size() < m_rogue_map::USE_ITEM_MAX) {
             // ドロップアイテムを拾う
             
             // TODO: (kyokomi) 拾うSE再生
             
             // メッセージログ
-            logMessage("%sを拾った。", DropItemSprite::DropItemDto::createItemName(*drop_item_dto).c_str());
+            logMessage("%sを拾った。", itemDto.createItemName().c_str());
             
             // イベントリに追加する
-            getItemWindowLayer()->addItemList(*drop_item_dto);
+            getItemWindowLayer()->addItemList(itemDto);
             
             // Map上から削除する
             rogue_map_layer->removeDropItemSprite(drop_item_sprite);
         } else {
             // アイテム所持数限界
-            logMessage("持ち物が一杯で、\n%sを拾えなかった。", DropItemSprite::DropItemDto::createItemName(*drop_item_dto).c_str());
+            logMessage("持ち物が一杯で、\n%sを拾えなかった。", itemDto.createItemName().c_str());
         }
     }
 }
@@ -840,7 +838,7 @@ void RogueScene::attack() {
     auto pActorSprite = getPlayerActorSprite(1);
     
     MapIndex addMapIndex = {0, 0, MoveDirectionType::MOVE_NONE};
-    MapIndex attackMapIndex = pActorSprite->getActorMapItem()->mapIndex;
+    MapIndex attackMapIndex = pActorSprite->getActorMapItem().mapIndex;
     if (attackMapIndex.moveDictType == MoveDirectionType::MOVE_UP) {
         // 上
         addMapIndex.y += 1;
@@ -869,8 +867,8 @@ void RogueScene::attack() {
     ActorSprite* pEnemySprite = NULL;
     // 敵をタッチした
     auto pEnemyMapItem = MapManager::getInstance()->getActorMapItem(attackMapIndex);
-    if (pEnemyMapItem->mapDataType == MapDataType::ENEMY) {
-        pEnemySprite = rogue_map_layer->getEnemyActorSprite(pEnemyMapItem->seqNo);
+    if (pEnemyMapItem.mapDataType == MapDataType::ENEMY) {
+        pEnemySprite = rogue_map_layer->getEnemyActorSprite(pEnemyMapItem.seqNo);
     } else {
         // 空振り
     }
@@ -911,7 +909,7 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
         // 敵のドロップ確率を抽選してアイテムの抽選（TODO: とりあえず一律3%）
         if (LotteryUtils::isHit(300)) {
             // アイテムdrop
-            institutionDropItem(1, pEnemySprite->getActorMapItem()->mapIndex);
+            institutionDropItem(1, pEnemySprite->getActorMapItem().mapIndex);
         }
         // マップから消える
         getRogueMapLayer()->removeEnemyActorSprite(pEnemySprite);
@@ -981,26 +979,26 @@ void RogueScene::showItemList() {
         item_window_layer = ItemWindowLayer::createWithContentSize(win_size * 0.8);
         item_window_layer->setPosition(Point(win_size.width / 2 - item_window_layer->getContentSize().width / 2,
                                             win_size.height /2 - item_window_layer->getContentSize().height / 2));
-        item_window_layer->setItemDropMenuCallback([this](Ref* ref, DropItemSprite::DropItemDto drop_item) {
+        item_window_layer->setItemDropMenuCallback([this](Ref* ref, ItemDto drop_item) {
             CCLOG("RogueScene::itemDropMenuCallback");
             
             auto player_sprite = getPlayerActorSprite(1);
             
             // すでにアイテムが置いてある場合は置けない
-            if (MapManager::getInstance()->getDropMapItem(&player_sprite->getActorMapItem()->mapIndex)->mapDataType != MapDataType::NONE) {
-                this->logMessage("%sを床におけなかった。", DropItemSprite::DropItemDto::createItemName(drop_item).c_str());
+            if (MapManager::getInstance()->getDropMapItem(player_sprite->getActorMapItem().mapIndex).mapDataType != MapDataType::NONE) {
+                this->logMessage("%sを床におけなかった。", drop_item.createItemName().c_str());
                 // アイテムを戻す
                 this->getItemWindowLayer()->addItemList(drop_item);
                 
             } else {
                 
                 // 装備してたら外す
-                if (drop_item.isEquip) {
-                    drop_item.isEquip = false;
+                if (drop_item.isEquip()) {
+                    drop_item.setEquip(false);
                     
-                    if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
+                    if (drop_item.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
                         player_sprite->getActorDto()->equipReleaseWeapon();
-                    } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                    } else if (drop_item.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
                         player_sprite->getActorDto()->equipReleaseAccessory();
                     }
                     
@@ -1010,8 +1008,8 @@ void RogueScene::showItemList() {
                 
                 // アイテムをマップのプ
                 // レイヤーの足元に置く
-                if (this->getRogueMapLayer()->tileSetDropMapItem(drop_item, player_sprite->getActorMapItem()->mapIndex)) {
-                    this->logMessage("%sを床においた。", DropItemSprite::DropItemDto::createItemName(drop_item).c_str());
+                if (this->getRogueMapLayer()->tileSetDropMapItem(drop_item, player_sprite->getActorMapItem().mapIndex)) {
+                    this->logMessage("%sを床においた。", drop_item.createItemName().c_str());
                     
                     // ターン消費
                     this->changeGameStatus(GameStatus::ENEMY_TURN);
@@ -1022,13 +1020,13 @@ void RogueScene::showItemList() {
             this->hideItemList();
         });
         
-        item_window_layer->setItemUseMenuCallback([this](Ref* ref, DropItemSprite::DropItemDto drop_item) {
+        item_window_layer->setItemUseMenuCallback([this](Ref* ref, ItemDto drop_item) {
             CCLOG("RogueScene::itemUseMenuCallback");
             
             auto player_sprite = getPlayerActorSprite(1);
             
             // itemIdで処理してくれるlogicへ
-            std::string use_message = ItemLogic::use(drop_item.itemId, player_sprite->getActorDto());
+            std::string use_message = ItemLogic::use(drop_item.getItemId(), player_sprite->getActorDto());
             
             this->logMessage(use_message.c_str());
             
@@ -1039,37 +1037,37 @@ void RogueScene::showItemList() {
             this->changeGameStatus(GameStatus::ENEMY_TURN);
         });
         
-        item_window_layer->setItemEquipMenuCallback([this, item_window_layer](Ref* ref, DropItemSprite::DropItemDto drop_item) {
-            CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", drop_item.itemType);
+        item_window_layer->setItemEquipMenuCallback([this, item_window_layer](Ref* ref, ItemDto drop_item) {
+            CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", drop_item.getItemType());
             
             auto player_sprite = getPlayerActorSprite(1);
             
-            if (drop_item.isEquip) {
-                if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
+            if (drop_item.isEquip()) {
+                if (drop_item.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
                     // 解除
                     item_window_layer->setItemEquip(player_sprite->getActorDto()->getWeaponEquip().getObjectId(), false);
 
                     // 武器装備
-                    MWeapon mWeapon = MWeaponDao::getInstance()->selectById(drop_item.itemId);
-                    player_sprite->getActorDto()->equipWeapon(drop_item.objectId, drop_item.param, mWeapon);
+                    MWeapon mWeapon = MWeaponDao::getInstance()->selectById(drop_item.getItemId());
+                    player_sprite->getActorDto()->equipWeapon(drop_item.getObjectId(), drop_item.getParam(), mWeapon);
                     
-                } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                } else if (drop_item.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     // 解除
                     item_window_layer->setItemEquip(player_sprite->getActorDto()->getAccessoryEquip().getObjectId(), false);
                     // 防具装備
-                    MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(drop_item.itemId);
-                    player_sprite->getActorDto()->equipAccessory(drop_item.objectId, drop_item.param, mAccessory);
+                    MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(drop_item.getItemId());
+                    player_sprite->getActorDto()->equipAccessory(drop_item.getObjectId(), drop_item.getParam(), mAccessory);
                 }
-                this->logMessage("%sを装備した。", DropItemSprite::DropItemDto::createItemName(drop_item).c_str());
+                this->logMessage("%sを装備した。", drop_item.createItemName().c_str());
             } else {
-                if (drop_item.itemType == MUseItem::ItemType::EQUIP_WEAPON) {
+                if (drop_item.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
                     // 武器解除
                     player_sprite->getActorDto()->equipReleaseWeapon();
-                } else if (drop_item.itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                } else if (drop_item.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     // 防具装備
                     player_sprite->getActorDto()->equipReleaseAccessory();
                 }
-                this->logMessage("%sの装備をはずした。", DropItemSprite::DropItemDto::createItemName(drop_item).c_str());
+                this->logMessage("%sの装備をはずした。", drop_item.createItemName().c_str());
             }
             
             // 装備解除、装備によってステータス変動するためステータスバーを更新
@@ -1286,7 +1284,7 @@ void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
             const int LabelTag = 2;
             auto label = dynamic_cast<Label*>(equipWeaponLayer->getChildByTag(LabelTag));
             if (actorDto.isEquipWeapon()) {
-                std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.getWeaponEquip().getImgResId());
+                std::string spriteFileName = ItemLogic::createItemImageFileName(actorDto.getWeaponEquip().getImgResId());
                 auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
                 if (!equipSpriteFrame) {
                     equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
@@ -1315,7 +1313,7 @@ void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
             auto label = dynamic_cast<Label*>(equipAccessoryLayer->getChildByTag(LabelTag));
         
             if (actorDto.isEquipAccessory()) {
-                std::string spriteFileName = DropItemSprite::createItemImageFileName(actorDto.getAccessoryEquip().getImgResId());
+                std::string spriteFileName = ItemLogic::createItemImageFileName(actorDto.getAccessoryEquip().getImgResId());
                 auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
                 if (!equipSpriteFrame) {
                     equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
@@ -1346,9 +1344,9 @@ void RogueScene::rogueMapLighting() {
     
     // プレイヤー周辺３＊３はかならず更新
     // プレイヤー視野でマップをリフレッシュする
-    rogue_map_layer->refreshPlayerRectAutoMapping(actor_sprite->getActorMapItem()->mapIndex);
+    rogue_map_layer->refreshPlayerRectAutoMapping(actor_sprite->getActorMapItem().mapIndex);
     
-    Rect floorInfoIndexRect = rogue_map_layer->getTileMapFloorInfo(actor_sprite->getActorMapItem()->mapIndex);
+    Rect floorInfoIndexRect = rogue_map_layer->getTileMapFloorInfo(actor_sprite->getActorMapItem().mapIndex);
     if (floorInfoIndexRect.equals(Rect::ZERO)) {
         // 視野をプレイヤー周辺に更新
         rogue_map_layer->hideFloorLighting();
@@ -1357,7 +1355,7 @@ void RogueScene::rogueMapLighting() {
         // 視野を部屋に更新
         hidePlayerLighting();
         
-        rogue_map_layer->showFloorLighting(actor_sprite->getActorMapItem()->mapIndex, floorInfoIndexRect);
+        rogue_map_layer->showFloorLighting(actor_sprite->getActorMapItem().mapIndex, floorInfoIndexRect);
         
         // マッピングとマップ情報も更新
         rogue_map_layer->refreshFloorRectAutoMapping(floorInfoIndexRect);
@@ -1490,7 +1488,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             MUseItem mUseItem = MUseItemDao::getInstance()->selectById(hitId);
             // ドロップアイテム情報を生成
             int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
-            DropItemSprite::DropItemDto dropItemDto {
+            ItemDto itemDto(
                 objectId,
                 mUseItem.getUseItemId(),
                 mUseItem.getUseItemType(),
@@ -1498,10 +1496,10 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
                 mUseItem.getUseItemName(),
                 false,
                 param
-            };
+            );
             
             // 配置
-            tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
+            tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
             AccountData::getInstance()->rogue_play_data_.item_count++;
@@ -1511,7 +1509,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             MWeapon mWeapon = MWeaponDao::getInstance()->selectById(hitId);
             
             int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
-            DropItemSprite::DropItemDto dropItemDto {
+            ItemDto itemDto(
                 objectId,
                 mWeapon.getWeaponId(),
                 MUseItem::ItemType::EQUIP_WEAPON,
@@ -1519,9 +1517,9 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
                 mWeapon.getWeaponName(),
                 false,
                 param
-            };
+            );
             
-            tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
+            tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
             AccountData::getInstance()->rogue_play_data_.item_count++;
@@ -1531,7 +1529,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(hitId);
             
             int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
-            DropItemSprite::DropItemDto dropItemDto {
+            ItemDto itemDto(
                 objectId,
                 mAccessory.getAccessoryId(),
                 MUseItem::ItemType::EQUIP_ACCESSORY,
@@ -1539,9 +1537,9 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
                 mAccessory.getAccessoryName(),
                 false,
                 param
-            };
+            );
             
-            tiled_map_layer->tileSetDropMapItem(dropItemDto, mapIndex);
+            tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
             AccountData::getInstance()->rogue_play_data_.item_count++;

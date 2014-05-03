@@ -119,23 +119,24 @@ private:
 public:
     void initMapping(int top, int bottom, int left, int right);
     
-    std::list<MapIndex> createActorFindDist(MapIndex mapIndex, int dist);
-    std::list<MapIndex> createMovePointList(MapIndex moveFromMapIndex, MapItem* moveToMapItem);
+    std::list<MapIndex> createActorFindDist(const MapIndex& mapIndex, int dist);
+    std::list<MapIndex> createMovePointList(const MapIndex& moveFromMapIndex, const MapItem& moveToMapItem);
     void clearCursor();
     
-    void addActor(ActorMapItem* pActorMapItem);
-    void moveActor(ActorMapItem* actorMapItem, MapIndex moveMapIndex);
-    void addDropItem(DropMapItem* pDropMapItem);
+    void addActor(const ActorMapItem& actorMapItem);
+    void moveActor(const ActorMapItem& actorMapItem, const MapIndex& beforeMapIndex, const MapIndex& afterMapIndex);
+    void addDropItem(const DropMapItem& dropMapItem);
     void addObstacle(MapIndex* pMapIndex);
-    void removeMapItem(MapItem* pRemoveMapItem);
     
-    ActorMapItem* getActorMapItem(const MapIndex& pMapIndex);
-    MapItem* getMapItem(const MapIndex& pMapIndex);
+    void removeMapItem(const MapItem& mapItem);
+    
+    const ActorMapItem& getActorMapItem(const MapIndex& pMapIndex) const;
+    MapItem getMapItem(const MapIndex& pMapIndex) const;
     ActorMapItem* getActorMapItemById(int seqNo);
-    DropMapItem* getDropMapItem(const MapIndex* pMapIndex);
+    const DropMapItem& getDropMapItem(const MapIndex& mapIndex);
     
     MoveDirectionType checkMoveDirectionType(MapIndex fromMapIndex, MapIndex toMapIndex);
-    MapItem searchTargetMapItem(std::list<MapIndex> searchMapIndexList);
+    MapItem searchTargetMapItem(const std::list<MapIndex>& searchMapIndexList);
     
     std::list<ActorMapItem> findEnemyMapItem();
     
@@ -150,7 +151,7 @@ private:
     
     void init();
     
-    bool vaildateInit()
+    bool vaildateInit() const
     {
         if (map_data_.map_data_setting.bottom == 0 && map_data_.map_data_setting.left == 0 && map_data_.map_data_setting.right == 0 && map_data_.map_data_setting.top == 0)
         {
@@ -206,13 +207,33 @@ private:
     }
     
     void findDist(int x, int y, int dist, bool first);
-    void findMovePointList(int moveX, int moveY, int moveDist, MapItem* moveToMapItem);
-    bool chkMove(int mapPointX, int mapPointY, int dist);
+    void findMovePointList(int moveX, int moveY, int moveDist, const MapItem& moveToMapItem);
+    bool chkMove(int mapPointX, int mapPointY, int dist) const;
     bool chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataType ignoreMapDataType);
     void addDistCursor(int mapPointX, int mapPointY, int dist);
     
     std::string logOutString(MapItem mapItem);
     void DEBUG_LOG_MAP_ITEM_LAYER(); // デバッグ用のマップログ出力
+    
+    static bool equalMapItem(const MapItem& m1, const MapItem& m2)
+    {
+        if (m1.mapDataType != m2.mapDataType) {
+            return false;
+        }
+        if (m1.mapIndex.x != m2.mapIndex.x) {
+            return false;
+        }
+        if (m1.mapIndex.y != m2.mapIndex.y) {
+            return false;
+        }
+        if (m1.moveDist != m2.moveDist) {
+            return false;
+        }
+        if (m1.attackDist != m2.attackDist) {
+            return false;
+        }
+        return true;
+    }
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__MapManager__) */

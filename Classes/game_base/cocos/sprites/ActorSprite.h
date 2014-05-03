@@ -35,7 +35,11 @@ public:
     static ActorSprite* createWithActorDto(ActorDto actorDto, int typeId);
     
     void setActorMapItem(ActorMapItem actorMapItem);
-    ActorMapItem* getActorMapItem();
+    const ActorMapItem& getActorMapItem() const;
+    void moveDone(bool done = true);
+    void attackDone(bool done = true);
+    void done(bool done = true);
+    
     ActorDto* getActorDto();
     
     void runMoveAction(MapIndex moveMapIndex);

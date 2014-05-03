@@ -69,11 +69,13 @@ private:
 public:
     static RogueTMXTiledMap* create(const std::string& tmxFile);
     
-    ActorMapItem startPlayerRandomPosition(ActorDto& actor_dto, const MapIndex& base_actor_index);
-    void setPlayerActorMapItem(ActorMapItem* actor_map_item, int tag);
+    ActorMapItem startPlayerRandomPosition(const ActorDto& actor_dto, const MapIndex& base_actor_index);
+    void setPlayerActorMapItem(const ActorMapItem& actorMapItem, int tag);
     bool tileSetEnemyActorMapItem(ActorDto enemyActorDto, MapIndex mapIndex);
     void removeEnemyActorSprite(ActorSprite* pEnemySprite);
-    bool tileSetDropMapItem(DropItemSprite::DropItemDto dropItemDto, MapIndex mapIndex);
+    
+    bool tileSetDropMapItem(const ItemDto& itemDto, MapIndex mapIndex);
+    
     void removeDropItemSprite(DropItemSprite* pDropItemSprite);
     ActorSprite* getEnemyActorSprite(int seq_no);
     DropItemSprite* getDropItemSprite(int seq_no);
@@ -94,20 +96,21 @@ public:
     bool isFloorMapIndex(const MapIndex& mapIndex);
     bool isActorInstMapIndex(const MapIndex& mapIndex);
     bool isDropItemInstMapIndex(const MapIndex& mapIndex);
-    bool isTiledMapColisionLayer(MapIndex touchPointMapIndex);
-    bool isMapLayerOver(MapIndex touchPointMapIndex);
-    DrawNode* createGridDraw();
+    bool isTiledMapColisionLayer(const MapIndex& touchPointMapIndex);
+    bool isMapLayerOver(const MapIndex& touchPointMapIndex) const;
     
-    Point indexToPoint(MapIndex mapIndex);
-    Point indexToPoint(int mapIndex_x, int mapIndex_y);
-    MapIndex pointToIndex(Point point);
-    MapIndex touchPointToIndex(Point point);
-    Point indexToPointNotTileSize(MapIndex mapIndex);
-    Point indexToPointNotTileSize(int mapIndex_x, int mapIndex_y);
-    MapIndex mapIndexToTileIndex(MapIndex mapIndex);
-    MapIndex mapIndexToTileIndex(int mapIndex_x, int mapIndex_y);
+    DrawNode* createGridDraw() const;
     
-    void addMiniMapItem(MapItem* pMapItem, int baseSpriteTag);
+    Point indexToPoint(const MapIndex& mapIndex) const;
+    Point indexToPoint(int mapIndex_x, int mapIndex_y)const;
+    MapIndex pointToIndex(const Point& point) const;
+    MapIndex touchPointToIndex(const Point& point) const;
+    Point indexToPointNotTileSize(const MapIndex& mapIndex) const;
+    Point indexToPointNotTileSize(int mapIndex_x, int mapIndex_y) const;
+    MapIndex mapIndexToTileIndex(const MapIndex& mapIndex) const;
+    MapIndex mapIndexToTileIndex(int mapIndex_x, int mapIndex_y) const;
+    
+    void addMiniMapItem(const MapItem& mapItem, int baseSpriteTag);
 
     LayerColor* getMiniMapLayer() { return mini_map_layer_; };
     

@@ -6,11 +6,14 @@
 //
 //
 #include "AppMacros.h"
+#include "MRogueMap.h"
 #include "CommonWindowUtil.h"
 
 #include "ItemWindowLayer.h"
 #include "TableViewTestLayer.h"
-#include "DropItemSprite.h"
+#include "ItemDto.h"
+
+#include "ItemLogic.h"
 
 #include "MWeaponDao.h"
 #include "MAccessoryDao.h"
@@ -23,7 +26,7 @@ USING_NS_CC;
 #define ITEM_LAYER_PARAM_DEFAULT "ぱらめーたが表示されます"
 
 ItemWindowLayer::ItemWindowLayer()
-:item_dto_list_(std::list<DropItemSprite::DropItemDto>()),
+:_itemList(std::list<ItemDto>()),
 show_item_detail_idx_(-1),
 item_drop_menu_callback_(nullptr),
 item_use_menu_callback_(nullptr)
@@ -58,8 +61,8 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
 
     // アイテム一覧レイヤー（左側）
     std::list<TableViewTestLayer::TableLayout> itemNameList;
-    for (DropItemSprite::DropItemDto dropItem : item_dto_list_) {
-        TableViewTestLayer::TableLayout layout = {cocos2d::StringUtils::format("item_%d.png", dropItem.imageResId), dropItem.name};
+    for (auto itemDto : _itemList) {
+        TableViewTestLayer::TableLayout layout = {cocos2d::StringUtils::format("item_%d.png", itemDto.getImageResId()), itemDto.getName()};
         
         itemNameList.push_back(layout);
     }
@@ -78,11 +81,11 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
             return;
         }
         // touched DropItemDto
-        auto it = item_dto_list_.begin();
+        auto it = _itemList.begin();
         std::advance(it, touchedIdx);
-        auto dropItemDto = static_cast<DropItemSprite::DropItemDto>(*it);
+        auto dropItemDto = static_cast<ItemDto>(*it);
         
-        this->setItemDetail(&dropItemDto);
+        this->setItemDetail(dropItemDto);
         
         // 表示indexを更新
         show_item_detail_idx_ = touchedIdx;
@@ -181,11 +184,11 @@ Menu* ItemWindowLayer::initCreateMenu() {
             return;
         }
         if (item_drop_menu_callback_) {
-            auto it = item_dto_list_.begin();
+            auto it = _itemList.begin();
             std::advance(it, show_item_detail_idx_);
-            auto dropItemDto = (DropItemSprite::DropItemDto) *it;
+            auto dropItemDto = static_cast<ItemDto>(*it);
             // 削除
-            item_dto_list_.erase(it);
+            _itemList.erase(it);
             
             item_drop_menu_callback_(pSeneder, dropItemDto);
         }
@@ -202,11 +205,11 @@ Menu* ItemWindowLayer::initCreateMenu() {
             return;
         }
         if (item_use_menu_callback_) {
-            auto it = item_dto_list_.begin();
+            auto it = _itemList.begin();
             std::advance(it, show_item_detail_idx_);
-            auto dropItemDto = (DropItemSprite::DropItemDto) *it;
+            auto dropItemDto = static_cast<ItemDto>(*it);
             // 削除
-            item_dto_list_.erase(it);
+            _itemList.erase(it);
             
             item_use_menu_callback_(pSeneder, dropItemDto);
         }
@@ -221,12 +224,12 @@ Menu* ItemWindowLayer::initCreateMenu() {
             return;
         }
         if (item_Equip_Menu_Callback_) {
-            auto it = item_dto_list_.begin();
+            auto it = _itemList.begin();
             std::advance(it, show_item_detail_idx_);
             // ステータスを装備状態を反転
-            it->isEquip = !it->isEquip;
+            it->setEquip(!it->isEquip());
             
-            auto dropItemDto = (DropItemSprite::DropItemDto) *it;
+            auto dropItemDto = static_cast<ItemDto>(*it);
             item_Equip_Menu_Callback_(pSeneder, dropItemDto);
         }
     });
@@ -243,26 +246,27 @@ Menu* ItemWindowLayer::initCreateMenu() {
 #pragma mark
 #pragma mark itemList関連
 
-DropItemSprite::DropItemDto ItemWindowLayer::findItem(long itemListIndex) {
-    if (itemListIndex >= 0 && item_dto_list_.size() > itemListIndex) {
-        auto it = item_dto_list_.begin();
+ItemDto ItemWindowLayer::findItem(long itemListIndex) const
+{
+    if (itemListIndex >= 0 && _itemList.size() > itemListIndex) {
+        auto it = _itemList.begin();
         std::advance(it, itemListIndex);
-        auto dropItemDto = (DropItemSprite::DropItemDto) *it;
+        auto dropItemDto = static_cast<ItemDto>(*it);
         return dropItemDto;
     }
     return {0, 0, MUseItem::ItemType::NONE, 0, "", false};
 }
 
-void ItemWindowLayer::addItemList(DropItemSprite::DropItemDto dropItemDto) {
-    item_dto_list_.push_back(dropItemDto);
+void ItemWindowLayer::addItemList(const ItemDto& itemDto) {
+    _itemList.push_back(itemDto);
 }
 
 // 指定したアイテムを装備状態を変更する
 void ItemWindowLayer::setItemEquip(long objectId, bool isEquip) {
-    for (DropItemSprite::DropItemDto& itemDto : item_dto_list_) {
-        if (itemDto.objectId == objectId) {
+    for (auto itemDto : _itemList) {
+        if (itemDto.getObjectId() == objectId) {
             // TODO: とりあえず装備だけ
-            itemDto.isEquip = isEquip;
+            itemDto.setEquip(isEquip);
             break;
         }
     }
@@ -276,15 +280,15 @@ void ItemWindowLayer::reloadItemList() {
     if (pItemTabelLayer) {
         
         // 装備ソート
-        item_dto_list_.sort(DropItemSprite::DropItemDto::compare_dropItem_equip);
+        _itemList.sort(ItemDto::compare_dropItem_equip);
         
         std::list<TableViewTestLayer::TableLayout> itemNameList;
         
-        for (DropItemSprite::DropItemDto dropItem : item_dto_list_) {
+        for (auto itemDto : _itemList) {
             TableViewTestLayer::TableLayout layout = {
-                DropItemSprite::createItemImageFileName(dropItem.imageResId),
-                DropItemSprite::DropItemDto::createItemName(dropItem),
-                dropItem.isEquip ? Color3B::YELLOW : Color3B::WHITE // 装備中は黄文字
+                ItemLogic::createItemImageFileName(itemDto.getImageResId()),
+                itemDto.createItemName(),
+                itemDto.isEquip() ? Color3B::YELLOW : Color3B::WHITE // 装備中は黄文字
             };
             itemNameList.push_back(layout);
         }
@@ -292,9 +296,9 @@ void ItemWindowLayer::reloadItemList() {
         
         auto item_count_label = static_cast<Label*>(this->getChildByTag(ItemWindowLayer::ItemCountLabelTag));
         if (item_count_label) {
-            item_count_label->setString(cocos2d::StringUtils::format("所持数 %d/%d", (int)item_dto_list_.size(), USE_ITEM_MAX));
+            item_count_label->setString(cocos2d::StringUtils::format("所持数 %d/%d", (int)_itemList.size(), m_rogue_map::USE_ITEM_MAX));
             item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
-            if (item_dto_list_.size() >= USE_ITEM_MAX) {
+            if (_itemList.size() >= m_rogue_map::USE_ITEM_MAX) {
                 item_count_label->setColor(Color3B::RED);
             } else {
                 item_count_label->setColor(Color3B::WHITE);
@@ -306,7 +310,7 @@ void ItemWindowLayer::reloadItemList() {
 
 void ItemWindowLayer::sortItemList() {
     // ソート
-    item_dto_list_.sort(DropItemSprite::DropItemDto::compare_dropItem_weapon_with_accessory);
+    _itemList.sort(ItemDto::compare_dropItem_weapon_with_accessory);
 }
 
 #pragma mark
@@ -314,28 +318,24 @@ void ItemWindowLayer::sortItemList() {
 
 // アイテム選択時の処理
 void ItemWindowLayer::setItemDetail(long itemListIndex) {
-    DropItemSprite::DropItemDto dropItemDto = findItem(itemListIndex);
-    setItemDetail(&dropItemDto);
+    ItemDto itemDto = findItem(itemListIndex);
+    setItemDetail(itemDto);
 }
 
 // アイテム選択時の処理
 // アイテム名とか説明とかパラメータを右側に表示する
-void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
-    if (!pDropItemDto) {
-        return;
-    }
-    
+void ItemWindowLayer::setItemDetail(const ItemDto& itemDto) {
     auto pItemDetailLayer = this->getChildByTag(ItemWindowLayer::ItemDetailLayerTag);
     if (pItemDetailLayer) {
         // name
         auto pItemNameLabel = static_cast<Label*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemNameTag));
         if (pItemNameLabel) {
-            if (pDropItemDto->name.empty()) {
+            if (itemDto.getName().empty()) {
                 pItemNameLabel->setString(ITEM_LAYER_NAME_DEFAULT);
             } else {
                 // TODO: とりあえず装備中で文言かえる
-                std::string itemNameText = DropItemSprite::DropItemDto::createItemName(*pDropItemDto);
-                if (pDropItemDto->isEquip) {
+                std::string itemNameText = itemDto.createItemName();
+                if (itemDto.isEquip()) {
                     pItemNameLabel->setString(cocos2d::StringUtils::format("%s (装備中)", itemNameText.c_str()));
                 } else {
                     pItemNameLabel->setString(itemNameText);
@@ -346,17 +346,17 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
         // detail
         auto pItemDetailLabel = static_cast<Label*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemDetailTag));
         if (pItemDetailLabel) {
-            if (pDropItemDto->name.empty()) {
+            if (itemDto.getName().empty()) {
                 pItemDetailLabel->setString(ITEM_LAYER_DETAIL_DEFAULT);
             } else {
-                if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON) {
-                    MWeapon weapon = MWeaponDao::getInstance()->selectById(pDropItemDto->itemId);
+                if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
+                    MWeapon weapon = MWeaponDao::getInstance()->selectById(itemDto.getItemId());
                     pItemDetailLabel->setString(weapon.getWeaponDetail());
-                } else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
-                    MAccessory accessory = MAccessoryDao::getInstance()->selectById(pDropItemDto->itemId);
+                } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                    MAccessory accessory = MAccessoryDao::getInstance()->selectById(itemDto.getItemId());
                     pItemDetailLabel->setString(accessory.getAccessoryDetail());
-                } else if (pDropItemDto->itemType != MUseItem::ItemType::NONE) {
-                    MUseItem useItem = MUseItemDao::getInstance()->selectById(pDropItemDto->itemId);
+                } else if (itemDto.getItemType() != MUseItem::ItemType::NONE) {
+                    MUseItem useItem = MUseItemDao::getInstance()->selectById(itemDto.getItemId());
                     pItemDetailLabel->setString(useItem.getUseItemDetail());
                 }
             }
@@ -365,19 +365,19 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
         // param
         auto pItemParamlLabel = static_cast<Label*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemParamTag));
         if (pItemParamlLabel) {
-            if (pDropItemDto->name.empty()) {
+            if (itemDto.getName().empty()) {
                 pItemParamlLabel->setString(ITEM_LAYER_PARAM_DEFAULT);
             } else {
-                if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON) {
-                    MWeapon weapon = MWeaponDao::getInstance()->selectById(pDropItemDto->itemId);
-                    int totalParam = weapon.getAttackPoint() + pDropItemDto->param;
+                if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
+                    MWeapon weapon = MWeaponDao::getInstance()->selectById(itemDto.getItemId());
+                    int totalParam = weapon.getAttackPoint() + itemDto.getParam();
                     pItemParamlLabel->setString(cocos2d::StringUtils::format("攻撃力: %3d", totalParam));
-                } else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
-                    MAccessory accessory = MAccessoryDao::getInstance()->selectById(pDropItemDto->itemId);
-                    int totalParam = accessory.getDefensePoint() + pDropItemDto->param;
+                } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                    MAccessory accessory = MAccessoryDao::getInstance()->selectById(itemDto.getItemId());
+                    int totalParam = accessory.getDefensePoint() + itemDto.getParam();
                     pItemParamlLabel->setString(cocos2d::StringUtils::format("防御力: %3d", totalParam));
-                } else if (pDropItemDto->itemType != MUseItem::ItemType::NONE) {
-                    MUseItem useItem = MUseItemDao::getInstance()->selectById(pDropItemDto->itemId);
+                } else if (itemDto.getItemType() != MUseItem::ItemType::NONE) {
+                    MUseItem useItem = MUseItemDao::getInstance()->selectById(itemDto.getItemId());
                     pItemParamlLabel->setString(cocos2d::StringUtils::format("効果: %3d", useItem.getUseItemParam()));
                 }
             }
@@ -391,12 +391,12 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
             auto pMenuEquip = static_cast<MenuItemLabel*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuEquipTag));
             
             // 未指定
-            if (pDropItemDto->itemType == MUseItem::ItemType::NONE) {
+            if (itemDto.getItemType() == MUseItem::ItemType::NONE) {
                 pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
                 pMenuDrop->setEnabled(false);pMenuDrop->setVisible(false);
                 pMenuEquip->setEnabled(false);pMenuEquip->setVisible(false);
-            } else if (pDropItemDto->itemType == MUseItem::ItemType::EQUIP_WEAPON ||
-                       pDropItemDto->itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
+            } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON ||
+                       itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
                 // 装備可能・置く
                 pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
                 pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
@@ -405,7 +405,7 @@ void ItemWindowLayer::setItemDetail(DropItemSprite::DropItemDto* pDropItemDto) {
                 // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので
                 CCLOG("begore setString %f %f", pMenuEquip->getPosition().x, pMenuEquip->getPosition().y);
                 Size beforeSize = pMenuEquip->getContentSize();
-                if (pDropItemDto->isEquip) {
+                if (itemDto.isEquip()) {
                     pMenuEquip->setString("はずす");
                 } else {
                     pMenuEquip->setString("そうび");

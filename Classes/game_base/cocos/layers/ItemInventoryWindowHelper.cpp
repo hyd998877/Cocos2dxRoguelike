@@ -12,6 +12,8 @@
 
 #include "MenuItemUtil.h"
 
+USING_NS_CC;
+
 ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryDto itemInventoryDto)
 {
     return create(std::list<ItemInventoryDto>({itemInventoryDto}));
@@ -64,18 +66,18 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
     itemWindowLayer->reloadItemList();
     
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer->getContentSize(), contentSize));
-    itemWindowLayer->setItemDropMenuCallback([modalLayer, itemWindowLayer](Ref* ref, DropItemSprite::DropItemDto drop_item) {
+    itemWindowLayer->setItemDropMenuCallback([modalLayer, itemWindowLayer](Ref* ref, ItemDto itemDto) {
         CCLOG("RogueScene::itemDropMenuCallback");
         modalLayer->setVisible(false);
         modalLayer->removeAllChildrenWithCleanup(true);
     });
     
-    itemWindowLayer->setItemUseMenuCallback([](Ref* ref, DropItemSprite::DropItemDto drop_item) {
+    itemWindowLayer->setItemUseMenuCallback([](Ref* ref, ItemDto itemDto) {
         CCLOG("RogueScene::itemUseMenuCallback");
     });
     
-    itemWindowLayer->setItemEquipMenuCallback([modalLayer](Ref* ref, DropItemSprite::DropItemDto drop_item) {
-        CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", drop_item.itemType);
+    itemWindowLayer->setItemEquipMenuCallback([modalLayer](Ref* ref, ItemDto itemDto) {
+        CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", itemDto.getItemType());
         modalLayer->setVisible(false);
         modalLayer->removeAllChildrenWithCleanup(true);
     });

@@ -99,6 +99,7 @@
 		CE93B4C0188156FC00825FD1 /* grid32.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A5188156FC00825FD1 /* grid32.png */; };
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
+		CEA247F319152C8100B0656A /* ItemDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA247F119152C8100B0656A /* ItemDto.cpp */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
 		CECE37AD18B9A08C0086C8A0 /* bg in Resources */ = {isa = PBXBuildFile; fileRef = CECE37AC18B9A08C0086C8A0 /* bg */; };
 		CECE37B518B9A6EA0086C8A0 /* battle in Resources */ = {isa = PBXBuildFile; fileRef = CECE37B418B9A6EA0086C8A0 /* battle */; };
@@ -333,7 +334,6 @@
 		CE626DA01914BEF6005925DC /* MLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevel.h; sourceTree = "<group>"; };
 		CE626DA11914BEF6005925DC /* MMonster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMonster.h; sourceTree = "<group>"; };
 		CE626DA21914BEF6005925DC /* MPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayer.h; sourceTree = "<group>"; };
-		CE626DA31914BEF6005925DC /* MRogueMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRogueMap.h; sourceTree = "<group>"; };
 		CE626DA41914BEF6005925DC /* MUseItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItem.cpp; sourceTree = "<group>"; };
 		CE626DA51914BEF6005925DC /* MUseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItem.h; sourceTree = "<group>"; };
 		CE626DA61914BEF6005925DC /* MWeapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeapon.cpp; sourceTree = "<group>"; };
@@ -380,6 +380,8 @@
 		CE93B4A5188156FC00825FD1 /* grid32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid32.png; sourceTree = "<group>"; };
 		CE93B4AD188156FC00825FD1 /* menu_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_button.png; sourceTree = "<group>"; };
 		CE93B4AF188156FC00825FD1 /* tmx */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tmx; sourceTree = "<group>"; };
+		CEA247F119152C8100B0656A /* ItemDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemDto.cpp; sourceTree = "<group>"; };
+		CEA247F219152C8100B0656A /* ItemDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemDto.h; sourceTree = "<group>"; };
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
 		CECE37AC18B9A08C0086C8A0 /* bg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bg; sourceTree = "<group>"; };
 		CECE37B418B9A6EA0086C8A0 /* battle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = battle; sourceTree = "<group>"; };
@@ -787,7 +789,6 @@
 				CE626DA01914BEF6005925DC /* MLevel.h */,
 				CE626DA11914BEF6005925DC /* MMonster.h */,
 				CE626DA21914BEF6005925DC /* MPlayer.h */,
-				CE626DA31914BEF6005925DC /* MRogueMap.h */,
 				CE626DA41914BEF6005925DC /* MUseItem.cpp */,
 				CE626DA51914BEF6005925DC /* MUseItem.h */,
 				CE626DA61914BEF6005925DC /* MWeapon.cpp */,
@@ -805,6 +806,8 @@
 				CE626DAC1914BEF6005925DC /* ActorEquipDto.h */,
 				CE626E0B1914C68B005925DC /* ItemInventoryDto.cpp */,
 				CE626E0C1914C68B005925DC /* ItemInventoryDto.h */,
+				CEA247F119152C8100B0656A /* ItemDto.cpp */,
+				CEA247F219152C8100B0656A /* ItemDto.h */,
 			);
 			path = dto;
 			sourceTree = "<group>";
@@ -1300,6 +1303,7 @@
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				CE626DED1914BEF6005925DC /* JoystickLayer.cpp in Sources */,
 				CE626DEA1914BEF6005925DC /* AlertDialogLayer.cpp in Sources */,
+				CEA247F319152C8100B0656A /* ItemDto.cpp in Sources */,
 				CE626E081914BEF6005925DC /* DropItemSprite.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				CE626DEE1914BEF6005925DC /* ModalLayer.cpp in Sources */,

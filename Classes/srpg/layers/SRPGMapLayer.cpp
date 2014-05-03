@@ -99,10 +99,10 @@ bool SRPGMapLayer::init()
 //    actorDto.attackRange = 1;
 //    actorDto.movePoint = 5;
 //    actorDto.playerId = 4;
-    ActorMapItem* pActorMapItem = addActor(MapDataType::PLAYER, 1, 5, 5, actorDto);
+    ActorMapItem pActorMapItem = addActor(MapDataType::PLAYER, 1, 5, 5, actorDto);
     
     // 移動可能範囲のリストを作成
-    std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
+    std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorMapItem.mapIndex, pActorMapItem.moveDist);
     // 移動可能範囲を表示
     addMapCursor(MapDataType::MOVE_DIST, moveList);
     
@@ -236,7 +236,7 @@ void SRPGMapLayer::visibleMapCursor(MapDataType mapDataType, bool visible)
 /**
  * アクター追加.
  */
-ActorMapItem* SRPGMapLayer::addActor(MapDataType pMapDataType, int pSeqNo, int pMapPointX, int pMapPointY, ActorDto pActorDto)
+const ActorMapItem& SRPGMapLayer::addActor(MapDataType pMapDataType, int pSeqNo, int pMapPointX, int pMapPointY, ActorDto pActorDto)
 {
     Size winSize = Director::getInstance()->getWinSize();
     
@@ -339,30 +339,27 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
 {
     // グリッド選択
     CCLOG("executeMapIndex mapIdx x = %d y = %d grid selected", mapIndex.x, mapIndex.y);
-    auto pActorMapItem = MapManager::getInstance()->getActorMapItem(mapIndex);
-    CCLOG("mapDataType = %d", pActorMapItem->mapDataType);
-    if (pActorMapItem->mapDataType == MapDataType::PLAYER)
-    {
-        auto pActorMapItem = MapManager::getInstance()->getActorMapItem(mapIndex);
+    auto actorMapItem = MapManager::getInstance()->getActorMapItem(mapIndex);
+    CCLOG("mapDataType = %d", actorMapItem.mapDataType);
+    if (actorMapItem.mapDataType == MapDataType::PLAYER) {
         // 移動可能範囲のリストを作成
-        std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorMapItem->mapIndex, pActorMapItem->moveDist);
+        std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(actorMapItem.mapIndex, actorMapItem.moveDist);
         // 移動可能範囲を表示
         addMapCursor(MapDataType::MOVE_DIST, moveList);
         
-        CCLOG("touched player seqNo = %d", pActorMapItem->seqNo);
+        CCLOG("touched player seqNo = %d", actorMapItem.seqNo);
         m_moveAnimation = false;
         return;
     }
     
-    auto pMapItem = MapManager::getInstance()->getMapItem(mapIndex);
-    if (pMapItem->mapDataType == MapDataType::MOVE_DIST)
-    {
+    auto mapItem = MapManager::getInstance()->getMapItem(mapIndex);
+    if (mapItem.mapDataType == MapDataType::MOVE_DIST) {
         auto pActorSprite = findActorSprite(1);
         
         // 移動対象を取得
 //        auto pActorMapItem = MapManager::getInstance()->getActorMapItemById(1); // TODO: とりあえず1固定
         // 移動可能範囲のリストを作成
-        std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorSprite->getActorMapItem()->mapIndex, pActorSprite->getActorMapItem()->moveDist);
+        std::list<MapIndex> moveList = MapManager::getInstance()->createActorFindDist(pActorSprite->getActorMapItem().mapIndex, pActorSprite->getActorMapItem().moveDist);
         // 移動可能範囲を表示
         addMapCursor(MapDataType::MOVE_DIST, moveList);
         // 移動経路の作成と表示
@@ -385,7 +382,7 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
             }
             
             auto pMoveSeq = Sequence::create(moveArray);
-            MapIndex moveAfterIndex = pMapItem->mapIndex;
+            MapIndex moveAfterIndex = mapItem.mapIndex;
             auto pAnimation = Sequence::create(pMoveSeq, CallFunc::create([this, pActorSprite, moveAfterIndex](void) {
                 CCLOG("call func!!！");
                 clearAllMapCursor();
@@ -393,8 +390,13 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
                 
                 CCLOG("moveAfterIndex = (%d, %d)", moveAfterIndex.x, moveAfterIndex.y);
                 // マップ情報も更新する
-                MapManager::getInstance()->moveActor(pActorSprite->getActorMapItem(), moveAfterIndex);
-                CCLOG("moveActor = (%d, %d)", pActorSprite->getActorMapItem()->mapIndex.x, pActorSprite->getActorMapItem()->mapIndex.y);
+                MapIndex beforeMapIndex = pActorSprite->getActorMapItem().mapIndex;
+                ActorMapItem afterMapItem = pActorSprite->getActorMapItem();
+                afterMapItem.mapIndex = moveAfterIndex;
+                pActorSprite->setActorMapItem(afterMapItem);
+                MapManager::getInstance()->moveActor(pActorSprite->getActorMapItem(), beforeMapIndex, moveAfterIndex);
+                
+                CCLOG("moveActor = (%d, %d)", pActorSprite->getActorMapItem().mapIndex.x, pActorSprite->getActorMapItem().mapIndex.y);
                 m_moveAnimation = false;
                 
             }), NULL);

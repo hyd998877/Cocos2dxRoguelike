@@ -14,8 +14,8 @@
 #include "RogueScene.h"
 #include "MapManager.h"
 
-#include "ActorSprite.h"
-#include "DropItemSprite.h"
+#include "ActorDto.h"
+#include "Itemdto.h"
 
 NS_ROGUE_BEGIN
 
@@ -33,7 +33,7 @@ public:
     
     // --- インベントリ ---
     // 所持品、装備状態
-    std::list<DropItemSprite::DropItemDto> item_list_;
+    std::list<ItemDto> item_list_;
     
     // --- 倉庫 ---
     // アイテムリスト
@@ -56,7 +56,7 @@ private:
     AccountData()
     :rogue_play_data_({0, 0, RogueScene::GameStatus::INIT, 0, 0, 0}),
     player_actor_(ActorDto()),
-    item_list_(std::list<DropItemSprite::DropItemDto>())
+    item_list_(std::list<ItemDto>())
     {
     };
     

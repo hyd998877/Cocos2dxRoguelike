@@ -10,12 +10,12 @@
 #define __Cocos2dxSRPGQuest__ItemWindowLayer__
 
 #include "cocos2d.h"
-#include "DropItemSprite.h"
+#include "ItemDto.h"
 
 class ItemWindowLayer : public cocos2d::LayerColor
 {
 public:
-    typedef std::function<void(Ref*, DropItemSprite::DropItemDto)> ItemWindowMenuCallback;
+    typedef std::function<void(Ref*, ItemDto)> ItemWindowMenuCallback;
 protected:
     enum tag {
         ItemTableLayerTag  = 10000,
@@ -32,7 +32,7 @@ protected:
 private:
     long show_item_detail_idx_;
     // TODO: ユーザーデータから持ってくるようにする
-    std::list<DropItemSprite::DropItemDto> item_dto_list_;
+    std::list<ItemDto> _itemList;
     ItemWindowMenuCallback item_use_menu_callback_;
     ItemWindowMenuCallback item_drop_menu_callback_;
     ItemWindowMenuCallback item_Equip_Menu_Callback_;
@@ -43,9 +43,9 @@ public:
     virtual bool initWithContentSize(cocos2d::Size contentSize);
     static ItemWindowLayer* createWithContentSize(cocos2d::Size contentSize);
     
-    Menu* initCreateMenu();
-    DropItemSprite::DropItemDto findItem(long itemListIndex);
-    void addItemList(DropItemSprite::DropItemDto dropItemDto);
+    cocos2d::Menu* initCreateMenu();
+    ItemDto findItem(long itemListIndex) const;
+    void addItemList(const ItemDto& itemDto);
     void setItemEquip(long objectId, bool isEquip);
     void reloadItemList();
     void sortItemList();
@@ -54,14 +54,14 @@ public:
     void setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback);
     void setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback);
     
-    void setItemList(std::list<DropItemSprite::DropItemDto> item_list) { item_dto_list_ = item_list; }
-    std::list<DropItemSprite::DropItemDto> getItemList() { return item_dto_list_; }
+    void setItemList(const std::list<ItemDto>& itemList) { _itemList = itemList; }
+    const std::list<ItemDto>& getItemList() const { return _itemList; }
 private:
     void setItemDetail(long itemListIndex);
-    void setItemDetail(DropItemSprite::DropItemDto* pDropItemDto);
+    void setItemDetail(const ItemDto& itemDto);
     
-    Label* createDetailTitleLabel(const Node* base, std::string text, float heightPointProportion);
-    Label* createDetailTextLabel(const Node* base, std::string text, float heightPointProportion);
+    cocos2d::Label* createDetailTitleLabel(const Node* base, std::string text, float heightPointProportion);
+    cocos2d::Label* createDetailTextLabel(const Node* base, std::string text, float heightPointProportion);
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ItemWindowLayer__) */

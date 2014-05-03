@@ -42,7 +42,13 @@
     ]
  }
  */
-namespace m_rogue_map{
+
+//namespace RogueGameConfig {
+namespace m_rogue_map {
+    
+    // 所持可能アイテム数
+    const int USE_ITEM_MAX = 20;
+    
     const std::string MobCount = "mobCount";
     const std::string MobIds = "mobIds";
     const std::string DropItemCount = "dropItemCount";
@@ -58,118 +64,118 @@ namespace m_rogue_map{
     const std::string DropItemUpValueLimits = "dropItemUpValueLimits";
     
     
-    const static ValueMap floor1_{
-        {MobCount, Value(4)},
-        {MobIds, Value(ValueVector{
+    const static cocos2d::ValueMap floor1_{
+        {MobCount, cocos2d::Value(4)},
+        {MobIds, cocos2d::Value(cocos2d::ValueVector{
             // 20%
-            Value(ValueMap{ {Id, Value(0)}, {Prob, Value(2000)}, {DropProb, Value(0)} }), // hazure
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(0)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(0)} }), // hazure
             // 80%
-            Value(ValueMap{ {Id, Value(1)}, {Prob, Value(8000)}, {DropProb, Value(1000)} })  // sura
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value(8000)}, {DropProb, cocos2d::Value(1000)} })  // sura
         })},
-        {DropItemCount, Value(10)},
-        {DropItemIds, Value(ValueVector{
+        {DropItemCount, cocos2d::Value(10)},
+        {DropItemIds, cocos2d::Value(cocos2d::ValueVector{
             // 60% ハズレ
-            Value(ValueMap{ {ItemType, Value( 0)}, {Id, Value(0)}, {Prob, Value(6000)} }), // hazure
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 0)}, {Id, cocos2d::Value(0)}, {Prob, cocos2d::Value(6000)} }), // hazure
             //  8% 武器
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(3)}, {Prob, Value( 100)} }), // w
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(2)}, {Prob, Value( 200)} }), // w
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(1)}, {Prob, Value( 500)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(3)}, {Prob, cocos2d::Value( 100)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value( 200)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value( 500)} }), // w
             //  8% 防具
-            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(2)}, {Prob, Value( 200)} }), // a
-            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(1)}, {Prob, Value( 600)} }), // a
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 2)}, {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value( 200)} }), // a
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 2)}, {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value( 600)} }), // a
             // 12% ゴールド
-            Value(ValueMap{ {ItemType, Value(10)}, {Id, Value(7)}, {Prob, Value(1200)} }), // gold
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(10)}, {Id, cocos2d::Value(7)}, {Prob, cocos2d::Value(1200)} }), // gold
             // 12% 消費アイテム
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(5)}, {Prob, Value( 100)} }), // et
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(4)}, {Prob, Value( 200)} }), // et
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(2)}, {Prob, Value( 300)} }), // pt
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(1)}, {Prob, Value( 600)} }), // pt
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(5)}, {Prob, cocos2d::Value( 100)} }), // et
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(4)}, {Prob, cocos2d::Value( 200)} }), // et
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value( 300)} }), // pt
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value( 600)} }), // pt
         })},
-        {GoldMin, Value( 100)},
-        {GoldMax, Value(1000)},
-        {DropItemUpValueLimits, Value(ValueVector{
+        {GoldMin, cocos2d::Value( 100)},
+        {GoldMax, cocos2d::Value(1000)},
+        {DropItemUpValueLimits, cocos2d::Value(cocos2d::ValueVector{
             // 70%  +0
-            Value(ValueMap{ {Id, Value(0)}, {Prob, Value(7000)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(0)}, {Prob, cocos2d::Value(7000)} }),
             // 10%  +1
-            Value(ValueMap{ {Id, Value(1)}, {Prob, Value(1000)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value(1000)} }),
             // 10%  +2
-            Value(ValueMap{ {Id, Value(2)}, {Prob, Value(1000)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value(1000)} }),
             //  5%  +3
-            Value(ValueMap{ {Id, Value(3)}, {Prob, Value( 500)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(3)}, {Prob, cocos2d::Value( 500)} }),
             //  5%  +4
-            Value(ValueMap{ {Id, Value(4)}, {Prob, Value( 500)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(4)}, {Prob, cocos2d::Value( 500)} }),
         })}
     };
 
-    const static ValueMap floor2_{
-        {MobCount, Value(5)},
-        {MobIds, Value(ValueVector{
+    const static cocos2d::ValueMap floor2_{
+        {MobCount, cocos2d::Value(5)},
+        {MobIds, cocos2d::Value(cocos2d::ValueVector{
             // 20%
-            Value(ValueMap{ {Id, Value(0)}, {Prob, Value(2000)}, {DropProb, Value(0)} }), // hazure
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(0)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(0)} }), // hazure
             // 40%
-            Value(ValueMap{ {Id, Value(1)}, {Prob, Value(4000)}, {DropProb, Value(1000)} }),  // sura
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value(4000)}, {DropProb, cocos2d::Value(1000)} }),  // sura
             // 20%
-            Value(ValueMap{ {Id, Value(2)}, {Prob, Value(2000)}, {DropProb, Value(1000)} }),  // youhei
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(1000)} }),  // youhei
             // 20%
-            Value(ValueMap{ {Id, Value(3)}, {Prob, Value(2000)}, {DropProb, Value(1000)} }),  // youkan
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(3)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(1000)} }),  // youkan
         })},
-        {DropItemCount, Value(10)},
-        {DropItemIds, Value(ValueVector{
+        {DropItemCount, cocos2d::Value(10)},
+        {DropItemIds, cocos2d::Value(cocos2d::ValueVector{
             // 60% ハズレ
-            Value(ValueMap{ {ItemType, Value( 0)}, {Id, Value(0)}, {Prob, Value(6000)} }), // hazure
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 0)}, {Id, cocos2d::Value(0)}, {Prob, cocos2d::Value(6000)} }), // hazure
             //  8% 武器
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(6)}, {Prob, Value(  10)} }), // w
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(5)}, {Prob, Value(  40)} }), // w
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(4)}, {Prob, Value( 100)} }), // w
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(3)}, {Prob, Value( 100)} }), // w
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(2)}, {Prob, Value( 150)} }), // w
-            Value(ValueMap{ {ItemType, Value( 1)}, {Id, Value(1)}, {Prob, Value( 400)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(6)}, {Prob, cocos2d::Value(  10)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(5)}, {Prob, cocos2d::Value(  40)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(4)}, {Prob, cocos2d::Value( 100)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(3)}, {Prob, cocos2d::Value( 100)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value( 150)} }), // w
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 1)}, {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value( 400)} }), // w
             //  8% 防具
-            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(6)}, {Prob, Value(  10)} }), // a
-            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(5)}, {Prob, Value(  40)} }), // a
-            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(3)}, {Prob, Value( 150)} }), // a
-            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(2)}, {Prob, Value( 200)} }), // a
-            Value(ValueMap{ {ItemType, Value( 2)}, {Id, Value(1)}, {Prob, Value( 400)} }), // a
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 2)}, {Id, cocos2d::Value(6)}, {Prob, cocos2d::Value(  10)} }), // a
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 2)}, {Id, cocos2d::Value(5)}, {Prob, cocos2d::Value(  40)} }), // a
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 2)}, {Id, cocos2d::Value(3)}, {Prob, cocos2d::Value( 150)} }), // a
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 2)}, {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value( 200)} }), // a
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value( 2)}, {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value( 400)} }), // a
             // 12% ゴールド
-            Value(ValueMap{ {ItemType, Value(10)}, {Id, Value(7)}, {Prob, Value(1200)} }), // gold
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(10)}, {Id, cocos2d::Value(7)}, {Prob, cocos2d::Value(1200)} }), // gold
             // 12% 消費アイテム
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(6)}, {Prob, Value( 100)} }), // et
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(5)}, {Prob, Value( 100)} }), // et
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(4)}, {Prob, Value( 300)} }), // et
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(3)}, {Prob, Value( 100)} }), // pt
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(2)}, {Prob, Value( 100)} }), // pt
-            Value(ValueMap{ {ItemType, Value(20)}, {Id, Value(1)}, {Prob, Value( 500)} }), // pt
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(6)}, {Prob, cocos2d::Value( 100)} }), // et
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(5)}, {Prob, cocos2d::Value( 100)} }), // et
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(4)}, {Prob, cocos2d::Value( 300)} }), // et
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(3)}, {Prob, cocos2d::Value( 100)} }), // pt
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value( 100)} }), // pt
+            cocos2d::Value(cocos2d::ValueMap{ {ItemType, cocos2d::Value(20)}, {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value( 500)} }), // pt
         })},
-        {GoldMin, Value( 100)},
-        {GoldMax, Value(2000)},
-        {DropItemUpValueLimits, Value(ValueVector{
+        {GoldMin, cocos2d::Value( 100)},
+        {GoldMax, cocos2d::Value(2000)},
+        {DropItemUpValueLimits, cocos2d::Value(cocos2d::ValueVector{
             // 70%  +0
-            Value(ValueMap{ {Id, Value(0)}, {Prob, Value(7000)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(0)}, {Prob, cocos2d::Value(7000)} }),
             // 10%  +1
-            Value(ValueMap{ {Id, Value(1)}, {Prob, Value(1000)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value(1000)} }),
             // 10%  +2
-            Value(ValueMap{ {Id, Value(2)}, {Prob, Value(1000)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value(1000)} }),
             //  5%  +3
-            Value(ValueMap{ {Id, Value(3)}, {Prob, Value( 500)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(3)}, {Prob, cocos2d::Value( 500)} }),
             //  5%  +4
-            Value(ValueMap{ {Id, Value(4)}, {Prob, Value( 500)} }),
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(4)}, {Prob, cocos2d::Value( 500)} }),
         })}
     };
     
-    const static ValueVector datas_{
+    const static cocos2d::ValueVector datas_{
         // 1〜3
-        Value(floor1_),
-        Value(floor1_),
-        Value(floor1_),
+        cocos2d::Value(floor1_),
+        cocos2d::Value(floor1_),
+        cocos2d::Value(floor1_),
         // 4〜9
-        Value(floor2_),
-        Value(floor2_),
-        Value(floor2_),
-        Value(floor2_),
-        Value(floor2_),
-        Value(floor2_),
+        cocos2d::Value(floor2_),
+        cocos2d::Value(floor2_),
+        cocos2d::Value(floor2_),
+        cocos2d::Value(floor2_),
+        cocos2d::Value(floor2_),
+        cocos2d::Value(floor2_),
         // 10〜
-        Value(floor2_)
+        cocos2d::Value(floor2_)
     };
 }
 
