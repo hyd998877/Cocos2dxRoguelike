@@ -99,6 +99,8 @@ ActorDto ActorDto::createActorDto(const std::string data_string)
        atoi(data_string_array[index++].c_str()),
        atoi(data_string_array[index++].c_str()),
        atoi(data_string_array[index++].c_str()),
+       ActorEquipDto(),
+       ActorEquipDto(),
        atoi(data_string_array[index++].c_str())
     );
     
