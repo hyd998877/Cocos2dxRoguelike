@@ -9,7 +9,14 @@
 #ifndef __Cocos2dRogueLike__ActorDto__
 #define __Cocos2dRogueLike__ActorDto__
 
+#include <string>
+#include <vector>
+#include <stdlib.h>
+
 #include "ActorEquipDto.h"
+#include "MLevelDao.h"
+
+#include "StringUtils.h"
 
 class ActorDto {
   

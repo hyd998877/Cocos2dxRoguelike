@@ -138,11 +138,11 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     this->addChild(pItemDetailLayer);
     
     // アイテム個数
-    auto item_count_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(),
-                                                 cocos2d::StringUtils::format("%d/%d", 0, USE_ITEM_MAX));
-    item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
-    item_count_label->setTag(ItemWindowLayer::ItemCountLabelTag);
-    this->addChild(item_count_label);
+//    auto item_count_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(),
+//                                                 cocos2d::StringUtils::format("%d/%d", 0, USE_ITEM_MAX));
+//    item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
+//    item_count_label->setTag(ItemWindowLayer::ItemCountLabelTag);
+//    this->addChild(item_count_label);
     
     return true;
 }

@@ -10,7 +10,6 @@
 #define __Cocos2dRogueLike__StringUtils__
 
 #include <vector>
-#include <stdarg.h>
 #include <string>
 #include <functional>
 #include <sstream>

@@ -10,8 +10,11 @@
 
 USING_NS_CC;
 
-LabelRPG::LabelRPG(FontAtlas *atlas /* = nullptr */, TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
-             TextVAlignment vAlignment /* = TextVAlignment::TOP */,bool useDistanceField /* = false */,bool useA8Shader /* = false */)
+LabelRPG::LabelRPG(FontAtlas *atlas /* = nullptr */,
+                   TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
+                   TextVAlignment vAlignment /* = TextVAlignment::TOP */,
+                   bool useDistanceField /* = false */,
+                   bool useA8Shader /* = false */)
 :nowLabelLenght_(0)
 ,nowLabelText_()
 {
@@ -66,7 +69,7 @@ void LabelRPG::setStringWithRunText(const std::string &text, float interval)
                 nowLabelLenght_ += charSize;
 
                 std::string s(this->nowLabelText_, 0, nowLabelLenght_);
-                CCLOG("tim = %f len = %ld text = %s nowText = %s", time, this->getString().length(), this->nowLabelText_.c_str(), s.c_str());
+                
                 this->setString(s);
                 this->setPosition(Point(originalPoint_.x + this->getSystemFontSize() / 2 + this->getContentSize().width / 2, originalPoint_.y - this->getContentSize().height / 2 - this->getSystemFontSize() / 2));
             }

@@ -151,7 +151,13 @@ void MypageScene::initGlobalMenu()
     auto item_menu3 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "そ　う　こ"), WAKU_PADDING, [this](Ref *ref) {
         // アイテムリストを設定
         Size winSize = Director::getInstance()->getWinSize();
-        auto itemWindowLayer = ItemWindow::createItemWindowLayer(winSize * 0.8, AccountData::getInstance()->item_list_);
+
+        std::list<ItemInventoryDto> itemInventoryList{
+            ItemInventoryDto("所持品",  20, AccountData::getInstance()->item_list_),
+            ItemInventoryDto("倉　庫", 100, AccountData::getInstance()->item_list_)
+        };
+        
+        auto itemWindowLayer = ItemInventoryWindowHelper::create(itemInventoryList);
         itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
         this->addChild(itemWindowLayer, 99999);
     });

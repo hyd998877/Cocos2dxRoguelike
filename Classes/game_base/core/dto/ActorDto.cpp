@@ -8,10 +8,6 @@
 
 #include "ActorDto.h"
 
-#include "MLevelDao.h"
-
-#include "StringUtils.h"
-
 using namespace GameCore;
 
 ActorDto::ActorDto(int playerId,

@@ -62,7 +62,6 @@
 		CE626DE81914BEF6005925DC /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D721914BEF6005925DC /* BattleScene.cpp */; };
 		CE626DE91914BEF6005925DC /* LabelRPG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D791914BEF6005925DC /* LabelRPG.cpp */; };
 		CE626DEA1914BEF6005925DC /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */; };
-		CE626DEB1914BEF6005925DC /* ItemWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D7E1914BEF6005925DC /* ItemWindow.cpp */; };
 		CE626DEC1914BEF6005925DC /* ItemWindowLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D801914BEF6005925DC /* ItemWindowLayer.cpp */; };
 		CE626DED1914BEF6005925DC /* JoystickLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D821914BEF6005925DC /* JoystickLayer.cpp */; };
 		CE626DEE1914BEF6005925DC /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D841914BEF6005925DC /* ModalLayer.cpp */; };
@@ -91,9 +90,11 @@
 		CE626E081914BEF6005925DC /* DropItemSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DD81914BEF6005925DC /* DropItemSprite.cpp */; };
 		CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DE01914BEF6005925DC /* SRPGMapLayer.cpp */; };
 		CE626E0A1914BEF6005925DC /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DE41914BEF6005925DC /* SRPGScene.cpp */; };
+		CE626E0D1914C68B005925DC /* ItemInventoryDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626E0B1914C68B005925DC /* ItemInventoryDto.cpp */; };
 		CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE6E644B18DB33CF0008C116 /* game_over.jpg */; };
 		CE73FB2418B0A3F1009273D0 /* test_master in Resources */ = {isa = PBXBuildFile; fileRef = CE73FB2318B0A3F1009273D0 /* test_master */; };
 		CE81F79618940AA900A8162B /* kaidan.png in Resources */ = {isa = PBXBuildFile; fileRef = CE81F79518940AA900A8162B /* kaidan.png */; };
+		CE8670D71914ED810055C092 /* ItemInventoryWindowHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE8670D51914ED810055C092 /* ItemInventoryWindowHelper.cpp */; };
 		CE93B4BF188156FC00825FD1 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A4188156FC00825FD1 /* fonts */; };
 		CE93B4C0188156FC00825FD1 /* grid32.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A5188156FC00825FD1 /* grid32.png */; };
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
@@ -303,8 +304,6 @@
 		CE626D7A1914BEF6005925DC /* LabelRPG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelRPG.h; sourceTree = "<group>"; };
 		CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlertDialogLayer.cpp; sourceTree = "<group>"; };
 		CE626D7D1914BEF6005925DC /* AlertDialogLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertDialogLayer.h; sourceTree = "<group>"; };
-		CE626D7E1914BEF6005925DC /* ItemWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindow.cpp; sourceTree = "<group>"; };
-		CE626D7F1914BEF6005925DC /* ItemWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindow.h; sourceTree = "<group>"; };
 		CE626D801914BEF6005925DC /* ItemWindowLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindowLayer.cpp; sourceTree = "<group>"; };
 		CE626D811914BEF6005925DC /* ItemWindowLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindowLayer.h; sourceTree = "<group>"; };
 		CE626D821914BEF6005925DC /* JoystickLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JoystickLayer.cpp; sourceTree = "<group>"; };
@@ -367,10 +366,15 @@
 		CE626DE11914BEF6005925DC /* SRPGMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGMapLayer.h; sourceTree = "<group>"; };
 		CE626DE41914BEF6005925DC /* SRPGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SRPGScene.cpp; sourceTree = "<group>"; };
 		CE626DE51914BEF6005925DC /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
+		CE626E0B1914C68B005925DC /* ItemInventoryDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemInventoryDto.cpp; sourceTree = "<group>"; };
+		CE626E0C1914C68B005925DC /* ItemInventoryDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInventoryDto.h; sourceTree = "<group>"; };
 		CE626E0F1914C6FE005925DC /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
 		CE6E644B18DB33CF0008C116 /* game_over.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = game_over.jpg; sourceTree = "<group>"; };
 		CE73FB2318B0A3F1009273D0 /* test_master */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_master; sourceTree = "<group>"; };
 		CE81F79518940AA900A8162B /* kaidan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kaidan.png; sourceTree = "<group>"; };
+		CE8670D51914ED810055C092 /* ItemInventoryWindowHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemInventoryWindowHelper.cpp; sourceTree = "<group>"; };
+		CE8670D61914ED810055C092 /* ItemInventoryWindowHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInventoryWindowHelper.h; sourceTree = "<group>"; };
+		CE8670DC1915085C0055C092 /* MenuItemUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuItemUtil.h; sourceTree = "<group>"; };
 		CE93B417188156C700825FD1 /* AppMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppMacros.h; path = ../Classes/AppMacros.h; sourceTree = "<group>"; };
 		CE93B4A4188156FC00825FD1 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		CE93B4A5188156FC00825FD1 /* grid32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid32.png; sourceTree = "<group>"; };
@@ -704,8 +708,8 @@
 			children = (
 				CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */,
 				CE626D7D1914BEF6005925DC /* AlertDialogLayer.h */,
-				CE626D7E1914BEF6005925DC /* ItemWindow.cpp */,
-				CE626D7F1914BEF6005925DC /* ItemWindow.h */,
+				CE8670D51914ED810055C092 /* ItemInventoryWindowHelper.cpp */,
+				CE8670D61914ED810055C092 /* ItemInventoryWindowHelper.h */,
 				CE626D801914BEF6005925DC /* ItemWindowLayer.cpp */,
 				CE626D811914BEF6005925DC /* ItemWindowLayer.h */,
 				CE626D821914BEF6005925DC /* JoystickLayer.cpp */,
@@ -742,6 +746,7 @@
 				CE626D8F1914BEF6005925DC /* CommonWindowUtil.cpp */,
 				CE626D901914BEF6005925DC /* CommonWindowUtil.h */,
 				CE626D911914BEF6005925DC /* LayerActionUtils.h */,
+				CE8670DC1915085C0055C092 /* MenuItemUtil.h */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -798,6 +803,8 @@
 				CE626DAA1914BEF6005925DC /* ActorDto.h */,
 				CE626DAB1914BEF6005925DC /* ActorEquipDto.cpp */,
 				CE626DAC1914BEF6005925DC /* ActorEquipDto.h */,
+				CE626E0B1914C68B005925DC /* ItemInventoryDto.cpp */,
+				CE626E0C1914C68B005925DC /* ItemInventoryDto.h */,
 			);
 			path = dto;
 			sourceTree = "<group>";
@@ -1314,12 +1321,13 @@
 				CE626E071914BEF6005925DC /* RogueScene.cpp in Sources */,
 				CE626E061914BEF6005925DC /* MypageScene.cpp in Sources */,
 				CE626DF71914BEF6005925DC /* MAccessory.cpp in Sources */,
-				CE626DEB1914BEF6005925DC /* ItemWindow.cpp in Sources */,
+				CE8670D71914ED810055C092 /* ItemInventoryWindowHelper.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				CE626DFA1914BEF6005925DC /* MWeapon.cpp in Sources */,
 				CE626DF91914BEF6005925DC /* MUseItem.cpp in Sources */,
 				CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */,
 				CE626E0A1914BEF6005925DC /* SRPGScene.cpp in Sources */,
+				CE626E0D1914C68B005925DC /* ItemInventoryDto.cpp in Sources */,
 				CE626DF31914BEF6005925DC /* MAccessoryDao.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

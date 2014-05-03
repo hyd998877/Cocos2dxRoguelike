@@ -9,7 +9,10 @@
 #ifndef __Cocos2dRogueLike__ActorEquipDto__
 #define __Cocos2dRogueLike__ActorEquipDto__
 
-#include <iostream>
+#include <vector>
+#include <string>
+#include <stdlib.h>
+
 #include "MWeapon.h"
 #include "MAccessory.h"
 
