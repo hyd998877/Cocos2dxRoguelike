@@ -33,17 +33,16 @@ public:
      
      対応するコールバックメソッド呼び出しに利用します。
      */
-    enum class ActionType {
-        ITEM_DROP,  /// < 捨てる
-        ITEM_DIST,  /// < ？
-        ITEM_USE,   /// < 使う
-        ITEM_EQUIP, /// < 装備/はずす
-        ITEM_SALE,  /// < 売る
+    
+    enum class CloseType {
+        UN_CLOSE,
+        CLOSE,
     };
     
     typedef struct _ActionCallback {
-        ActionType _actionType;
-        ItemWindowLayer::ItemWindowMenuCallback callback;
+        ItemWindowLayer::ItemWindowMenuType _actionType;
+        CloseType _closeType;
+        ItemWindowLayer::ItemWindowMenuCallback _callback;
     } ActionCallback;
     
     typedef std::list<ItemInventoryDto> ItemInventoryList;
@@ -53,7 +52,7 @@ public:
     static ModalLayer* create(ItemInventoryList itemInventoryList, std::list<ActionCallback> actionCallbackList);
 
 private:
-    static void searchCallbackFire(std::list<ActionCallback> actionCallbackList, cocos2d::Ref* ref, ItemDto itemDto, ActionType fireActionType);
+    static bool searchCallbackFire(std::list<ActionCallback> actionCallbackList, cocos2d::Ref* ref, ItemDto itemDto, ItemWindowLayer::ItemWindowMenuType fireActionType);
     
     /**
      @brief Menuの要素の長さを合わせて中心を作成

@@ -28,8 +28,7 @@ USING_NS_CC;
 ItemWindowLayer::ItemWindowLayer()
 : _itemInventoryDto()
 , show_item_detail_idx_(-1)
-, item_drop_menu_callback_(nullptr)
-, item_use_menu_callback_(nullptr)
+, _itemMenuCallback(nullptr)
 {
 }
 
@@ -126,11 +125,6 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     paramTextLabel->setTag(ItemWindowLayer::ItemParamTag);
     pItemDetailLayer->addChild(paramTextLabel);
     
-    // メニュー
-    auto pMenu = initCreateMenu();
-    pMenu->setPositionX(pItemDetailLayer->getContentSize().width / 2);
-    pItemDetailLayer->addChild(pMenu);
-    
     // 枠線
     auto pItemDetailWaku = CommonWindowUtil::createWindowWaku(pItemDetailLayer);
     pItemDetailWaku->setPreferredSize(pItemDetailLayer->getContentSize());
@@ -160,63 +154,63 @@ Label* ItemWindowLayer::createDetailTextLabel(const Node* base, std::string text
     return textLabel;
 }
 
-Menu* ItemWindowLayer::initCreateMenu() {
+void ItemWindowLayer::initCreateMenu(std::list<ItemWindowLayer::ItemWindowMenuType> menuTypeList)
+{
+    cocos2d::Vector<MenuItem*> menuItemArray;
     
+    const Size WAKU_PADDING = Size(8, 4);
     // -----------------------------
     // メニューボタン
-    const Size WAKU_PADDING = Size(8, 4);
-    
-    // 捨てるボタン
-    auto pMenuItemDrop = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "すてる"), WAKU_PADDING, [this](Ref *pSeneder) {
+    for (auto menuType : menuTypeList) {
         
-        // hoge
-        CCLOG("item drop menu pressed");
-        if (show_item_detail_idx_ < 0) {
-            return;
+        std::string labelText;
+        switch (menuType) {
+            case ITEM_DROP:
+                labelText = "すてる";
+                break;
+            case ITEM_SALE:
+                labelText = "売　る";
+                break;
+            case ITEM_STOCK:
+                labelText = "預ける"; // 出　す
+                break;
+            case ITEM_USE:
+                labelText = "つかう";
+                break;
+            case ITEM_EQUIP:
+                labelText = "そうび"; // はずす
+                break;
+            default:
+                break;
         }
-        if (item_drop_menu_callback_) {
-            auto itemDto = this->findItem(show_item_detail_idx_);
-            item_drop_menu_callback_(pSeneder, itemDto);
-        }
-    });
+        auto label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), labelText);
+        auto menuItem = CommonWindowUtil::createMenuItemLabelWaku(label, WAKU_PADDING, [this, menuType](Ref *pSeneder) {
+            CCLOG("item drop menu pressed");
+            if (show_item_detail_idx_ < 0) {
+                return;
+            }
+            if (this->_itemMenuCallback) {
+                auto itemDto = this->findItem(show_item_detail_idx_);
+                this->_itemMenuCallback(menuType, pSeneder, itemDto);
+            }
+        });
+        this->_menuItemMap.insert(menuType, menuItem);
+        menuItemArray.pushBack(menuItem);
+    }
     
-    pMenuItemDrop->setTag(ItemWindowLayer::ItemDetailMenuDropTag);
+    this->_menu = Menu::createWithArray(menuItemArray);
+    // 平均サイズ
+    float height = 0.0f;
+    for (auto node : this->_menu->getChildren()) {
+        height += node->getContentSize().height;
+    }
+    this->_menu->setPosition(Point(0, height / this->_menu->getChildrenCount()));
+    this->_menu->alignItemsHorizontallyWithPadding(4);
     
-    // 使用ボタン
-    auto pMenuItemUse = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "つかう"), WAKU_PADDING, [this](Ref *pSeneder) {
-        
-        // hoge
-        CCLOG("item use menu pressed");
-        if (show_item_detail_idx_ < 0) {
-            return;
-        }
-        if (item_use_menu_callback_) {
-            auto itemDto = this->findItem(show_item_detail_idx_);
-            item_use_menu_callback_(pSeneder, itemDto);
-        }
-    });
-    pMenuItemUse->setTag(ItemWindowLayer::ItemDetailMenuUseTag);
-    
-    // 装備（する/はずす）ボタン
-    auto pMenuItemEquip = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "そうび"), WAKU_PADDING, [this](Ref *pSeneder) {
-        
-        CCLOG("item equip menu pressed");
-        if (show_item_detail_idx_ < 0) {
-            return;
-        }
-        if (item_Equip_Menu_Callback_) {
-            auto itemDto = this->findItem(show_item_detail_idx_);
-            item_Equip_Menu_Callback_(pSeneder, itemDto);
-        }
-    });
-    pMenuItemEquip->setTag(ItemWindowLayer::ItemDetailMenuEquipTag);
-    
-    auto pMenu = Menu::create(pMenuItemDrop, pMenuItemUse, pMenuItemEquip, NULL);
-    pMenu->setTag(ItemWindowLayer::ItemDetailMenuTag);
-    pMenu->setPosition(Point(0, pMenuItemDrop->getContentSize().height));
-    pMenu->alignItemsHorizontallyWithPadding(4);
-    
-    return pMenu;
+    auto pItemDetailLayer = this->getChildByTag(ItemWindowLayer::ItemDetailLayerTag);
+    // メニュー
+    this->_menu->setPositionX(pItemDetailLayer->getContentSize().width / 2);
+    pItemDetailLayer->addChild(this->_menu);
 }
 
 #pragma mark
@@ -347,54 +341,45 @@ void ItemWindowLayer::setItemDetail(const ItemDto& itemDto) {
         }
         
         // menu
-        auto pItemDetailMenu = static_cast<Menu*>(pItemDetailLayer->getChildByTag(ItemWindowLayer::ItemDetailMenuTag));
-        if (pItemDetailMenu) {
-            auto pMenuUse = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuUseTag));
-            auto pMenuDrop = static_cast<MenuItem*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuDropTag));
-            auto pMenuEquip = static_cast<MenuItemLabel*>(pItemDetailMenu->getChildByTag(ItemWindowLayer::ItemDetailMenuEquipTag));
-            
-            // 未指定
-            if (itemDto.getItemType() == MUseItem::ItemType::NONE) {
-                pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
-                pMenuDrop->setEnabled(false);pMenuDrop->setVisible(false);
-                pMenuEquip->setEnabled(false);pMenuEquip->setVisible(false);
-            } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON ||
-                       itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
-                // 装備可能・置く
-                pMenuUse->setEnabled(false);pMenuUse->setVisible(false);
-                pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
-                pMenuEquip->setEnabled(true);pMenuEquip->setVisible(true);
-                
-                // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので
-                CCLOG("begore setString %f %f", pMenuEquip->getPosition().x, pMenuEquip->getPosition().y);
-                Size beforeSize = pMenuEquip->getContentSize();
-                if (itemDto.isEquip()) {
-                    pMenuEquip->setString("はずす");
-                } else {
-                    pMenuEquip->setString("そうび");
+        if (this->_menu) {
+            for (auto menuItemKey : this->_menuItemMap.keys()) {
+                // 未指定
+                if (itemDto.getItemType() == MUseItem::ItemType::NONE) {
+                    this->_menuItemMap.at(menuItemKey)->setVisible(false);
+                    this->_menuItemMap.at(menuItemKey)->setEnabled(false);
+                    continue;
                 }
-                pMenuEquip->setContentSize(beforeSize);
-                CCLOG("after setString %f %f", pMenuEquip->getPosition().x, pMenuEquip->getPosition().y);
-            } else {
-                pMenuUse->setEnabled(true);pMenuUse->setVisible(true);
-                pMenuDrop->setEnabled(true);pMenuDrop->setVisible(true);
-                pMenuEquip->setEnabled(false);pMenuEquip->setVisible(false);
+                
+                this->_menuItemMap.at(menuItemKey)->setVisible(true);
+                this->_menuItemMap.at(menuItemKey)->setEnabled(true);
+                
+                if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON ||
+                           itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                    if (menuItemKey == ItemWindowMenuType::ITEM_USE) {
+                        this->_menuItemMap.at(menuItemKey)->setVisible(false);
+                        this->_menuItemMap.at(menuItemKey)->setEnabled(false);
+                    } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
+                        // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので補正
+                        auto node = dynamic_cast<MenuItemLabel*>(this->_menuItemMap.at(menuItemKey));
+                        CCLOG("begore setString %f %f", node->getPosition().x, node->getPosition().y);
+                        Size beforeSize = node->getContentSize();
+                        if (itemDto.isEquip()) {
+                            node->setString("はずす");
+                        } else {
+                            node->setString("そうび");
+                        }
+                        node->setContentSize(beforeSize);
+                        CCLOG("after setString %f %f", node->getPosition().x, node->getPosition().y);
+                    }
+                } else {
+                    if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
+                        this->_menuItemMap.at(menuItemKey)->setVisible(false);
+                        this->_menuItemMap.at(menuItemKey)->setEnabled(false);
+                    }
+                }
             }
         }
     }
 }
 
-#pragma mark
-#pragma mark callback関連
-
-void ItemWindowLayer::setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback) {
-    item_use_menu_callback_ = itemUseMenuCallback;
-}
-
-void ItemWindowLayer::setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback) {
-    item_drop_menu_callback_ = itemDropMenuCallback;
-}
-void ItemWindowLayer::setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback) {
-    item_Equip_Menu_Callback_ = itemEquipMenuCallback;
-}
 

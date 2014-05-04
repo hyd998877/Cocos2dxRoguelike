@@ -16,7 +16,16 @@
 class ItemWindowLayer : public cocos2d::LayerColor
 {
 public:
-    typedef std::function<void(Ref*, ItemDto)> ItemWindowMenuCallback;
+    enum ItemWindowMenuType {
+        ITEM_DROP = 1,  /// < 捨てる
+        ITEM_USE,       /// < 使う
+        ITEM_EQUIP,     /// < 装備/はずす
+        
+        ITEM_STOCK,     /// < 倉庫へ/持ち物へ
+        ITEM_SALE,      /// < 売る
+    };
+    
+    typedef std::function<void(ItemWindowMenuType, Ref*, const ItemDto&)> ItemWindowMenuCallback;
 protected:
     enum Tags {
         ItemTableLayerTag  = 10000,
@@ -24,33 +33,30 @@ protected:
         ItemNameTag        = 21000,
         ItemDetailTag      = 22000,
         ItemParamTag       = 23000,
-        ItemDetailMenuTag      = 30000,
-        ItemDetailMenuUseTag   = 30001,
-        ItemDetailMenuDropTag  = 30002,
-        ItemDetailMenuEquipTag = 30003,
         ItemCountLabelTag      = 40000,
     };
 public:
+    
     ItemWindowLayer();
     virtual ~ItemWindowLayer();
-    
-    virtual bool initWithContentSize(cocos2d::Size contentSize);
+
     static ItemWindowLayer* createWithContentSize(cocos2d::Size contentSize);
+    bool initWithContentSize(cocos2d::Size contentSize);
+    void initCreateMenu(std::list<ItemWindowLayer::ItemWindowMenuType> menuTypeList);
     
     void sortWeaponWithAccessory();
     
-    void setItemUseMenuCallback(const ItemWindowMenuCallback& itemUseMenuCallback);
-    void setItemDropMenuCallback(const ItemWindowMenuCallback& itemDropMenuCallback);
-    void setItemEquipMenuCallback(const ItemWindowMenuCallback& itemEquipMenuCallback);
+    void setItemMenuCallback(const ItemWindowMenuCallback &itemWindowMenuCallback) { _itemMenuCallback = itemWindowMenuCallback; }
     
     void reloadItemList();
     void setItemInventory(const ItemInventoryDto &itemInventoryDto) { _itemInventoryDto = itemInventoryDto; }
     ItemDto findItem(long itemListIndex) const;
 private:
+    cocos2d::Menu* _menu;
+    cocos2d::Map<int, cocos2d::MenuItem*> _menuItemMap;
+    
     void setItemDetail(long itemListIndex);
     void setItemDetail(const ItemDto& itemDto);
-    
-    cocos2d::Menu* initCreateMenu();
     
     cocos2d::Label* createDetailTitleLabel(const Node* base, std::string text, float heightPointProportion);
     cocos2d::Label* createDetailTextLabel(const Node* base, std::string text, float heightPointProportion);
@@ -58,9 +64,7 @@ private:
     long show_item_detail_idx_;
     
     ItemInventoryDto _itemInventoryDto;
-    ItemWindowMenuCallback item_use_menu_callback_;
-    ItemWindowMenuCallback item_drop_menu_callback_;
-    ItemWindowMenuCallback item_Equip_Menu_Callback_;
+    ItemWindowMenuCallback _itemMenuCallback;
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__ItemWindowLayer__) */

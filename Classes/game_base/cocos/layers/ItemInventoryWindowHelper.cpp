@@ -27,20 +27,48 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
     // アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
     auto itemWindowLayer = ItemWindowLayer::createWithContentSize(contentSize);
     
-    ///////////////////////////////////////
-    // ヘッダー
-    cocos2d::Vector<MenuItem*> menuItemArray;
+    std::list<ItemWindowLayer::ItemWindowMenuType> menuTypeList;
+    for (auto actionCallback : actionCallbackList) {
+        menuTypeList.push_back(actionCallback._actionType);
+    }
+    itemWindowLayer->initCreateMenu(menuTypeList);
     
     // 1件目デフォルト
     ItemInventoryDto selectInventory  = (*itemInventoryList.begin());
     std::string selectTabName = selectInventory.getName();
-
+    
+    // お金表示
+    // ラベル
+    std::string goldText = GameCore::StringUtils::format("所持金 %10ld G", selectInventory.getGold());
+    auto goldTextLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), goldText);
+    goldTextLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
+    goldTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
+    // 枠
+    auto goldLayerWaku = CommonWindowUtil::createWindowWaku(Size(contentSize.width/2, goldTextLabel->getContentSize().height + goldTextLabel->getSystemFontSize()/2) + Size(0, 2));
+    // ベースレイヤー
+    auto goldLayer = Layer::create();
+    goldLayer->setContentSize(Size(contentSize.width/2, goldLayerWaku->getContentSize().height));
+    goldLayer->setPosition(Point(contentSize.width + 2 - goldLayerWaku->getContentSize().width, contentSize.height));
+    
+    // ラベル
+    goldTextLabel->setPosition(Point(goldLayer->getContentSize().width /2, goldLayer->getContentSize().height / 2));
+    
+    goldLayer->addChild(goldTextLabel);
+    goldLayer->addChild(goldLayerWaku);
+    itemWindowLayer->addChild(goldLayer);
+    
+    ///////////////////////////////////////
+    // ヘッダー
+    cocos2d::Vector<MenuItem*> menuItemArray;
+    
     // タブ作成
     for (auto inventory : itemInventoryList) {
-        auto tabMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), inventory.createTabName()), Size(12, 4), [inventory, itemWindowLayer](Ref* ref) {
+        auto tabMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), inventory.createTabName()), Size(12, 4), [inventory, itemWindowLayer, goldTextLabel](Ref* ref) {
             CCLOG("TabName = %s", inventory.getName().c_str());
             MenuItemUtil::touchItemRefreshColor(ref, Color3B::GREEN);
             
+            std::string goldText = GameCore::StringUtils::format("所持金 %10ld G", inventory.getGold());
+            goldTextLabel->setString(goldText);
             itemWindowLayer->setItemInventory(inventory);
             itemWindowLayer->reloadItemList();
         });
@@ -59,32 +87,19 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
     }
     headerMenu->setPosition(menuItemHeaderPoint);
     itemWindowLayer->addChild(headerMenu);
-    
+
     ////////////////////////////
     // 内容
     itemWindowLayer->setItemInventory(selectInventory);
     itemWindowLayer->reloadItemList();
     
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer->getContentSize(), contentSize));
-    itemWindowLayer->setItemDropMenuCallback([modalLayer, actionCallbackList](Ref* ref, ItemDto itemDto) {
+    itemWindowLayer->setItemMenuCallback([modalLayer, actionCallbackList](ItemWindowLayer::ItemWindowMenuType menuType, Ref* ref, const ItemDto &itemDto) {
         CCLOG("RogueScene::itemDropMenuCallback");
-        searchCallbackFire(actionCallbackList, ref, itemDto, ActionType::ITEM_DROP);
-        modalLayer->setVisible(false);
-        modalLayer->removeAllChildrenWithCleanup(true);
-    });
-    
-    itemWindowLayer->setItemUseMenuCallback([modalLayer, actionCallbackList](Ref* ref, ItemDto itemDto) {
-        CCLOG("RogueScene::itemUseMenuCallback");
-        searchCallbackFire(actionCallbackList, ref, itemDto, ActionType::ITEM_USE);
-        modalLayer->setVisible(false);
-        modalLayer->removeAllChildrenWithCleanup(true);
-    });
-    
-    itemWindowLayer->setItemEquipMenuCallback([modalLayer, actionCallbackList](Ref* ref, ItemDto itemDto) {
-        CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", itemDto.getItemType());
-        searchCallbackFire(actionCallbackList, ref, itemDto, ActionType::ITEM_EQUIP);
-        modalLayer->setVisible(false);
-        modalLayer->removeAllChildrenWithCleanup(true);
+        if (searchCallbackFire(actionCallbackList, ref, itemDto, menuType)) {
+            modalLayer->setVisible(false);
+            modalLayer->removeAllChildrenWithCleanup(true);
+        }
     });
     
     ///////////////////////////////////////
@@ -118,7 +133,7 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
     return modalLayer;
 }
 
-void ItemInventoryWindowHelper::searchCallbackFire(std::list<ActionCallback> actionCallbackList, Ref* ref, ItemDto itemDto, ActionType fireActionType)
+bool ItemInventoryWindowHelper::searchCallbackFire(std::list<ActionCallback> actionCallbackList, Ref* ref, ItemDto itemDto, ItemWindowLayer::ItemWindowMenuType fireActionType)
 {
     auto it = std::find_if(actionCallbackList.begin(), actionCallbackList.end(), [fireActionType](ActionCallback actionCallback) -> bool {
         if (actionCallback._actionType == fireActionType) {
@@ -126,7 +141,12 @@ void ItemInventoryWindowHelper::searchCallbackFire(std::list<ActionCallback> act
         }
         return false;
     });
-    (*it).callback(ref, itemDto);
+    (*it)._callback(fireActionType, ref, itemDto);
+    
+    if ((*it)._closeType == ItemInventoryWindowHelper::CloseType::CLOSE) {
+        return true;
+    }
+    return false;
 }
 
 Point ItemInventoryWindowHelper::createMenuCenterPoint(Menu* menu)
