@@ -6,6 +6,7 @@ gen
 *.so
 *.o
 *o.d
+doc/
 
 .gradle
 proj.android/build
