@@ -26,25 +26,19 @@ public:
     // シングルトン
     static AccountData* getInstance();
 
-    // --- ローグプレイ情報 ---
-    RogueLikeGame::RogueScene::RoguePlayData rogue_play_data_;
-    
-    // --- プレイヤー情報 ---
-    ActorDto player_actor_;
-    
-    // --- インベントリ ---
-    // 所持品、装備状態
-    ItemInventoryDto _itemInventory;
-    
-    // --- 倉庫 ---
-    // アイテムリスト
-    // ゴールド
-    // TODO: (kyokomi)別クラスかなぁ
     
     // --- システムデータ ---
     // TODO: (kyokomi)別クラスかなぁ
-
+    
+    const RogueLikeGame::RogueScene::RoguePlayData &getRoguePlayData() { return _roguePlayData; }
+    const ActorDto &getPlayerActor() { return _playerActor; }
+    const ItemInventoryDto &getItemInventory() { return _itemInventory; }
+    const ItemInventoryDto &getItemInventoryStock() { return _itemInventoryStock; }
+    
     void load();
+    void save(const RogueLikeGame::RogueScene::RoguePlayData &roguePlayData,
+              const ActorDto &playerActor,
+              const ItemInventoryDto &itemInventory);
     void save();
     void resetRoguePlayData();
     void resetAll();
@@ -58,6 +52,22 @@ private:
     ~AccountData();
     
     void init();
+    
+    static cocos2d::ValueVector createSaveItemList(const ItemInventoryDto& itemInventory);
+    
+    // --- ローグプレイ情報 ---
+    RogueLikeGame::RogueScene::RoguePlayData _roguePlayData;
+    // --- プレイヤー情報 ---
+    ActorDto _playerActor;
+    // --- インベントリ ---
+    // 所持品、装備状態
+    ItemInventoryDto _itemInventory;
+    // --- 倉庫 ---
+    ItemInventoryDto _itemInventoryStock;
+    
+    void clearRoguePlayData();
+    void clearPlayerActorData();
+    void clearItemList();
 };
 
 NS_ROGUE_END

@@ -13,11 +13,9 @@
 #include "LayerActionUtils.h"
 #include "LotteryUtils.h"
 
-#include "TableViewTestLayer.h"
 #include "SystemMenuLayer.h"
 
 #include "AlertDialogLayer.h"
-#include "ItemWindowLayer.h"
 #include "ItemInventoryWindowHelper.h"
 #include "ModalLayer.h"
 
@@ -92,18 +90,18 @@ bool RogueScene::initWithQuestId(int quest_id) {
     
     ActorDto actor_dto;
     // 不一致の場合初期化
-    if (AccountData::getInstance()->rogue_play_data_.quest_id != quest_id) {
+    if (AccountData::getInstance()->getRoguePlayData().quest_id != quest_id) {
         AccountData::getInstance()->resetRoguePlayData();
         rogue_play_data_.quest_id = quest_id;
         // デフォルトステータス
         actor_dto = ActorDto::createActorDto(m_player::data_.at("1").asString());
     } else {
         // ロード処理
-        rogue_play_data_ = AccountData::getInstance()->rogue_play_data_;
-        actor_dto = AccountData::getInstance()->player_actor_;
+        rogue_play_data_ = AccountData::getInstance()->getRoguePlayData();
+        actor_dto = AccountData::getInstance()->getPlayerActor();
     }
     // イベントリロード
-    this->_itemInventory = AccountData::getInstance()->_itemInventory;
+    this->_itemInventory = AccountData::getInstance()->getItemInventory();
     rogue_play_data_.item_count = this->_itemInventory.getMaxObjectId();
     
     auto win_size = Director::getInstance()->getWinSize();
@@ -404,7 +402,7 @@ void RogueScene::showItemInventoryWindow()
                     
                 } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     // 解除
-                    relaseObjectId = player_sprite->getActorDto()->getWeaponEquip().getObjectId();
+                    relaseObjectId = player_sprite->getActorDto()->getAccessoryEquip().getObjectId();
                     // 防具装備
                     MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(itemDto.getItemId());
                     player_sprite->getActorDto()->equipAccessory(itemDto.getObjectId(), itemDto.getParam(), mAccessory);
@@ -872,7 +870,6 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
 
 void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
     auto rogue_map_layer = getRogueMapLayer();
-    auto actor_sprite = getPlayerActorSprite(1);
     
     // itemを取得
     auto drop_item_sprite = rogue_map_layer->getDropItemSprite(drop_map_item.seqNo);
@@ -886,7 +883,7 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
         // メッセージログ
         logMessage("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
         // ゴールドを加算
-        actor_sprite->getActorDto()->addGold(itemDto.getParam());
+        this->_itemInventory.addGold(itemDto.getParam());
         
         // Map上から削除する
         rogue_map_layer->removeDropItemSprite(drop_item_sprite);
@@ -922,12 +919,10 @@ void RogueScene::touchKaidan() {
     auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "はい", "いいえ", [this, actor_sprite](Ref *ref) {
         // save
         this->rogue_play_data_.quest_id += 1;
-        
-        AccountData::getInstance()->player_actor_ = *(actor_sprite->getActorDto());
-        AccountData::getInstance()->rogue_play_data_ =  this->rogue_play_data_;
-        AccountData::getInstance()->_itemInventory = this->_itemInventory;
-        AccountData::getInstance()->save();
-        
+        ActorDto playerActor = *(actor_sprite->getActorDto());
+        AccountData::getInstance()->save(this->rogue_play_data_,
+                                         playerActor,
+                                         this->_itemInventory);
         // 画面遷移
         this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
         
@@ -1179,7 +1174,8 @@ void RogueScene::refreshStatus() {
         return;
     }
     
-    auto pStatusText = pStatusBarLayer->getChildren().at(0); // TODO: とりあえず1要素なので。。。
+     // TODO: とりあえず1要素なので。。。
+    auto pStatusText = pStatusBarLayer->getChildren().at(0);
     if (pStatusText) {
         
         // プレイヤー取得
@@ -1187,7 +1183,14 @@ void RogueScene::refreshStatus() {
         auto pPlayerDto = pPlayerSprite->getActorDto();
         int floor = rogue_play_data_.quest_id; // フロア情報（クエストID=フロア数でいい？)
         // 作成
-        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G", floor, pPlayerDto->getLv(), pPlayerDto->getHitPoint(), pPlayerDto->getHitPointLimit(), pPlayerDto->getMagicPoint(), pPlayerDto->getMagicPointLimit(), pPlayerDto->getGold());
+        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10ld G",
+                                             floor,
+                                             pPlayerDto->getLv(),
+                                             pPlayerDto->getHitPoint(),
+                                             pPlayerDto->getHitPointLimit(),
+                                             pPlayerDto->getMagicPoint(),
+                                             pPlayerDto->getMagicPointLimit(),
+                                             this->_itemInventory.getGold());
         
         auto pLabelText = static_cast<Label*>(pStatusText);
         pLabelText->setString(pStr->getCString());
@@ -1412,8 +1415,8 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
         int hitId = valueMap.at(RogueGameConfig::Id).asInt();
         
         // objectIdを補正
-        if (AccountData::getInstance()->rogue_play_data_.item_count < 0) {
-            AccountData::getInstance()->rogue_play_data_.item_count = 0;
+        if (this->rogue_play_data_.item_count < 0) {
+            this->rogue_play_data_.item_count = 0;
         }
         
         // 武器、防具の+値やゴールド値を決定する
@@ -1433,7 +1436,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             // Master取得
             MUseItem mUseItem = MUseItemDao::getInstance()->selectById(hitId);
             // ドロップアイテム情報を生成
-            int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
+            int objectId = this->rogue_play_data_.item_count + 1;
             ItemDto itemDto(
                 objectId,
                 mUseItem.getUseItemId(),
@@ -1448,13 +1451,13 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
-            AccountData::getInstance()->rogue_play_data_.item_count++;
+            this->rogue_play_data_.item_count++;
             
         } else if (itemType == MUseItem::ItemType::EQUIP_WEAPON) {
             // 武器
             MWeapon mWeapon = MWeaponDao::getInstance()->selectById(hitId);
             
-            int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
+            int objectId = this->rogue_play_data_.item_count + 1;
             ItemDto itemDto(
                 objectId,
                 mWeapon.getWeaponId(),
@@ -1468,13 +1471,13 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
-            AccountData::getInstance()->rogue_play_data_.item_count++;
+            this->rogue_play_data_.item_count++;
             
         } else if (itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
             // 防具
             MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(hitId);
             
-            int objectId = AccountData::getInstance()->rogue_play_data_.item_count + 1;
+            int objectId = this->rogue_play_data_.item_count + 1;
             ItemDto itemDto(
                 objectId,
                 mAccessory.getAccessoryId(),
@@ -1488,7 +1491,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
-            AccountData::getInstance()->rogue_play_data_.item_count++;
+            this->rogue_play_data_.item_count++;
         }
     }
     hitValues.clear();

@@ -14,9 +14,6 @@ NS_ROGUE_BEGIN
 
 static std::string createSaveFilePath();
 static void remoteSaveFile();
-static void clearRoguePlayData();
-static void clearPlayerActorData();
-static void clearItemList();
 
 static AccountData *s_account_data_instance;
 
@@ -33,9 +30,10 @@ AccountData* AccountData::getInstance()
 }
 
 AccountData::AccountData()
-:rogue_play_data_({0, 0, RogueScene::GameStatus::INIT, 0, 0, 0}),
-player_actor_(ActorDto()),
-_itemInventory("所持品", RogueGameConfig::USE_ITEM_MAX)
+: _roguePlayData({0, 0, RogueScene::GameStatus::INIT, 0, 0, 0})
+, _playerActor(ActorDto())
+, _itemInventory("所持品", 0, RogueGameConfig::USE_ITEM_MAX)
+, _itemInventoryStock("倉　庫", 0, RogueGameConfig::STOCK_ITEM_MAX)
 {
 };
 
@@ -51,37 +49,53 @@ void AccountData::init()
 #pragma mark
 #pragma mark static method
 
+void AccountData::save(const RogueScene::RoguePlayData& roguePlayData,
+                       const ActorDto& playerActor,
+                       const ItemInventoryDto& itemInventory)
+{
+    this->_roguePlayData = roguePlayData;
+    this->_playerActor = playerActor;
+    this->_itemInventory = itemInventory;
+    save();
+}
+
 void AccountData::save()
 {
     CCLOG("%s %d save ", __FILE__, __LINE__);
 
-    ValueVector save_item_list;
-    
-    auto itemList = this->_itemInventory.getItemList();
-    
-    auto it = itemList.begin();
-    for (int i = 0; i < RogueGameConfig::USE_ITEM_MAX; i++) {
-        if (it != itemList.end()) {
-            auto item_str = (*(it)).itemDtoToString();
-            it++;
-            
-            save_item_list.push_back(Value(item_str));
-        } else {
-            // 空データ保存
-            save_item_list.push_back(Value(""));
-        }
-    }
+    ValueVector saveItemList = createSaveItemList(this->_itemInventory);
+    ValueVector saveItemStockList = createSaveItemList(this->_itemInventoryStock);
     
     ValueMap save_data{
-        {"rogue_play_data", Value(RogueScene::roguePlayDataToString(rogue_play_data_))},
-        {"player_actor", Value(player_actor_.actorToString())},
-        {"player_actor.weapon_equip", Value(player_actor_.getWeaponEquip().actorEquipToString())},
-        {"player_actor.accessory_equip", Value(player_actor_.getAccessoryEquip().actorEquipToString())},
-        {"item_list", Value(save_item_list)}
+        {"rogue_play_data", Value(RogueScene::roguePlayDataToString(_roguePlayData))},
+        {"player_actor", Value(_playerActor.actorToString())},
+        {"player_actor.weapon_equip", Value(_playerActor.getWeaponEquip().actorEquipToString())},
+        {"player_actor.accessory_equip", Value(_playerActor.getAccessoryEquip().actorEquipToString())},
+        {"item_list", Value(saveItemList)},
+        {"item_stock_list", Value(saveItemStockList)}
     };
     
     // 書き込み
     FileUtils::getInstance()->writeToFile(save_data, createSaveFilePath());
+}
+
+ValueVector AccountData::createSaveItemList(const ItemInventoryDto& itemInventory)
+{
+    ValueVector saveItemList;
+    
+    auto itemList = itemInventory.getItemList();
+    auto it = itemList.begin();
+    for (int i = 0; i < itemList.size(); i++) {
+        if (it != itemList.end()) {
+            auto item_str = (*(it)).itemDtoToString();
+            it++;
+            saveItemList.push_back(Value(item_str));
+        } else {
+            // 空データ保存
+            saveItemList.push_back(Value(""));
+        }
+    }
+    return saveItemList;
 }
 
 void AccountData::load()
@@ -94,28 +108,28 @@ void AccountData::load()
         return;
     }
     
-    Value rogue_play_data_value = save_data.at("rogue_play_data");
-    std::string rogue_play_data_str = rogue_play_data_value.asString();
-    if (rogue_play_data_str.size() > 0) {
-        rogue_play_data_ = RogueScene::createRoguePlayData(rogue_play_data_str);
+    Value _roguePlayDatavalue = save_data.at("rogue_play_data");
+    std::string _roguePlayDatastr = _roguePlayDatavalue.asString();
+    if (_roguePlayDatastr.size() > 0) {
+        _roguePlayData = RogueScene::createRoguePlayData(_roguePlayDatastr);
     }
 
-    Value player_actor_data_value = save_data.at("player_actor");
-    std::string player_actor_data_str = player_actor_data_value.asString();
-    if (player_actor_data_str.size() > 0) {
-        player_actor_ = ActorDto::createActorDto(player_actor_data_str);
+    Value _playerActordata_value = save_data.at("player_actor");
+    std::string _playerActordata_str = _playerActordata_value.asString();
+    if (_playerActordata_str.size() > 0) {
+        _playerActor = ActorDto::createActorDto(_playerActordata_str);
     }
     
-    Value player_actor_weapon_equip_data_value = save_data.at("player_actor.weapon_equip");
-    std::string player_actor_weapon_equip_data_str = player_actor_weapon_equip_data_value.asString();
-    if (player_actor_weapon_equip_data_str.size() > 0) {
-        player_actor_.setWeaponEquip(ActorEquipDto::createEquipDto(player_actor_weapon_equip_data_str));
+    Value _playerActorweapon_equip_data_value = save_data.at("player_actor.weapon_equip");
+    std::string _playerActorweapon_equip_data_str = _playerActorweapon_equip_data_value.asString();
+    if (_playerActorweapon_equip_data_str.size() > 0) {
+        _playerActor.setWeaponEquip(ActorEquipDto::createEquipDto(_playerActorweapon_equip_data_str));
     }
     
-    Value player_actor_accessory_equip_data_value = save_data.at("player_actor.accessory_equip");
-    std::string player_actor_accessory_equip_data_str = player_actor_accessory_equip_data_value.asString();
-    if (player_actor_accessory_equip_data_str.size() > 0) {
-        player_actor_.setAccessoryEquip(ActorEquipDto::createEquipDto(player_actor_accessory_equip_data_str));
+    Value _playerActoraccessory_equip_data_value = save_data.at("player_actor.accessory_equip");
+    std::string _playerActoraccessory_equip_data_str = _playerActoraccessory_equip_data_value.asString();
+    if (_playerActoraccessory_equip_data_str.size() > 0) {
+        _playerActor.setAccessoryEquip(ActorEquipDto::createEquipDto(_playerActoraccessory_equip_data_str));
     }
     
     ValueVector item_list_value = save_data.at("item_list").asValueVector();
@@ -156,14 +170,14 @@ void AccountData::resetAll() {
 #pragma mark 汎用
 
 std::string AccountData::createQuestSaveDetailText() const {
-    return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %d G",
+    return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %ld G",
                         "初心者の洞窟",
-                        this->rogue_play_data_.quest_id,
-                        this->player_actor_.getLv(),
-                        this->player_actor_.getExp(),
-                        this->player_actor_.getHitPoint(),
-                        this->player_actor_.getHitPointLimit(),
-                        this->player_actor_.getGold());
+                        this->_roguePlayData.quest_id,
+                        this->_playerActor.getLv(),
+                        this->_playerActor.getExp(),
+                        this->_playerActor.getHitPoint(),
+                        this->_playerActor.getHitPointLimit(),
+                        this->_itemInventory.getGold());
 }
 
 
@@ -171,12 +185,21 @@ std::string AccountData::createQuestSaveDetailText() const {
 #pragma mark チェック系
 
 bool AccountData::isQuestSaveData() const {
-    if (this->rogue_play_data_.quest_id > 0) {
+    if (this->_roguePlayData.quest_id > 0) {
         return true;
     }
     return false;
 }
 
+void AccountData::clearRoguePlayData() {
+    this->_roguePlayData = RogueScene::createRoguePlayData();
+}
+void AccountData::clearPlayerActorData() {
+    this->_playerActor = ActorDto();
+}
+void AccountData::clearItemList() {
+    this->_itemInventory.clearItemList();
+}
 
 ///////////////////////////////////////////////
 
@@ -187,16 +210,6 @@ static std::string createSaveFilePath() {
 static void remoteSaveFile() {
     std::string save_file_path = createSaveFilePath();
     remove(save_file_path.c_str());
-}
-
-static void clearRoguePlayData() {
-    AccountData::getInstance()->rogue_play_data_ = RogueScene::createRoguePlayData();
-}
-static void clearPlayerActorData() {
-    AccountData::getInstance()->player_actor_ = ActorDto();
-}
-static void clearItemList() {
-    AccountData::getInstance()->_itemInventory.clearItemList();
 }
 
 NS_ROGUE_END

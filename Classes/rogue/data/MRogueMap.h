@@ -47,6 +47,7 @@ namespace RogueGameConfig {
 
     // 所持可能アイテム数
     const int USE_ITEM_MAX = 20;
+    const int STOCK_ITEM_MAX = 100;
     
     const std::string MobCount = "mobCount";
     const std::string MobIds = "mobIds";

@@ -10,13 +10,15 @@
 
 ItemInventoryDto::ItemInventoryDto()
 : _name("")
+, _gold(0)
 , _size(0)
 , _itemList()
 {
 }
 
-ItemInventoryDto::ItemInventoryDto(std::string name, int size, ItemList itemList)
+ItemInventoryDto::ItemInventoryDto(std::string name, long gold, int size, ItemList itemList)
 : _name(name)
+, _gold(gold)
 , _size(size)
 , _itemList(itemList)
 {
@@ -33,6 +35,14 @@ std::string ItemInventoryDto::createTabName() const
                                          _name.c_str(),
                                          _itemList.size(),
                                          _size);
+}
+
+void ItemInventoryDto::addGold(int gold)
+{
+    this->_gold += gold;
+    if (this->_gold < 0) {
+        this->_gold = 0;
+    }
 }
 
 bool ItemInventoryDto::addItemDto(const ItemDto &itemDto)
