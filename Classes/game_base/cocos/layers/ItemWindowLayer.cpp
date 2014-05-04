@@ -172,7 +172,7 @@ void ItemWindowLayer::initCreateMenu(std::list<ItemWindowLayer::ItemWindowMenuTy
                 labelText = "売　る";
                 break;
             case ITEM_STOCK:
-                labelText = "預ける"; // 出　す
+                labelText = "出・入";
                 break;
             case ITEM_USE:
                 labelText = "つかう";
@@ -194,6 +194,8 @@ void ItemWindowLayer::initCreateMenu(std::list<ItemWindowLayer::ItemWindowMenuTy
                 this->_itemMenuCallback(menuType, pSeneder, itemDto);
             }
         });
+        menuItem->setVisible(false);
+        menuItem->setEnabled(false);
         this->_menuItemMap.insert(menuType, menuItem);
         menuItemArray.pushBack(menuItem);
     }
@@ -234,7 +236,6 @@ void ItemWindowLayer::reloadItemList() {
     
     auto pItemTabelLayer = static_cast<TableViewTestLayer*>(getChildByTag(ItemWindowLayer::ItemTableLayerTag));
     if (pItemTabelLayer) {
-        
         // 装備ソート
         this->_itemInventoryDto.sortItemList();
         auto itemList = this->_itemInventoryDto.getItemList();
@@ -242,6 +243,9 @@ void ItemWindowLayer::reloadItemList() {
         std::list<TableViewTestLayer::TableLayout> itemNameList;
         
         for (auto itemDto : itemList) {
+            if (itemDto.getObjectId() <= 0) {
+                continue;
+            }
             TableViewTestLayer::TableLayout layout = {
                 ItemLogic::createItemImageFileName(itemDto.getImageResId()),
                 itemDto.createItemName(),

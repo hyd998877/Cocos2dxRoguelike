@@ -14,9 +14,8 @@
 #include "LotteryUtils.h"
 
 #include "SystemMenuLayer.h"
-
+#include "ItemInventoryLayer.h"
 #include "AlertDialogLayer.h"
-#include "ItemInventoryWindowHelper.h"
 #include "ModalLayer.h"
 
 #include "ItemLogic.h"
@@ -383,112 +382,122 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
 
 void RogueScene::showItemInventoryWindow()
 {
-    std::list<ItemInventoryWindowHelper::ActionCallback> actionCallbackList{
-        ItemInventoryWindowHelper::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_DROP, ItemInventoryWindowHelper::CloseType::CLOSE,
+    auto itemWindowLayer = ItemInventoryLayer::create(this->_itemInventory);
+    itemWindowLayer->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
+        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_DROP, ItemInventoryLayer::CloseType::CLOSE,
             [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
                 CCLOG("RogueScene::itemDropMenuCallback");
-                
-                std::string message = "";
-                // アイテムをマップのプレイヤーの足元に置く。ただしすでにアイテムが置いてある場合は置けない
-                auto player_sprite = getPlayerActorSprite(1);
-                MapIndex targetMapIndex = player_sprite->getActorMapItem().mapIndex;
-                if (this->getRogueMapLayer()->tileSetDropMapItem(itemDto, targetMapIndex)) {
-                    message = itemDto.createItemName() + "を床においた。";
-                    
-                    // もし装備してたら外す
-                    if (itemDto.isEquip()) {
-                        this->_itemInventory.itemEquip(itemDto.getObjectId(), false);
-                        
-                        if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
-                            player_sprite->getActorDto()->equipReleaseWeapon();
-                        } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
-                            player_sprite->getActorDto()->equipReleaseAccessory();
-                        }
-                        
-                        // 装備変更でステータス更新
-                        this->refreshStatusEquip(*player_sprite->getActorDto());
-                    }
-                    this->_itemInventory.removeItemDto(itemDto.getObjectId());
-                    
-                    // ターン消費
-                    this->changeGameStatus(GameStatus::ENEMY_TURN);
-                } else {
-                    message = itemDto.createItemName() + "を床におけなかった。";
-                }
-                this->logMessage(message.c_str());
+                this->itemWindowDropItem(itemDto);
             }
         },
-        ItemInventoryWindowHelper::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_EQUIP, ItemInventoryWindowHelper::CloseType::CLOSE,
-            [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", itemDto.getItemType());
-                
-                auto player_sprite = this->getPlayerActorSprite(1);
-                
-                if (!itemDto.isEquip()) {
-                    int relaseObjectId = 0;
-                    
-                    if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
-                        // 解除
-                        relaseObjectId = player_sprite->getActorDto()->getWeaponEquip().getObjectId();
-                        // 武器装備
-                        MWeapon mWeapon = MWeaponDao::getInstance()->selectById(itemDto.getItemId());
-                        player_sprite->getActorDto()->equipWeapon(itemDto.getObjectId(), itemDto.getParam(), mWeapon);
-                        this->_itemInventory.itemEquip(itemDto.getObjectId(), true);
-                        
-                    } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
-                        // 解除
-                        relaseObjectId = player_sprite->getActorDto()->getAccessoryEquip().getObjectId();
-                        // 防具装備
-                        MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(itemDto.getItemId());
-                        player_sprite->getActorDto()->equipAccessory(itemDto.getObjectId(), itemDto.getParam(), mAccessory);
-                    }
-                    
-                    if (relaseObjectId != 0) {
-                        this->_itemInventory.itemEquip(relaseObjectId, false);
-                    }
-                    this->_itemInventory.itemEquip(itemDto.getObjectId(), true);
-                    this->logMessage("%sを装備した。", itemDto.createItemName().c_str());
-                } else {
-                    if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
-                        // 武器解除
-                        player_sprite->getActorDto()->equipReleaseWeapon();
-                    } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
-                        // 防具解除
-                        player_sprite->getActorDto()->equipReleaseAccessory();
-                    }
-                    this->_itemInventory.itemEquip(itemDto.getObjectId(), false);
-                    this->logMessage("%sの装備をはずした。", itemDto.createItemName().c_str());
-                }
-                
-                // 装備解除、装備によってステータス変動するためステータスバーを更新
-                this->refreshStatusEquip(*player_sprite->getActorDto());
-                
-                // ターン消費
-                this->changeGameStatus(GameStatus::ENEMY_TURN);
-            }
-        },
-        ItemInventoryWindowHelper::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_USE, ItemInventoryWindowHelper::CloseType::CLOSE,
+        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_USE, ItemInventoryLayer::CloseType::CLOSE,
             [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
                 CCLOG("RogueScene::itemUseMenuCallback");
-                
-                auto player_sprite = this->getPlayerActorSprite(1);
-                
-                // itemIdで処理してくれるlogicへ
-                std::string use_message = ItemLogic::use(itemDto.getItemId(), player_sprite->getActorDto());
-                
-                this->logMessage(use_message.c_str());
-                
-                this->_itemInventory.removeItemDto(itemDto.getObjectId());
-                
-                // ターン消費
-                this->changeGameStatus(GameStatus::ENEMY_TURN);
+                this->itemWindowUseItem(itemDto);
             }
         },
-    };
-    
-    auto itemWindowLayer = ItemInventoryWindowHelper::create(this->_itemInventory, actionCallbackList);
+        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_EQUIP, ItemInventoryLayer::CloseType::CLOSE,
+            [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
+                CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", itemDto.getItemType());
+                this->itemWindowEquipItem(itemDto);
+            }
+        },
+    });
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
     this->addChild(itemWindowLayer, ZOrders::ItemListLayerZOrder, Tags::ItemListWindowTag);
+}
+
+void RogueScene::itemWindowDropItem(const ItemDto &itemDto)
+{
+    std::string message = "";
+    // アイテムをマップのプレイヤーの足元に置く。ただしすでにアイテムが置いてある場合は置けない
+    auto player_sprite = getPlayerActorSprite(1);
+    MapIndex targetMapIndex = player_sprite->getActorMapItem().mapIndex;
+    if (this->getRogueMapLayer()->tileSetDropMapItem(itemDto, targetMapIndex)) {
+        message = itemDto.createItemName() + "を床においた。";
+        // もし装備してたら外す
+        if (itemDto.isEquip()) {
+            this->_itemInventory.itemEquip(itemDto.getObjectId(), false);
+            
+            if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
+                player_sprite->getActorDto()->equipReleaseWeapon();
+            } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                player_sprite->getActorDto()->equipReleaseAccessory();
+            }
+            
+            // 装備変更でステータス更新
+            this->refreshStatusEquip(*player_sprite->getActorDto());
+        }
+        this->_itemInventory.removeItemDto(itemDto.getObjectId());
+        
+        // ターン消費
+        this->changeGameStatus(GameStatus::ENEMY_TURN);
+    } else {
+        message = itemDto.createItemName() + "を床におけなかった。";
+    }
+    this->logMessage(message.c_str());
+}
+
+void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
+{
+    auto player_sprite = this->getPlayerActorSprite(1);
+    
+    if (!itemDto.isEquip()) {
+        int relaseObjectId = 0;
+        
+        if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
+            // 解除
+            relaseObjectId = player_sprite->getActorDto()->getWeaponEquip().getObjectId();
+            // 武器装備
+            MWeapon mWeapon = MWeaponDao::getInstance()->selectById(itemDto.getItemId());
+            player_sprite->getActorDto()->equipWeapon(itemDto.getObjectId(), itemDto.getParam(), mWeapon);
+            this->_itemInventory.itemEquip(itemDto.getObjectId(), true);
+            
+        } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
+            // 解除
+            relaseObjectId = player_sprite->getActorDto()->getAccessoryEquip().getObjectId();
+            // 防具装備
+            MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(itemDto.getItemId());
+            player_sprite->getActorDto()->equipAccessory(itemDto.getObjectId(), itemDto.getParam(), mAccessory);
+        }
+        
+        if (relaseObjectId != 0) {
+            this->_itemInventory.itemEquip(relaseObjectId, false);
+        }
+        this->_itemInventory.itemEquip(itemDto.getObjectId(), true);
+        this->logMessage("%sを装備した。", itemDto.createItemName().c_str());
+    } else {
+        if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
+            // 武器解除
+            player_sprite->getActorDto()->equipReleaseWeapon();
+        } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
+            // 防具解除
+            player_sprite->getActorDto()->equipReleaseAccessory();
+        }
+        this->_itemInventory.itemEquip(itemDto.getObjectId(), false);
+        this->logMessage("%sの装備をはずした。", itemDto.createItemName().c_str());
+    }
+    
+    // 装備解除、装備によってステータス変動するためステータスバーを更新
+    this->refreshStatusEquip(*player_sprite->getActorDto());
+    
+    // ターン消費
+    this->changeGameStatus(GameStatus::ENEMY_TURN);
+}
+
+void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
+{
+    auto player_sprite = this->getPlayerActorSprite(1);
+    
+    // itemIdで処理してくれるlogicへ
+    std::string use_message = ItemLogic::use(itemDto.getItemId(), player_sprite->getActorDto());
+    
+    this->logMessage(use_message.c_str());
+    
+    this->_itemInventory.removeItemDto(itemDto.getObjectId());
+    
+    // ターン消費
+    this->changeGameStatus(GameStatus::ENEMY_TURN);
 }
 
 // --------------------------

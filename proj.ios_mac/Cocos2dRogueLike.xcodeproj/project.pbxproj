@@ -59,6 +59,7 @@
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
 		CE2F8A3F18AF28E5001B457C /* novel in Resources */ = {isa = PBXBuildFile; fileRef = CE2F8A3D18AF28E5001B457C /* novel */; };
+		CE5AC3F1191692AA00ED0A22 /* ItemInventoryLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5AC3EF191692AA00ED0A22 /* ItemInventoryLayer.cpp */; };
 		CE626DE81914BEF6005925DC /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D721914BEF6005925DC /* BattleScene.cpp */; };
 		CE626DE91914BEF6005925DC /* LabelRPG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D791914BEF6005925DC /* LabelRPG.cpp */; };
 		CE626DEA1914BEF6005925DC /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */; };
@@ -94,7 +95,6 @@
 		CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE6E644B18DB33CF0008C116 /* game_over.jpg */; };
 		CE73FB2418B0A3F1009273D0 /* test_master in Resources */ = {isa = PBXBuildFile; fileRef = CE73FB2318B0A3F1009273D0 /* test_master */; };
 		CE81F79618940AA900A8162B /* kaidan.png in Resources */ = {isa = PBXBuildFile; fileRef = CE81F79518940AA900A8162B /* kaidan.png */; };
-		CE8670D71914ED810055C092 /* ItemInventoryWindowHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE8670D51914ED810055C092 /* ItemInventoryWindowHelper.cpp */; };
 		CE93B4BF188156FC00825FD1 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A4188156FC00825FD1 /* fonts */; };
 		CE93B4C0188156FC00825FD1 /* grid32.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A5188156FC00825FD1 /* grid32.png */; };
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
@@ -299,6 +299,8 @@
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
 		CE2F8A3D18AF28E5001B457C /* novel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = novel; sourceTree = "<group>"; };
+		CE5AC3EF191692AA00ED0A22 /* ItemInventoryLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemInventoryLayer.cpp; sourceTree = "<group>"; };
+		CE5AC3F0191692AA00ED0A22 /* ItemInventoryLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInventoryLayer.h; sourceTree = "<group>"; };
 		CE626D721914BEF6005925DC /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScene.cpp; sourceTree = "<group>"; };
 		CE626D731914BEF6005925DC /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
 		CE626D791914BEF6005925DC /* LabelRPG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelRPG.cpp; sourceTree = "<group>"; };
@@ -372,8 +374,6 @@
 		CE6E644B18DB33CF0008C116 /* game_over.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = game_over.jpg; sourceTree = "<group>"; };
 		CE73FB2318B0A3F1009273D0 /* test_master */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_master; sourceTree = "<group>"; };
 		CE81F79518940AA900A8162B /* kaidan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kaidan.png; sourceTree = "<group>"; };
-		CE8670D51914ED810055C092 /* ItemInventoryWindowHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemInventoryWindowHelper.cpp; sourceTree = "<group>"; };
-		CE8670D61914ED810055C092 /* ItemInventoryWindowHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInventoryWindowHelper.h; sourceTree = "<group>"; };
 		CE8670DC1915085C0055C092 /* MenuItemUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuItemUtil.h; sourceTree = "<group>"; };
 		CE93B417188156C700825FD1 /* AppMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppMacros.h; path = ../Classes/AppMacros.h; sourceTree = "<group>"; };
 		CE93B4A4188156FC00825FD1 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
@@ -710,8 +710,6 @@
 			children = (
 				CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */,
 				CE626D7D1914BEF6005925DC /* AlertDialogLayer.h */,
-				CE8670D51914ED810055C092 /* ItemInventoryWindowHelper.cpp */,
-				CE8670D61914ED810055C092 /* ItemInventoryWindowHelper.h */,
 				CE626D801914BEF6005925DC /* ItemWindowLayer.cpp */,
 				CE626D811914BEF6005925DC /* ItemWindowLayer.h */,
 				CE626D821914BEF6005925DC /* JoystickLayer.cpp */,
@@ -722,6 +720,8 @@
 				CE626D871914BEF6005925DC /* SystemMenuLayer.h */,
 				CE626D881914BEF6005925DC /* TableViewTestLayer.cpp */,
 				CE626D891914BEF6005925DC /* TableViewTestLayer.h */,
+				CE5AC3EF191692AA00ED0A22 /* ItemInventoryLayer.cpp */,
+				CE5AC3F0191692AA00ED0A22 /* ItemInventoryLayer.h */,
 			);
 			path = layers;
 			sourceTree = "<group>";
@@ -1296,6 +1296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE626DF01914BEF6005925DC /* TableViewTestLayer.cpp in Sources */,
+				CE5AC3F1191692AA00ED0A22 /* ItemInventoryLayer.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				CE626DFD1914BEF6005925DC /* BattleLogic.cpp in Sources */,
 				CE626DE81914BEF6005925DC /* BattleScene.cpp in Sources */,
@@ -1325,7 +1326,6 @@
 				CE626E071914BEF6005925DC /* RogueScene.cpp in Sources */,
 				CE626E061914BEF6005925DC /* MypageScene.cpp in Sources */,
 				CE626DF71914BEF6005925DC /* MAccessory.cpp in Sources */,
-				CE8670D71914ED810055C092 /* ItemInventoryWindowHelper.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				CE626DFA1914BEF6005925DC /* MWeapon.cpp in Sources */,
 				CE626DF91914BEF6005925DC /* MUseItem.cpp in Sources */,

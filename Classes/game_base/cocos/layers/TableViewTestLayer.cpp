@@ -156,13 +156,15 @@ long TableViewTestLayer::numberOfCellsInTableView(TableView *table)
 
 void TableViewTestLayer::makeItemList(std::list<TableLayout> itemList) {
     m_itemList = itemList;
-    
+
     auto table_view = static_cast<TableView*>(this->getChildByTag(TableViewTestLayer::TableViewTag));
+    table_view->setVisible(false);
     
     // タッチなしに初期化
     touchCellRefreshColor(table_view, -1);
     
     table_view->reloadData();
+    table_view->setVisible(true);
 }
 
 #pragma mark

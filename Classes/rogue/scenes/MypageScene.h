@@ -11,25 +11,26 @@
 
 #include "cocos2d.h"
 #include "AppMacros.h"
-#include "ItemInventoryWindowHelper.h"
 
-USING_NS_CC;
-using namespace std;
+#include "ItemInventoryDto.h"
 
 NS_ROGUE_BEGIN
 
-class MypageScene : public Layer
+class MypageScene : public cocos2d::Layer
 {
 public:
-    static Scene* scene();
-private:
+    static cocos2d::Scene* scene();
     MypageScene();
     virtual ~MypageScene();
     
-    bool init();
+    virtual bool init();
+private:
     void initQuestSave();
     void initMyPage();
 
+    ItemInventoryDto _itemInventory;
+    ItemInventoryDto _itemInventoryStock;
+    
     CREATE_FUNC(MypageScene);
     
     /** グロナビ生成 */

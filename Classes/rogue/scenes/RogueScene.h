@@ -193,6 +193,9 @@ private:
     
     // イベントリ表示
     void showItemInventoryWindow();
+    void itemWindowDropItem(const ItemDto &itemDto);
+    void itemWindowEquipItem(const ItemDto &itemDto);
+    void itemWindowUseItem(const ItemDto &itemDto);
     
     // システムメニュ
     void showSystemMenu();

@@ -9,6 +9,13 @@
 
 USING_NS_CC;
 
+ModalLayer::ModalLayer()
+{
+}
+ModalLayer::~ModalLayer()
+{
+}
+
 // モーダルレイヤー生成し、中心に配置
 ModalLayer* ModalLayer::createWithAttachCenterPosition(Node* attachNode, const cocos2d::Color3B& color, const GLubyte& opacity)
 {

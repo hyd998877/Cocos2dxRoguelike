@@ -33,11 +33,12 @@ public:
     
     void setItemList(ItemList itemList) { _itemList = itemList; }
     
+    bool isInventoryByObjectId(long objectId) const;
+    ItemDto findByObjectId(long objectId) const;
     void addGold(int gold);
     bool addItemDto(const ItemDto &itemDto);
     void removeItemDto(long objectId);
     void itemEquip(long objectId, bool equip);
-    ItemDto* findItemDto(long objectId);
     
     bool isLimit() const;
 
@@ -46,8 +47,10 @@ public:
     void clearItemList();
     void resetAllEquip();
     void sortItemList(Comparator comparator = ItemDto::compare_dropItem_equip);
-    long getMaxObjectId();
+    long getMaxObjectId() const;
 private:
+    ItemDto* findItemDto(long objectId);
+    
     std::string _name;
     long _gold;
     int _size;

@@ -49,6 +49,19 @@ void AccountData::init()
 #pragma mark
 #pragma mark static method
 
+void AccountData::saveInventory(const ItemInventoryDto &itemInventory)
+{
+    this->_itemInventory = itemInventory;
+    save();
+}
+
+void AccountData::saveInventory(const ItemInventoryDto &itemInventory, const ItemInventoryDto &itemInventoryStock)
+{
+    this->_itemInventory = itemInventory;
+    this->_itemInventoryStock = itemInventoryStock;
+    save();
+}
+
 void AccountData::save(const RogueScene::RoguePlayData& roguePlayData,
                        const ActorDto& playerActor,
                        const ItemInventoryDto& itemInventory)
@@ -211,6 +224,23 @@ bool AccountData::isQuestSaveData() const {
     return false;
 }
 
+const ItemInventoryDto &AccountData::changeInventoryItem(long objectId)
+{
+    if (this->_itemInventory.isInventoryByObjectId(objectId)) {
+        this->_itemInventoryStock.addItemDto(this->_itemInventory.findByObjectId(objectId));
+        this->_itemInventory.removeItemDto(objectId);
+        return this->getItemInventory();
+    } else if (this->_itemInventoryStock.isInventoryByObjectId(objectId)) {
+        this->_itemInventory.addItemDto(this->_itemInventoryStock.findByObjectId(objectId));
+        this->_itemInventoryStock.removeItemDto(objectId);
+        return this->getItemInventoryStock();
+    }
+    return this->getItemInventory();
+}
+
+
+///////////////////////////////////////////////
+// private
 void AccountData::clearRoguePlayData() {
     this->_roguePlayData = RogueScene::createRoguePlayData();
 }

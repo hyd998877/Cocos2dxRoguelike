@@ -26,7 +26,6 @@ public:
     // シングルトン
     static AccountData* getInstance();
 
-    
     // --- システムデータ ---
     // TODO: (kyokomi)別クラスかなぁ
     
@@ -40,12 +39,18 @@ public:
               const ActorDto &playerActor,
               const ItemInventoryDto &itemInventory);
     void save();
+    void saveInventory(const ItemInventoryDto &itemInventory);
+    void saveInventory(const ItemInventoryDto &itemInventory, const ItemInventoryDto &itemInventoryStock);
+
     void resetRoguePlayData();
     void resetAll();
     
     std::string createQuestSaveDetailText() const;
     // チェック系
     bool isQuestSaveData() const;
+    
+    // イベントリ系
+    const ItemInventoryDto &changeInventoryItem(long objectId);
 private:
     
     AccountData();

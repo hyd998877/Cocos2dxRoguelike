@@ -17,11 +17,17 @@
 #include "BattleScene.h"
 #include "SRPGScene.h"
 
+#include "ItemInventoryLayer.h"
+
 #include "AccountData.h"
+
+USING_NS_CC;
 
 NS_ROGUE_BEGIN
 
 MypageScene::MypageScene()
+: _itemInventory()
+, _itemInventoryStock()
 {
 }
 
@@ -154,16 +160,59 @@ void MypageScene::initGlobalMenu()
         // アイテムリストを設定
         Size winSize = Director::getInstance()->getWinSize();
 
+        this->_itemInventory = AccountData::getInstance()->getItemInventory();
+        this->_itemInventoryStock = AccountData::getInstance()->getItemInventoryStock();
         std::list<ItemInventoryDto> itemInventoryList{
-            AccountData::getInstance()->getItemInventory(),
-            AccountData::getInstance()->getItemInventoryStock()
+            this->_itemInventory,
+            this->_itemInventoryStock
         };
         
-        std::list<ItemInventoryWindowHelper::ActionCallback> actionCallbackList;
-        
-        auto itemWindowLayer = ItemInventoryWindowHelper::create(itemInventoryList, actionCallbackList);
-        itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
-        this->addChild(itemWindowLayer, 99999);
+        auto itemWindow = ItemInventoryLayer::create(itemInventoryList);
+        itemWindow->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
+            ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_DROP, ItemInventoryLayer::CloseType::UN_CLOSE,
+                [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
+                    
+                    // TODO: 本当に捨てていいですか的なやつ
+                }
+            },
+            ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_SALE, ItemInventoryLayer::CloseType::UN_CLOSE,
+                [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
+                    
+                    // TODO: 本当に売っていいですか的なやつ
+                        // TODO: アイテム値段持ってねーよ・・・マスタぁああああ ItemLogicでsale()を追加かな
+                }
+            },
+            ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_STOCK, ItemInventoryLayer::CloseType::UN_CLOSE,
+                [this, itemWindow](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
+                    // 倉庫に入れる。逆に倉庫側だと持ち物へ。一杯の時はボタン押せなくしたい...
+                    long objectId = itemDto.getObjectId();
+                    
+                    if (this->_itemInventory.isInventoryByObjectId(objectId)) {
+                        this->_itemInventoryStock.addItemDto(this->_itemInventory.findByObjectId(objectId));
+                        this->_itemInventory.removeItemDto(objectId);
+                        
+                        itemWindow->refresh(std::list<ItemInventoryDto>{
+                            this->_itemInventory,
+                            this->_itemInventoryStock
+                        }, this->_itemInventory);
+                        
+                    } else if (this->_itemInventoryStock.isInventoryByObjectId(objectId)) {
+                        this->_itemInventory.addItemDto(this->_itemInventoryStock.findByObjectId(objectId));
+                        this->_itemInventoryStock.removeItemDto(objectId);
+                        
+                        itemWindow->refresh(std::list<ItemInventoryDto>{
+                            this->_itemInventory,
+                            this->_itemInventoryStock
+                        }, this->_itemInventoryStock);
+                    }
+                }
+            },
+        });
+        itemWindow->setPosition(CommonWindowUtil::createPointCenter(itemWindow, this));
+        itemWindow->setCloseCallback([this]() {
+            AccountData::getInstance()->saveInventory(this->_itemInventory, this->_itemInventoryStock);
+        });
+        this->addChild(itemWindow, 99999);
     });
     
     auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "の　べ　る"), WAKU_PADDING, [this](Ref *ref) {
