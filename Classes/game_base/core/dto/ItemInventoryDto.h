@@ -20,15 +20,28 @@ class ItemInventoryDto
 {
 public:
     typedef std::list<ItemDto> ItemList;
+    typedef std::function<bool(const ItemDto& o1, const ItemDto& o2)> Comparator;
     
+    ItemInventoryDto();
     ItemInventoryDto(std::string name, int size, ItemList itemList = ItemList());
     virtual ~ItemInventoryDto();
     
     const std::string& getName() const { return _name; }
     const ItemList& getItemList() const { return _itemList; }
+    void setItemList(ItemList itemList) { _itemList = itemList; }
+    bool addItemDto(const ItemDto &itemDto);
+    void removeItemDto(long objectId);
+    void itemEquip(long objectId, bool equip);
+    ItemDto* findItemDto(long objectId);
     
+    bool isLimit() const;
+
     std::string createTabName() const;
     
+    void clearItemList();
+    void resetAllEquip();
+    void sortItemList(Comparator comparator = ItemDto::compare_dropItem_equip);
+    long getMaxObjectId();
 private:
     std::string _name;
     int _size;

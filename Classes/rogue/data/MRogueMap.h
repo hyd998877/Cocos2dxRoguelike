@@ -43,9 +43,8 @@
  }
  */
 
-//namespace RogueGameConfig {
-namespace m_rogue_map {
-    
+namespace RogueGameConfig {
+
     // 所持可能アイテム数
     const int USE_ITEM_MAX = 20;
     

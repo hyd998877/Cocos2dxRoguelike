@@ -14,12 +14,12 @@
 
 USING_NS_CC;
 
-ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryDto itemInventoryDto)
+ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryDto itemInventoryDto, std::list<ActionCallback> actionCallbackList)
 {
-    return create(std::list<ItemInventoryDto>({itemInventoryDto}));
+    return create(std::list<ItemInventoryDto>({itemInventoryDto}), actionCallbackList);
 }
 
-ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryList)
+ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryList, std::list<ActionCallback> actionCallbackList)
 {
     Size contentSize = Director::getInstance()->getWinSize() * ItemInventoryWindowHelper::WINDOW_SIZE_SCALE;
     
@@ -41,7 +41,7 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
             CCLOG("TabName = %s", inventory.getName().c_str());
             MenuItemUtil::touchItemRefreshColor(ref, Color3B::GREEN);
             
-            itemWindowLayer->setItemList(inventory.getItemList());
+            itemWindowLayer->setItemInventory(inventory);
             itemWindowLayer->reloadItemList();
         });
         if (selectTabName == inventory.getName()) {
@@ -62,22 +62,27 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
     
     ////////////////////////////
     // 内容
-    itemWindowLayer->setItemList(selectInventory.getItemList());
+    itemWindowLayer->setItemInventory(selectInventory);
     itemWindowLayer->reloadItemList();
     
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer->getContentSize(), contentSize));
-    itemWindowLayer->setItemDropMenuCallback([modalLayer, itemWindowLayer](Ref* ref, ItemDto itemDto) {
+    itemWindowLayer->setItemDropMenuCallback([modalLayer, actionCallbackList](Ref* ref, ItemDto itemDto) {
         CCLOG("RogueScene::itemDropMenuCallback");
+        searchCallbackFire(actionCallbackList, ref, itemDto, ActionType::ITEM_DROP);
         modalLayer->setVisible(false);
         modalLayer->removeAllChildrenWithCleanup(true);
     });
     
-    itemWindowLayer->setItemUseMenuCallback([](Ref* ref, ItemDto itemDto) {
+    itemWindowLayer->setItemUseMenuCallback([modalLayer, actionCallbackList](Ref* ref, ItemDto itemDto) {
         CCLOG("RogueScene::itemUseMenuCallback");
+        searchCallbackFire(actionCallbackList, ref, itemDto, ActionType::ITEM_USE);
+        modalLayer->setVisible(false);
+        modalLayer->removeAllChildrenWithCleanup(true);
     });
     
-    itemWindowLayer->setItemEquipMenuCallback([modalLayer](Ref* ref, ItemDto itemDto) {
+    itemWindowLayer->setItemEquipMenuCallback([modalLayer, actionCallbackList](Ref* ref, ItemDto itemDto) {
         CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", itemDto.getItemType());
+        searchCallbackFire(actionCallbackList, ref, itemDto, ActionType::ITEM_EQUIP);
         modalLayer->setVisible(false);
         modalLayer->removeAllChildrenWithCleanup(true);
     });
@@ -88,7 +93,7 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
     // 並び替えボタン
     auto sort_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "並び替え"), Size(12, 4), [itemWindowLayer](Ref* ref) {
         // 並び替え
-        itemWindowLayer->sortItemList();
+        itemWindowLayer->sortWeaponWithAccessory();
         itemWindowLayer->reloadItemList();
     });
     sort_menu_item_label->setPosition(Point(itemWindowLayer->getContentSize().width, itemWindowLayer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
@@ -112,4 +117,15 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, modalLayer));
     
     return modalLayer;
+}
+
+void ItemInventoryWindowHelper::searchCallbackFire(std::list<ActionCallback> actionCallbackList, Ref* ref, ItemDto itemDto, ActionType fireActionType)
+{
+    auto it = std::find_if(actionCallbackList.begin(), actionCallbackList.end(), [fireActionType](ActionCallback actionCallback) -> bool {
+        if (actionCallback._actionType == fireActionType) {
+            return true;
+        }
+        return false;
+    });
+    (*it).callback(ref, itemDto);
 }

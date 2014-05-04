@@ -10,6 +10,8 @@
 #include "AppMacros.h"
 
 #include "CommonWindowUtil.h"
+#include "AlertDialogLayer.h"
+
 #include "NovelScene.h"
 #include "RogueScene.h"
 #include "BattleScene.h"
@@ -153,11 +155,13 @@ void MypageScene::initGlobalMenu()
         Size winSize = Director::getInstance()->getWinSize();
 
         std::list<ItemInventoryDto> itemInventoryList{
-            ItemInventoryDto("所持品",  20, AccountData::getInstance()->item_list_),
-            ItemInventoryDto("倉　庫", 100, AccountData::getInstance()->item_list_)
+            AccountData::getInstance()->_itemInventory,
+            ItemInventoryDto("倉　庫", 100)
         };
         
-        auto itemWindowLayer = ItemInventoryWindowHelper::create(itemInventoryList);
+        std::list<ItemInventoryWindowHelper::ActionCallback> actionCallbackList;
+        
+        auto itemWindowLayer = ItemInventoryWindowHelper::create(itemInventoryList, actionCallbackList);
         itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
         this->addChild(itemWindowLayer, 99999);
     });

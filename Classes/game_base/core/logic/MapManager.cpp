@@ -378,7 +378,7 @@ void MapManager::addMapping(const MapIndex& mapIndex)
     map_data_.mapping_array[mapIndex.x][mapIndex.y] = true;
 }
 
-const std::vector<std::vector<bool>> MapManager::getMappingData()
+std::vector<std::vector<bool>> MapManager::getMappingData()
 {
     assert(vaildateInit());
     
@@ -411,34 +411,28 @@ MapItem MapManager::getMapItem(const MapIndex& mapIndex) const
     return (map_data_.map_cursor_data_array[mapIndex.x][mapIndex.y]);
 }
 
-const ActorMapItem& MapManager::getActorMapItem(const MapIndex& pMapIndex) const
+ActorMapItem MapManager::getActorMapItem(const MapIndex& pMapIndex) const
 {
     assert(vaildateInit());
     
     return (map_data_.map_object_data_array[pMapIndex.x][pMapIndex.y]);
 }
 
-ActorMapItem* MapManager::getActorMapItemById(int seqNo) {
-    assert(vaildateInit());
-    
-    long xCount = map_data_.map_object_data_array.size();
-    for (int x = 0; x < xCount; x++) {
-        long yCount = map_data_.map_object_data_array[x].size();
-        for (int y = 0; y < yCount; y++) {
-            if (map_data_.map_object_data_array[x][y].mapDataType == MapDataType::PLAYER &&
-                map_data_.map_object_data_array[x][y].seqNo == seqNo) {
-                return &(map_data_.map_object_data_array[x][y]);
-            }
-        }
-    }
-    return NULL;
-}
-
-const DropMapItem& MapManager::getDropMapItem(const MapIndex& pMapIndex) {
+DropMapItem MapManager::getDropMapItem(const MapIndex& pMapIndex) {
     assert(vaildateInit());
     
     return (map_data_.map_drop_item_data_array[pMapIndex.x][pMapIndex.y]);
 }
+
+bool MapManager::isDropMapItemIndex(const MapIndex &dropTargetMapIndex)
+{
+    if (this->getDropMapItem(dropTargetMapIndex).mapDataType != MapDataType::NONE) {
+        return false;
+    }
+    
+    return true;
+}
+
 
 /**
  * 移動ルート情報を作成.
@@ -469,7 +463,7 @@ void MapManager::findMovePointList(int moveX, int moveY, int moveDist, const Map
     moveMapIndex.x = moveX;
     moveMapIndex.y = moveY;
     MapItem mapItem = getMapItem(moveMapIndex);
-    if (MapManager::equalMapItem(mapItem, moveToMapItem)) {
+    if (!MapManager::equalMapItem(mapItem, moveToMapItem)) {
         // タップした位置のdistの次はどこか探す
         moveDist++;
         

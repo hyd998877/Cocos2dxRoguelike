@@ -26,10 +26,10 @@ USING_NS_CC;
 #define ITEM_LAYER_PARAM_DEFAULT "ぱらめーたが表示されます"
 
 ItemWindowLayer::ItemWindowLayer()
-:_itemList(std::list<ItemDto>()),
-show_item_detail_idx_(-1),
-item_drop_menu_callback_(nullptr),
-item_use_menu_callback_(nullptr)
+: _itemInventoryDto()
+, show_item_detail_idx_(-1)
+, item_drop_menu_callback_(nullptr)
+, item_use_menu_callback_(nullptr)
 {
 }
 
@@ -59,9 +59,11 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     
     int padding = 2;
 
+    std::list<ItemDto> itemList = this->_itemInventoryDto.getItemList();
+    
     // アイテム一覧レイヤー（左側）
     std::list<TableViewTestLayer::TableLayout> itemNameList;
-    for (auto itemDto : _itemList) {
+    for (auto itemDto : itemList) {
         TableViewTestLayer::TableLayout layout = {cocos2d::StringUtils::format("item_%d.png", itemDto.getImageResId()), itemDto.getName()};
         
         itemNameList.push_back(layout);
@@ -73,22 +75,18 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     pItemListLayer->setOpacity(128);
     pItemListLayer->setPosition(Point(contentSize.width / 2 - pItemListLayer->getContentSize().width - padding,
                                       contentSize.height / 2 - pItemListLayer->getContentSize().height / 2));
-    pItemListLayer->setCallback([this](Ref *pObject, long touchedIdx) {
+    pItemListLayer->setCallback([this, itemList](Ref *pObject, long touchedIdx) {
         // 行選択時
         CCLOG(" touched idx = %ld", touchedIdx);
         // 同じ行連打は無視
         if (show_item_detail_idx_ == touchedIdx) {
             return;
         }
-        // touched DropItemDto
-        auto it = _itemList.begin();
-        std::advance(it, touchedIdx);
-        auto dropItemDto = static_cast<ItemDto>(*it);
-        
-        this->setItemDetail(dropItemDto);
-        
         // 表示indexを更新
-        show_item_detail_idx_ = touchedIdx;
+        this->show_item_detail_idx_ = touchedIdx;
+        
+        auto itemDto = this->findItem(this->show_item_detail_idx_);
+        this->setItemDetail(itemDto);
     });
     auto pItemItemListWaku = CommonWindowUtil::createWindowWaku(pItemListLayer);
     pItemListLayer->addChild(pItemItemListWaku);
@@ -140,13 +138,6 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     pItemDetailLayer->addChild(pItemDetailWaku);
     this->addChild(pItemDetailLayer);
     
-    // アイテム個数
-//    auto item_count_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(),
-//                                                 cocos2d::StringUtils::format("%d/%d", 0, USE_ITEM_MAX));
-//    item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
-//    item_count_label->setTag(ItemWindowLayer::ItemCountLabelTag);
-//    this->addChild(item_count_label);
-    
     return true;
 }
 
@@ -184,13 +175,8 @@ Menu* ItemWindowLayer::initCreateMenu() {
             return;
         }
         if (item_drop_menu_callback_) {
-            auto it = _itemList.begin();
-            std::advance(it, show_item_detail_idx_);
-            auto dropItemDto = static_cast<ItemDto>(*it);
-            // 削除
-            _itemList.erase(it);
-            
-            item_drop_menu_callback_(pSeneder, dropItemDto);
+            auto itemDto = this->findItem(show_item_detail_idx_);
+            item_drop_menu_callback_(pSeneder, itemDto);
         }
     });
     
@@ -205,13 +191,8 @@ Menu* ItemWindowLayer::initCreateMenu() {
             return;
         }
         if (item_use_menu_callback_) {
-            auto it = _itemList.begin();
-            std::advance(it, show_item_detail_idx_);
-            auto dropItemDto = static_cast<ItemDto>(*it);
-            // 削除
-            _itemList.erase(it);
-            
-            item_use_menu_callback_(pSeneder, dropItemDto);
+            auto itemDto = this->findItem(show_item_detail_idx_);
+            item_use_menu_callback_(pSeneder, itemDto);
         }
     });
     pMenuItemUse->setTag(ItemWindowLayer::ItemDetailMenuUseTag);
@@ -224,13 +205,8 @@ Menu* ItemWindowLayer::initCreateMenu() {
             return;
         }
         if (item_Equip_Menu_Callback_) {
-            auto it = _itemList.begin();
-            std::advance(it, show_item_detail_idx_);
-            // ステータスを装備状態を反転
-            it->setEquip(!it->isEquip());
-            
-            auto dropItemDto = static_cast<ItemDto>(*it);
-            item_Equip_Menu_Callback_(pSeneder, dropItemDto);
+            auto itemDto = this->findItem(show_item_detail_idx_);
+            item_Equip_Menu_Callback_(pSeneder, itemDto);
         }
     });
     pMenuItemEquip->setTag(ItemWindowLayer::ItemDetailMenuEquipTag);
@@ -248,28 +224,14 @@ Menu* ItemWindowLayer::initCreateMenu() {
 
 ItemDto ItemWindowLayer::findItem(long itemListIndex) const
 {
-    if (itemListIndex >= 0 && _itemList.size() > itemListIndex) {
-        auto it = _itemList.begin();
+    auto itemList = this->_itemInventoryDto.getItemList();
+    if (itemListIndex >= 0 && itemList.size() > itemListIndex) {
+        auto it = itemList.begin();
         std::advance(it, itemListIndex);
         auto dropItemDto = static_cast<ItemDto>(*it);
         return dropItemDto;
     }
-    return {0, 0, MUseItem::ItemType::NONE, 0, "", false};
-}
-
-void ItemWindowLayer::addItemList(const ItemDto& itemDto) {
-    _itemList.push_back(itemDto);
-}
-
-// 指定したアイテムを装備状態を変更する
-void ItemWindowLayer::setItemEquip(long objectId, bool isEquip) {
-    for (auto itemDto : _itemList) {
-        if (itemDto.getObjectId() == objectId) {
-            // TODO: とりあえず装備だけ
-            itemDto.setEquip(isEquip);
-            break;
-        }
-    }
+    return ItemDto();
 }
 
 void ItemWindowLayer::reloadItemList() {
@@ -280,11 +242,12 @@ void ItemWindowLayer::reloadItemList() {
     if (pItemTabelLayer) {
         
         // 装備ソート
-        _itemList.sort(ItemDto::compare_dropItem_equip);
+        this->_itemInventoryDto.sortItemList();
+        auto itemList = this->_itemInventoryDto.getItemList();
         
         std::list<TableViewTestLayer::TableLayout> itemNameList;
         
-        for (auto itemDto : _itemList) {
+        for (auto itemDto : itemList) {
             TableViewTestLayer::TableLayout layout = {
                 ItemLogic::createItemImageFileName(itemDto.getImageResId()),
                 itemDto.createItemName(),
@@ -296,9 +259,9 @@ void ItemWindowLayer::reloadItemList() {
         
         auto item_count_label = static_cast<Label*>(this->getChildByTag(ItemWindowLayer::ItemCountLabelTag));
         if (item_count_label) {
-            item_count_label->setString(cocos2d::StringUtils::format("所持数 %d/%d", (int)_itemList.size(), m_rogue_map::USE_ITEM_MAX));
+            item_count_label->setString(cocos2d::StringUtils::format("所持数 %d/%d", (int)itemList.size(), RogueGameConfig::USE_ITEM_MAX));
             item_count_label->setPosition(Point(item_count_label->getContentSize().width / 2, item_count_label->getContentSize().height / 2 + this->getContentSize().height));
-            if (_itemList.size() >= m_rogue_map::USE_ITEM_MAX) {
+            if (itemList.size() >= RogueGameConfig::USE_ITEM_MAX) {
                 item_count_label->setColor(Color3B::RED);
             } else {
                 item_count_label->setColor(Color3B::WHITE);
@@ -308,9 +271,9 @@ void ItemWindowLayer::reloadItemList() {
     setItemDetail(show_item_detail_idx_);
 }
 
-void ItemWindowLayer::sortItemList() {
-    // ソート
-    _itemList.sort(ItemDto::compare_dropItem_weapon_with_accessory);
+void ItemWindowLayer::sortWeaponWithAccessory()
+{
+    this->_itemInventoryDto.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
 }
 
 #pragma mark

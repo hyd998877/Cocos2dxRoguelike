@@ -13,11 +13,10 @@
 #include "extensions/cocos-ext.h"
 #include "MapManager.h"
 #include "ActorSprite.h"
-#include "DropItemSprite.h"
-#include "ItemWindowLayer.h"
-#include "AlertDialogLayer.h"
-#include "ModalLayer.h"
+
 #include "RogueTMXTiledMap.h"
+
+#include "ItemInventoryDto.h"
 
 #include "StringUtils.h"
 
@@ -147,6 +146,8 @@ private:
 
     // ゲーム管理 save
     RoguePlayData rogue_play_data_;
+    // 所持アイテム
+    ItemInventoryDto _itemInventory;
     
 public:
     RogueScene();
@@ -190,9 +191,9 @@ private:
     void playFloorTitleCutIn(int questId);
     void playGameOverCutIn();
     
-    // アイテムリスト
-    void showItemList();
-    void hideItemList();
+    // イベントリ表示
+    void showItemInventoryWindow();
+    
     // システムメニュ
     void showSystemMenu();
     void hideSystemMenu();
@@ -204,9 +205,7 @@ private:
     // 汎用
     const ValueMap getRogueMapData();
     ActorSprite* getPlayerActorSprite(int seqNo);
-    ModalLayer* getModalLayer();
     RogueTMXTiledMap* getRogueMapLayer();
-    ItemWindowLayer* getItemWindowLayer();
     
     // 照明
     void rogueMapLighting();

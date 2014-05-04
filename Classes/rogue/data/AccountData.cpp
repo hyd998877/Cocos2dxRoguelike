@@ -32,6 +32,17 @@ AccountData* AccountData::getInstance()
     return s_account_data_instance;
 }
 
+AccountData::AccountData()
+:rogue_play_data_({0, 0, RogueScene::GameStatus::INIT, 0, 0, 0}),
+player_actor_(ActorDto()),
+_itemInventory("所持品", RogueGameConfig::USE_ITEM_MAX)
+{
+};
+
+AccountData::~AccountData()
+{
+};
+
 void AccountData::init()
 {
     load();
@@ -43,21 +54,19 @@ void AccountData::init()
 void AccountData::save()
 {
     CCLOG("%s %d save ", __FILE__, __LINE__);
-    
+
     ValueVector save_item_list;
     
-    auto it = item_list_.begin();
-    for (int i = 0; i < m_rogue_map::USE_ITEM_MAX; i++)
-    {
-        if (it != item_list_.end())
-        {
+    auto itemList = this->_itemInventory.getItemList();
+    
+    auto it = itemList.begin();
+    for (int i = 0; i < RogueGameConfig::USE_ITEM_MAX; i++) {
+        if (it != itemList.end()) {
             auto item_str = (*(it)).itemDtoToString();
             it++;
             
             save_item_list.push_back(Value(item_str));
-        }
-        else
-        {
+        } else {
             // 空データ保存
             save_item_list.push_back(Value(""));
         }
@@ -110,14 +119,15 @@ void AccountData::load()
     }
     
     ValueVector item_list_value = save_data.at("item_list").asValueVector();
-    item_list_.clear();
+    std::list<ItemDto> itemList;
     for (Value item_value : item_list_value) {
         std::string item_data_str = item_value.asString();
         if (item_data_str.size() > 0) {
             auto item = ItemDto::createItemDtoWithString(item_data_str);
-            item_list_.push_back(item);
+            itemList.push_back(item);
         }
     }
+    this->_itemInventory.setItemList(itemList);
 }
 
 void AccountData::resetRoguePlayData() {
@@ -126,12 +136,7 @@ void AccountData::resetRoguePlayData() {
     clearRoguePlayData();
     clearPlayerActorData();
     
-    // TODO: ここじゃない感がある。装備全解除
-    auto it = item_list_.begin();
-    while (it != item_list_.end()) {
-        (*it).setEquip(false);
-        it++;
-    }
+    this->_itemInventory.resetAllEquip();
     
     save();
 }
@@ -191,7 +196,7 @@ static void clearPlayerActorData() {
     AccountData::getInstance()->player_actor_ = ActorDto();
 }
 static void clearItemList() {
-    AccountData::getInstance()->item_list_.clear();
+    AccountData::getInstance()->_itemInventory.clearItemList();
 }
 
 NS_ROGUE_END

@@ -207,7 +207,7 @@ bool RogueTMXTiledMap::tileSetDropMapItem(const ItemDto& itemDto, MapIndex mapIn
     }
     
     // すでにアイテムが置いてある場合は置けない
-    if (MapManager::getInstance()->getDropMapItem(mapIndex).mapDataType != MapDataType::NONE) {
+    if (!MapManager::getInstance()->isDropMapItemIndex(mapIndex)) {
         return false;
     }
     

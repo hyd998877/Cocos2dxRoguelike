@@ -130,10 +130,10 @@ public:
     
     void removeMapItem(const MapItem& mapItem);
     
-    const ActorMapItem& getActorMapItem(const MapIndex& pMapIndex) const;
-    MapItem getMapItem(const MapIndex& pMapIndex) const;
-    ActorMapItem* getActorMapItemById(int seqNo);
-    const DropMapItem& getDropMapItem(const MapIndex& mapIndex);
+    ActorMapItem getActorMapItem(const MapIndex &pMapIndex) const;
+    MapItem getMapItem(const MapIndex &pMapIndex) const;
+    DropMapItem getDropMapItem(const MapIndex &mapIndex);
+    bool isDropMapItemIndex(const MapIndex &dropTargetMapIndex);
     
     MoveDirectionType checkMoveDirectionType(MapIndex fromMapIndex, MapIndex toMapIndex);
     MapItem searchTargetMapItem(const std::list<MapIndex>& searchMapIndexList);
@@ -141,9 +141,9 @@ public:
     std::list<ActorMapItem> findEnemyMapItem();
     
     void addMapping(const MapIndex& mapIndex);
-    const std::vector<std::vector<bool>> getMappingData();
+    std::vector<std::vector<bool>> getMappingData();
    
-    const MapData& getMapData() const { return map_data_; }
+    MapData getMapData() const { return map_data_; }
     
 private:
     MapManager();

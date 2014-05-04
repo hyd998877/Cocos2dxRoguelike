@@ -108,6 +108,16 @@ public:
         }
     }
     
+    // objectId
+    static bool const compare_objectId(const ItemDto& o1, const ItemDto& o2)
+    {
+        if (o1._objectId <= o2._objectId) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 private:
     /** すべてのアイテムで一意な値 */
     long _objectId;

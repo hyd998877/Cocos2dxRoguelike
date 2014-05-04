@@ -16,6 +16,7 @@
 
 #include "ActorDto.h"
 #include "Itemdto.h"
+#include "ItemInventoryDto.h"
 
 NS_ROGUE_BEGIN
 
@@ -33,7 +34,7 @@ public:
     
     // --- インベントリ ---
     // 所持品、装備状態
-    std::list<ItemDto> item_list_;
+    ItemInventoryDto _itemInventory;
     
     // --- 倉庫 ---
     // アイテムリスト
@@ -53,17 +54,8 @@ public:
     bool isQuestSaveData() const;
 private:
     
-    AccountData()
-    :rogue_play_data_({0, 0, RogueScene::GameStatus::INIT, 0, 0, 0}),
-    player_actor_(ActorDto()),
-    item_list_(std::list<ItemDto>())
-    {
-    };
-    
-    ~AccountData()
-    {
-        item_list_.clear();
-    };
+    AccountData();
+    ~AccountData();
     
     void init();
 };
