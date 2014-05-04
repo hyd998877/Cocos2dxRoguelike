@@ -96,23 +96,22 @@ ModalLayer* ItemInventoryWindowHelper::create(ItemInventoryList itemInventoryLis
         itemWindowLayer->sortWeaponWithAccessory();
         itemWindowLayer->reloadItemList();
     });
-    sort_menu_item_label->setPosition(Point(itemWindowLayer->getContentSize().width, itemWindowLayer->getContentSize().height + sort_menu_item_label->getContentSize().height / 2));
-
     
     // 閉じるボタン
     auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "とじる"), Size(12, 4), [modalLayer](Ref* ref) {
         modalLayer->setVisible(false);
         modalLayer->removeAllChildrenWithCleanup(true);
     });
-    clone_menu_item_label->setPosition(Point(contentSize.width, clone_menu_item_label->getPositionY() - clone_menu_item_label->getContentSize().height / 2));
     
     ///////////////////////////
     // Menu
     auto menu = Menu::create(sort_menu_item_label, clone_menu_item_label, NULL);
-    menu->setPosition(Point::ZERO);
+    Point menuCenterPoint = createMenuCenterPoint(menu);
+    menu->setPosition(Point(contentSize.width - menuCenterPoint.x,
+                            (clone_menu_item_label->getContentSize().height * -1) + menuCenterPoint.y));
+    menu->alignItemsHorizontallyWithPadding(0);
     
     itemWindowLayer->addChild(menu);
-    
     modalLayer->addChild(itemWindowLayer);
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, modalLayer));
     
@@ -129,3 +128,19 @@ void ItemInventoryWindowHelper::searchCallbackFire(std::list<ActionCallback> act
     });
     (*it).callback(ref, itemDto);
 }
+
+Point ItemInventoryWindowHelper::createMenuCenterPoint(Menu* menu)
+{
+    Size menuItemSize = Size::ZERO;
+    if (menu && menu->getChildrenCount() > 0) {
+        for (auto node : menu->getChildren()) {
+            menuItemSize = menuItemSize + node->getContentSize();
+        }
+        // 横用
+        return Point(menuItemSize.width / 2,
+                     menuItemSize.height / menu->getChildrenCount() / 2);
+    } else {
+        return Point::ZERO;
+    }
+}
+
