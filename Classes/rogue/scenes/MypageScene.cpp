@@ -355,16 +355,39 @@ void MypageScene::showItemStockWindow()
     auto itemWindow = ItemInventoryLayer::create(itemInventoryList);
     itemWindow->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_DROP, ItemInventoryLayer::CloseType::UN_CLOSE,
-            [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                
-                // TODO: 本当に捨てていいですか的なやつ
+            [this, itemWindow](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
+                auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("本当に捨ててもいいですか？", "は　い", [this, itemDto, itemWindow](Ref *ref) {
+                    
+                    auto saleInventory = ItemInventoryDto::findByObjectIdInventory(itemDto.getObjectId(),
+                                                                                   &this->_itemInventory,
+                                                                                   &this->_itemInventoryStock);
+                    saleInventory->removeItemDto(itemDto.getObjectId());
+                    
+                    itemWindow->refresh(std::list<ItemInventoryDto>{
+                        this->_itemInventory,
+                        this->_itemInventoryStock
+                    }, *saleInventory);
+                }, "いいえ", [](Ref *ref) {});
+                this->addChild(dialogLayer, ZOrders::Dialog);
             }
         },
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_SALE, ItemInventoryLayer::CloseType::UN_CLOSE,
-            [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                
-                // TODO: 本当に売っていいですか的なやつ
-                // TODO: アイテム値段持ってねーよ・・・マスタぁああああ ItemLogicでsale()を追加かな
+            [this, itemWindow](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
+                int gold = ItemLogic::sale(itemDto);
+                auto text = GameCore::StringUtils::format("本当に売ってもいいですか？\n\n金額 %d", gold);
+                auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(text, "は　い", [this, gold, itemDto, itemWindow](Ref *ref) {
+                    auto saleInventory = ItemInventoryDto::findByObjectIdInventory(itemDto.getObjectId(),
+                                                                                   &this->_itemInventory,
+                                                                                   &this->_itemInventoryStock);
+                    saleInventory->removeItemDto(itemDto.getObjectId());
+                    saleInventory->addGold(gold);
+                    
+                    itemWindow->refresh(std::list<ItemInventoryDto>{
+                        this->_itemInventory,
+                        this->_itemInventoryStock
+                    }, *saleInventory);
+                }, "いいえ", [](Ref *ref) {});
+                this->addChild(dialogLayer, ZOrders::Dialog);
             }
         },
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_STOCK, ItemInventoryLayer::CloseType::UN_CLOSE,

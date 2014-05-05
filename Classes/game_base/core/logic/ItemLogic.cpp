@@ -31,6 +31,12 @@ std::string ItemLogic::use(int itemId, ActorDto* pUseActorDto)
     return "";
 }
 
+int ItemLogic::sale(const ItemDto &itemDto)
+{
+    // TODO: 金額計算だけ。実際のお金振込とかアイテム削除は別でやる
+    return 10;
+}
+
 std::string ItemLogic::createItemImageFileName(int itemResId)
 {
     return StringUtils::format("icon_set/item_%d.png", itemResId % 10000);

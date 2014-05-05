@@ -206,6 +206,12 @@ void ItemInventoryLayer::refreshInventory()
     this->_itemWindowLayer->reloadItemList();
 }
 
+void ItemInventoryLayer::refresh(const ItemInventoryList &itemInventoryList)
+{
+    this->_itemInventoryList = itemInventoryList;
+    this->changeTab(this->_selectInventory.getName());
+}
+
 void ItemInventoryLayer::refresh(const ItemInventoryList &itemInventoryList, const ItemInventoryDto &selectInventory)
 {
     this->_itemInventoryList = itemInventoryList;

@@ -173,3 +173,13 @@ ItemInventoryDto* ItemInventoryDto::changeInventory(long objectId, ItemInventory
     return nullptr;
 }
 
+ItemInventoryDto* ItemInventoryDto::findByObjectIdInventory(long objectId, ItemInventoryDto *inventory1, ItemInventoryDto *inventory2)
+{
+    if (inventory1->isInventoryByObjectId(objectId)) {
+        return inventory1;
+    } else if (inventory2->isInventoryByObjectId(objectId)) {
+        return inventory2;
+    }
+    return nullptr;
+}
+

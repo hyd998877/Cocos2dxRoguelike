@@ -22,6 +22,7 @@ private:
     
 public:
     static std::string use(int itemId, ActorDto* pUseActorDto);
+    static int sale(const ItemDto &itemDto);
     static std::string createItemImageFileName(int itemResId);
     static int calcMixedItemGold(const ItemDto &baseItemDto, const ItemDto &materialItemDto);
     static bool isMixedItemEvolution(const ItemDto &baseItemDto, const ItemDto &materialItemDto);

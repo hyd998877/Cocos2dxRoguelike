@@ -41,7 +41,7 @@ public:
     
     void changeTab(const std::string &inventoryName);
     void refreshInventory();
-    
+    void refresh(const ItemInventoryList &itemInventoryList);
     void refresh(const ItemInventoryList &itemInventoryList, const ItemInventoryDto &selectInventory);
     
     void setCloseCallback(const CloseCallback &callback) { _closeCallback = callback; }

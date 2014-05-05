@@ -51,6 +51,7 @@ public:
     long getMaxObjectId() const;
     
     static ItemInventoryDto* changeInventory(long objectId, ItemInventoryDto *inventory1, ItemInventoryDto *inventory2);
+    static ItemInventoryDto* findByObjectIdInventory(long objectId, ItemInventoryDto *inventory1, ItemInventoryDto *inventory2);
 private:
     ItemDto* findItemDto(long objectId);
     
