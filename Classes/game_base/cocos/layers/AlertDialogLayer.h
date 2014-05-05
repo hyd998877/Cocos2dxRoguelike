@@ -20,22 +20,13 @@ private:
 protected:
     
 public:
-    AlertDialogLayer()
-    :m_okMenuItemCallback(nullptr),
-    m_ngMenuItemCallback(nullptr)
-    {
-        
-    };
-    virtual ~AlertDialogLayer()
-    {
-        m_okMenuItemCallback = nullptr;
-        m_ngMenuItemCallback = nullptr;
-    }
+    AlertDialogLayer();
+    virtual ~AlertDialogLayer();
+
+    bool initWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText = "");
     
-    bool initWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText);
-    
-    static ModalLayer* createWithContentSizeModal(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText, const cocos2d::ccMenuCallback& okCallback, const cocos2d::ccMenuCallback& ngCallback);
-    static AlertDialogLayer* createWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText);
+    static ModalLayer* createWithContentSizeModal(cocos2d::Size contentSize, std::string titleText, std::string okText, const cocos2d::ccMenuCallback& okCallback, std::string ngText = "", const cocos2d::ccMenuCallback& ngCallback = nullptr);
+    static AlertDialogLayer* createWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText = "");
     
     void setOkMenuItemCallback(const cocos2d::ccMenuCallback& callback) {
         m_okMenuItemCallback = callback;

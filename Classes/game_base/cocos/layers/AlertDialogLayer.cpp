@@ -11,8 +11,21 @@
 
 USING_NS_CC;
 
+AlertDialogLayer::AlertDialogLayer()
+:m_okMenuItemCallback(nullptr),
+m_ngMenuItemCallback(nullptr)
+{
+    
+};
+
+AlertDialogLayer::~AlertDialogLayer()
+{
+    m_okMenuItemCallback = nullptr;
+    m_ngMenuItemCallback = nullptr;
+}
+
 // モーダル版のアラートダイアログ生成
-ModalLayer* AlertDialogLayer::createWithContentSizeModal(Size contentSize, std::string titleText, std::string okText, std::string ngText, const cocos2d::ccMenuCallback& okCallback, const cocos2d::ccMenuCallback& ngCallback) {
+ModalLayer* AlertDialogLayer::createWithContentSizeModal(Size contentSize, std::string titleText, std::string okText, const cocos2d::ccMenuCallback& okCallback, std::string ngText, const cocos2d::ccMenuCallback& ngCallback) {
     
     // モーダルレイヤー生成
     auto modalLayer = ModalLayer::create();
@@ -33,6 +46,8 @@ ModalLayer* AlertDialogLayer::createWithContentSizeModal(Size contentSize, std::
         modalLayer->removeAllChildrenWithCleanup(true);
     });
     // モーダルに乗せて返す
+    alertDialogLayer->setScale(0.1f);
+    alertDialogLayer->runAction(ScaleTo::create(0.2f, 1.0f));
     modalLayer->addChild(alertDialogLayer);
     return modalLayer;
 }
@@ -60,28 +75,35 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     pTitle->setPosition(Point(this->getContentSize().width * 0.5, this->getContentSize().height * 0.75 - pTitle->getContentSize().height/4));
     this->addChild(pTitle);
     
+    // TODO: 本文分けた方がいいのかな？
+    
     // --------------
     // ボタン生成
-    const Size WAKU_PADDING = Size(8, 4);
+    const Size WAKU_PADDING = Size(12, 4);
     
+    cocos2d::Vector<MenuItem*> menuItemArray;
     // OKボタン
-    auto pOkMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), okText), WAKU_PADDING, [this](Ref *pSender) {
-        if (m_okMenuItemCallback) {
-            this->m_okMenuItemCallback(pSender);
-        }
-    });
-    pOkMenuItemLabel->setPosition(Point(this->getContentSize().width * 0.25, pOkMenuItemLabel->getContentSize().height));
-    
+    if (!okText.empty()) {
+        auto pOkMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), okText), WAKU_PADDING, [this](Ref *pSender) {
+            if (m_okMenuItemCallback) {
+                this->m_okMenuItemCallback(pSender);
+            }
+        });
+        menuItemArray.pushBack(pOkMenuItemLabel);
+    }
     // NGボタン
-    auto pNgMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), ngText), WAKU_PADDING, [this](Ref *pSender) {
-        if (m_ngMenuItemCallback) {
-            this->m_ngMenuItemCallback(pSender);
-        }
-    });
-    pNgMenuItemLabel->setPosition(Point(this->getContentSize().width * 0.75, pNgMenuItemLabel->getContentSize().height));
+    if (!ngText.empty()) {
+        auto pNgMenuItemLabel = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), ngText), WAKU_PADDING, [this](Ref *pSender) {
+            if (m_ngMenuItemCallback) {
+                this->m_ngMenuItemCallback(pSender);
+            }
+        });
+        menuItemArray.pushBack(pNgMenuItemLabel);
+    }
     
-    auto pCommonWindowMenu = Menu::create(pOkMenuItemLabel, pNgMenuItemLabel, NULL);
-    pCommonWindowMenu->setPosition(Point::ZERO);
+    auto pCommonWindowMenu = Menu::createWithArray(menuItemArray);
+    pCommonWindowMenu->setPosition(Point(this->getContentSize().width/2, this->getContentSize().height/5));
+    pCommonWindowMenu->alignItemsHorizontallyWithPadding(20);
     this->addChild(pCommonWindowMenu);
     
     return true;

@@ -63,6 +63,11 @@ namespace FontUtils {
         const int fontSize = 32;
         return getDefaultFontTTFConfig(fontSize);
     }
+    const static cocos2d::TTFConfig getBigTitleFontTTFConfig()
+    {
+        const int fontSize = 39;
+        return getDefaultFontTTFConfig(fontSize);
+    }
     const static cocos2d::TTFConfig getStrongFontTTFConfig()
     {
         const int fontSize = 47;

@@ -931,7 +931,7 @@ void RogueScene::touchKaidan() {
     
     // 階段下りる判定
     Size win_size = Director::getInstance()->getWinSize();
-    auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "はい", "いいえ", [this, actor_sprite](Ref *ref) {
+    auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "は　い", [this, actor_sprite](Ref *ref) {
         // save
         this->rogue_play_data_.quest_id += 1;
         ActorDto playerActor = *(actor_sprite->getActorDto());
@@ -941,7 +941,7 @@ void RogueScene::touchKaidan() {
         // 画面遷移
         this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
         
-    }, [](Ref *ref) {});
+    }, "いいえ", [](Ref *ref) {});
     this->addChild(alertDialog, ZOrders::ModalLayerZOrder);
 }
 
@@ -1115,20 +1115,17 @@ void RogueScene::showSystemMenu() {
             this->hideSystemMenu();
         });
         
-        // TODO: (kyokomi) セーブ消去未実装
         SystemMenuLayer::SystemMenuButtonInfo menu4("脱　出", [this, systemMenuModalLayer]() {
             CCLOG("Menu4ボタンが押された！");
             Size win_size = Director::getInstance()->getWinSize();
-            auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "あきらめますか？", "はい", "いいえ", [this](Ref *ref) {
-                
+            auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "あきらめますか？", "は　い", [this](Ref *ref) {
                 // ゲームオーバー
                 this->changeGameStatus(GameStatus::GAME_OVER);
                 
-            }, [this](Ref *ref) {
+            }, "いいえ", [this](Ref *ref) {
                 this->showSystemMenu();
             });
             this->addChild(alertDialog, ZOrders::ModalLayerZOrder);
-            
             this->hideSystemMenu();
         });
         

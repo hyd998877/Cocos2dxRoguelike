@@ -72,11 +72,11 @@ void MypageScene::initQuestSave()
     std::string saveDetail = AccountData::getInstance()->createQuestSaveDetailText();
     std::string dialogTitle = saveTitle + "\n\n" + saveDetail + "\n\n※いいえを選択すると、\n所持していたアイテムは消えます";
     
-    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(win_size*0.6, dialogTitle, "はい", "いいえ", [](Ref *ref) {
+    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(win_size*0.6, dialogTitle, "はい", [](Ref *ref) {
         auto scene = RogueScene::scene(AccountData::getInstance()->getRoguePlayData().quest_id);
         auto trans = TransitionProgressOutIn::create(1, scene);
         Director::getInstance()->replaceScene(trans);
-    }, [this](Ref *ref) {
+    }, "いいえ", [this](Ref *ref) {
         AccountData::getInstance()->resetRoguePlayData();
         this->initMyPage();
     });
@@ -417,24 +417,29 @@ void MypageScene::showMixedItemSelectWindow(std::function<void(const ItemDto &it
 
 bool MypageScene::mixedItem()
 {
+    Size winSize = Director::getInstance()->getWinSize();
+    
     // 選択チェック
     if (this->_baseItemDto.getObjectId() == 0 || this->_materialItemDto.getObjectId() == 0) {
-        // TODO: ベースまたは素材が選択されていませんダイアログ表示
         CCLOG("ベースか素材が選択されていません");
+        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "ベースか素材が選択されていません", "とじる", [](Ref *ref) {});
+        this->addChild(dialogLayer);
         return false;
     }
     
     // 合成可能かチェック
     if (!ItemLogic::isMixedItem(this->_baseItemDto, this->_materialItemDto)) {
-        // TODO: 合成できませんダイアログ表示
         CCLOG("その組み合わせは合成できません");
+        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "その組み合わせは合成できません", "とじる", [](Ref *ref) {});
+        this->addChild(dialogLayer);
         return false;
     }
     // 金額計算して支払う
     int mixedGold = ItemLogic::calcMixedItemGold(this->_baseItemDto, this->_materialItemDto);
     if (this->_itemInventory.getGold() < mixedGold) {
-        // TODO: お金たりなくて合成できませんダイアログ表示
         CCLOG("お金がたりません");
+        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "お金がたりません", "とじる", [](Ref *ref) {});
+        this->addChild(dialogLayer);
         return false;
     }
     
