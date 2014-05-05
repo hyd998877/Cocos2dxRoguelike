@@ -153,6 +153,9 @@ void MypageScene::initMixedPage()
     }
     this->_baseLayer = Layer::create();
     
+    this->_itemInventory = AccountData::getInstance()->getItemInventory();
+    this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
+    
     // タイトル表示
     initHeaderTitle("ごうせい屋", "bg//shop03_a.jpg");
     
@@ -418,18 +421,14 @@ void MypageScene::showMixedItemSelectWindow(std::function<void(const ItemDto &it
     // アイテムリストを設定
     Size winSize = Director::getInstance()->getWinSize();
     
-    this->_itemInventory = AccountData::getInstance()->getItemInventory();
-    this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
-    std::list<ItemInventoryDto> itemInventoryList{
-        this->_itemInventory
-    };
-    
-    auto itemWindow = ItemInventoryLayer::create(itemInventoryList);
+    auto itemWindow = ItemInventoryLayer::create(this->_itemInventory);
     itemWindow->setPosition(CommonWindowUtil::createPointCenter(itemWindow, this));
     itemWindow->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_MIXED, ItemInventoryLayer::CloseType::CLOSE,
             [this, selectItemCallback](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
                 CCLOG("itemName = %s", itemDto.getName().c_str());
+                
+                this->_itemInventory.removeItemDto(itemDto.getObjectId());
                 selectItemCallback(itemDto);
             }
         }
