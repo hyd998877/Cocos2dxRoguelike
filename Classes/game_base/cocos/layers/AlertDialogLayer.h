@@ -25,6 +25,7 @@ public:
 
     bool initWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText = "");
     
+    static ModalLayer* createWithContentSizeModal(std::string titleText, std::string okText, const cocos2d::ccMenuCallback& okCallback, std::string ngText = "", const cocos2d::ccMenuCallback& ngCallback = nullptr);
     static ModalLayer* createWithContentSizeModal(cocos2d::Size contentSize, std::string titleText, std::string okText, const cocos2d::ccMenuCallback& okCallback, std::string ngText = "", const cocos2d::ccMenuCallback& ngCallback = nullptr);
     static AlertDialogLayer* createWithContentSize(cocos2d::Size contentSize, std::string titleText, std::string okText, std::string ngText = "");
     

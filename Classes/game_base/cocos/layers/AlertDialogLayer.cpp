@@ -24,6 +24,12 @@ AlertDialogLayer::~AlertDialogLayer()
     m_ngMenuItemCallback = nullptr;
 }
 
+ModalLayer* AlertDialogLayer::createWithContentSizeModal(std::string titleText, std::string okText, const cocos2d::ccMenuCallback& okCallback, std::string ngText, const cocos2d::ccMenuCallback& ngCallback)
+{
+    auto winSize = Director::getInstance()->getWinSize();
+    return createWithContentSizeModal(winSize*0.6, titleText, okText, okCallback, ngText, ngCallback);
+}
+
 // モーダル版のアラートダイアログ生成
 ModalLayer* AlertDialogLayer::createWithContentSizeModal(Size contentSize, std::string titleText, std::string okText, const cocos2d::ccMenuCallback& okCallback, std::string ngText, const cocos2d::ccMenuCallback& ngCallback) {
     

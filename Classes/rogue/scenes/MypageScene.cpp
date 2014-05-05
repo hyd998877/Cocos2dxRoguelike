@@ -72,7 +72,7 @@ void MypageScene::initQuestSave()
     std::string saveDetail = AccountData::getInstance()->createQuestSaveDetailText();
     std::string dialogTitle = saveTitle + "\n\n" + saveDetail + "\n\n※いいえを選択すると、\n所持していたアイテムは消えます";
     
-    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(win_size*0.6, dialogTitle, "はい", [](Ref *ref) {
+    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(dialogTitle, "はい", [](Ref *ref) {
         auto scene = RogueScene::scene(AccountData::getInstance()->getRoguePlayData().quest_id);
         auto trans = TransitionProgressOutIn::create(1, scene);
         Director::getInstance()->replaceScene(trans);
@@ -379,7 +379,8 @@ void MypageScene::showItemStockWindow()
                     }, *changeInventory);
                 } else {
                     // 交換がない
-                    // TODO: エラーもここに？
+                    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("交換できません。", "とじる", [](Ref *ref) {});
+                    this->addChild(dialogLayer, ZOrders::Dialog);
                 }
             }
         },
@@ -418,6 +419,8 @@ void MypageScene::showMixedItemSelectWindow(std::function<void(const ItemDto &it
     this->addChild(itemWindow, ZOrders::ItemInventory);
 }
 
+
+
 bool MypageScene::mixedItem()
 {
     Size winSize = Director::getInstance()->getWinSize();
@@ -425,7 +428,7 @@ bool MypageScene::mixedItem()
     // 選択チェック
     if (this->_baseItemDto.getObjectId() == 0 || this->_materialItemDto.getObjectId() == 0) {
         CCLOG("ベースか素材が選択されていません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "ベースか素材が選択されていません", "とじる", [](Ref *ref) {});
+        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("ベースか素材が選択されていません", "とじる", [](Ref *ref) {});
         this->addChild(dialogLayer, ZOrders::Dialog);
         return false;
     }
@@ -433,7 +436,7 @@ bool MypageScene::mixedItem()
     // 合成可能かチェック
     if (!ItemLogic::isMixedItem(this->_baseItemDto, this->_materialItemDto)) {
         CCLOG("その組み合わせは合成できません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "その組み合わせは合成できません", "とじる", [](Ref *ref) {});
+        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("その組み合わせは合成できません", "とじる", [](Ref *ref) {});
         this->addChild(dialogLayer, ZOrders::Dialog);
         return false;
     }
@@ -441,7 +444,7 @@ bool MypageScene::mixedItem()
     int mixedGold = ItemLogic::calcMixedItemGold(this->_baseItemDto, this->_materialItemDto);
     if (this->_itemInventory.getGold() < mixedGold) {
         CCLOG("お金がたりません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "お金がたりません", "とじる", [](Ref *ref) {});
+        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("お金がたりません", "とじる", [](Ref *ref) {});
         this->addChild(dialogLayer, ZOrders::Dialog);
         return false;
     }
@@ -458,7 +461,7 @@ bool MypageScene::mixedItem()
     AccountData::getInstance()->saveInventory(this->_itemInventory);
     CCLOG("合成成功！");
     
-    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, mixedItemDto.createItemName() + "合成に成功しました。", "とじる", [](Ref *ref) {});
+    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(mixedItemDto.createItemName() + "合成に成功しました。", "とじる", [](Ref *ref) {});
     this->addChild(dialogLayer, ZOrders::Dialog);
     return true;
 }
