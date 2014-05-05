@@ -123,7 +123,7 @@ cocos2d::Layer* CommonWindowUtil::createSpriteWithLabelLayer(const cocos2d::Size
 }
 
 cocos2d::MenuItem* CommonWindowUtil::createMenuItemLabelWithSpriteIcon(const cocos2d::Size& layerSize,
-                                                                       cocos2d::Sprite* sprite,
+                                                                       cocos2d::Node* iconNode,
                                                                        const cocos2d::TTFConfig& ttfConfig,
                                                                        const std::string& text,
                                                                        const cocos2d::ccMenuCallback &callback)
@@ -133,15 +133,15 @@ cocos2d::MenuItem* CommonWindowUtil::createMenuItemLabelWithSpriteIcon(const coc
     auto baseMenuItemLabel = cocos2d::MenuItemLabel::create(textLabel, callback);
     baseMenuItemLabel->setContentSize(layerSize);
     
-    sprite->setPosition(cocos2d::Point(sprite->getContentSize().width,
+    iconNode->setPosition(cocos2d::Point(iconNode->getContentSize().width,
                                        baseMenuItemLabel->getContentSize().height /2));
-    baseMenuItemLabel->addChild(sprite);
+    baseMenuItemLabel->addChild(iconNode);
     
     // 枠作成
     auto pMenuItemLabelWaku = CommonWindowUtil::createWindowWaku(baseMenuItemLabel);
     baseMenuItemLabel->addChild(pMenuItemLabelWaku);
 
-    textLabel->setPosition(cocos2d::Point(sprite->getPositionX() + baseMenuItemLabel->getContentSize().width / 2 - textLabel->getContentSize().width / 2,
+    textLabel->setPosition(cocos2d::Point(iconNode->getPositionX() + baseMenuItemLabel->getContentSize().width / 2 - textLabel->getContentSize().width / 2,
                                           baseMenuItemLabel->getContentSize().height / 2 - textLabel->getContentSize().height / 2));
     
     return baseMenuItemLabel;
