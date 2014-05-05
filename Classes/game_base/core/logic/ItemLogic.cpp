@@ -11,6 +11,7 @@
 #include "MUseItemDao.h"
 
 #include "StringUtils.h"
+#include "ItemDto.h"
 
 using namespace GameCore;
 
@@ -33,4 +34,42 @@ std::string ItemLogic::use(int itemId, ActorDto* pUseActorDto)
 std::string ItemLogic::createItemImageFileName(int itemResId)
 {
     return StringUtils::format("icon_set/item_%d.png", itemResId % 10000);
+}
+
+bool ItemLogic::isMixedItem(const ItemDto &baseItemDto, const ItemDto &materialItemDto)
+{
+    if (baseItemDto.getItemType() == materialItemDto.getItemType()) {
+        return true;
+    }
+    return false;
+}
+
+bool ItemLogic::isMixedItemEvolution(const ItemDto &baseItemDto, const ItemDto &materialItemDto)
+{
+    // TODO: 別アイテムへの進化判定はいずれ
+    return false;
+}
+
+int ItemLogic::calcMixedItemGold(const ItemDto &baseItemDto, const ItemDto &materialItemDto)
+{
+    // TODO: とりあえずタダ
+    return 0;
+}
+
+ItemDto ItemLogic::mixedItem(const ItemDto &baseItemDto, const ItemDto &materialItemDto)
+{
+    ItemDto resultItemDto;
+    
+    if (isMixedItem(baseItemDto, materialItemDto)) {
+        
+        if (isMixedItemEvolution(baseItemDto, materialItemDto)) {
+            // 別アイテムに進化
+            
+        } else {
+            // 普通の強化
+            resultItemDto = ItemDto(baseItemDto);
+            resultItemDto.setParam(baseItemDto.getParam() + materialItemDto.getParam());
+        }
+    }
+    return resultItemDto;
 }

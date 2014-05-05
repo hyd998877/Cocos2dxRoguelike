@@ -30,6 +30,8 @@ MypageScene::MypageScene()
 : _itemInventory()
 , _itemInventoryStock()
 , _baseLayer(nullptr)
+, _baseItemDto()
+, _materialItemDto()
 {
 }
 
@@ -171,10 +173,12 @@ void MypageScene::initMixedPage()
         auto baseSprite = cocos2d::Sprite::createWithSpriteFrame(imageSpriteFrame);
         auto baseItemMenuLabel = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, baseSprite, FontUtils::getDefaultFontTTFConfig(), "ベースを選択してください", [this, baseSprite](Ref *ref) {
             auto label = static_cast<Label*>(static_cast<MenuItemLabel*>(ref)->getLabel());
-            showMixedItemSelectWindow([label, baseSprite](const ItemDto &itemDto) {
+            showMixedItemSelectWindow([this, label, baseSprite](const ItemDto &itemDto) {
                 auto itemSprite = Sprite::create(ItemLogic::createItemImageFileName(itemDto.getImageResId()));
                 baseSprite->setTexture(itemSprite->getTexture());
                 label->setString(itemDto.createItemName());
+                
+                this->_baseItemDto = itemDto;
             });
         });
         baseItemMenuLabel->setPosition(Point(win_size.width*0.3, win_size.height*0.7));
@@ -183,19 +187,34 @@ void MypageScene::initMixedPage()
         auto materialSprite = cocos2d::Sprite::createWithSpriteFrame(imageSpriteFrame);
         auto materialItemlayer = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, materialSprite, FontUtils::getDefaultFontTTFConfig(), "そざいを選択してください",[this, materialSprite](Ref *ref) {
             auto label = static_cast<Label*>(static_cast<MenuItemLabel*>(ref)->getLabel());
-            showMixedItemSelectWindow([label, materialSprite](const ItemDto &itemDto) {
+            showMixedItemSelectWindow([this, label, materialSprite](const ItemDto &itemDto) {
                 auto itemSprite = Sprite::create(ItemLogic::createItemImageFileName(itemDto.getImageResId()));
                 materialSprite->setTexture(itemSprite->getTexture());
                 label->setString(itemDto.createItemName());
+                
+                this->_materialItemDto = itemDto;
             });
         });
         materialItemlayer->setPosition(Point(win_size.width*0.3, win_size.height*0.3));
         
+        // L表示
+        auto sprite1 = Sprite::create("ui/l_image.png");
+        sprite1->setPosition(Point(win_size.width*0.6, win_size.height*0.65));
+        this->_baseLayer->addChild(sprite1);
+        auto sprite2 = Sprite::create("ui/l_image.png");
+        sprite2->setFlippedY(true);
+        sprite2->setPosition(Point(win_size.width*0.6, win_size.height*0.35));
+        this->_baseLayer->addChild(sprite2);
+        
         // 合成ボタン
-        // TODO:
-        auto mixedMenuItem = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "合成"), Size(8, 4), [](Ref *ref) {
-            
+        auto mixedMenuItem = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getStrongFontTTFConfig(), "合　成"), Size(16, 8), [this](Ref *ref) {
+            // 合成実行
+            if (this->mixedItem()) {
+                // 成功したらベースと素材を未選択にする
+                this->initMixedPage();
+            }
         });
+        mixedMenuItem->setPosition(Point(win_size.width*0.7, win_size.height*0.5));
         
         auto menu = Menu::create(baseItemMenuLabel, materialItemlayer, mixedMenuItem, NULL);
         menu->setPosition(Point::ZERO);
@@ -382,9 +401,46 @@ void MypageScene::showMixedItemSelectWindow(std::function<void(const ItemDto &it
         }
     });
     itemWindow->setCloseCallback([this]() {
-        //AccountData::getInstance()->saveInventory(this->_itemInventory, this->_itemInventoryStock);
+        //
     });
     this->addChild(itemWindow, 99999);
+}
+
+bool MypageScene::mixedItem()
+{
+    // 選択チェック
+    if (this->_baseItemDto.getObjectId() == 0 || this->_materialItemDto.getObjectId() == 0) {
+        // TODO: ベースまたは素材が選択されていませんダイアログ表示
+        CCLOG("ベースか素材が選択されていません");
+        return false;
+    }
+    
+    // 合成可能かチェック
+    if (!ItemLogic::isMixedItem(this->_baseItemDto, this->_materialItemDto)) {
+        // TODO: 合成できませんダイアログ表示
+        CCLOG("その組み合わせは合成できません");
+        return false;
+    }
+    // 金額計算して支払う
+    int mixedGold = ItemLogic::calcMixedItemGold(this->_baseItemDto, this->_materialItemDto);
+    if (this->_itemInventory.getGold() < mixedGold) {
+        // TODO: お金たりなくて合成できませんダイアログ表示
+        CCLOG("お金がたりません");
+        return false;
+    }
+    
+    // 合成!
+    auto mixedItemDto = ItemLogic::mixedItem(this->_baseItemDto, this->_materialItemDto);
+    
+    // ベースと素材のアイテムを削除
+    this->_itemInventory.removeItemDto(this->_baseItemDto.getObjectId());
+    this->_itemInventory.removeItemDto(this->_materialItemDto.getObjectId());
+    
+    // 合成結果のアイテムをインベントリに追加してsaveする
+    this->_itemInventory.addItemDto(mixedItemDto);
+    AccountData::getInstance()->saveInventory(this->_itemInventory);
+    CCLOG("合成成功！");
+    return true;
 }
 
 NS_ROGUE_END

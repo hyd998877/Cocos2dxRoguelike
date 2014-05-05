@@ -47,11 +47,18 @@ private:
     void showItemStockWindow();
     void showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback);
     
+    bool mixedItem();
+    
     CREATE_FUNC(MypageScene);
     
     cocos2d::Layer* _baseLayer;
+    // 倉庫用
     ItemInventoryDto _itemInventory;
     ItemInventoryDto _itemInventoryStock;
+    
+    // 合成用
+    ItemDto _baseItemDto;
+    ItemDto _materialItemDto;
 };
 
 NS_ROGUE_END
