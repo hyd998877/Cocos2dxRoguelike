@@ -35,6 +35,7 @@ public:
     
     bool isInventoryByObjectId(long objectId) const;
     ItemDto findByObjectId(long objectId) const;
+    void setGold(int gold);
     void addGold(int gold);
     bool addItemDto(const ItemDto &itemDto);
     void removeItemDto(long objectId);

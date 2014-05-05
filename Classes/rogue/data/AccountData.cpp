@@ -149,7 +149,7 @@ void AccountData::load()
     }
   
     int gold = save_data.at("inventory.gold").asInt();
-    this->_itemInventory.addGold(gold);
+    this->_itemInventory.setGold(gold);
     
     ValueVector item_list_value = save_data.at("inventory.item_list").asValueVector();
     std::list<ItemDto> itemList;
@@ -163,7 +163,7 @@ void AccountData::load()
     this->_itemInventory.setItemList(itemList);
 
     int stockGold = save_data.at("inventory.gold").asInt();
-    this->_itemInventoryStock.addGold(stockGold);
+    this->_itemInventoryStock.setGold(stockGold);
     
     ValueVector itemStockListValue = save_data.at("inventoryStock.item_list").asValueVector();
     std::list<ItemDto> itemStockList;

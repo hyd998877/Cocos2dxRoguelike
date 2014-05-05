@@ -37,6 +37,14 @@ std::string ItemInventoryDto::createTabName() const
                                          _size);
 }
 
+void ItemInventoryDto::setGold(int gold)
+{
+    this->_gold = gold;
+    if (this->_gold < 0) {
+        this->_gold = 0;
+    }
+}
+
 void ItemInventoryDto::addGold(int gold)
 {
     this->_gold += gold;
