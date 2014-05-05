@@ -23,6 +23,8 @@ public:
         
         ITEM_STOCK,     /// < 倉庫へ/持ち物へ
         ITEM_SALE,      /// < 売る
+        
+        ITEM_MIXED,     /// < 合成選択
     };
     
     typedef std::function<void(ItemWindowMenuType, Ref*, const ItemDto&)> ItemWindowMenuCallback;

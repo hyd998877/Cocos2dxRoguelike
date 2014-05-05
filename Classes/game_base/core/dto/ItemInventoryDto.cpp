@@ -149,3 +149,19 @@ ItemDto* ItemInventoryDto::findItemDto(long objectId)
     return &(*it);
 }
 
+////////////////////////////
+// static
+ItemInventoryDto* ItemInventoryDto::changeInventory(long objectId, ItemInventoryDto *inventory1, ItemInventoryDto *inventory2)
+{
+    if (inventory1->isInventoryByObjectId(objectId)) {
+        inventory2->addItemDto(inventory1->findByObjectId(objectId));
+        inventory1->removeItemDto(objectId);
+        return inventory1;
+    } else if (inventory2->isInventoryByObjectId(objectId)) {
+        inventory1->addItemDto(inventory2->findByObjectId(objectId));
+        inventory2->removeItemDto(objectId);
+        return inventory2;
+    }
+    return nullptr;
+}
+

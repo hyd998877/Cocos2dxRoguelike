@@ -48,6 +48,8 @@ public:
     void resetAllEquip();
     void sortItemList(Comparator comparator = ItemDto::compare_dropItem_equip);
     long getMaxObjectId() const;
+    
+    static ItemInventoryDto* changeInventory(long objectId, ItemInventoryDto *inventory1, ItemInventoryDto *inventory2);
 private:
     ItemDto* findItemDto(long objectId);
     

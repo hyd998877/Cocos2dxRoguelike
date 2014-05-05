@@ -180,6 +180,8 @@ void ItemWindowLayer::initCreateMenu(std::list<ItemWindowLayer::ItemWindowMenuTy
             case ITEM_EQUIP:
                 labelText = "そうび"; // はずす
                 break;
+            case ITEM_MIXED:
+                labelText = "えらぶ";
             default:
                 break;
         }

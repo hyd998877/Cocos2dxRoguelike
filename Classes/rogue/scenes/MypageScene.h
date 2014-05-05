@@ -19,6 +19,15 @@ NS_ROGUE_BEGIN
 class MypageScene : public cocos2d::Layer
 {
 public:
+    enum GlobalMenuTags {
+        TOP = 1,
+        QUEST,
+        STOCK,
+        NOVEL,
+        MIXED,
+        TEST
+    };
+    
     static cocos2d::Scene* scene();
     MypageScene();
     virtual ~MypageScene();
@@ -26,15 +35,23 @@ public:
     virtual bool init();
 private:
     void initQuestSave();
+    
     void initMyPage();
+    void initItemStockPage();
+    void initMixedPage();
 
-    ItemInventoryDto _itemInventory;
-    ItemInventoryDto _itemInventoryStock;
+    void initGlobalMenu(int selectMenuTag);
+    void initHeaderTitle(const std::string titleText);
+    cocos2d::Menu* createGlobalMenu();
+
+    void showItemStockWindow();
+    void showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback);
     
     CREATE_FUNC(MypageScene);
     
-    /** グロナビ生成 */
-    void initGlobalMenu();
+    cocos2d::Layer* _baseLayer;
+    ItemInventoryDto _itemInventory;
+    ItemInventoryDto _itemInventoryStock;
 };
 
 NS_ROGUE_END
