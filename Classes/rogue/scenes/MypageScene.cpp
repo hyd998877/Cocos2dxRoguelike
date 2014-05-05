@@ -108,13 +108,11 @@ void MypageScene::initMyPage()
         auto comment_layer = LayerColor::create(Color4B::BLACK);
         comment_layer->setContentSize(Size(win_size.width / 2, win_size.height / 3));
         comment_layer->setPosition(Point(win_size.width * 0.7 - comment_layer->getContentSize().width / 2, win_size.height * 0.5 - comment_layer->getContentSize().height / 2));
-        comment_layer->setTag(10); // TODO: とりあえず
         this->_baseLayer->addChild(comment_layer);
         
         auto comment_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "ここにはお知らせとか表示する予定よ！\nまだ開発中です。");
         comment_label->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
         comment_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
-        comment_label->setTag(100); // TODO: とりあえず
         comment_layer->addChild(comment_label);
         comment_label->setPosition(Point(comment_layer->getContentSize().width / 2, comment_layer->getContentSize().height / 2));
         
