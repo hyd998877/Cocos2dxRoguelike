@@ -19,6 +19,10 @@ NS_ROGUE_BEGIN
 class MypageScene : public cocos2d::Layer
 {
 public:
+    enum ZOrders {
+        ItemInventory = 100,
+        Dialog
+    };
     enum GlobalMenuTags {
         TOP = 1,
         QUEST,

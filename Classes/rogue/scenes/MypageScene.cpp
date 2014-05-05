@@ -344,7 +344,9 @@ void MypageScene::showItemStockWindow()
     Size winSize = Director::getInstance()->getWinSize();
     
     this->_itemInventory = AccountData::getInstance()->getItemInventory();
+    this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
     this->_itemInventoryStock = AccountData::getInstance()->getItemInventoryStock();
+    this->_itemInventoryStock.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
     std::list<ItemInventoryDto> itemInventoryList{
         this->_itemInventory,
         this->_itemInventoryStock
@@ -386,7 +388,7 @@ void MypageScene::showItemStockWindow()
     itemWindow->setCloseCallback([this]() {
         AccountData::getInstance()->saveInventory(this->_itemInventory, this->_itemInventoryStock);
     });
-    this->addChild(itemWindow, 99999);
+    this->addChild(itemWindow, ZOrders::ItemInventory);
 }
 
 void MypageScene::showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback)
@@ -395,6 +397,7 @@ void MypageScene::showMixedItemSelectWindow(std::function<void(const ItemDto &it
     Size winSize = Director::getInstance()->getWinSize();
     
     this->_itemInventory = AccountData::getInstance()->getItemInventory();
+    this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
     std::list<ItemInventoryDto> itemInventoryList{
         this->_itemInventory
     };
@@ -412,7 +415,7 @@ void MypageScene::showMixedItemSelectWindow(std::function<void(const ItemDto &it
     itemWindow->setCloseCallback([this]() {
         //
     });
-    this->addChild(itemWindow, 99999);
+    this->addChild(itemWindow, ZOrders::ItemInventory);
 }
 
 bool MypageScene::mixedItem()
@@ -423,7 +426,7 @@ bool MypageScene::mixedItem()
     if (this->_baseItemDto.getObjectId() == 0 || this->_materialItemDto.getObjectId() == 0) {
         CCLOG("ベースか素材が選択されていません");
         auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "ベースか素材が選択されていません", "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer);
+        this->addChild(dialogLayer, ZOrders::Dialog);
         return false;
     }
     
@@ -431,7 +434,7 @@ bool MypageScene::mixedItem()
     if (!ItemLogic::isMixedItem(this->_baseItemDto, this->_materialItemDto)) {
         CCLOG("その組み合わせは合成できません");
         auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "その組み合わせは合成できません", "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer);
+        this->addChild(dialogLayer, ZOrders::Dialog);
         return false;
     }
     // 金額計算して支払う
@@ -439,7 +442,7 @@ bool MypageScene::mixedItem()
     if (this->_itemInventory.getGold() < mixedGold) {
         CCLOG("お金がたりません");
         auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, "お金がたりません", "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer);
+        this->addChild(dialogLayer, ZOrders::Dialog);
         return false;
     }
     
@@ -454,6 +457,9 @@ bool MypageScene::mixedItem()
     this->_itemInventory.addItemDto(mixedItemDto);
     AccountData::getInstance()->saveInventory(this->_itemInventory);
     CCLOG("合成成功！");
+    
+    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(winSize*0.6, mixedItemDto.createItemName() + "合成に成功しました。", "とじる", [](Ref *ref) {});
+    this->addChild(dialogLayer, ZOrders::Dialog);
     return true;
 }
 
