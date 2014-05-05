@@ -41,7 +41,7 @@ private:
     void initMixedPage();
 
     void initGlobalMenu(int selectMenuTag);
-    void initHeaderTitle(const std::string titleText);
+    void initHeaderTitle(const std::string &titleText, const std::string &backgroundName = "");
     cocos2d::Menu* createGlobalMenu();
 
     void showItemStockWindow();

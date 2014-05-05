@@ -91,9 +91,9 @@ void MypageScene::initMyPage()
     this->_baseLayer = Layer::create();
 
     Size win_size = Director::getInstance()->getWinSize();
-
+    
     // タイトル表示
-    initHeaderTitle("とっぷぺーじ");
+    initHeaderTitle("とっぷぺーじ", "bg/saloon06_c.jpg");
     
     // キャラ表示
     {
@@ -105,7 +105,7 @@ void MypageScene::initMyPage()
     
     // セリフ表示
     {
-        auto comment_layer = Layer::create();
+        auto comment_layer = LayerColor::create(Color4B::BLACK);
         comment_layer->setContentSize(Size(win_size.width / 2, win_size.height / 3));
         comment_layer->setPosition(Point(win_size.width * 0.7 - comment_layer->getContentSize().width / 2, win_size.height * 0.5 - comment_layer->getContentSize().height / 2));
         comment_layer->setTag(10); // TODO: とりあえず
@@ -136,7 +136,7 @@ void MypageScene::initItemStockPage()
     this->_baseLayer = Layer::create();
     
     // タイトル表示
-    initHeaderTitle("そうこ");
+    initHeaderTitle("そうこ", "bg/ci_shopbakery01a_b.jpg");
     
     {
         this->showItemStockWindow();
@@ -156,7 +156,7 @@ void MypageScene::initMixedPage()
     this->_baseLayer = Layer::create();
     
     // タイトル表示
-    initHeaderTitle("ごうせい屋");
+    initHeaderTitle("ごうせい屋", "bg//shop03_a.jpg");
     
     {
         Size win_size = Director::getInstance()->getWinSize();
@@ -243,12 +243,21 @@ void MypageScene::initGlobalMenu(int selectMenuTag)
     this->_baseLayer->addChild(menu);
 }
 // initXXXXPage後によぶ
-void MypageScene::initHeaderTitle(const std::string titleText)
+void MypageScene::initHeaderTitle(const std::string &titleText, const std::string &backgroundName)
 {
     Size win_size = Director::getInstance()->getWinSize();
+
+    // 背景
+    if (!backgroundName.empty()) {
+        auto background = Sprite::create(backgroundName);
+        background->setOpacity(96);
+        background->setScale(win_size.width/background->getContentSize().width);
+        background->setPosition(Point(win_size.width/2, win_size.height/2));
+        this->_baseLayer->addChild(background);
+    }
     
     // タイトル表示
-    auto title_layer = Layer::create();
+    auto title_layer = LayerColor::create(Color4B::BLACK);
     title_layer->setContentSize(Size(win_size.width, win_size.height / 8));
     title_layer->setPosition(Point(0, win_size.height - title_layer->getContentSize().height));
     this->_baseLayer->addChild(title_layer);
