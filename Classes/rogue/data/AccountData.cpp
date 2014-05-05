@@ -148,33 +148,37 @@ void AccountData::load()
         _playerActor.setAccessoryEquip(ActorEquipDto::createEquipDto(_playerActoraccessory_equip_data_str));
     }
   
-    int gold = save_data.at("inventory.gold").asInt();
-    this->_itemInventory.setGold(gold);
-    
-    ValueVector item_list_value = save_data.at("inventory.item_list").asValueVector();
-    std::list<ItemDto> itemList;
-    for (Value item_value : item_list_value) {
-        std::string item_data_str = item_value.asString();
-        if (item_data_str.size() > 0) {
-            auto item = ItemDto::createItemDtoWithString(item_data_str);
-            itemList.push_back(item);
+    {
+        int gold = save_data.at("inventory.gold").asInt();
+        this->_itemInventory.setGold(gold);
+        
+        ValueVector item_list_value = save_data.at("inventory.item_list").asValueVector();
+        std::list<ItemDto> itemList;
+        for (Value item_value : item_list_value) {
+            std::string item_data_str = item_value.asString();
+            if (item_data_str.size() > 0) {
+                auto item = ItemDto::createItemDtoWithString(item_data_str);
+                itemList.push_back(item);
+            }
         }
+        this->_itemInventory.setItemList(itemList);
     }
-    this->_itemInventory.setItemList(itemList);
-
-    int stockGold = save_data.at("inventory.gold").asInt();
-    this->_itemInventoryStock.setGold(stockGold);
     
-    ValueVector itemStockListValue = save_data.at("inventoryStock.item_list").asValueVector();
-    std::list<ItemDto> itemStockList;
-    for (Value itemValue : itemStockListValue) {
-        std::string itemDataStr = itemValue.asString();
-        if (itemDataStr.size() > 0) {
-            auto item = ItemDto::createItemDtoWithString(itemDataStr);
-            itemStockList.push_back(item);
+    {
+        int stockGold = save_data.at("inventoryStock.gold").asInt();
+        this->_itemInventoryStock.setGold(stockGold);
+        
+        ValueVector itemStockListValue = save_data.at("inventoryStock.item_list").asValueVector();
+        std::list<ItemDto> itemStockList;
+        for (Value itemValue : itemStockListValue) {
+            std::string itemDataStr = itemValue.asString();
+            if (itemDataStr.size() > 0) {
+                auto item = ItemDto::createItemDtoWithString(itemDataStr);
+                itemStockList.push_back(item);
+            }
         }
+        this->_itemInventoryStock.setItemList(itemStockList);
     }
-    this->_itemInventoryStock.setItemList(itemStockList);
 }
 
 void AccountData::resetRoguePlayData() {
