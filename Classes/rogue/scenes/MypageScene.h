@@ -53,6 +53,8 @@ private:
     
     bool mixedItem();
     
+    void showDebugMenu();
+    
     CREATE_FUNC(MypageScene);
     
     cocos2d::Layer* _baseLayer;

@@ -17,8 +17,10 @@
 #include "BattleScene.h"
 #include "SRPGScene.h"
 
+#include "SystemMenuLayer.h"
 #include "ItemInventoryLayer.h"
 #include "ItemLogic.h"
+#include "MUseItemDao.h"
 
 #include "AccountData.h"
 
@@ -341,9 +343,7 @@ Menu* MypageScene::createGlobalMenu()
     item_menu5->setTag(GlobalMenuTags::MIXED);
     
     auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "て　す　と"), WAKU_PADDING, [this](Ref *ref) {
-        Scene* scene = SRPGScene::scene();
-        TransitionProgressInOut* trans = TransitionProgressInOut::create(1, scene);
-        Director::getInstance()->replaceScene(trans);
+        this->showDebugMenu();
     });
     item_menu6->setTag(GlobalMenuTags::TEST);
     
@@ -501,5 +501,57 @@ bool MypageScene::mixedItem()
     this->addChild(dialogLayer, ZOrders::Dialog);
     return true;
 }
+
+/////////////////
+// DEBUG
+
+void MypageScene::showDebugMenu()
+{
+    this->_itemInventory = AccountData::getInstance()->getItemInventory();
+    this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
+    
+    auto modalLayer = ModalLayer::create();
+    Size win_size = Director::getInstance()->getWinSize();
+    
+    auto systemMenuLayer = SystemMenuLayer::create(win_size * 0.5, "その他・システムメニュー");
+    systemMenuLayer->setPosition(CommonWindowUtil::createPointCenter(systemMenuLayer, modalLayer));
+    systemMenuLayer->setMenuButtonList(std::list<SystemMenuLayer::SystemMenuButtonInfo>{
+        SystemMenuLayer::SystemMenuButtonInfo("ぽっと", [this, modalLayer]() {
+            
+            for (int i = 0; i < 10; i++) {
+                MUseItem mUseItem = MUseItemDao::getInstance()->selectById(1);
+                int objectId = AccountData::getInstance()->getGameObjectId();
+                ItemDto itemDto(objectId, mUseItem, 0);
+                this->_itemInventory.addItemDto(itemDto);
+                AccountData::getInstance()->gameObjectCountUp();
+            }
+
+            AccountData::getInstance()->saveInventory(this->_itemInventory);
+            modalLayer->removeAllChildrenWithCleanup(true); modalLayer->setVisible(false);
+        }),
+        SystemMenuLayer::SystemMenuButtonInfo("おかね", [this, modalLayer]() {
+            this->_itemInventory.addGold(10000);
+            AccountData::getInstance()->saveInventory(this->_itemInventory);
+            modalLayer->removeAllChildrenWithCleanup(true); modalLayer->setVisible(false);
+        }),
+        SystemMenuLayer::SystemMenuButtonInfo("未設定", [this, modalLayer]() {
+            modalLayer->removeAllChildrenWithCleanup(true); modalLayer->setVisible(false);
+        }),
+        
+        SystemMenuLayer::SystemMenuButtonInfo("未設定", [this, modalLayer]() {
+            modalLayer->removeAllChildrenWithCleanup(true); modalLayer->setVisible(false);
+        }),
+        SystemMenuLayer::SystemMenuButtonInfo("未設定", [this, modalLayer]() {
+            modalLayer->removeAllChildrenWithCleanup(true); modalLayer->setVisible(false);
+        }),
+        SystemMenuLayer::SystemMenuButtonInfo("未設定", [this, modalLayer]() {
+            modalLayer->removeAllChildrenWithCleanup(true); modalLayer->setVisible(false);
+        }),
+    });
+    
+    modalLayer->addChild(systemMenuLayer);
+    this->addChild(modalLayer, ZOrders::Dialog);
+}
+
 
 NS_ROGUE_END

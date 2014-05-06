@@ -28,6 +28,18 @@ ItemDto::ItemDto(long               objectId   /* = 0L */,
     
 }
 
+ItemDto::ItemDto(long objectId, const MUseItem &mUseItem, int param)
+: _objectId(objectId)
+, _itemId(mUseItem.getUseItemId())
+, _itemType(mUseItem.getUseItemType())
+, _imageResId(mUseItem.getUseItemImageId())
+, _name(mUseItem.getUseItemName())
+, _equip(false)
+, _param(param)
+{
+    
+}
+
 ItemDto::~ItemDto()
 {
     

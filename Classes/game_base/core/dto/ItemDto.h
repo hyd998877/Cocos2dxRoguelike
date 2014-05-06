@@ -26,6 +26,8 @@ public:
             std::string        name       = "",
             bool               equip      = false,
             int                param      = 0);
+    ItemDto(long objectId, const MUseItem &mUseItem, int param);
+    
     virtual ~ItemDto();
     
     static ItemDto createItemDtoWithString(const std::string& dataString);
