@@ -46,6 +46,7 @@ public:
     void saveInventory(const ItemInventoryDto &itemInventory);
     void saveInventory(const ItemInventoryDto &itemInventory, const ItemInventoryDto &itemInventoryStock);
 
+    void resetRoguePlayDataAndInventory();
     void resetRoguePlayData();
     void resetAll();
     
@@ -86,6 +87,8 @@ private:
     void clearRoguePlayData();
     void clearPlayerActorData();
     void clearInventory();
+    void clearInventoryStock();
+    void clearSystemData();
 };
 
 NS_ROGUE_END

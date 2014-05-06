@@ -204,8 +204,22 @@ void AccountData::load()
     this->_systemData.setPlayScoreMap(playScoreMap);
 }
 
+// もちかえり
 void AccountData::resetRoguePlayData() {
     CCLOG("%s %d resetRoguePlayData ", __FILE__, __LINE__);
+    
+    clearRoguePlayData();
+    clearPlayerActorData();
+
+    // 装備は解除
+    this->_itemInventory.resetAllEquip();
+    
+    save();
+}
+
+// 死亡
+void AccountData::resetRoguePlayDataAndInventory() {
+    CCLOG("%s %d resetRoguePlayDataAndInventory ", __FILE__, __LINE__);
     
     clearRoguePlayData();
     clearPlayerActorData();
@@ -220,10 +234,11 @@ void AccountData::resetAll() {
     clearRoguePlayData();
     clearPlayerActorData();
     clearInventory();
+    clearInventoryStock();
+    clearSystemData();
     
     remoteSaveFile();
 }
-
 
 #pragma mark
 #pragma mark 汎用
@@ -301,14 +316,25 @@ void AccountData::updateGamePlayProgress(AccountData::GamePlayProgress progress)
 
 ///////////////////////////////////////////////
 // private
-void AccountData::clearRoguePlayData() {
+void AccountData::clearRoguePlayData()
+{
     this->_roguePlayData = RogueScene::createRoguePlayData();
 }
-void AccountData::clearPlayerActorData() {
+void AccountData::clearPlayerActorData()
+{
     this->_playerActor = ActorDto();
 }
-void AccountData::clearInventory() {
+void AccountData::clearInventory()
+{
     this->_itemInventory = ItemInventoryDto("所持品", 0, RogueGameConfig::USE_ITEM_MAX);
+}
+void AccountData::clearInventoryStock()
+{
+    this->_itemInventoryStock = ItemInventoryDto("倉　庫", 0, RogueGameConfig::STOCK_ITEM_MAX);
+}
+void AccountData::clearSystemData()
+{
+    this->_systemData = SystemDataDto();
 }
 
 ///////////////////////////////////////////////

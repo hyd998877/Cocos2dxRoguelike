@@ -578,7 +578,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
     
     if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
         // セーブ消去
-        AccountData::getInstance()->resetAll();
+        AccountData::getInstance()->resetRoguePlayDataAndInventory();
         // ゲームオーバーの演出
         playGameOverCutIn();
         return;
