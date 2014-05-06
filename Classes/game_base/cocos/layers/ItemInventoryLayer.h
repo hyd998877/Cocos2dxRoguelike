@@ -21,6 +21,7 @@ public:
     };
     
     typedef std::function<void(void)> CloseCallback;
+    typedef std::function<void(ItemInventoryDto::Comparator)> SortCallback;
     
     typedef struct _ActionCallback {
         ItemWindowLayer::ItemWindowMenuType _actionType;
@@ -45,6 +46,7 @@ public:
     void refresh(const ItemInventoryList &itemInventoryList, const ItemInventoryDto &selectInventory);
     
     void setCloseCallback(const CloseCallback &callback) { _closeCallback = callback; }
+    void setSortCallback(const SortCallback &callback) { _sortCallback = callback; }
 private:
     constexpr static const float WINDOW_SIZE_SCALE = 0.8;
     
@@ -56,6 +58,7 @@ private:
     cocos2d::Map<std::string, cocos2d::Label*> _menuItemMap;
     
     CloseCallback _closeCallback;
+    SortCallback _sortCallback;
     
     void initHeader();
     void initDetail();

@@ -150,6 +150,9 @@ void ItemInventoryLayer::initFooter()
         // 並び替え
         this->_itemWindowLayer->sortWeaponWithAccessory();
         this->_itemWindowLayer->reloadItemList();
+        if (this->_sortCallback) {
+            this->_sortCallback(ItemDto::compare_dropItem_weapon_with_accessory);
+        }
     });
     
     // 閉じるボタン

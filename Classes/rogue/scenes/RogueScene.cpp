@@ -402,6 +402,9 @@ void RogueScene::showItemInventoryWindow()
             }
         },
     });
+    itemWindowLayer->setSortCallback([this](ItemInventoryDto::Comparator comparator) {
+        this->_itemInventory.sortItemList(comparator);
+    });
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
     this->addChild(itemWindowLayer, ZOrders::ItemListLayerZOrder, Tags::ItemListWindowTag);
 }
