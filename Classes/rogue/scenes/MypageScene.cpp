@@ -110,7 +110,14 @@ void MypageScene::initMyPage()
         comment_layer->setPosition(Point(win_size.width * 0.7 - comment_layer->getContentSize().width / 2, win_size.height * 0.5 - comment_layer->getContentSize().height / 2));
         this->_baseLayer->addChild(comment_layer);
         
-        auto comment_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "ここにはお知らせとか表示する予定よ！\nまだ開発中です。");
+        // TODO: なんかランダムなメッセージとかにしたいです
+        std::string messageText = "今日も気合いれてダンジョンいこー";
+        auto gameProgress = AccountData::getInstance()->getGamePlayProgress();
+        if (gameProgress == AccountData::GamePlayProgress::INIT) {
+            messageText = "はじめまして！\nまずはクエストをやってみよう！";
+        }
+        
+        auto comment_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), messageText);
         comment_label->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
         comment_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
         comment_layer->addChild(comment_label);
@@ -290,15 +297,24 @@ Menu* MypageScene::createGlobalMenu()
     auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "くえ　すと"), WAKU_PADDING, [this](Ref *ref) {
         CCLOG("tappedMenuItem3");
         
-        Scene* scene = NovelScene::scene(2, 0, [this]() {
-            CCLOG("novel2 end");
+        if (AccountData::getInstance()->getGamePlayProgress() == AccountData::GamePlayProgress::INIT) {
+            Scene* scene = NovelScene::scene(2, 0, [this]() {
+                CCLOG("novel2 end");
+                
+                AccountData::getInstance()->updateGamePlayProgress(AccountData::GamePlayProgress::TUTORIAL_PLAY);
+                int play_quest_id = 1;
+                auto scene = RogueScene::scene(play_quest_id);
+                auto trans = TransitionProgressOutIn::create(1, scene);
+                Director::getInstance()->replaceScene(trans);
+            });
+            TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
+            Director::getInstance()->replaceScene(trans);
+        } else {
             int play_quest_id = 1;
             auto scene = RogueScene::scene(play_quest_id);
             auto trans = TransitionProgressOutIn::create(1, scene);
             Director::getInstance()->replaceScene(trans);
-        });
-        TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
-        Director::getInstance()->replaceScene(trans);
+        }
     });
     item_menu2->setTag(GlobalMenuTags::QUEST);
     

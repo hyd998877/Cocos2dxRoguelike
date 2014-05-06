@@ -22,6 +22,14 @@ NS_ROGUE_BEGIN
 class AccountData
 {
 public:
+    enum GamePlayProgress {
+        INIT            =  0,
+        TUTORIAL_PLAY   = 10,
+        TUTORIAL_CLEAR  = 11,
+        MAINQUEST_PLAY  = 20,
+        MAINQUEST_CLEAR = 21,
+    };
+    
     // シングルトン
     static AccountData* getInstance();
 
@@ -48,6 +56,9 @@ public:
     // system系
     void gameObjectCountUp();
     long getGameObjectId() const;
+    void putPlayScore(const std::string &questKey, int score);
+    AccountData::GamePlayProgress getGamePlayProgress();
+    void updateGamePlayProgress(AccountData::GamePlayProgress progress);
     
     // イベントリ系
     const ItemInventoryDto &changeInventoryItem(long objectId);

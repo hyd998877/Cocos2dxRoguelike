@@ -16,13 +16,15 @@
 SystemDataDto::SystemDataDto()
 : _gameProgress(0L)
 , _gameObjectCount(0L)
+, _playScoreMap()
 {
     
 }
 
-SystemDataDto::SystemDataDto(long gameProgress, long gameObjectCount)
+SystemDataDto::SystemDataDto(long gameProgress, long gameObjectCount, PlayScoreMap playScoreMap)
 : _gameProgress(gameProgress)
 , _gameObjectCount(gameObjectCount)
+, _playScoreMap(playScoreMap)
 {
     
 }
@@ -34,6 +36,11 @@ SystemDataDto::~SystemDataDto()
 
 SystemDataDto SystemDataDto::createWithSeparatedString(const std::string& separatedString)
 {
+    return createWithSeparatedString(separatedString, PlayScoreMap());
+}
+
+SystemDataDto SystemDataDto::createWithSeparatedString(const std::string& separatedString, PlayScoreMap playScoreMap)
+{
     std::vector<std::string> dataStringArray = GameCore::StringUtils::split(std::string(separatedString));
     if (dataStringArray.size() != 2) {
         return SystemDataDto();
@@ -42,7 +49,8 @@ SystemDataDto SystemDataDto::createWithSeparatedString(const std::string& separa
     
     SystemDataDto dto(
                       atol(dataStringArray[index++].c_str()),
-                      atol(dataStringArray[index++].c_str())
+                      atol(dataStringArray[index++].c_str()),
+                      playScoreMap
                       );
     return dto;
 }

@@ -15,6 +15,7 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <unordered_map>
 
 /**
  @class SystemDataDto.cpp SystemDataDto.h
@@ -28,17 +29,27 @@
 class SystemDataDto
 {
 public:
+    typedef std::unordered_map<std::string, int> PlayScoreMap;
     SystemDataDto();
-    SystemDataDto(long gameProgress, long gameObjectCount);
+    SystemDataDto(long gameProgress, long gameObjectCount, PlayScoreMap playScoreMap);
     virtual ~SystemDataDto();
     
     /**
      @brief カンマ区切り文字列からSystemDataDtoを生成します。
      
-     @param[in] INパラメータ名 説明
+     @param[in] separatedString カンマ区切り文字列
      @return SystemDataDto
      */
     static SystemDataDto createWithSeparatedString(const std::string& separatedString);
+    
+    /**
+     @brief カンマ区切り文字列からSystemDataDtoを生成します。
+     
+     @param[in] separatedString カンマ区切り文字列
+     @param[in] playScoreMap プレイスコア
+     @return SystemDataDto
+     */
+    static SystemDataDto createWithSeparatedString(const std::string& separatedString, PlayScoreMap playScoreMap);
     
     /**
      @brief SystemDataDtoの内容を元にカンマ区切り文字列を生成します。
@@ -51,10 +62,13 @@ public:
     void setGameProgress(long gameProgress) { _gameProgress = gameProgress; }
     long getGameObjectCount() const { return _gameObjectCount; }
     void setGameObjectCount(long gameObjectCount) { _gameObjectCount = gameObjectCount; }
-    
+    PlayScoreMap getPlayScoreMap() const { return _playScoreMap; }
+    void setPlayScoreMap(PlayScoreMap playScoreMap) { _playScoreMap = playScoreMap; }
+    void putPlayScoreMap(const std::string &key, int score) { _playScoreMap.insert({key, score}); }
 private:
     long _gameProgress;     /// > ゲーム進行状況
     long _gameObjectCount;  /// > ゲーム内のオブジェクトカウント
+    PlayScoreMap _playScoreMap;
 };
 
 #endif /* defined(__Cocos2dRogueLike__SystemDataDto__) */

@@ -34,6 +34,7 @@ AccountData::AccountData()
 , _playerActor(ActorDto())
 , _itemInventory("所持品", 0, RogueGameConfig::USE_ITEM_MAX)
 , _itemInventoryStock("倉　庫", 0, RogueGameConfig::STOCK_ITEM_MAX)
+, _systemData()
 {
 };
 
@@ -80,6 +81,12 @@ void AccountData::save()
     ValueVector saveItemStockList = createSaveItemList(this->_itemInventoryStock);
     int gold = this->_itemInventory.getGold();
     int stockGold = this->_itemInventoryStock.getGold();
+    
+    ValueMap playScoreMap;
+    for (auto mapData : this->_systemData.getPlayScoreMap()) {
+        playScoreMap.insert({mapData.first, Value(mapData.second)});
+    }
+    
     ValueMap save_data{
         {"rogue_play_data", Value(RogueScene::roguePlayDataToString(_roguePlayData))},
         {"player_actor", Value(this->_playerActor.actorToString())},
@@ -89,7 +96,8 @@ void AccountData::save()
         {"inventory.item_list", Value(saveItemList)},
         {"inventoryStock.gold", Value(stockGold)},
         {"inventoryStock.item_list", Value(saveItemStockList)},
-        {"system", Value(this->_systemData.toSeparatedString())}
+        {"system", Value(this->_systemData.toSeparatedString())},
+        {"system.play_score_map", Value(playScoreMap)}
     };
     
     // 書き込み
@@ -186,6 +194,14 @@ void AccountData::load()
     if (!system_data_value_str.empty()) {
         this->_systemData = SystemDataDto::createWithSeparatedString(system_data_value_str);
     }
+    
+    Value system_data_play_score_map_value = save_data.at("system.play_score_map");
+    auto system_data_play_score_map_value_map = system_data_play_score_map_value.asValueMap();
+    SystemDataDto::PlayScoreMap playScoreMap;
+    for (auto data : system_data_play_score_map_value_map) {
+        playScoreMap.insert({data.first, data.second.asInt()});
+    }
+    this->_systemData.setPlayScoreMap(playScoreMap);
 }
 
 void AccountData::resetRoguePlayData() {
@@ -260,6 +276,27 @@ void AccountData::gameObjectCountUp()
 long AccountData::getGameObjectId() const
 {
     return this->_systemData.getGameObjectCount() + 1;
+}
+
+void AccountData::putPlayScore(const std::string &questKey, int score)
+{
+    auto value = this->_systemData.getPlayScoreMap()[questKey];
+    if (score > value) {
+        this->_systemData.putPlayScoreMap(questKey, score);
+    }
+}
+
+AccountData::GamePlayProgress AccountData::getGamePlayProgress()
+{
+    return static_cast<AccountData::GamePlayProgress>(this->_systemData.getGameProgress());
+}
+
+void AccountData::updateGamePlayProgress(AccountData::GamePlayProgress progress)
+{
+    if (this->_systemData.getGameProgress() < progress) {
+        this->_systemData.setGameProgress(progress);
+    }
+    save();
 }
 
 ///////////////////////////////////////////////
