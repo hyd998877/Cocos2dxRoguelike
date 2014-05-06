@@ -68,8 +68,11 @@ void ItemInventoryLayer::initHeader()
     
     // アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
     this->_itemWindowLayer = ItemWindowLayer::createWithContentSize(contentSize);
+    // アニメーション不要
+#if 0
     this->_itemWindowLayer->setScale(0.1f);
     this->_itemWindowLayer->runAction(ScaleTo::create(0.2f, 1.0f));
+#endif
     
     std::string selectTabName = this->_selectInventory.getName();
     
