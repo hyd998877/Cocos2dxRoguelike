@@ -16,6 +16,17 @@ USING_NS_CC;
 // シングルトン
 static MUseItemDao *s_m_user_item_dao_instance = nullptr;
 
+MUseItemDao::MUseItemDao()
+: m_useItemList()
+{
+    
+};
+
+MUseItemDao::~MUseItemDao()
+{
+    s_m_user_item_dao_instance = nullptr;
+}
+
 MUseItemDao* MUseItemDao::getInstance()
 {
     if (!s_m_user_item_dao_instance)
@@ -62,20 +73,14 @@ void MUseItemDao::init()
     Json_dispose(json);
 }
 
-const MUseItem MUseItemDao::selectById(int useItemId) const
+const MUseItem & MUseItemDao::selectById(int useItemId) const
 {
-    for (MUseItem useItem : m_useItemList)
-    {
-        if (useItem.getUseItemId() == useItemId)
-        {
-            return useItem;
+    auto it = std::find_if(m_useItemList.cbegin(), m_useItemList.cend(), [useItemId](const MUseItem& mUseItem) -> bool {
+        if (mUseItem.getUseItemId() == useItemId) {
+            return true;
         }
-    }
-    return MUseItem(0, 0, MUseItem::ItemType::NONE, "", "", 0);
+        return false;
+    });
+    return *(it);
 }
 
-
-MUseItemDao::~MUseItemDao()
-{
-    s_m_user_item_dao_instance = nullptr;
-}

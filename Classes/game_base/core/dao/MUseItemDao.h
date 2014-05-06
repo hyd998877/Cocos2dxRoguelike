@@ -19,15 +19,10 @@ public:
     // シングルトン
     static MUseItemDao* getInstance();
     
-    const MUseItem selectById(int useItemId) const;
+    const MUseItem & selectById(int useItemId) const;
     
-    MUseItemDao()
-    :m_useItemList(std::list<MUseItem>())
-    {
-        
-    };
-    
-    ~MUseItemDao();
+    MUseItemDao();
+    virtual ~MUseItemDao();
 private:
     std::list<MUseItem> m_useItemList;
     
