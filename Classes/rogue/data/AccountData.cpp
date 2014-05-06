@@ -88,7 +88,8 @@ void AccountData::save()
         {"inventory.gold", Value(gold)},
         {"inventory.item_list", Value(saveItemList)},
         {"inventoryStock.gold", Value(stockGold)},
-        {"inventoryStock.item_list", Value(saveItemStockList)}
+        {"inventoryStock.item_list", Value(saveItemStockList)},
+        {"system", Value(this->_systemData.toSeparatedString())}
     };
     
     // 書き込み
@@ -124,28 +125,28 @@ void AccountData::load()
         return;
     }
     
-    Value _roguePlayDatavalue = save_data.at("rogue_play_data");
-    std::string _roguePlayDatastr = _roguePlayDatavalue.asString();
-    if (_roguePlayDatastr.size() > 0) {
-        _roguePlayData = RogueScene::createRoguePlayData(_roguePlayDatastr);
+    Value roguePlayDatavalue = save_data.at("rogue_play_data");
+    std::string roguePlayDatastr = roguePlayDatavalue.asString();
+    if (!roguePlayDatastr.empty()) {
+        this->_roguePlayData = RogueScene::createRoguePlayData(roguePlayDatastr);
     }
 
-    Value _playerActordata_value = save_data.at("player_actor");
-    std::string _playerActordata_str = _playerActordata_value.asString();
-    if (_playerActordata_str.size() > 0) {
-        _playerActor = ActorDto::createActorDto(_playerActordata_str);
+    Value playerActordata_value = save_data.at("player_actor");
+    std::string playerActordata_str = playerActordata_value.asString();
+    if (!playerActordata_str.empty()) {
+        this->_playerActor = ActorDto::createActorDto(playerActordata_str);
     }
     
-    Value _playerActorweapon_equip_data_value = save_data.at("player_actor.weapon_equip");
-    std::string _playerActorweapon_equip_data_str = _playerActorweapon_equip_data_value.asString();
-    if (_playerActorweapon_equip_data_str.size() > 0) {
-        _playerActor.setWeaponEquip(ActorEquipDto::createEquipDto(_playerActorweapon_equip_data_str));
+    Value playerActorweapon_equip_data_value = save_data.at("player_actor.weapon_equip");
+    std::string playerActorweapon_equip_data_str = playerActorweapon_equip_data_value.asString();
+    if (!playerActorweapon_equip_data_str.empty()) {
+        this->_playerActor.setWeaponEquip(ActorEquipDto::createEquipDto(playerActorweapon_equip_data_str));
     }
     
-    Value _playerActoraccessory_equip_data_value = save_data.at("player_actor.accessory_equip");
-    std::string _playerActoraccessory_equip_data_str = _playerActoraccessory_equip_data_value.asString();
-    if (_playerActoraccessory_equip_data_str.size() > 0) {
-        _playerActor.setAccessoryEquip(ActorEquipDto::createEquipDto(_playerActoraccessory_equip_data_str));
+    Value playerActoraccessory_equip_data_value = save_data.at("player_actor.accessory_equip");
+    std::string playerActoraccessory_equip_data_str = playerActoraccessory_equip_data_value.asString();
+    if (!playerActoraccessory_equip_data_str.empty()) {
+        this->_playerActor.setAccessoryEquip(ActorEquipDto::createEquipDto(playerActoraccessory_equip_data_str));
     }
   
     {
@@ -156,7 +157,7 @@ void AccountData::load()
         std::list<ItemDto> itemList;
         for (Value item_value : item_list_value) {
             std::string item_data_str = item_value.asString();
-            if (item_data_str.size() > 0) {
+            if (!item_data_str.empty()) {
                 auto item = ItemDto::createItemDtoWithString(item_data_str);
                 itemList.push_back(item);
             }
@@ -172,12 +173,18 @@ void AccountData::load()
         std::list<ItemDto> itemStockList;
         for (Value itemValue : itemStockListValue) {
             std::string itemDataStr = itemValue.asString();
-            if (itemDataStr.size() > 0) {
+            if (!itemDataStr.empty()) {
                 auto item = ItemDto::createItemDtoWithString(itemDataStr);
                 itemStockList.push_back(item);
             }
         }
         this->_itemInventoryStock.setItemList(itemStockList);
+    }
+    
+    Value system_data_value = save_data.at("system");
+    std::string system_data_value_str = system_data_value.asString();
+    if (!system_data_value_str.empty()) {
+        this->_systemData = SystemDataDto::createWithSeparatedString(system_data_value_str);
     }
 }
 
@@ -207,6 +214,7 @@ void AccountData::resetAll() {
 #pragma mark 汎用
 
 std::string AccountData::createQuestSaveDetailText() const {
+    // TODO: ダンジョン名が仮
     return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %ld G",
                         "初心者の洞窟",
                         this->_roguePlayData.quest_id,
@@ -242,6 +250,18 @@ const ItemInventoryDto &AccountData::changeInventoryItem(long objectId)
     return this->getItemInventory();
 }
 
+#pragma mark
+#pragma mark System系
+
+void AccountData::gameObjectCountUp()
+{
+    this->_systemData.setGameObjectCount(this->_systemData.getGameObjectCount() + 1);
+}
+
+long AccountData::getGameObjectId() const
+{
+    return this->_systemData.getGameObjectCount() + 1;
+}
 
 ///////////////////////////////////////////////
 // private

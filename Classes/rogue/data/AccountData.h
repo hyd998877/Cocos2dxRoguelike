@@ -12,11 +12,10 @@
 #include "cocos2d.h"
 
 #include "RogueScene.h"
-#include "MapManager.h"
 
 #include "ActorDto.h"
-#include "Itemdto.h"
 #include "ItemInventoryDto.h"
+#include "SystemDataDto.h"
 
 NS_ROGUE_BEGIN
 
@@ -26,16 +25,13 @@ public:
     // シングルトン
     static AccountData* getInstance();
 
-    // --- システムデータ ---
-    // TODO: (kyokomi)別クラスかなぁ
-    
-    const RogueLikeGame::RogueScene::RoguePlayData &getRoguePlayData() { return _roguePlayData; }
+    const RogueScene::RoguePlayData &getRoguePlayData() { return _roguePlayData; }
     const ActorDto &getPlayerActor() { return _playerActor; }
     const ItemInventoryDto &getItemInventory() { return _itemInventory; }
     const ItemInventoryDto &getItemInventoryStock() { return _itemInventoryStock; }
     
     void load();
-    void save(const RogueLikeGame::RogueScene::RoguePlayData &roguePlayData,
+    void save(const RogueScene::RoguePlayData &roguePlayData,
               const ActorDto &playerActor,
               const ItemInventoryDto &itemInventory);
     void save();
@@ -48,6 +44,10 @@ public:
     std::string createQuestSaveDetailText() const;
     // チェック系
     bool isQuestSaveData() const;
+    
+    // system系
+    void gameObjectCountUp();
+    long getGameObjectId() const;
     
     // イベントリ系
     const ItemInventoryDto &changeInventoryItem(long objectId);
@@ -69,6 +69,8 @@ private:
     ItemInventoryDto _itemInventory;
     // --- 倉庫 ---
     ItemInventoryDto _itemInventoryStock;
+    // --- システムデータ ---
+    SystemDataDto _systemData;
     
     void clearRoguePlayData();
     void clearPlayerActorData();

@@ -41,6 +41,7 @@ public:
         GAME_OVER         = 99,
     };
     
+    // TODO: Dtoにしてclassにする
     typedef struct _RoguePlayData {
         // クエストID（階数）
         int quest_id;
@@ -54,8 +55,6 @@ public:
         int turn_count;
         // 敵出現数（トータル）
         int enemy_count;
-        // アイテム出現数（トータル）
-        int item_count;
         
     } RoguePlayData;
     
@@ -74,20 +73,18 @@ public:
         data.no_action_count = atoi(data_string_array[index].c_str()); index++;
         data.turn_count = atoi(data_string_array[index].c_str()); index++;
         data.enemy_count = atoi(data_string_array[index].c_str()); index++;
-        data.item_count = atoi(data_string_array[index].c_str()); index++;
         return data;
     }
     
     static std::string const roguePlayDataToString(const RoguePlayData& data)
     {
-        return cocos2d::StringUtils::format("%d,%d,%d,%d,%d,%d,%d",
+        return cocos2d::StringUtils::format("%d,%d,%d,%d,%d,%d",
                                    data.quest_id,
                                    data.floor_id,
                                    data.game_status,
                                    data.no_action_count,
                                    data.turn_count,
-                                   data.enemy_count,
-                                   data.item_count
+                                   data.enemy_count
                                    );
     }
     

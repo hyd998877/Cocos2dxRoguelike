@@ -101,7 +101,6 @@ bool RogueScene::initWithQuestId(int quest_id) {
     }
     // イベントリロード
     this->_itemInventory = AccountData::getInstance()->getItemInventory();
-    rogue_play_data_.item_count = this->_itemInventory.getMaxObjectId();
     
     auto win_size = Director::getInstance()->getWinSize();
 
@@ -1426,11 +1425,6 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
         MUseItem::ItemType itemType = static_cast<MUseItem::ItemType>(valueMap.at(RogueGameConfig::ItemType).asInt());
         int hitId = valueMap.at(RogueGameConfig::Id).asInt();
         
-        // objectIdを補正
-        if (this->rogue_play_data_.item_count < 0) {
-            this->rogue_play_data_.item_count = 0;
-        }
-        
         // 武器、防具の+値やゴールド値を決定する
         int param = 0;
         if (itemType == MUseItem::ItemType::GOLD) {
@@ -1448,7 +1442,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             // Master取得
             MUseItem mUseItem = MUseItemDao::getInstance()->selectById(hitId);
             // ドロップアイテム情報を生成
-            int objectId = this->rogue_play_data_.item_count + 1;
+            int objectId = AccountData::getInstance()->getGameObjectId();
             ItemDto itemDto(
                 objectId,
                 mUseItem.getUseItemId(),
@@ -1463,13 +1457,13 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
-            this->rogue_play_data_.item_count++;
+            AccountData::getInstance()->gameObjectCountUp();
             
         } else if (itemType == MUseItem::ItemType::EQUIP_WEAPON) {
             // 武器
             MWeapon mWeapon = MWeaponDao::getInstance()->selectById(hitId);
             
-            int objectId = this->rogue_play_data_.item_count + 1;
+            int objectId = AccountData::getInstance()->getGameObjectId();
             ItemDto itemDto(
                 objectId,
                 mWeapon.getWeaponId(),
@@ -1483,13 +1477,13 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
-            this->rogue_play_data_.item_count++;
+            AccountData::getInstance()->gameObjectCountUp();
             
         } else if (itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
             // 防具
             MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(hitId);
             
-            int objectId = this->rogue_play_data_.item_count + 1;
+            int objectId = AccountData::getInstance()->getGameObjectId();
             ItemDto itemDto(
                 objectId,
                 mAccessory.getAccessoryId(),
@@ -1503,7 +1497,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             tiled_map_layer->tileSetDropMapItem(itemDto, mapIndex);
             
             // objectIdを更新
-            this->rogue_play_data_.item_count++;
+            AccountData::getInstance()->gameObjectCountUp();
         }
     }
     hitValues.clear();

@@ -99,6 +99,7 @@
 		CE93B4C0188156FC00825FD1 /* grid32.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4A5188156FC00825FD1 /* grid32.png */; };
 		CE93B4C8188156FC00825FD1 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AD188156FC00825FD1 /* menu_button.png */; };
 		CE93B4CA188156FC00825FD1 /* tmx in Resources */ = {isa = PBXBuildFile; fileRef = CE93B4AF188156FC00825FD1 /* tmx */; };
+		CE9A70441918BBF300F685A4 /* SystemDataDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9A70421918BBF300F685A4 /* SystemDataDto.cpp */; };
 		CEA247F319152C8100B0656A /* ItemDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA247F119152C8100B0656A /* ItemDto.cpp */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
 		CECE37AD18B9A08C0086C8A0 /* bg in Resources */ = {isa = PBXBuildFile; fileRef = CECE37AC18B9A08C0086C8A0 /* bg */; };
@@ -380,6 +381,8 @@
 		CE93B4A5188156FC00825FD1 /* grid32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid32.png; sourceTree = "<group>"; };
 		CE93B4AD188156FC00825FD1 /* menu_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_button.png; sourceTree = "<group>"; };
 		CE93B4AF188156FC00825FD1 /* tmx */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tmx; sourceTree = "<group>"; };
+		CE9A70421918BBF300F685A4 /* SystemDataDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemDataDto.cpp; sourceTree = "<group>"; };
+		CE9A70431918BBF300F685A4 /* SystemDataDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemDataDto.h; sourceTree = "<group>"; };
 		CEA247F119152C8100B0656A /* ItemDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemDto.cpp; sourceTree = "<group>"; };
 		CEA247F219152C8100B0656A /* ItemDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemDto.h; sourceTree = "<group>"; };
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
@@ -808,6 +811,8 @@
 				CE626E0C1914C68B005925DC /* ItemInventoryDto.h */,
 				CEA247F119152C8100B0656A /* ItemDto.cpp */,
 				CEA247F219152C8100B0656A /* ItemDto.h */,
+				CE9A70421918BBF300F685A4 /* SystemDataDto.cpp */,
+				CE9A70431918BBF300F685A4 /* SystemDataDto.h */,
 			);
 			path = dto;
 			sourceTree = "<group>";
@@ -1297,6 +1302,7 @@
 			files = (
 				CE626DF01914BEF6005925DC /* TableViewTestLayer.cpp in Sources */,
 				CE5AC3F1191692AA00ED0A22 /* ItemInventoryLayer.cpp in Sources */,
+				CE9A70441918BBF300F685A4 /* SystemDataDto.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				CE626DFD1914BEF6005925DC /* BattleLogic.cpp in Sources */,
 				CE626DE81914BEF6005925DC /* BattleScene.cpp in Sources */,
