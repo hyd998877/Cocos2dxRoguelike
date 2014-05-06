@@ -28,6 +28,7 @@ DropItemSprite::~DropItemSprite()
 bool DropItemSprite::initWithItemDto(const ItemDto& itemDto)
 {
     _itemDto = itemDto;
+    _itemDto.setEquip(false);
     auto spriteFileName = ItemLogic::createItemImageFileName(_itemDto.getImageResId());
     if (!Sprite::initWithFile(spriteFileName))
     {
@@ -39,6 +40,7 @@ bool DropItemSprite::initWithItemDto(const ItemDto& itemDto)
 bool DropItemSprite::initWithTextureItemDto(const ItemDto& itemDto, Texture2D *texture)
 {
     _itemDto = itemDto;
+    _itemDto.setEquip(false);
     if (!Sprite::initWithTexture(texture))
     {
         return false;
