@@ -157,7 +157,7 @@ void MypageScene::initMixedPage()
     this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
     
     // タイトル表示
-    initHeaderTitle("ごうせい屋", "bg//shop03_a.jpg");
+    initHeaderTitle("ごうせい屋", "bg/shop03_a.jpg");
     
     {
         Size win_size = Director::getInstance()->getWinSize();
