@@ -162,10 +162,16 @@ ItemDto* ItemInventoryDto::findItemDto(long objectId)
 ItemInventoryDto* ItemInventoryDto::changeInventory(long objectId, ItemInventoryDto *inventory1, ItemInventoryDto *inventory2)
 {
     if (inventory1->isInventoryByObjectId(objectId)) {
+        if (inventory2->isLimit()) {
+            return nullptr;
+        }
         inventory2->addItemDto(inventory1->findByObjectId(objectId));
         inventory1->removeItemDto(objectId);
         return inventory1;
     } else if (inventory2->isInventoryByObjectId(objectId)) {
+        if (inventory1->isLimit()) {
+            return nullptr;
+        }
         inventory1->addItemDto(inventory2->findByObjectId(objectId));
         inventory2->removeItemDto(objectId);
         return inventory2;

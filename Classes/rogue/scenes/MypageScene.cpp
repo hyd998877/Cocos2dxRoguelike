@@ -419,7 +419,8 @@ void MypageScene::showItemStockWindow()
                     }, *changeInventory);
                 } else {
                     // 交換がない
-                    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("交換できません。", "とじる", [](Ref *ref) {});
+                    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("一杯で交換できません。\n捨てるか売るかしてからもう一度試してください。",
+                                                                                    "とじる", [](Ref *ref) {});
                     this->addChild(dialogLayer, ZOrders::Dialog);
                 }
             }
