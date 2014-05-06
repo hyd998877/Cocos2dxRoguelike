@@ -12,7 +12,9 @@
 #ifndef __Cocos2dRogueLike__SystemDataDto__
 #define __Cocos2dRogueLike__SystemDataDto__
 
-#include <iostream>
+#include <string>
+#include <stdlib.h>
+#include <vector>
 
 /**
  @class SystemDataDto.cpp SystemDataDto.h

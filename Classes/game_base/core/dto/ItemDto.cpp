@@ -8,6 +8,8 @@
 
 #include "ItemDto.h"
 
+#include "StringUtils.h"
+
 ItemDto::ItemDto(long               objectId   /* = 0L */,
                  int                itemId     /* = 0 */,
                  MUseItem::ItemType itemType   /* = MUseItem::ItemType::NONE */,
