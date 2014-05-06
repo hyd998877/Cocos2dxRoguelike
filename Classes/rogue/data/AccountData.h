@@ -74,7 +74,7 @@ private:
     
     void clearRoguePlayData();
     void clearPlayerActorData();
-    void clearItemList();
+    void clearInventory();
 };
 
 NS_ROGUE_END

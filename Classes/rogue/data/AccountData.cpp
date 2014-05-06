@@ -193,8 +193,7 @@ void AccountData::resetRoguePlayData() {
     
     clearRoguePlayData();
     clearPlayerActorData();
-    
-    this->_itemInventory.resetAllEquip();
+    clearInventory();
     
     save();
 }
@@ -204,7 +203,7 @@ void AccountData::resetAll() {
     
     clearRoguePlayData();
     clearPlayerActorData();
-    clearItemList();
+    clearInventory();
     
     remoteSaveFile();
 }
@@ -271,8 +270,8 @@ void AccountData::clearRoguePlayData() {
 void AccountData::clearPlayerActorData() {
     this->_playerActor = ActorDto();
 }
-void AccountData::clearItemList() {
-    this->_itemInventory.clearItemList();
+void AccountData::clearInventory() {
+    this->_itemInventory = ItemInventoryDto("所持品", 0, RogueGameConfig::USE_ITEM_MAX);
 }
 
 ///////////////////////////////////////////////
