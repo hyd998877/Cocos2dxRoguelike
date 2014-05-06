@@ -35,22 +35,15 @@ public:
         MP_RECOVER_PERCENT = 201,
     };
     
-    MUseItem(int useItemId, int useItemImageId, ItemType useItemType, std::string useItemName, std::string useItemDetail, int useItemParam)
-    {
-        _useItemId = useItemId;
-        _useItemImageId = useItemImageId;
-        _useItemType = useItemType;
-        _useItemName = useItemName;
-        _useItemDetail = useItemDetail;
-        _useItemParam = useItemParam;
-    };
+    MUseItem(int useItemId, int useItemImageId, ItemType useItemType, std::string useItemName, std::string useItemDetail, int useItemParam);
+    virtual ~MUseItem();
     
-    const int getUseItemId() {return _useItemId;}
-    const int getUseItemImageId() {return _useItemImageId;}
-    const ItemType getUseItemType() {return _useItemType;}
-    const std::string getUseItemName() {return _useItemName;}
-    const std::string getUseItemDetail() {return _useItemDetail;}
-    const int getUseItemParam() {return _useItemParam;}
+    int getUseItemId() const {return _useItemId;}
+    int getUseItemImageId() const {return _useItemImageId;}
+    ItemType getUseItemType() const {return _useItemType;}
+    const std::string& getUseItemName() const {return _useItemName;}
+    const std::string& getUseItemDetail() const {return _useItemDetail;}
+    int getUseItemParam() const {return _useItemParam;}
     
 private:
     int _useItemId;
