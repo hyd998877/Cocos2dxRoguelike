@@ -82,9 +82,9 @@ void AccountData::save()
     int stockGold = this->_itemInventoryStock.getGold();
     ValueMap save_data{
         {"rogue_play_data", Value(RogueScene::roguePlayDataToString(_roguePlayData))},
-        {"player_actor", Value(_playerActor.actorToString())},
-        {"player_actor.weapon_equip", Value(_playerActor.getWeaponEquip().actorEquipToString())},
-        {"player_actor.accessory_equip", Value(_playerActor.getAccessoryEquip().actorEquipToString())},
+        {"player_actor", Value(this->_playerActor.actorToString())},
+        {"player_actor.weapon_equip", Value(this->_playerActor.getWeaponEquip().actorEquipToString())},
+        {"player_actor.accessory_equip", Value(this->_playerActor.getAccessoryEquip().actorEquipToString())},
         {"inventory.gold", Value(gold)},
         {"inventory.item_list", Value(saveItemList)},
         {"inventoryStock.gold", Value(stockGold)},

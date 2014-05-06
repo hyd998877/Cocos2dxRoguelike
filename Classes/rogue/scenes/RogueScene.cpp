@@ -926,12 +926,11 @@ void RogueScene::touchKaidan() {
     
     // TODO: (kyokomi)階段SE
     
-    auto actor_sprite = getPlayerActorSprite(1);
-    
     // 階段下りる判定
     Size win_size = Director::getInstance()->getWinSize();
-    auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "は　い", [this, actor_sprite](Ref *ref) {
+    auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "は　い", [this](Ref *ref) {
         // save
+        auto actor_sprite = getPlayerActorSprite(1);
         this->rogue_play_data_.quest_id += 1;
         ActorDto playerActor = *(actor_sprite->getActorDto());
         AccountData::getInstance()->save(this->rogue_play_data_,

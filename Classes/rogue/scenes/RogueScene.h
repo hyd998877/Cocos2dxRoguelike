@@ -58,10 +58,10 @@ public:
         
     } RoguePlayData;
     
-    static RoguePlayData createRoguePlayData(std::string data_string = "")
+    static RoguePlayData createRoguePlayData(const std::string &data_string = "")
     {
-        std::vector<std::string> data_string_array = GameCore::StringUtils::split(std::move(data_string));
-        if (data_string_array.size() != 7) {
+        std::vector<std::string> data_string_array = GameCore::StringUtils::split(std::string(data_string));
+        if (data_string_array.size() != 6) {
             return {0, 0, GameStatus::INIT, 0, 0, 0};
         }
         
