@@ -75,6 +75,8 @@ private:
      @return menuの中心Point
      */
     static cocos2d::Point createMenuCenterPoint(cocos2d::Menu* menu);
+    
+    void close();
 };
 
 #endif /* defined(__Cocos2dRogueLike__ItemInventoryLayer__) */

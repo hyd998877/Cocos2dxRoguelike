@@ -85,7 +85,7 @@ void ItemInventoryLayer::initHeader()
     // 枠
     auto goldLayerWaku = CommonWindowUtil::createWindowWaku(Size(contentSize.width/2, this->_goldTextLabel->getContentSize().height + this->_goldTextLabel->getSystemFontSize()/2) + Size(0, 2));
     // ベースレイヤー
-    auto goldLayer = Layer::create();
+    auto goldLayer = LayerColor::create(Color4B::BLACK);
     goldLayer->setContentSize(Size(contentSize.width/2, goldLayerWaku->getContentSize().height));
     goldLayer->setPosition(Point(contentSize.width + 2 - goldLayerWaku->getContentSize().width, contentSize.height));
     
@@ -131,6 +131,7 @@ void ItemInventoryLayer::initHeader()
 void ItemInventoryLayer::initDetail()
 {
     Size contentSize = Director::getInstance()->getWinSize() * ItemInventoryLayer::WINDOW_SIZE_SCALE;
+    
     ////////////////////////////
     // 内容
     this->_itemWindowLayer->setItemInventory(this->_selectInventory);
@@ -157,11 +158,7 @@ void ItemInventoryLayer::initFooter()
     
     // 閉じるボタン
     auto clone_menu_item_label = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "とじる"), Size(12, 4), [this](Ref* ref) {
-        this->setVisible(false);
-        this->removeAllChildrenWithCleanup(true);
-        if (this->_closeCallback) {
-            this->_closeCallback();
-        }
+        this->close();
     });
     
     ///////////////////////////
@@ -187,8 +184,7 @@ void ItemInventoryLayer::initMenuActionCallback(std::list<ActionCallback> action
     
     this->_itemWindowLayer->setItemMenuCallback([this, actionCallbackList](ItemWindowLayer::ItemWindowMenuType menuType, Ref* ref, const ItemDto &itemDto) {
         if (ItemInventoryLayer::searchCallbackFire(actionCallbackList, ref, itemDto, menuType)) {
-            this->setVisible(false);
-            this->removeAllChildrenWithCleanup(true);
+            this->close();
         }
     });
 }
@@ -259,4 +255,12 @@ Point ItemInventoryLayer::createMenuCenterPoint(Menu* menu)
     }
 }
 
+void ItemInventoryLayer::close()
+{
+    this->setVisible(false);
+    this->removeAllChildrenWithCleanup(true);
+    if (this->_closeCallback) {
+        this->_closeCallback();
+    }
+}
 

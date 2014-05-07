@@ -71,7 +71,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     auto pItemListLayer = TableViewTestLayer::createWithTextArray(itemNameList,
                                                                   Size(contentSize.width / 2, contentSize.height));
     pItemListLayer->setColor(Color3B::BLACK);
-    pItemListLayer->setOpacity(128);
+    pItemListLayer->setOpacity(0);
     pItemListLayer->setPosition(Point(contentSize.width / 2 - pItemListLayer->getContentSize().width - padding,
                                       contentSize.height / 2 - pItemListLayer->getContentSize().height / 2));
     pItemListLayer->setCallback([this, itemList](Ref *pObject, long touchedIdx) {
@@ -96,7 +96,7 @@ bool ItemWindowLayer::initWithContentSize(Size contentSize) {
     // アイテム詳細レイヤー（右側）
     auto pItemDetailLayer = LayerColor::create();
     pItemDetailLayer->setColor(Color3B::BLACK);
-    pItemDetailLayer->setOpacity(128);
+    pItemDetailLayer->setOpacity(0);
     pItemDetailLayer->setContentSize(Size(contentSize.width / 2, contentSize.height));
     pItemDetailLayer->setPosition(Point(contentSize.width / 2 + padding, 0));
     pItemDetailLayer->setTag(ItemDetailLayerTag);

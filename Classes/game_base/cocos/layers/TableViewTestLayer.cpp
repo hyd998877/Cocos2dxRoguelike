@@ -45,7 +45,7 @@ bool TableViewTestLayer::init(std::list<TableLayout> itemList, Size contentSize)
 	tableView->reloadData();
 
     this->setColor(Color3B::BLACK);
-    this->setOpacity(128);
+    this->setOpacity(0);
     
     return true;
 }
