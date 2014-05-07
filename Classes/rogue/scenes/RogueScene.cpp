@@ -417,6 +417,10 @@ void RogueScene::showItemInventoryWindow()
         this->getChildByTag(Tags::ButtonMenuTag)->setVisible(true);
     });
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
+    
+    auto novelActorSprite = ActorSprite::createNovelActorSprite(ActorSprite::NovelDirection::RIGHT);
+    itemWindowLayer->addChild(novelActorSprite, -1);
+    
     this->addChild(itemWindowLayer, ZOrders::ItemListLayerZOrder, Tags::ItemListWindowTag);
 }
 

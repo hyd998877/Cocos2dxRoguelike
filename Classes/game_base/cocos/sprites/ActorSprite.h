@@ -24,7 +24,7 @@ public:
     
     // コンストラクタ、デストラクタ
     ActorSprite();
-    ~ActorSprite();
+    virtual ~ActorSprite();
     
     // 初期化とか
     bool initWithActorDto(ActorDto actorDto);
@@ -48,6 +48,13 @@ public:
     void runRightAction();
     void runTopAction();
     
+    enum class NovelDirection {
+        LEFT,
+        CENTER,
+        RIGHT
+    };
+    
+    static Sprite* createNovelActorSprite(ActorSprite::NovelDirection novelDirection = ActorSprite::NovelDirection::LEFT);
 private:
     ActorMapItem m_actorMapItem;
     ActorDto m_actorDto;

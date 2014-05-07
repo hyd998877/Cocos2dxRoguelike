@@ -245,3 +245,34 @@ FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, int typeId, std::
     
     return Animate::create(pAnimation);
 }
+
+
+/////////////
+// static
+
+// TODO: キャラ固定なのはいずれ
+// 立ち絵
+Sprite* ActorSprite::createNovelActorSprite(ActorSprite::NovelDirection novelDirection)
+{
+    Size winSize = Director::getInstance()->getWinSize();
+    Size resolutionSize = Director::getInstance()->getOpenGLView()->getDesignResolutionSize();
+    
+    // キャラ表示
+    auto playerSprite = Sprite::create("novel/actor4_novel_s_0.png");
+    playerSprite->setScale(resolutionSize.height/playerSprite->getContentSize().height);
+    if (novelDirection == ActorSprite::NovelDirection::LEFT) {
+        playerSprite->setPosition(Point(winSize.width * 0.15, winSize.height * 0.4));
+        playerSprite->setFlippedX(true);
+    } else if (novelDirection == ActorSprite::NovelDirection::CENTER) {
+        playerSprite->setPosition(Point(winSize.width * 0.55, winSize.height * 0.4));
+    } else if (novelDirection == ActorSprite::NovelDirection::RIGHT) {
+        playerSprite->setPosition(Point(winSize.width * 0.85, winSize.height * 0.4));
+    }
+    
+    return playerSprite;
+}
+
+
+
+
+
