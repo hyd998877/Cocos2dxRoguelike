@@ -38,7 +38,7 @@ bool QuestPageLayer::init()
     Size winSize = Director::getInstance()->getWinSize();
     Size resolutionSize = Director::getInstance()->getOpenGLView()->getDesignResolutionSize();
     
-    auto background = Sprite::create("bg/ci_shopbakery01a_b.jpg");
+    auto background = Sprite::create("bg/ad_forest01_c.jpg");
     background->setOpacity(96);
     background->setScale(winSize.width/background->getContentSize().width);
     background->setPosition(Point(winSize.width/2, winSize.height/2));
