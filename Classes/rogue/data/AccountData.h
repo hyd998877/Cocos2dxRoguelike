@@ -52,6 +52,7 @@ public:
     
     std::string createQuestSaveDetailText() const;
     // チェック系
+    bool isItemInventory();
     bool isQuestSaveData() const;
     bool isPlayQuestData(RogueScene::QuestType questType, int questId) const;
     

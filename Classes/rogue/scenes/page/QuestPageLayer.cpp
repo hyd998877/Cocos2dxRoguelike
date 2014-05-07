@@ -9,8 +9,11 @@
 #include "QuestPageLayer.h"
 #include "AppMacros.h"
 
+#include "AccountData.h"
+
 #include "CommonWindowUtil.h"
 #include "MypageHeaderLayer.h"
+#include "AlertDialogLayer.h"
 
 #include "RogueScene.h"
 
@@ -53,6 +56,12 @@ bool QuestPageLayer::init()
     });
     auto iconNode2 = Sprite::create("icon_set/item_0.png");
     auto menuItem2 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode2, FontUtils::getDefaultFontTTFConfig(), "不思議な洞窟", [this](Ref *ref) {
+        // チュートリアルクリアしてないとプレイできない
+        if (RogueLikeGame::AccountData::getInstance()->getGamePlayProgress() < RogueLikeGame::AccountData::GamePlayProgress::TUTORIAL_CLEAR) {
+            this->addChild(AlertDialogLayer::createWithContentSizeModal("このダンジョンはまだプレイできません。", "とじる", [](Ref *ref) {}));
+            return;
+        }
+        
         // メインクエスト
         int play_quest_id = 1;
         auto scene = RogueLikeGame::RogueScene::scene(RogueLikeGame::RogueScene::QuestType::MAIN_QUEST, play_quest_id);
@@ -61,13 +70,23 @@ bool QuestPageLayer::init()
     });
     auto iconNode3 = Sprite::create("icon_set/item_0.png");
     auto menuItem3 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode3, FontUtils::getDefaultFontTTFConfig(), "最果ての洞窟", [this](Ref *ref) {
+        // メインクリアしてないとプレイできない
+        if (RogueLikeGame::AccountData::getInstance()->getGamePlayProgress() < RogueLikeGame::AccountData::GamePlayProgress::MAINQUEST_CLEAR) {
+            this->addChild(AlertDialogLayer::createWithContentSizeModal("このダンジョンはまだプレイできません。", "とじる", [](Ref *ref) {}));
+            return;
+        }
         
-        // TODO: アイテムとゴールド所持の判定と警告
-        
-        int play_quest_id = 1;
-        auto scene = RogueLikeGame::RogueScene::scene(RogueLikeGame::RogueScene::QuestType::DEEP_QUEST, play_quest_id);
-        auto trans = TransitionFadeDown::create(1.0f, scene);
-        Director::getInstance()->replaceScene(trans);
+        // アイテムとゴールド所持の警告
+        this->addChild(AlertDialogLayer::createWithContentSizeModal("このダンジョンは\nアイテムやゴールドを持ち込むことはできません。\n持っているアイテムやゴールドをすべて失いますが\nそれでもいいですか？", "は　い", [](Ref *ref) {
+            // データリセット
+            RogueLikeGame::AccountData::getInstance()->resetRoguePlayDataAndInventory();
+            
+            // クエスト開始
+            int play_quest_id = 1;
+            auto scene = RogueLikeGame::RogueScene::scene(RogueLikeGame::RogueScene::QuestType::DEEP_QUEST, play_quest_id);
+            auto trans = TransitionFadeDown::create(1.0f, scene);
+            Director::getInstance()->replaceScene(trans);
+        }, "いいえ", [](Ref *ref) {}));
     });
     
     auto menu = Menu::create(menuItem1, menuItem2, menuItem3, NULL);

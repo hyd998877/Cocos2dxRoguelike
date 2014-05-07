@@ -259,6 +259,16 @@ std::string AccountData::createQuestSaveDetailText() const {
 #pragma mark
 #pragma mark チェック系
 
+/// なんか持ってるかチェック
+bool AccountData::isItemInventory()
+{
+    if (this->_itemInventory.getGold() > 0 || this->_itemInventory.getItemList().size() > 0) {
+        return true;
+    }
+    
+    return false;
+}
+
 bool AccountData::isQuestSaveData() const {
     if (this->_roguePlayData.quest_id > 0) {
         return true;
