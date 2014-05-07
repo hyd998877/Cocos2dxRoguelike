@@ -114,9 +114,6 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     Size winSize = Director::getInstance()->getWinSize();
     
     // 背景表示
-    Sprite* background = Sprite::create("novel/013-PostTown01.jpg");
-    background->setPosition(Point(winSize.width * 0.5, winSize.height * 0.5));
-    this->addChild(background, kZOrder_Background, kTag_Background);
     
     // -----------------------------
     // TODO: テキスト表示 Class化したい・・・
@@ -320,21 +317,31 @@ void NovelScene::nextNovelJson()
 
 void NovelScene::changeBackgroundAnimation(const string& imgFilePath)
 {
-    auto pBackground = dynamic_cast<Sprite*>(this->getChildByTag(kTag_Background));
+    Size winSize = Director::getInstance()->getWinSize();
     
-    FadeOut* fadeOut = FadeOut::create(0.5);
-    FadeIn* fadeIn = FadeIn::create(0.5);
-    
-    Texture2D *texture = Director::getInstance()->getTextureCache()->getTextureForKey(imgFilePath);
-    if (!texture)
-    {
-        texture = Director::getInstance()->getTextureCache()->addImage(imgFilePath);
+    auto node = this->getChildByTag(kTag_Background);
+    if (node) {
+        auto background = static_cast<Sprite*>(node);
+        FadeOut* fadeOut = FadeOut::create(0.5);
+        FadeIn* fadeIn = FadeIn::create(0.5);
+        
+        Texture2D *texture = Director::getInstance()->getTextureCache()->getTextureForKey(imgFilePath);
+        if (!texture)
+        {
+            texture = Director::getInstance()->getTextureCache()->addImage(imgFilePath);
+        }
+        auto pActionSeq = Sequence::create(fadeOut, CallFunc::create([this, winSize, background, texture]() {
+            background->setTexture(texture);
+            background->setScale(winSize.width/background->getContentSize().width);
+        }), fadeIn, NULL);
+        
+        background->runAction(pActionSeq);
+    } else {
+        auto background = Sprite::create(imgFilePath);
+        background->setScale(winSize.width/background->getContentSize().width);
+        background->setPosition(Point(winSize.width * 0.5, winSize.height * 0.5));
+        this->addChild(background, kZOrder_Background, kTag_Background);
     }
-    auto pActionSeq = Sequence::create(fadeOut, CallFunc::create([this, pBackground, texture]() {
-        pBackground->setTexture(texture);
-    }), fadeIn, NULL);
-    
-    pBackground->runAction(pActionSeq);
 }
 
 void NovelScene::makeSelectSpriteButton(const string& str1, int next1Id, const string& str2, int next2Id)
@@ -406,10 +413,13 @@ void NovelScene::makeActorImage(const char* imageFilePath, int dict)
 {
     int dictTag = dict + kTag_ActorDict;
     
+    Size resolutionSize = Director::getInstance()->getOpenGLView()->getDesignResolutionSize();
+    
     // Sprite生成
     Sprite* actor = Sprite::create(imageFilePath);
-    actor->setScale(0.75);
+    actor->setScale(resolutionSize.height/actor->getContentSize().height);
     
+    float scaleToWidth = actor->getContentSize().width * actor->getScale();
     // 生成前に念のためremoveしておく
     removeActorImage(dict);
     
@@ -417,7 +427,7 @@ void NovelScene::makeActorImage(const char* imageFilePath, int dict)
     Point point = Point::ZERO;
     if (dictTag == kTag_ActorDictLeft)
     {
-        point = Point(actor->boundingBox().size.width * 0.5, actor->boundingBox().size.height * 0.5);
+        point = Point(winSize.width*0.40 - scaleToWidth/2, actor->boundingBox().size.height * 0.5);
         actor->setFlippedX(true); // 右向きにする
         
         // centerとrightを暗くする
@@ -426,7 +436,7 @@ void NovelScene::makeActorImage(const char* imageFilePath, int dict)
     }
     else if (dictTag == kTag_ActorDictCenter)
     {
-        point = Point(winSize.width / 4 + actor->boundingBox().size.width * 0.5, actor->boundingBox().size.height * 0.5);
+        point = Point(winSize.width*0.75 - scaleToWidth/2, actor->boundingBox().size.height * 0.5);
         
         // leftとrightを暗くする
         shadeActorImage(kTag_ActorDictLeft-kTag_ActorDict);
@@ -434,7 +444,7 @@ void NovelScene::makeActorImage(const char* imageFilePath, int dict)
     }
     else if (dictTag == kTag_ActorDictRight)
     {
-        point = Point(winSize.width - actor->boundingBox().size.width * 0.5, actor->boundingBox().size.height * 0.5);
+        point = Point(winSize.width*1.10 - scaleToWidth/2, actor->boundingBox().size.height * 0.5);
         
         // leftとcenterとを暗くする
         shadeActorImage(kTag_ActorDictLeft-kTag_ActorDict);
