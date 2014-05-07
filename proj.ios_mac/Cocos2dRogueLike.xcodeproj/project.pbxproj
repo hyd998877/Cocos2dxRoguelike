@@ -58,6 +58,10 @@
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
+		CE119DDB1919F1730047B44D /* ItemStockPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */; };
+		CE119DDE1919F1A50047B44D /* TopPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DDC1919F1A50047B44D /* TopPageLayer.cpp */; };
+		CE119DE11919F44F0047B44D /* ItemMixedPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DDF1919F44F0047B44D /* ItemMixedPageLayer.cpp */; };
+		CE1EFC7B191A047500E5EFE4 /* MypageHeaderLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE1EFC79191A047500E5EFE4 /* MypageHeaderLayer.cpp */; };
 		CE2F8A3F18AF28E5001B457C /* novel in Resources */ = {isa = PBXBuildFile; fileRef = CE2F8A3D18AF28E5001B457C /* novel */; };
 		CE5AC3F1191692AA00ED0A22 /* ItemInventoryLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5AC3EF191692AA00ED0A22 /* ItemInventoryLayer.cpp */; };
 		CE626DE81914BEF6005925DC /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D721914BEF6005925DC /* BattleScene.cpp */; };
@@ -299,6 +303,14 @@
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
+		CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemStockPageLayer.cpp; sourceTree = "<group>"; };
+		CE119DDA1919F1730047B44D /* ItemStockPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemStockPageLayer.h; sourceTree = "<group>"; };
+		CE119DDC1919F1A50047B44D /* TopPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TopPageLayer.cpp; sourceTree = "<group>"; };
+		CE119DDD1919F1A50047B44D /* TopPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopPageLayer.h; sourceTree = "<group>"; };
+		CE119DDF1919F44F0047B44D /* ItemMixedPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemMixedPageLayer.cpp; sourceTree = "<group>"; };
+		CE119DE01919F44F0047B44D /* ItemMixedPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemMixedPageLayer.h; sourceTree = "<group>"; };
+		CE1EFC79191A047500E5EFE4 /* MypageHeaderLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageHeaderLayer.cpp; sourceTree = "<group>"; };
+		CE1EFC7A191A047500E5EFE4 /* MypageHeaderLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageHeaderLayer.h; sourceTree = "<group>"; };
 		CE2F8A3D18AF28E5001B457C /* novel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = novel; sourceTree = "<group>"; };
 		CE5AC3EF191692AA00ED0A22 /* ItemInventoryLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemInventoryLayer.cpp; sourceTree = "<group>"; };
 		CE5AC3F0191692AA00ED0A22 /* ItemInventoryLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInventoryLayer.h; sourceTree = "<group>"; };
@@ -601,6 +613,28 @@
 			);
 			name = Resources;
 			path = ../Resources;
+			sourceTree = "<group>";
+		};
+		CE119DD81919F14D0047B44D /* page */ = {
+			isa = PBXGroup;
+			children = (
+				CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */,
+				CE119DDA1919F1730047B44D /* ItemStockPageLayer.h */,
+				CE119DDC1919F1A50047B44D /* TopPageLayer.cpp */,
+				CE119DDD1919F1A50047B44D /* TopPageLayer.h */,
+				CE119DDF1919F44F0047B44D /* ItemMixedPageLayer.cpp */,
+				CE119DE01919F44F0047B44D /* ItemMixedPageLayer.h */,
+			);
+			path = page;
+			sourceTree = "<group>";
+		};
+		CE1EFC76191A046500E5EFE4 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				CE1EFC79191A047500E5EFE4 /* MypageHeaderLayer.cpp */,
+				CE1EFC7A191A047500E5EFE4 /* MypageHeaderLayer.h */,
+			);
+			path = common;
 			sourceTree = "<group>";
 		};
 		CE626D6B1914BEF6005925DC /* battle */ = {
@@ -972,6 +1006,8 @@
 		CE626DD21914BEF6005925DC /* scenes */ = {
 			isa = PBXGroup;
 			children = (
+				CE1EFC76191A046500E5EFE4 /* common */,
+				CE119DD81919F14D0047B44D /* page */,
 				CE626DD31914BEF6005925DC /* MypageScene.cpp */,
 				CE626DD41914BEF6005925DC /* MypageScene.h */,
 				CE626DD51914BEF6005925DC /* RogueScene.cpp */,
@@ -1300,6 +1336,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE119DDE1919F1A50047B44D /* TopPageLayer.cpp in Sources */,
 				CE626DF01914BEF6005925DC /* TableViewTestLayer.cpp in Sources */,
 				CE5AC3F1191692AA00ED0A22 /* ItemInventoryLayer.cpp in Sources */,
 				CE9A70441918BBF300F685A4 /* SystemDataDto.cpp in Sources */,
@@ -1311,10 +1348,12 @@
 				CE626DED1914BEF6005925DC /* JoystickLayer.cpp in Sources */,
 				CE626DEA1914BEF6005925DC /* AlertDialogLayer.cpp in Sources */,
 				CEA247F319152C8100B0656A /* ItemDto.cpp in Sources */,
+				CE119DDB1919F1730047B44D /* ItemStockPageLayer.cpp in Sources */,
 				CE626E081914BEF6005925DC /* DropItemSprite.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				CE626DEE1914BEF6005925DC /* ModalLayer.cpp in Sources */,
 				CE626E041914BEF6005925DC /* RogueTMXTiledMap.cpp in Sources */,
+				CE1EFC7B191A047500E5EFE4 /* MypageHeaderLayer.cpp in Sources */,
 				CE626DF11914BEF6005925DC /* ActorSprite.cpp in Sources */,
 				CE626DF61914BEF6005925DC /* MWeaponDao.cpp in Sources */,
 				CE626DFF1914BEF6005925DC /* MapManager.cpp in Sources */,
@@ -1333,6 +1372,7 @@
 				CE626E061914BEF6005925DC /* MypageScene.cpp in Sources */,
 				CE626DF71914BEF6005925DC /* MAccessory.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
+				CE119DE11919F44F0047B44D /* ItemMixedPageLayer.cpp in Sources */,
 				CE626DFA1914BEF6005925DC /* MWeapon.cpp in Sources */,
 				CE626DF91914BEF6005925DC /* MUseItem.cpp in Sources */,
 				CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */,

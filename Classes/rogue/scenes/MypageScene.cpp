@@ -24,6 +24,10 @@
 
 #include "AccountData.h"
 
+#include "TopPageLayer.h"
+#include "ItemStockPageLayer.h"
+#include "ItemMixedPageLayer.h"
+
 USING_NS_CC;
 
 NS_ROGUE_BEGIN
@@ -58,12 +62,36 @@ bool MypageScene::init()
 
     // セーブあり
     if (AccountData::getInstance()->isQuestSaveData()) {
-        initQuestSave();
+        this->initQuestSave();
     } else {
-        initMyPage();
+        this->initMyPage();
     }
 
     return true;
+}
+
+void MypageScene::changePage(Layer* pageLayer, int selectMenuTag)
+{
+    if (this->_baseLayer) {
+        this->_baseLayer->removeAllChildrenWithCleanup(true);
+    }
+    this->_baseLayer = Layer::create();
+    
+    this->_baseLayer->addChild(pageLayer, ZOrders::Page);
+    {
+        auto menu = createGlobalMenu();
+        auto item_menu1 = menu->getChildByTag(selectMenuTag);
+        item_menu1->setColor(Color3B::GREEN);
+        auto black_layer = LayerColor::create(Color4B::BLACK);
+        black_layer->setOpacity(192);
+        black_layer->setContentSize(Size(menu->getContentSize().width, item_menu1->getContentSize().height + 8));
+        pageLayer->addChild(black_layer);
+        pageLayer->addChild(menu);
+    }
+    
+    if (this->_baseLayer) {
+        this->addChild(this->_baseLayer);
+    }
 }
 
 void MypageScene::initQuestSave()
@@ -87,200 +115,17 @@ void MypageScene::initQuestSave()
 
 void MypageScene::initMyPage()
 {
-    if (this->_baseLayer) {
-        this->_baseLayer->removeAllChildrenWithCleanup(true);
-    }
-    this->_baseLayer = Layer::create();
-
-    Size win_size = Director::getInstance()->getWinSize();
-    
-    // タイトル表示
-    initHeaderTitle("とっぷぺーじ", "bg/saloon06_c.jpg");
-    
-    // キャラ表示
-    {
-        auto actor_sprite = Sprite::create("novel/actor4_novel_s_0.png");
-        actor_sprite->setPosition(Point(win_size.width * 0.25, actor_sprite->getContentSize().height * 0.25));
-        actor_sprite->setFlippedX(true);
-        this->_baseLayer->addChild(actor_sprite);
-    }
-    
-    // セリフ表示
-    {
-        auto comment_layer = LayerColor::create(Color4B::BLACK);
-        comment_layer->setContentSize(Size(win_size.width / 2, win_size.height / 3));
-        comment_layer->setPosition(Point(win_size.width * 0.7 - comment_layer->getContentSize().width / 2, win_size.height * 0.5 - comment_layer->getContentSize().height / 2));
-        this->_baseLayer->addChild(comment_layer);
-        
-        // TODO: なんかランダムなメッセージとかにしたいです
-        std::string messageText = "今日も気合いれてダンジョンいこー";
-        auto gameProgress = AccountData::getInstance()->getGamePlayProgress();
-        if (gameProgress == AccountData::GamePlayProgress::INIT) {
-            messageText = "はじめまして！\nまずはクエストをやってみよう！";
-        }
-        
-        auto comment_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), messageText);
-        comment_label->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
-        comment_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
-        comment_layer->addChild(comment_label);
-        comment_label->setPosition(Point(comment_layer->getContentSize().width / 2, comment_layer->getContentSize().height / 2));
-        
-        // 枠
-        CommonWindowUtil::attachWindowWaku(comment_layer);
-    }
-    
-    // グロナビ生成
-    initGlobalMenu(GlobalMenuTags::TOP);
-    
-    this->addChild(this->_baseLayer);
+    this->changePage(TopPageLayer::create(), GlobalMenuTags::TOP);
 }
 
 void MypageScene::initItemStockPage()
 {
-    if (this->_baseLayer) {
-        this->_baseLayer->removeAllChildrenWithCleanup(true);
-    }
-    this->_baseLayer = Layer::create();
-    
-    // タイトル表示
-    initHeaderTitle("そうこ", "bg/ci_shopbakery01a_b.jpg");
-    
-    {
-        this->showItemStockWindow();
-    }
-    
-    // グロナビ生成
-    initGlobalMenu(GlobalMenuTags::STOCK);
-    
-    this->addChild(this->_baseLayer);
+    this->changePage(ItemStockPageLayer::create(), GlobalMenuTags::STOCK);
 }
 
 void MypageScene::initMixedPage()
 {
-    if (this->_baseLayer) {
-        this->_baseLayer->removeAllChildrenWithCleanup(true);
-    }
-    this->_baseLayer = Layer::create();
-    
-    this->_itemInventory = AccountData::getInstance()->getItemInventory();
-    this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
-    
-    // タイトル表示
-    initHeaderTitle("ごうせい屋", "bg/shop03_a.jpg");
-    
-    {
-        Size win_size = Director::getInstance()->getWinSize();
-        Size layerSize = Size(win_size.width*0.5, win_size.height*0.3);
-        std::string spriteFrameFileName = "grid32.png";
-        
-        auto imageSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameFileName);
-        if (!imageSpriteFrame) {
-            imageSpriteFrame = cocos2d::Sprite::create(spriteFrameFileName)->getSpriteFrame();
-            cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(imageSpriteFrame, spriteFrameFileName);
-        }
-        
-        // ベース
-        auto baseSprite = cocos2d::Sprite::createWithSpriteFrame(imageSpriteFrame);
-        auto baseItemMenuLabel = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, baseSprite, FontUtils::getDefaultFontTTFConfig(), "ベースを選択してください", [this, baseSprite](Ref *ref) {
-            auto label = static_cast<Label*>(static_cast<MenuItemLabel*>(ref)->getLabel());
-            showMixedItemSelectWindow([this, label, baseSprite](const ItemDto &itemDto) {
-                auto itemSprite = Sprite::create(ItemLogic::createItemImageFileName(itemDto.getImageResId()));
-                baseSprite->setTexture(itemSprite->getTexture());
-                label->setString(itemDto.createItemName());
-                
-                this->_baseItemDto = itemDto;
-            });
-        });
-        baseItemMenuLabel->setPosition(Point(win_size.width*0.3, win_size.height*0.7));
-        
-        // 素材
-        auto materialSprite = cocos2d::Sprite::createWithSpriteFrame(imageSpriteFrame);
-        auto materialItemlayer = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, materialSprite, FontUtils::getDefaultFontTTFConfig(), "そざいを選択してください",[this, materialSprite](Ref *ref) {
-            auto label = static_cast<Label*>(static_cast<MenuItemLabel*>(ref)->getLabel());
-            showMixedItemSelectWindow([this, label, materialSprite](const ItemDto &itemDto) {
-                auto itemSprite = Sprite::create(ItemLogic::createItemImageFileName(itemDto.getImageResId()));
-                materialSprite->setTexture(itemSprite->getTexture());
-                label->setString(itemDto.createItemName());
-                
-                this->_materialItemDto = itemDto;
-            });
-        });
-        materialItemlayer->setPosition(Point(win_size.width*0.3, win_size.height*0.3));
-        
-        // L表示
-        auto sprite1 = Sprite::create("ui/l_image.png");
-        sprite1->setPosition(Point(win_size.width*0.6, win_size.height*0.65));
-        this->_baseLayer->addChild(sprite1);
-        auto sprite2 = Sprite::create("ui/l_image.png");
-        sprite2->setFlippedY(true);
-        sprite2->setPosition(Point(win_size.width*0.6, win_size.height*0.35));
-        this->_baseLayer->addChild(sprite2);
-        
-        // 合成ボタン
-        auto mixedMenuItem = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getStrongFontTTFConfig(), "合　成"), Size(16, 8), [this](Ref *ref) {
-            // 合成実行
-            if (this->mixedItem()) {
-                // 成功したらベースと素材を未選択にする
-                this->initMixedPage();
-            }
-        });
-        mixedMenuItem->setPosition(Point(win_size.width*0.7, win_size.height*0.5));
-        
-        auto menu = Menu::create(baseItemMenuLabel, materialItemlayer, mixedMenuItem, NULL);
-        menu->setPosition(Point::ZERO);
-        this->_baseLayer->addChild(menu);
-    }
-    
-    // グロナビ生成
-    initGlobalMenu(GlobalMenuTags::MIXED);
-    
-    this->addChild(this->_baseLayer);
-}
-
-// initXXXXPage後によぶ
-void MypageScene::initGlobalMenu(int selectMenuTag)
-{
-    auto menu = createGlobalMenu();
-    
-    auto item_menu1 = menu->getChildByTag(selectMenuTag);
-    item_menu1->setColor(Color3B::GREEN);
-    
-    auto black_layer = LayerColor::create(Color4B::BLACK);
-    black_layer->setOpacity(192);
-    black_layer->setContentSize(Size(menu->getContentSize().width, item_menu1->getContentSize().height + 8));
-    this->_baseLayer->addChild(black_layer);
-    
-    this->_baseLayer->addChild(menu);
-}
-// initXXXXPage後によぶ
-void MypageScene::initHeaderTitle(const std::string &titleText, const std::string &backgroundName)
-{
-    Size win_size = Director::getInstance()->getWinSize();
-
-    // 背景
-    if (!backgroundName.empty()) {
-        auto background = Sprite::create(backgroundName);
-        background->setOpacity(96);
-        background->setScale(win_size.width/background->getContentSize().width);
-        background->setPosition(Point(win_size.width/2, win_size.height/2));
-        this->_baseLayer->addChild(background);
-    }
-    
-    // タイトル表示
-    auto title_layer = LayerColor::create(Color4B::BLACK);
-    title_layer->setContentSize(Size(win_size.width, win_size.height / 8));
-    title_layer->setPosition(Point(0, win_size.height - title_layer->getContentSize().height));
-    this->_baseLayer->addChild(title_layer);
-    
-    auto title_label = Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), titleText);
-    title_label->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
-    title_label->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
-    title_label->setPosition(Point(title_layer->getContentSize().width /2, title_layer->getContentSize().height / 2));
-    title_layer->addChild(title_label);
-    
-    // 枠
-    auto window_waku = CommonWindowUtil::createWindowWaku(Size(win_size.width, title_label->getContentSize().height + title_label->getSystemFontSize()));
-    title_layer->addChild(window_waku);
+    this->changePage(ItemMixedPageLayer::create(), GlobalMenuTags::MIXED);
 }
 
 /**
@@ -353,154 +198,6 @@ Menu* MypageScene::createGlobalMenu()
     menu->setPosition(Point(menu->getContentSize().width / 2, item_menu1->getContentSize().height / 2 + WAKU_PADDING.height / 2));
     
     return menu;
-}
-
-void MypageScene::showItemStockWindow()
-{
-    // アイテムリストを設定
-    Size winSize = Director::getInstance()->getWinSize();
-    
-    this->_itemInventory = AccountData::getInstance()->getItemInventory();
-    this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
-    this->_itemInventoryStock = AccountData::getInstance()->getItemInventoryStock();
-    this->_itemInventoryStock.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
-    std::list<ItemInventoryDto> itemInventoryList{
-        this->_itemInventory,
-        this->_itemInventoryStock
-    };
-    
-    auto itemWindow = ItemInventoryLayer::create(itemInventoryList);
-    itemWindow->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
-        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_DROP, ItemInventoryLayer::CloseType::UN_CLOSE,
-            [this, itemWindow](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("本当に捨ててもいいですか？", "は　い", [this, itemDto, itemWindow](Ref *ref) {
-                    
-                    auto saleInventory = ItemInventoryDto::findByObjectIdInventory(itemDto.getObjectId(),
-                                                                                   &this->_itemInventory,
-                                                                                   &this->_itemInventoryStock);
-                    saleInventory->removeItemDto(itemDto.getObjectId());
-                    
-                    itemWindow->refresh(std::list<ItemInventoryDto>{
-                        this->_itemInventory,
-                        this->_itemInventoryStock
-                    }, *saleInventory);
-                }, "いいえ", [](Ref *ref) {});
-                this->addChild(dialogLayer, ZOrders::Dialog);
-            }
-        },
-        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_SALE, ItemInventoryLayer::CloseType::UN_CLOSE,
-            [this, itemWindow](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                int gold = ItemLogic::sale(itemDto);
-                auto text = GameCore::StringUtils::format("本当に売ってもいいですか？\n\n金額 %d", gold);
-                auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(text, "は　い", [this, gold, itemDto, itemWindow](Ref *ref) {
-                    auto saleInventory = ItemInventoryDto::findByObjectIdInventory(itemDto.getObjectId(),
-                                                                                   &this->_itemInventory,
-                                                                                   &this->_itemInventoryStock);
-                    saleInventory->removeItemDto(itemDto.getObjectId());
-                    saleInventory->addGold(gold);
-                    
-                    itemWindow->refresh(std::list<ItemInventoryDto>{
-                        this->_itemInventory,
-                        this->_itemInventoryStock
-                    }, *saleInventory);
-                }, "いいえ", [](Ref *ref) {});
-                this->addChild(dialogLayer, ZOrders::Dialog);
-            }
-        },
-        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_STOCK, ItemInventoryLayer::CloseType::UN_CLOSE,
-            [this, itemWindow](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                // 倉庫に入れる。逆に倉庫側だと持ち物へ。一杯の時はボタン押せなくしたい...
-                long objectId = itemDto.getObjectId();
-                auto changeInventory = ItemInventoryDto::changeInventory(objectId, &this->_itemInventory, &this->_itemInventoryStock);
-                if (changeInventory) {
-                    itemWindow->refresh(std::list<ItemInventoryDto>{
-                        this->_itemInventory,
-                        this->_itemInventoryStock
-                    }, *changeInventory);
-                } else {
-                    // 交換がない
-                    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("一杯で交換できません。\n捨てるか売るかしてからもう一度試してください。",
-                                                                                    "とじる", [](Ref *ref) {});
-                    this->addChild(dialogLayer, ZOrders::Dialog);
-                }
-            }
-        },
-    });
-    itemWindow->setPosition(CommonWindowUtil::createPointCenter(itemWindow, this));
-    itemWindow->setCloseCallback([this]() {
-        AccountData::getInstance()->saveInventory(this->_itemInventory, this->_itemInventoryStock);
-    });
-    this->addChild(itemWindow, ZOrders::ItemInventory);
-}
-
-void MypageScene::showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback)
-{
-    // アイテムリストを設定
-    Size winSize = Director::getInstance()->getWinSize();
-    
-    auto itemWindow = ItemInventoryLayer::create(this->_itemInventory);
-    itemWindow->setPosition(CommonWindowUtil::createPointCenter(itemWindow, this));
-    itemWindow->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
-        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_MIXED, ItemInventoryLayer::CloseType::CLOSE,
-            [this, selectItemCallback](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                CCLOG("itemName = %s", itemDto.getName().c_str());
-                
-                this->_itemInventory.removeItemDto(itemDto.getObjectId());
-                selectItemCallback(itemDto);
-            }
-        }
-    });
-    itemWindow->setCloseCallback([this]() {
-        //
-    });
-    this->addChild(itemWindow, ZOrders::ItemInventory);
-}
-
-
-
-bool MypageScene::mixedItem()
-{
-    Size winSize = Director::getInstance()->getWinSize();
-    
-    // 選択チェック
-    if (this->_baseItemDto.getObjectId() == 0 || this->_materialItemDto.getObjectId() == 0) {
-        CCLOG("ベースか素材が選択されていません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("ベースか素材が選択されていません", "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer, ZOrders::Dialog);
-        return false;
-    }
-    
-    // 合成可能かチェック
-    if (!ItemLogic::isMixedItem(this->_baseItemDto, this->_materialItemDto)) {
-        CCLOG("その組み合わせは合成できません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("その組み合わせは合成できません", "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer, ZOrders::Dialog);
-        return false;
-    }
-    // 金額計算して支払う
-    int mixedGold = ItemLogic::calcMixedItemGold(this->_baseItemDto, this->_materialItemDto);
-    if (this->_itemInventory.getGold() < mixedGold) {
-        CCLOG("お金がたりません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("お金がたりません", "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer, ZOrders::Dialog);
-        return false;
-    }
-    
-    // 合成!
-    auto mixedItemDto = ItemLogic::mixedItem(this->_baseItemDto, this->_materialItemDto);
-    
-    // ベースと素材のアイテムを削除
-    this->_itemInventory.removeItemDto(this->_baseItemDto.getObjectId());
-    this->_itemInventory.removeItemDto(this->_materialItemDto.getObjectId());
-    
-    // 合成結果のアイテムをインベントリに追加してsaveする
-    this->_itemInventory.addItemDto(mixedItemDto);
-    AccountData::getInstance()->saveInventory(this->_itemInventory);
-    CCLOG("合成成功！");
-    
-    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(mixedItemDto.createItemName() + "合成に成功しました。", "とじる", [](Ref *ref) {});
-    this->addChild(dialogLayer, ZOrders::Dialog);
-    return true;
 }
 
 /////////////////

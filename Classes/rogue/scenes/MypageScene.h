@@ -20,8 +20,11 @@ class MypageScene : public cocos2d::Layer
 {
 public:
     enum ZOrders {
-        ItemInventory = 100,
-        Dialog
+        Background = 100,
+        Page = 101,
+        Header = 101,
+        Global = 101,
+        Dialog = 102
     };
     enum GlobalMenuTags {
         TOP = 1,
@@ -38,25 +41,21 @@ public:
     
     virtual bool init();
 private:
-    void initQuestSave();
+    void changePage(Layer* pageLayer, int selectMenuTag);
     
     void initMyPage();
     void initItemStockPage();
     void initMixedPage();
 
-    void initGlobalMenu(int selectMenuTag);
-    void initHeaderTitle(const std::string &titleText, const std::string &backgroundName = "");
+    void initQuestSave();
+    
     cocos2d::Menu* createGlobalMenu();
 
-    void showItemStockWindow();
-    void showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback);
-    
-    bool mixedItem();
-    
     void showDebugMenu();
     
     CREATE_FUNC(MypageScene);
     
+private:
     cocos2d::Layer* _baseLayer;
     // 倉庫用
     ItemInventoryDto _itemInventory;
