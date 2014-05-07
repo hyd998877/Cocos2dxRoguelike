@@ -383,6 +383,10 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
 
 void RogueScene::showItemInventoryWindow()
 {
+    // メニュー消す
+    this->getChildByTag(Tags::KeypadMenuTag)->setVisible(false);
+    this->getChildByTag(Tags::ButtonMenuTag)->setVisible(false);
+    
     auto itemWindowLayer = ItemInventoryLayer::create(this->_itemInventory);
     itemWindowLayer->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_DROP, ItemInventoryLayer::CloseType::CLOSE,
@@ -406,6 +410,11 @@ void RogueScene::showItemInventoryWindow()
     });
     itemWindowLayer->setSortCallback([this](ItemInventoryDto::Comparator comparator) {
         this->_itemInventory.sortItemList(comparator);
+    });
+    itemWindowLayer->setCloseCallback([this]() {
+        // メニュー戻す
+        this->getChildByTag(Tags::KeypadMenuTag)->setVisible(true);
+        this->getChildByTag(Tags::ButtonMenuTag)->setVisible(true);
     });
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
     this->addChild(itemWindowLayer, ZOrders::ItemListLayerZOrder, Tags::ItemListWindowTag);
