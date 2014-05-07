@@ -35,7 +35,9 @@ public:
     virtual bool init();
 private:
     void showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback);
-    bool mixedItem();
+    bool checkMixedItem();
+    bool checkMixedItem(const ItemDto &baseItem, const ItemDto &materialItem, const ItemInventoryDto &itemInventory);
+    void mixedItem(std::function<void(void)> mixedCallback);
     void loadInventory();
     void saveInventory();
     

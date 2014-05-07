@@ -99,7 +99,7 @@ bool ItemMixedPageLayer::init()
     // 合成ボタン
     auto mixedMenuItem = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getStrongFontTTFConfig(), "合成"), Size(16, 8), [this, baseSprite, baseItemMenuLabel, materialSprite, materialItemlayer](Ref *ref) {
         // 合成実行
-        if (this->mixedItem()) {
+        this->mixedItem([this, baseSprite, baseItemMenuLabel, materialSprite, materialItemlayer]() {
             // セーブ
             this->saveInventory();
             
@@ -111,7 +111,8 @@ bool ItemMixedPageLayer::init()
             auto materialLabel = static_cast<Label*>(static_cast<MenuItemLabel*>(materialItemlayer)->getLabel());
             this->refreshSelectItem(materialSprite, materialLabel, emptyItemDto);
             this->setMaterialItem(emptyItemDto);
-        }
+
+        });
     });
     mixedMenuItem->setPosition(Point(winSize.width*0.675, winSize.height*0.5));
     
@@ -126,10 +127,14 @@ bool ItemMixedPageLayer::init()
     return true;
 }
 
-bool ItemMixedPageLayer::mixedItem()
+bool ItemMixedPageLayer::checkMixedItem()
+{
+    return checkMixedItem(this->_baseItemDto, this->_materialItemDto, this->_itemInventory);
+}
+bool ItemMixedPageLayer::checkMixedItem(const ItemDto &baseItem, const ItemDto &materialItem, const ItemInventoryDto &itemInventory)
 {
     // 選択チェック
-    if (this->_baseItemDto.getObjectId() == 0 || this->_materialItemDto.getObjectId() == 0) {
+    if (baseItem.getObjectId() == 0 || materialItem.getObjectId() == 0) {
         CCLOG("ベースか素材が選択されていません");
         auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("ベースか素材が選択されていません", "とじる", [](Ref *ref) {});
         this->addChild(dialogLayer, ZOrders::DIALOG);
@@ -137,35 +142,52 @@ bool ItemMixedPageLayer::mixedItem()
     }
     
     // 合成可能かチェック
-    if (!ItemLogic::isMixedItem(this->_baseItemDto, this->_materialItemDto)) {
+    if (!ItemLogic::isMixedItem(baseItem, materialItem)) {
         CCLOG("その組み合わせは合成できません");
         auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("その組み合わせは合成できません", "とじる", [](Ref *ref) {});
         this->addChild(dialogLayer, ZOrders::DIALOG);
         return false;
     }
     // 金額計算して支払う
-    int mixedGold = ItemLogic::calcMixedItemGold(this->_baseItemDto, this->_materialItemDto);
-    if (this->_itemInventory.getGold() < mixedGold) {
+    int mixedGold = ItemLogic::calcMixedItemGold(baseItem, materialItem);
+    if (itemInventory.getGold() < mixedGold) {
         CCLOG("お金がたりません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("お金がたりません", "とじる", [](Ref *ref) {});
+        std::string messageText = GameCore::StringUtils::format("お金がたりません。\n\n合成金額 %d ゴールド", mixedGold);
+        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(messageText, "とじる", [](Ref *ref) {});
         this->addChild(dialogLayer, ZOrders::DIALOG);
         return false;
     }
-    
-    // 合成!
-    auto mixedItemDto = ItemLogic::mixedItem(this->_baseItemDto, this->_materialItemDto);
-    
-    // ベースと素材のアイテムを削除
-    this->_itemInventory.removeItemDto(this->_baseItemDto.getObjectId());
-    this->_itemInventory.removeItemDto(this->_materialItemDto.getObjectId());
-    
-    // 合成結果のアイテムをインベントリに追加してsaveする
-    this->_itemInventory.addItemDto(mixedItemDto);
-    CCLOG("合成成功！");
-    
-    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(mixedItemDto.createItemName() + "合成に成功しました。", "とじる", [](Ref *ref) {});
-    this->addChild(dialogLayer, ZOrders::DIALOG);
+    // 合成できる
     return true;
+}
+
+void ItemMixedPageLayer::mixedItem(std::function<void(void)> mixedCallback)
+{
+    if (!this->checkMixedItem()) {
+        return;
+    }
+    
+    int mixedGold = ItemLogic::calcMixedItemGold(this->_baseItemDto, this->_materialItemDto);
+    std::string messageText = GameCore::StringUtils::format("合成に %d ゴールド必要ですが\nよろしいですか？\n\n所持ゴールド %10ld",
+                                                            mixedGold, this->_itemInventory.getGold());
+    this->addChild(AlertDialogLayer::createWithContentSizeModal(messageText, "は　い", [this, mixedGold, mixedCallback](Ref *ref) {
+        // 合成!
+        auto mixedItemDto = ItemLogic::mixedItem(this->_baseItemDto, this->_materialItemDto);
+        
+        // ベースと素材のアイテムを削除
+        this->_itemInventory.addGold(-1 * mixedGold);
+        this->_itemInventory.removeItemDto(this->_baseItemDto.getObjectId());
+        this->_itemInventory.removeItemDto(this->_materialItemDto.getObjectId());
+        
+        // 合成結果のアイテムをインベントリに追加してsaveする
+        this->_itemInventory.addItemDto(mixedItemDto);
+        std::string messageText = GameCore::StringUtils::format("%d ゴールドと%sを素材にして\n\n%s\n\nの合成に成功しました。",
+                                                                mixedGold,
+                                                                this->_materialItemDto.createItemName().c_str(),
+                                                                mixedItemDto.createItemName().c_str());
+        mixedCallback();
+        this->addChild(AlertDialogLayer::createWithContentSizeModal(messageText, "とじる", [](Ref *ref) {}), ZOrders::DIALOG);
+    }, "いいえ", [](Ref *ref) {}));
 }
 
 void ItemMixedPageLayer::showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback)

@@ -78,7 +78,7 @@ void ItemInventoryLayer::initHeader()
     
     // お金表示
     // ラベル
-    std::string goldText = GameCore::StringUtils::format("所持金 %10ld G", this->_selectInventory.getGold());
+    std::string goldText = GameCore::StringUtils::format("お金 %10ld G", this->_selectInventory.getGold());
     this->_goldTextLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), goldText);
     this->_goldTextLabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
     this->_goldTextLabel->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
@@ -202,7 +202,7 @@ void ItemInventoryLayer::changeTab(const std::string &inventoryName)
 
 void ItemInventoryLayer::refreshInventory()
 {
-    std::string goldText = GameCore::StringUtils::format("所持金 %10ld G", this->_selectInventory.getGold());
+    std::string goldText = GameCore::StringUtils::format("お金 %10ld G", this->_selectInventory.getGold());
     this->_goldTextLabel->setString(goldText);
     this->_itemWindowLayer->setItemInventory(this->_selectInventory);
     this->_itemWindowLayer->reloadItemList();

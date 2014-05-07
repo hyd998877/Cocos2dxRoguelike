@@ -58,8 +58,8 @@ bool ItemLogic::isMixedItemEvolution(const ItemDto &baseItemDto, const ItemDto &
 
 int ItemLogic::calcMixedItemGold(const ItemDto &baseItemDto, const ItemDto &materialItemDto)
 {
-    // TODO: とりあえずタダ
-    return 0;
+    // TODO: 定数にするべきかマスタにするべきか（マスタだと別ゲームでも依存しなく使える。定数だとゲームごとに定義しないとだけど管理が楽）
+    return ((baseItemDto.getParam() + materialItemDto.getParam()) * 1000) + 5000;
 }
 
 ItemDto ItemLogic::mixedItem(const ItemDto &baseItemDto, const ItemDto &materialItemDto)

@@ -78,6 +78,7 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     
     // タイトル内容
     auto pTitle = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), titleText);
+    pTitle->setAlignment(cocos2d::TextHAlignment::CENTER);
     pTitle->setPosition(Point(this->getContentSize().width * 0.5, this->getContentSize().height * 0.75 - pTitle->getContentSize().height/4));
     this->addChild(pTitle);
     
