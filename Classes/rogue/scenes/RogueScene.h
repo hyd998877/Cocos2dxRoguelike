@@ -29,6 +29,13 @@ NS_ROGUE_BEGIN
 class RogueScene : public cocos2d::Layer
 {
 public:
+    
+    enum class QuestType {
+        TUTORIAL,         /// > 初心者の洞窟
+        MAIN_QUEST,       /// > 不思議な洞窟
+        DEEP_QUEST        /// > 最果ての洞窟
+    };
+    
     // ゲームステート
     enum class GameStatus {
         INIT              = 0,
@@ -43,6 +50,8 @@ public:
     
     // TODO: Dtoにしてclassにする
     typedef struct _RoguePlayData {
+        // クエスト種類
+        RogueScene::QuestType _questType;
         // クエストID（階数）
         int quest_id;
         // フロアID(マップデータID)
@@ -61,24 +70,26 @@ public:
     static RoguePlayData createRoguePlayData(const std::string &data_string = "")
     {
         std::vector<std::string> data_string_array = GameCore::StringUtils::split(std::string(data_string));
-        if (data_string_array.size() != 6) {
-            return {0, 0, GameStatus::INIT, 0, 0, 0};
+        if (data_string_array.size() != 7) {
+            return {RogueScene::QuestType::TUTORIAL, 0, 0, RogueScene::GameStatus::INIT, 0, 0, 0};
         }
         
         int index = 0;
         RoguePlayData data;
-        data.quest_id = atoi(data_string_array[index].c_str()); index++;
-        data.floor_id = atoi(data_string_array[index].c_str()); index++;
-        data.game_status = static_cast<GameStatus>(atoi(data_string_array[index].c_str())); index++;
-        data.no_action_count = atoi(data_string_array[index].c_str()); index++;
-        data.turn_count = atoi(data_string_array[index].c_str()); index++;
-        data.enemy_count = atoi(data_string_array[index].c_str()); index++;
+        data._questType = static_cast<RogueScene::QuestType>(atoi(data_string_array[index++].c_str()));
+        data.quest_id = atoi(data_string_array[index++].c_str());
+        data.floor_id = atoi(data_string_array[index++].c_str());
+        data.game_status = static_cast<RogueScene::GameStatus>(atoi(data_string_array[index++].c_str()));
+        data.no_action_count = atoi(data_string_array[index++].c_str());
+        data.turn_count = atoi(data_string_array[index++].c_str());
+        data.enemy_count = atoi(data_string_array[index++].c_str());
         return data;
     }
     
     static std::string const roguePlayDataToString(const RoguePlayData& data)
     {
-        return cocos2d::StringUtils::format("%d,%d,%d,%d,%d,%d",
+        return cocos2d::StringUtils::format("%d,%d,%d,%d,%d,%d,%d",
+                                   data._questType,
                                    data.quest_id,
                                    data.floor_id,
                                    data.game_status,
@@ -151,10 +162,10 @@ public:
     virtual ~RogueScene();
     
     // 初期化とか
-    virtual bool initWithQuestId(int questId);
+    virtual bool initWithQuestId(QuestType questType, int questId);
     
-    static cocos2d::Scene* scene(int questId);
-    static RogueScene* createWithQuestId(int questId);
+    static cocos2d::Scene* scene(QuestType questType, int questId);
+    static RogueScene* createWithQuestId(QuestType questType, int questId);
         
     void onEnter();
     void onEnterTransitionDidFinish();

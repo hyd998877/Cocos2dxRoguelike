@@ -46,6 +46,7 @@ private:
     void initMyPage();
     void initItemStockPage();
     void initMixedPage();
+    void initQuestPage();
 
     void initQuestSave();
     

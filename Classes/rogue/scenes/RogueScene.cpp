@@ -46,7 +46,8 @@ std::size_t f_r(const std::string& s, char c)
 #pragma mark main
 
 RogueScene::RogueScene()
-:rogue_play_data_()
+: rogue_play_data_()
+, _itemInventory()
 {
     CCLOG("new rogueScene");
 }
@@ -56,16 +57,16 @@ RogueScene::~RogueScene()
     CCLOG("death rogueScene");
 }
 
-Scene* RogueScene::scene(int questId) {
+Scene* RogueScene::scene(QuestType questType, int questId) {
     Scene *scene = Scene::create();
-    RogueScene *layer = RogueScene::createWithQuestId(questId);
+    RogueScene *layer = RogueScene::createWithQuestId(questType, questId);
     scene->addChild(layer);
     return scene;
 }
 
-RogueScene* RogueScene::createWithQuestId(int questId) {
+RogueScene* RogueScene::createWithQuestId(QuestType questType, int questId) {
     auto *pRet = new RogueScene();
-    if (pRet && pRet->initWithQuestId(questId)) {
+    if (pRet && pRet->initWithQuestId(questType, questId)) {
         pRet->autorelease();
         return pRet;
     } else {
@@ -75,7 +76,7 @@ RogueScene* RogueScene::createWithQuestId(int questId) {
     }
 }
 
-bool RogueScene::initWithQuestId(int quest_id) {
+bool RogueScene::initWithQuestId(QuestType questType, int quest_id) {
     
     // 1. super init first
     if ( !Layer::init() ) {
@@ -89,8 +90,9 @@ bool RogueScene::initWithQuestId(int quest_id) {
     
     ActorDto actor_dto;
     // 不一致の場合初期化
-    if (AccountData::getInstance()->getRoguePlayData().quest_id != quest_id) {
+    if (!AccountData::getInstance()->isPlayQuestData(questType, quest_id)) {
         AccountData::getInstance()->resetRoguePlayData();
+        rogue_play_data_._questType = questType;
         rogue_play_data_.quest_id = quest_id;
         // デフォルトステータス
         actor_dto = ActorDto::createActorDto(m_player::data_.at("1").asString());
@@ -940,7 +942,7 @@ void RogueScene::touchKaidan() {
                                          playerActor,
                                          this->_itemInventory);
         // 画面遷移
-        this->changeScene(RogueScene::scene(rogue_play_data_.quest_id));
+        this->changeScene(RogueScene::scene(rogue_play_data_._questType, rogue_play_data_.quest_id));
         
     }, "いいえ", [](Ref *ref) {});
     this->addChild(alertDialog, ZOrders::ModalLayerZOrder);

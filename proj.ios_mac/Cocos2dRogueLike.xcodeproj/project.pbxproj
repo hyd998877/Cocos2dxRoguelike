@@ -57,6 +57,7 @@
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
+		CE046FA0191A2973004D442D /* QuestPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE046F9E191A2973004D442D /* QuestPageLayer.cpp */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
 		CE119DDB1919F1730047B44D /* ItemStockPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */; };
 		CE119DDE1919F1A50047B44D /* TopPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DDC1919F1A50047B44D /* TopPageLayer.cpp */; };
@@ -302,6 +303,8 @@
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CE046F9E191A2973004D442D /* QuestPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QuestPageLayer.cpp; sourceTree = "<group>"; };
+		CE046F9F191A2973004D442D /* QuestPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestPageLayer.h; sourceTree = "<group>"; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
 		CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemStockPageLayer.cpp; sourceTree = "<group>"; };
 		CE119DDA1919F1730047B44D /* ItemStockPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemStockPageLayer.h; sourceTree = "<group>"; };
@@ -624,6 +627,8 @@
 				CE119DDD1919F1A50047B44D /* TopPageLayer.h */,
 				CE119DDF1919F44F0047B44D /* ItemMixedPageLayer.cpp */,
 				CE119DE01919F44F0047B44D /* ItemMixedPageLayer.h */,
+				CE046F9E191A2973004D442D /* QuestPageLayer.cpp */,
+				CE046F9F191A2973004D442D /* QuestPageLayer.h */,
 			);
 			path = page;
 			sourceTree = "<group>";
@@ -1355,6 +1360,7 @@
 				CE626E041914BEF6005925DC /* RogueTMXTiledMap.cpp in Sources */,
 				CE1EFC7B191A047500E5EFE4 /* MypageHeaderLayer.cpp in Sources */,
 				CE626DF11914BEF6005925DC /* ActorSprite.cpp in Sources */,
+				CE046FA0191A2973004D442D /* QuestPageLayer.cpp in Sources */,
 				CE626DF61914BEF6005925DC /* MWeaponDao.cpp in Sources */,
 				CE626DFF1914BEF6005925DC /* MapManager.cpp in Sources */,
 				CE626DF81914BEF6005925DC /* MLevel.cpp in Sources */,

@@ -27,6 +27,7 @@
 #include "TopPageLayer.h"
 #include "ItemStockPageLayer.h"
 #include "ItemMixedPageLayer.h"
+#include "QuestPageLayer.h"
 
 USING_NS_CC;
 
@@ -103,8 +104,8 @@ void MypageScene::initQuestSave()
     std::string dialogTitle = saveTitle + "\n\n" + saveDetail + "\n\n※いいえを選択すると、\n所持していたアイテムは消えます";
     
     auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(dialogTitle, "はい", [](Ref *ref) {
-        auto scene = RogueScene::scene(AccountData::getInstance()->getRoguePlayData().quest_id);
-        auto trans = TransitionProgressOutIn::create(1, scene);
+        auto scene = RogueScene::scene(AccountData::getInstance()->getRoguePlayData()._questType, AccountData::getInstance()->getRoguePlayData().quest_id);
+        auto trans = TransitionFadeDown::create(1, scene);
         Director::getInstance()->replaceScene(trans);
     }, "いいえ", [this](Ref *ref) {
         AccountData::getInstance()->resetRoguePlayData();
@@ -128,6 +129,24 @@ void MypageScene::initMixedPage()
     this->changePage(ItemMixedPageLayer::create(), GlobalMenuTags::MIXED);
 }
 
+void MypageScene::initQuestPage()
+{
+    // 未プレイはチュートリアルADVへ
+    if (AccountData::getInstance()->getGamePlayProgress() == AccountData::GamePlayProgress::INIT) {
+        Scene* scene = NovelScene::scene(2, 0, [this]() {
+            AccountData::getInstance()->updateGamePlayProgress(AccountData::GamePlayProgress::TUTORIAL_PLAY);
+            int play_quest_id = 1;
+            auto scene = RogueScene::scene(RogueScene::QuestType::TUTORIAL, play_quest_id);
+            auto trans = TransitionFadeDown::create(1.0f, scene);
+            Director::getInstance()->replaceScene(trans);
+        });
+        auto trans = TransitionFadeDown::create(1.0f, scene);
+        Director::getInstance()->replaceScene(trans);
+    } else {
+        this->changePage(QuestPageLayer::create(), GlobalMenuTags::QUEST);
+    }
+}
+
 /**
  * グロナビ生成
  */
@@ -142,26 +161,7 @@ Menu* MypageScene::createGlobalMenu()
     item_menu1->setTag(GlobalMenuTags::TOP);
     
     auto item_menu2 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "くえ　すと"), WAKU_PADDING, [this](Ref *ref) {
-        CCLOG("tappedMenuItem3");
-        
-        if (AccountData::getInstance()->getGamePlayProgress() == AccountData::GamePlayProgress::INIT) {
-            Scene* scene = NovelScene::scene(2, 0, [this]() {
-                CCLOG("novel2 end");
-                
-                AccountData::getInstance()->updateGamePlayProgress(AccountData::GamePlayProgress::TUTORIAL_PLAY);
-                int play_quest_id = 1;
-                auto scene = RogueScene::scene(play_quest_id);
-                auto trans = TransitionProgressOutIn::create(1, scene);
-                Director::getInstance()->replaceScene(trans);
-            });
-            TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);
-            Director::getInstance()->replaceScene(trans);
-        } else {
-            int play_quest_id = 1;
-            auto scene = RogueScene::scene(play_quest_id);
-            auto trans = TransitionProgressOutIn::create(1, scene);
-            Director::getInstance()->replaceScene(trans);
-        }
+        this->initQuestPage();
     });
     item_menu2->setTag(GlobalMenuTags::QUEST);
     

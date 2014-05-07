@@ -53,6 +53,7 @@ public:
     std::string createQuestSaveDetailText() const;
     // チェック系
     bool isQuestSaveData() const;
+    bool isPlayQuestData(RogueScene::QuestType questType, int questId) const;
     
     // system系
     void gameObjectCountUp();

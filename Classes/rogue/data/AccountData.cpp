@@ -30,7 +30,7 @@ AccountData* AccountData::getInstance()
 }
 
 AccountData::AccountData()
-: _roguePlayData({0, 0, RogueScene::GameStatus::INIT, 0, 0, 0})
+: _roguePlayData({RogueScene::QuestType::TUTORIAL, 0, 0, RogueScene::GameStatus::INIT, 0, 0, 0})
 , _playerActor(ActorDto())
 , _itemInventory("所持品", 0, RogueGameConfig::USE_ITEM_MAX)
 , _itemInventoryStock("倉　庫", 0, RogueGameConfig::STOCK_ITEM_MAX)
@@ -261,6 +261,14 @@ std::string AccountData::createQuestSaveDetailText() const {
 
 bool AccountData::isQuestSaveData() const {
     if (this->_roguePlayData.quest_id > 0) {
+        return true;
+    }
+    return false;
+}
+
+bool AccountData::isPlayQuestData(RogueScene::QuestType questType, int questId) const
+{
+    if (this->_roguePlayData._questType == questType && this->_roguePlayData.quest_id == questId) {
         return true;
     }
     return false;
