@@ -104,7 +104,7 @@ void MypageScene::initQuestSave()
     std::string dialogTitle = saveTitle + "\n\n" + saveDetail + "\n\n※いいえを選択すると、\n所持していたアイテムは消えます";
     
     auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(dialogTitle, "はい", [](Ref *ref) {
-        auto scene = RogueScene::scene(AccountData::getInstance()->getRoguePlayData()._questType, AccountData::getInstance()->getRoguePlayData().quest_id);
+        auto scene = RogueScene::scene(AccountData::getInstance()->getRoguePlayData().getQuestType(), AccountData::getInstance()->getRoguePlayData().getQuestId());
         auto trans = TransitionFadeDown::create(1, scene);
         Director::getInstance()->replaceScene(trans);
     }, "いいえ", [this](Ref *ref) {
@@ -136,7 +136,7 @@ void MypageScene::initQuestPage()
         Scene* scene = NovelScene::scene(0, 0, [this]() {
             AccountData::getInstance()->updateGamePlayProgress(AccountData::GamePlayProgress::TUTORIAL_PLAY);
             int play_quest_id = 1;
-            auto scene = RogueScene::scene(RogueScene::QuestType::TUTORIAL, play_quest_id);
+            auto scene = RogueScene::scene(RoguePlayDto::QuestType::TUTORIAL, play_quest_id);
             auto trans = TransitionFadeDown::create(1.0f, scene);
             Director::getInstance()->replaceScene(trans);
         });

@@ -65,6 +65,7 @@
 		CE1EFC7B191A047500E5EFE4 /* MypageHeaderLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE1EFC79191A047500E5EFE4 /* MypageHeaderLayer.cpp */; };
 		CE2F8A3F18AF28E5001B457C /* novel in Resources */ = {isa = PBXBuildFile; fileRef = CE2F8A3D18AF28E5001B457C /* novel */; };
 		CE5AC3F1191692AA00ED0A22 /* ItemInventoryLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5AC3EF191692AA00ED0A22 /* ItemInventoryLayer.cpp */; };
+		CE5C0F27191B892F002FE6F3 /* RoguePlayDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C0F25191B892F002FE6F3 /* RoguePlayDto.cpp */; };
 		CE626DE81914BEF6005925DC /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D721914BEF6005925DC /* BattleScene.cpp */; };
 		CE626DE91914BEF6005925DC /* LabelRPG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D791914BEF6005925DC /* LabelRPG.cpp */; };
 		CE626DEA1914BEF6005925DC /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626D7C1914BEF6005925DC /* AlertDialogLayer.cpp */; };
@@ -317,6 +318,8 @@
 		CE2F8A3D18AF28E5001B457C /* novel */ = {isa = PBXFileReference; lastKnownFileType = folder; path = novel; sourceTree = "<group>"; };
 		CE5AC3EF191692AA00ED0A22 /* ItemInventoryLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemInventoryLayer.cpp; sourceTree = "<group>"; };
 		CE5AC3F0191692AA00ED0A22 /* ItemInventoryLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInventoryLayer.h; sourceTree = "<group>"; };
+		CE5C0F25191B892F002FE6F3 /* RoguePlayDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RoguePlayDto.cpp; sourceTree = "<group>"; };
+		CE5C0F26191B892F002FE6F3 /* RoguePlayDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoguePlayDto.h; sourceTree = "<group>"; };
 		CE626D721914BEF6005925DC /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScene.cpp; sourceTree = "<group>"; };
 		CE626D731914BEF6005925DC /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScene.h; sourceTree = "<group>"; };
 		CE626D791914BEF6005925DC /* LabelRPG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelRPG.cpp; sourceTree = "<group>"; };
@@ -988,6 +991,8 @@
 		CE626DC71914BEF6005925DC /* dto */ = {
 			isa = PBXGroup;
 			children = (
+				CE5C0F25191B892F002FE6F3 /* RoguePlayDto.cpp */,
+				CE5C0F26191B892F002FE6F3 /* RoguePlayDto.h */,
 			);
 			path = dto;
 			sourceTree = "<group>";
@@ -1377,6 +1382,7 @@
 				CE626E071914BEF6005925DC /* RogueScene.cpp in Sources */,
 				CE626E061914BEF6005925DC /* MypageScene.cpp in Sources */,
 				CE626DF71914BEF6005925DC /* MAccessory.cpp in Sources */,
+				CE5C0F27191B892F002FE6F3 /* RoguePlayDto.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				CE119DE11919F44F0047B44D /* ItemMixedPageLayer.cpp in Sources */,
 				CE626DFA1914BEF6005925DC /* MWeapon.cpp in Sources */,

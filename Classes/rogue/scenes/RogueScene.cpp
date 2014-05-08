@@ -12,6 +12,7 @@
 #include "CommonWindowUtil.h"
 #include "LayerActionUtils.h"
 #include "LotteryUtils.h"
+#include "StringUtils.h"
 
 #include "SystemMenuLayer.h"
 #include "ItemInventoryLayer.h"
@@ -27,7 +28,6 @@
 #include "MAccessoryDao.h"
 #include "MMonster.h"
 #include "MPlayer.h"
-
 #include "MRogueMap.h"
 
 #include "AccountData.h"
@@ -48,7 +48,7 @@ std::size_t f_r(const std::string& s, char c)
 #pragma mark main
 
 RogueScene::RogueScene()
-: rogue_play_data_()
+: _roguePlayDto()
 , _itemInventory()
 {
     CCLOG("new rogueScene");
@@ -59,14 +59,14 @@ RogueScene::~RogueScene()
     CCLOG("death rogueScene");
 }
 
-Scene* RogueScene::scene(QuestType questType, int questId) {
+Scene* RogueScene::scene(RoguePlayDto::QuestType questType, int questId) {
     Scene *scene = Scene::create();
     RogueScene *layer = RogueScene::createWithQuestId(questType, questId);
     scene->addChild(layer);
     return scene;
 }
 
-RogueScene* RogueScene::createWithQuestId(QuestType questType, int questId) {
+RogueScene* RogueScene::createWithQuestId(RoguePlayDto::QuestType questType, int questId) {
     auto *pRet = new RogueScene();
     if (pRet && pRet->initWithQuestId(questType, questId)) {
         pRet->autorelease();
@@ -78,7 +78,7 @@ RogueScene* RogueScene::createWithQuestId(QuestType questType, int questId) {
     }
 }
 
-bool RogueScene::initWithQuestId(QuestType questType, int quest_id) {
+bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id) {
     
     // 1. super init first
     if ( !Layer::init() ) {
@@ -94,13 +94,12 @@ bool RogueScene::initWithQuestId(QuestType questType, int quest_id) {
     // 不一致の場合初期化
     if (!AccountData::getInstance()->isPlayQuestData(questType, quest_id)) {
         AccountData::getInstance()->resetRoguePlayData();
-        rogue_play_data_._questType = questType;
-        rogue_play_data_.quest_id = quest_id;
+        this->_roguePlayDto.setPlayQuest(questType, quest_id);
         // デフォルトステータス
         actor_dto = ActorDto::createActorDto(m_player::data_.at("1").asString());
     } else {
         // ロード処理
-        rogue_play_data_ = AccountData::getInstance()->getRoguePlayData();
+        this->_roguePlayDto = AccountData::getInstance()->getRoguePlayData();
         actor_dto = AccountData::getInstance()->getPlayerActor();
     }
     // イベントリロード
@@ -108,18 +107,19 @@ bool RogueScene::initWithQuestId(QuestType questType, int quest_id) {
     
     auto win_size = Director::getInstance()->getWinSize();
 
+    
     // ---------------------
     // フロア開始カットイン表示
     // ---------------------
-    playFloorTitleCutIn(rogue_play_data_.quest_id);
+    playFloorTitleCutIn(this->_roguePlayDto.getQuestId());
     
     // ---------------------
     // タイルマップを生成
     // ---------------------
     // TODO: (kyokomi)ランダムなマップIDを指定する
-    rogue_play_data_.floor_id = 2;
+    this->_roguePlayDto.setFloorId(2);
     
-    auto tiled_map_layer = RogueTMXTiledMap::create(cocos2d::StringUtils::format("tmx/quest_%d.tmx", rogue_play_data_.floor_id));
+    auto tiled_map_layer = RogueTMXTiledMap::create(cocos2d::StringUtils::format("tmx/quest_%d.tmx", this->_roguePlayDto.getFloorId()));
 
     tiled_map_layer->setPosition(Point::ZERO);
     this->addChild(tiled_map_layer, ZOrders::TiledMapLayerZOrder, Tags::TiledMapLayerTag);
@@ -245,7 +245,7 @@ bool RogueScene::initWithQuestId(QuestType questType, int quest_id) {
     
     // ---------------------------------
     // プレイヤーの先行
-    changeGameStatus(GameStatus::PLAYER_TURN);
+    changeGameStatus(RoguePlayDto::GameStatus::PLAYER_TURN);
     
     //----------------------------------
     // 照明
@@ -274,7 +274,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray() {
     
     auto pMenuKeyUp = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyUpが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
+        if (this->isKeypadControll()) {
             auto winSize = Director::getInstance()->getWinSize();
             Point point = Point(winSize.width / 2, winSize.height / 2);
             MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
@@ -287,7 +287,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray() {
     
     auto pMenuKeyRight = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyRightが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
+        if (this->isKeypadControll()) {
             auto winSize = Director::getInstance()->getWinSize();
             Point point = Point(winSize.width / 2, winSize.height / 2);
             MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
@@ -300,7 +300,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray() {
     
     auto pMenuKeyDown = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyDownが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
+        if (this->isKeypadControll()) {
             auto winSize = Director::getInstance()->getWinSize();
             Point point = Point(winSize.width / 2, winSize.height / 2);
             MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
@@ -313,7 +313,7 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray() {
     
     auto pMenuKeyLeft = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
         CCLOG("pMenuKeyLeftが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
+        if (this->isKeypadControll()) {
             auto winSize = Director::getInstance()->getWinSize();
             Point point = Point(winSize.width / 2, winSize.height / 2);
             MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
@@ -327,6 +327,14 @@ Vector<MenuItem*> RogueScene::createKeypadMenuItemArray() {
     return resultArray;
 }
 
+bool RogueScene::isKeypadControll() {
+    if (this->_gameStatus == RoguePlayDto::GameStatus::PLAYER_TURN) {
+        return true;
+    }
+    
+    return false;
+}
+
 Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     Size win_size = Director::getInstance()->getWinSize();
     
@@ -337,7 +345,7 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     a_buttonPress->setOpacity(128);
     auto pA_MenuButton = MenuItemSprite::create(a_button, a_buttonPress, [this](Ref* pSender) {
         CCLOG("Aボタンが押された！");
-        if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
+        if (this->isKeypadControll()) {
             this->attack();
         }
     });
@@ -363,7 +371,9 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     c_buttonPress->setOpacity(128);
     auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Ref* pSender) {
         CCLOG("Cボタンが押された！");
-        this->showSystemMenu();
+        if (this->isKeypadControll()) {
+            this->showSystemMenu();
+        }
     });
     pC_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 3, rogu_map_layer->indexToPoint(10, 1).y));
     pC_MenuButton->setTag(Tags::C_ButtonMenuTag);
@@ -374,7 +384,9 @@ Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
     d_buttonPress->setOpacity(128);
     auto pD_MenuButton = MenuItemSprite::create(d_button, d_buttonPress, [this](Ref* pSender) {
         CCLOG("Dボタンが押された！");
-        this->showItemInventoryWindow();
+        if (this->isKeypadControll()) {
+            this->showItemInventoryWindow();
+        }
     });
     pD_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 2, rogu_map_layer->indexToPoint(11, 2).y));
     pD_MenuButton->setTag(Tags::D_ButtonMenuTag);
@@ -450,7 +462,7 @@ void RogueScene::itemWindowDropItem(const ItemDto &itemDto)
         this->_itemInventory.removeItemDto(itemDto.getObjectId());
         
         // ターン消費
-        this->changeGameStatus(GameStatus::ENEMY_TURN);
+        this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
     } else {
         message = itemDto.createItemName() + "を床におけなかった。";
     }
@@ -501,7 +513,7 @@ void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
     this->refreshStatusEquip(*player_sprite->getActorDto());
     
     // ターン消費
-    this->changeGameStatus(GameStatus::ENEMY_TURN);
+    this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
 }
 
 void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
@@ -516,7 +528,7 @@ void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
     this->_itemInventory.removeItemDto(itemDto.getObjectId());
     
     // ターン消費
-    this->changeGameStatus(GameStatus::ENEMY_TURN);
+    this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
 }
 
 // --------------------------
@@ -581,70 +593,77 @@ void RogueScene::onEnterTransitionDidFinish() {
 #pragma mark
 #pragma mark ゲームステート関連
 
-void RogueScene::changeGameStatus(GameStatus gameStatus) {
-    CCLOG("turn %d change gameStatus %d => %d", rogue_play_data_.turn_count, rogue_play_data_.game_status, gameStatus);
+void RogueScene::changeGameStatus(RoguePlayDto::GameStatus gameStatus) {
+    CCLOG("turn %d change gameStatus %d => %d", this->_roguePlayDto.getTurnCount(), this->_gameStatus, gameStatus);
     
     auto pPlayer = getPlayerActorSprite(1);
     
-    GameStatus beforeGameStatus = rogue_play_data_.game_status;
-    rogue_play_data_.game_status = gameStatus;
+    this->_beforeGameStatus = _gameStatus;
+    this->_gameStatus = gameStatus;
     
-    if (beforeGameStatus == GameStatus::GAME_OVER || beforeGameStatus == GameStatus::QUEST_CLEAR) {
+    if (this->_beforeGameStatus == RoguePlayDto::GameStatus::GAME_OVER ||
+        this->_beforeGameStatus == RoguePlayDto::GameStatus::QUEST_CLEAR) {
         return;
     }
     
-    if (rogue_play_data_.game_status == GameStatus::GAME_OVER) {
-        // セーブ消去
-        AccountData::getInstance()->resetRoguePlayDataAndInventory();
-        // ゲームオーバーの演出
-        playGameOverCutIn();
-        return;
-    } else if (rogue_play_data_.game_status == GameStatus::ESCAPE) {
-        // セーブ消去
-        AccountData::getInstance()->resetRoguePlayData();
-        // マイページへ
-        changeScene(MypageScene::scene());
-        return;
-    } else if (rogue_play_data_.game_status == GameStatus::QUEST_CLEAR) {
-        // セーブ消去
-        AccountData::getInstance()->resetRoguePlayData();
-        
-        // クリアフラグ更新
-        AccountData::getInstance()->clearQuestTypeWithUpdateGamePlayProgress(this->rogue_play_data_._questType);
-        
-        // クリア演出ADVパートへ(TODO: とりあえずquestType=ノベルIDにしてる)
-        changeScene(NovelScene::scene((int)this->rogue_play_data_._questType, 0, [this]() {
-            // ADVパート終わったらマイページへ
-            auto trans = TransitionProgressOutIn::create(0.5f, MypageScene::scene());
-            Director::getInstance()->replaceScene(trans);
-        }));
-        return;
-        
-    } else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
-        && rogue_play_data_.game_status == GameStatus::ENEMY_TURN) {
+    switch (this->_gameStatus) {
+        case RoguePlayDto::GameStatus::GAME_OVER:
+            // セーブ消去
+            AccountData::getInstance()->resetRoguePlayDataAndInventory();
+            // ゲームオーバーの演出
+            playGameOverCutIn();
+            return;
+        case RoguePlayDto::GameStatus::ESCAPE:
+            // セーブ消去
+            AccountData::getInstance()->resetRoguePlayData();
+            // マイページへ
+            changeScene(MypageScene::scene());
+            return;
+        case RoguePlayDto::GameStatus::QUEST_CLEAR:
+            // セーブ消去
+            AccountData::getInstance()->resetRoguePlayData();
+            
+            // クリアフラグ更新
+            AccountData::getInstance()->clearQuestTypeWithUpdateGamePlayProgress(this->_roguePlayDto.getQuestType());
+            
+            // クリア演出ADVパートへ(TODO: とりあえずquestType=ノベルIDにしてる)
+            changeScene(NovelScene::scene((int)this->_roguePlayDto.getQuestType(), 0, [this]() {
+                // ADVパート終わったらマイページへ
+                auto trans = TransitionProgressOutIn::create(0.5f, MypageScene::scene());
+                Director::getInstance()->replaceScene(trans);
+            }));
+            return;
+        default:
+            break;
+    }
+    
+    
+    if (this->_gameStatus == RoguePlayDto::GameStatus::ENEMY_TURN &&
+        (this->_beforeGameStatus == RoguePlayDto::GameStatus::PLAYER_TURN ||
+         this->_beforeGameStatus == RoguePlayDto::GameStatus::PLAYER_ACTION ||
+         this->_beforeGameStatus == RoguePlayDto::GameStatus::PLAYER_NO_ACTION)) {
         // 敵のターン開始時
         enemyTurn();
-    } else if (rogue_play_data_.game_status == GameStatus::PLAYER_ACTION) {
-        rogue_play_data_.no_action_count = 0;
-    } else if (rogue_play_data_.game_status == GameStatus::PLAYER_NO_ACTION) {
-        rogue_play_data_.no_action_count++;
-    } else if (rogue_play_data_.game_status == GameStatus::PLAYER_TURN) {
-        
-        MapManager::getInstance()->clearCursor();
 
+    } else if (this->_gameStatus == RoguePlayDto::GameStatus::PLAYER_ACTION) {
+        this->_roguePlayDto.resetNoActionCount();
+    } else if (this->_gameStatus == RoguePlayDto::GameStatus::PLAYER_NO_ACTION) {
+        this->_roguePlayDto.countUpNoAction();
+    } else if (this->_gameStatus == RoguePlayDto::GameStatus::PLAYER_TURN) {
+        MapManager::getInstance()->clearCursor();
         // ターン数を進める
-        rogue_play_data_.turn_count++;
+        _roguePlayDto.countUpTurn();
         
         // TODO: とりあえずここで・・・
         auto pPlayerDto = pPlayer->getActorDto();
         
         // 10ターンに1空腹度が減るという
-        if (rogue_play_data_.turn_count % 10 == 0) {
+        if (_roguePlayDto.getTurnCount() % 10 == 0) {
             pPlayerDto->countDownMagicPoint();
         }
         // 無行動が4ターン続くとHPが回復
-        if (rogue_play_data_.no_action_count == 4) {
-            rogue_play_data_.no_action_count = 0;
+        if (_roguePlayDto.getNoActionCount() == 4) {
+            _roguePlayDto.resetNoActionCount();
             pPlayerDto->countUpHitPoint();
         }
         
@@ -656,7 +675,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
             institutionEnemy(1);
         }
     }
-    
+
     // プレイステータス更新
     refreshStatus();
     // 照明情報更新
@@ -778,7 +797,7 @@ void RogueScene::enemyTurn() {
                 
             } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::PLAYER) {
                 // 移動中のステータスへ
-                changeGameStatus(GameStatus::ENEMY_ACTION);
+                changeGameStatus(RoguePlayDto::GameStatus::ENEMY_ACTION);
                 
                 // 攻撃アニメーション
                 float speed = getAnimationSpeed();
@@ -806,7 +825,7 @@ void RogueScene::enemyTurn() {
                 }), NULL));
             } else {
                 // アニメーション中のステータスへ
-                changeGameStatus(GameStatus::ENEMY_ACTION);
+                changeGameStatus(RoguePlayDto::GameStatus::ENEMY_ACTION);
                 
                 // 移動開始
                 rogue_map_layer->moveEnemyMap(enemyMapItem.seqNo, addMoveIndex, getAnimationSpeed(),CallFunc::create([this, pEnemySprite]() {
@@ -833,9 +852,9 @@ void RogueScene::checkEnmeyTurnEnd() {
         }
     }
     if (isTurnEnd) {
-        changeGameStatus(GameStatus::PLAYER_TURN);
+        changeGameStatus(RoguePlayDto::GameStatus::PLAYER_TURN);
     } else {
-        changeGameStatus(GameStatus::ENEMY_TURN);
+        changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
     }
 }
 
@@ -890,7 +909,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
         
     } else {
         
-        changeGameStatus(GameStatus::PLAYER_NO_ACTION);
+        changeGameStatus(RoguePlayDto::GameStatus::PLAYER_NO_ACTION);
 
         auto touch_point_map_item = MapManager::getInstance()->getMapItem(touchPointMapIndex);
         
@@ -909,7 +928,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
             }
             
             // ターンエンド
-            changeGameStatus(GameStatus::ENEMY_TURN);
+            changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
         }));
         
         // コールバックまでgameStatusを更新はしない
@@ -965,20 +984,23 @@ void RogueScene::touchKaidan() {
     auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "は　い", [this](Ref *ref) {
         // save
         auto actor_sprite = getPlayerActorSprite(1);
-        this->rogue_play_data_.quest_id += 1;
+        
+        int nextQuestId = this->_roguePlayDto.getQuestId() + 1;
+        this->_roguePlayDto.setQuestId(nextQuestId);
+        
         ActorDto playerActor = *(actor_sprite->getActorDto());
-        AccountData::getInstance()->save(this->rogue_play_data_,
+        AccountData::getInstance()->save(this->_roguePlayDto,
                                          playerActor,
                                          this->_itemInventory);
         
-        auto questData = RogueGameConfig::getQuestData(findQuestKey(rogue_play_data_._questType));
+        auto questData = RogueGameConfig::getQuestData(RoguePlayDto::findQuestKey(this->_roguePlayDto.getQuestType()));
         int clearCount = questData.at("clearCount").asInt();
-        if (clearCount < this->rogue_play_data_.quest_id) {
+        if (clearCount < nextQuestId) {
             // クエストクリア
-            this->changeGameStatus(RogueLikeGame::RogueScene::GameStatus::QUEST_CLEAR);
+            this->changeGameStatus(RoguePlayDto::GameStatus::QUEST_CLEAR);
         } else {
             // 画面遷移
-            this->changeScene(RogueScene::scene(rogue_play_data_._questType, rogue_play_data_.quest_id));
+            this->changeScene(RogueScene::scene(this->_roguePlayDto.getQuestType(), nextQuestId));
         }
     }, "いいえ", [](Ref *ref) {});
     this->addChild(alertDialog, ZOrders::ModalLayerZOrder);
@@ -1008,7 +1030,7 @@ void RogueScene::attack() {
         attackMapIndex.y -= 1;
     }
     
-    changeGameStatus(GameStatus::PLAYER_ACTION);
+    changeGameStatus(RoguePlayDto::GameStatus::PLAYER_ACTION);
     
     // 攻撃アニメーション
     float speed = getAnimationSpeed();
@@ -1029,7 +1051,7 @@ void RogueScene::attack() {
         if (pEnemySprite) {
             this->attackCallback(pActorSprite, pEnemySprite);
         }
-        changeGameStatus(GameStatus::ENEMY_TURN);
+        changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
     }), NULL));
 }
 
@@ -1159,7 +1181,7 @@ void RogueScene::showSystemMenu() {
             Size win_size = Director::getInstance()->getWinSize();
             auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "あきらめますか？", "は　い", [this](Ref *ref) {
                 // ゲームオーバー
-                this->changeGameStatus(GameStatus::GAME_OVER);
+                this->changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
                 
             }, "いいえ", [this](Ref *ref) {
                 this->showSystemMenu();
@@ -1189,7 +1211,7 @@ void RogueScene::showSystemMenu() {
         menuButtonInfoList.push_back(SystemMenuLayer::SystemMenuButtonInfo("持ち帰", [this, systemMenuModalLayer]() {
             CCLOG("Menu7ボタンが押された！");
             
-            this->changeGameStatus(GameStatus::ESCAPE);
+            this->changeGameStatus(RoguePlayDto::GameStatus::ESCAPE);
             
             this->hideSystemMenu();
         }));
@@ -1232,10 +1254,10 @@ void RogueScene::refreshStatus() {
         // プレイヤー取得
         auto pPlayerSprite = getPlayerActorSprite(1);
         auto pPlayerDto = pPlayerSprite->getActorDto();
-        int floor = rogue_play_data_.quest_id; // フロア情報（クエストID=フロア数でいい？)
+        int questId = _roguePlayDto.getQuestId(); // フロア情報（クエストID=フロア数でいい？)
         // 作成
         auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10ld G",
-                                             floor,
+                                             questId,
                                              pPlayerDto->getLv(),
                                              pPlayerDto->getHitPoint(),
                                              pPlayerDto->getHitPointLimit(),
@@ -1250,10 +1272,10 @@ void RogueScene::refreshStatus() {
         // TODO: 死亡判定ここで？
         if (pPlayerDto->getHitPoint() == 0) {
             logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
-            changeGameStatus(GameStatus::GAME_OVER);
+            changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
         } else if (pPlayerDto->getMagicPoint() == 0) {
             logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
-            changeGameStatus(GameStatus::GAME_OVER);
+            changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
         } else {
             // 残りHPで文字色を変える
             float hitPointDiv = (float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit();
@@ -1549,8 +1571,8 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
 // ローグマップ基本データ取得
 const ValueMap RogueScene::getRogueMapData() {
     // フロア情報のIndexを用意する（データがない場合は最終データで補正）
-    int questIndex = rogue_play_data_.quest_id - 1;
-    auto questData = RogueGameConfig::getQuestData(findQuestKey(rogue_play_data_._questType));
+    int questIndex = _roguePlayDto.getQuestId() - 1;
+    auto questData = RogueGameConfig::getQuestData(RoguePlayDto::findQuestKey(_roguePlayDto.getQuestType()));
     auto datas = questData.at("floor").asValueVector();
     if (datas.size() <= questIndex) {
         questIndex = datas.size() - 1;
@@ -1565,21 +1587,6 @@ ActorSprite* RogueScene::getPlayerActorSprite(int seqNo) {
 
 RogueTMXTiledMap* RogueScene::getRogueMapLayer() {
     return static_cast<RogueTMXTiledMap*>(this->getChildByTag(Tags::TiledMapLayerTag));
-}
-
-const std::string& RogueScene::findQuestKey(RogueScene::QuestType questType) {
-    switch (questType) {
-        case RogueScene::QuestType::TUTORIAL:
-            return RogueGameConfig::TUTORIAL_KEY;
-        case RogueScene::QuestType::MAIN_QUEST:
-            return RogueGameConfig::MAIN_QUEST_KEY;
-        case RogueScene::QuestType::MAIN_QUEST2:
-            return RogueGameConfig::MAIN_QUEST2_KEY;
-        case RogueScene::QuestType::DEEP_QUEST:
-            return RogueGameConfig::DEEP_QUEST_KEY;
-        default:
-            return RogueGameConfig::TUTORIAL_KEY;
-    }
 }
 
 NS_ROGUE_END

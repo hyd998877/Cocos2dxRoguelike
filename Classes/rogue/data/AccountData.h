@@ -35,13 +35,13 @@ public:
     // シングルトン
     static AccountData* getInstance();
 
-    const RogueScene::RoguePlayData &getRoguePlayData() { return _roguePlayData; }
+    const RoguePlayDto &getRoguePlayData() { return _roguePlayData; }
     const ActorDto &getPlayerActor() { return _playerActor; }
     const ItemInventoryDto &getItemInventory() { return _itemInventory; }
     const ItemInventoryDto &getItemInventoryStock() { return _itemInventoryStock; }
     
     void load();
-    void save(const RogueScene::RoguePlayData &roguePlayData,
+    void save(const RoguePlayDto &roguePlayData,
               const ActorDto &playerActor,
               const ItemInventoryDto &itemInventory);
     void save();
@@ -56,14 +56,14 @@ public:
     // チェック系
     bool isItemInventory();
     bool isQuestSaveData() const;
-    bool isPlayQuestData(RogueScene::QuestType questType, int questId) const;
+    bool isPlayQuestData(RoguePlayDto::QuestType questType, int questId) const;
     
     // system系
     void gameObjectCountUp();
     long getGameObjectId() const;
     void putPlayScore(const std::string &questKey, int score);
     AccountData::GamePlayProgress getGamePlayProgress();
-    void clearQuestTypeWithUpdateGamePlayProgress(RogueLikeGame::RogueScene::QuestType questType);
+    void clearQuestTypeWithUpdateGamePlayProgress(RoguePlayDto::QuestType questType);
     void updateGamePlayProgress(AccountData::GamePlayProgress progress);
     
     // イベントリ系
@@ -78,7 +78,7 @@ private:
     static cocos2d::ValueVector createSaveItemList(const ItemInventoryDto& itemInventory);
     
     // --- ローグプレイ情報 ---
-    RogueLikeGame::RogueScene::RoguePlayData _roguePlayData;
+    RoguePlayDto _roguePlayData;
     // --- プレイヤー情報 ---
     ActorDto _playerActor;
     // --- インベントリ ---

@@ -30,7 +30,7 @@ AccountData* AccountData::getInstance()
 }
 
 AccountData::AccountData()
-: _roguePlayData({RogueScene::QuestType::TUTORIAL, 0, 0, RogueScene::GameStatus::INIT, 0, 0, 0})
+: _roguePlayData({RoguePlayDto::QuestType::TUTORIAL, 0, 0, RoguePlayDto::GameStatus::INIT, 0, 0, 0})
 , _playerActor(ActorDto())
 , _itemInventory("所持品", 0, RogueGameConfig::USE_ITEM_MAX)
 , _itemInventoryStock("倉　庫", 0, RogueGameConfig::STOCK_ITEM_MAX)
@@ -63,7 +63,7 @@ void AccountData::saveInventory(const ItemInventoryDto &itemInventory, const Ite
     save();
 }
 
-void AccountData::save(const RogueScene::RoguePlayData& roguePlayData,
+void AccountData::save(const RoguePlayDto& roguePlayData,
                        const ActorDto& playerActor,
                        const ItemInventoryDto& itemInventory)
 {
@@ -88,7 +88,7 @@ void AccountData::save()
     }
     
     ValueMap save_data{
-        {"rogue_play_data", Value(RogueScene::roguePlayDataToString(_roguePlayData))},
+        {"rogue_play_data", Value(_roguePlayData.toSeparatedString())},
         {"player_actor", Value(this->_playerActor.actorToString())},
         {"player_actor.weapon_equip", Value(this->_playerActor.getWeaponEquip().actorEquipToString())},
         {"player_actor.accessory_equip", Value(this->_playerActor.getAccessoryEquip().actorEquipToString())},
@@ -136,7 +136,7 @@ void AccountData::load()
     Value roguePlayDatavalue = save_data.at("rogue_play_data");
     std::string roguePlayDatastr = roguePlayDatavalue.asString();
     if (!roguePlayDatastr.empty()) {
-        this->_roguePlayData = RogueScene::createRoguePlayData(roguePlayDatastr);
+        this->_roguePlayData = RoguePlayDto::createWithSeparatedString(roguePlayDatastr);
     }
 
     Value playerActordata_value = save_data.at("player_actor");
@@ -247,7 +247,7 @@ std::string AccountData::createQuestSaveDetailText() const {
     // TODO: ダンジョン名が仮
     return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %ld G",
                         "初心者の洞窟",
-                        this->_roguePlayData.quest_id,
+                        this->_roguePlayData.getQuestId(),
                         this->_playerActor.getLv(),
                         this->_playerActor.getExp(),
                         this->_playerActor.getHitPoint(),
@@ -270,15 +270,15 @@ bool AccountData::isItemInventory()
 }
 
 bool AccountData::isQuestSaveData() const {
-    if (this->_roguePlayData.quest_id > 0) {
+    if (this->_roguePlayData.getQuestId() > 0) {
         return true;
     }
     return false;
 }
 
-bool AccountData::isPlayQuestData(RogueScene::QuestType questType, int questId) const
+bool AccountData::isPlayQuestData(RoguePlayDto::QuestType questType, int questId) const
 {
-    if (this->_roguePlayData._questType == questType && this->_roguePlayData.quest_id == questId) {
+    if (this->_roguePlayData.getQuestType() == questType && this->_roguePlayData.getQuestId() == questId) {
         return true;
     }
     return false;
@@ -324,19 +324,19 @@ AccountData::GamePlayProgress AccountData::getGamePlayProgress()
     return static_cast<AccountData::GamePlayProgress>(this->_systemData.getGameProgress());
 }
 
-void AccountData::clearQuestTypeWithUpdateGamePlayProgress(RogueLikeGame::RogueScene::QuestType clearQuestType)
+void AccountData::clearQuestTypeWithUpdateGamePlayProgress(RoguePlayDto::QuestType clearQuestType)
 {
     switch (clearQuestType) {
-        case RogueLikeGame::RogueScene::QuestType::TUTORIAL:
+        case RoguePlayDto::QuestType::TUTORIAL:
             updateGamePlayProgress(AccountData::GamePlayProgress::TUTORIAL_CLEAR);
             break;
-        case RogueLikeGame::RogueScene::QuestType::MAIN_QUEST:
+        case RoguePlayDto::QuestType::MAIN_QUEST:
             updateGamePlayProgress(AccountData::GamePlayProgress::MAINQUEST_CLEAR);
             break;
-        case RogueLikeGame::RogueScene::QuestType::MAIN_QUEST2:
+        case RoguePlayDto::QuestType::MAIN_QUEST2:
             updateGamePlayProgress(AccountData::GamePlayProgress::MAINQUEST2_CLEAR);
             break;
-        case RogueLikeGame::RogueScene::QuestType::DEEP_QUEST:
+        case RoguePlayDto::QuestType::DEEP_QUEST:
             updateGamePlayProgress(AccountData::GamePlayProgress::DEEPQUEST_CLEAR);
             break;
         default:
@@ -356,7 +356,7 @@ void AccountData::updateGamePlayProgress(AccountData::GamePlayProgress progress)
 // private
 void AccountData::clearRoguePlayData()
 {
-    this->_roguePlayData = RogueScene::createRoguePlayData();
+    this->_roguePlayData = RoguePlayDto();
 }
 void AccountData::clearPlayerActorData()
 {

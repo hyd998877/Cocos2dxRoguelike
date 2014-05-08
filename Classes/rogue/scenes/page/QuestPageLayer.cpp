@@ -7,7 +7,6 @@
 //
 
 #include "QuestPageLayer.h"
-#include "AppMacros.h"
 
 #include "AccountData.h"
 
@@ -18,6 +17,8 @@
 #include "RogueScene.h"
 
 USING_NS_CC;
+
+NS_ROGUE_BEGIN
 
 QuestPageLayer::QuestPageLayer()
 {
@@ -50,7 +51,7 @@ bool QuestPageLayer::init()
     auto menuItem1 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode1, FontUtils::getDefaultFontTTFConfig(), "初心者の洞窟", [this](Ref *ref) {
         // 初心者クエスト
         int play_quest_id = 1;
-        auto scene = RogueLikeGame::RogueScene::scene(RogueLikeGame::RogueScene::QuestType::TUTORIAL, play_quest_id);
+        auto scene = RogueLikeGame::RogueScene::scene(RoguePlayDto::QuestType::TUTORIAL, play_quest_id);
         auto trans = TransitionFadeDown::create(1.0f, scene);
         Director::getInstance()->replaceScene(trans);
     });
@@ -64,7 +65,7 @@ bool QuestPageLayer::init()
         
         // メインクエスト
         int play_quest_id = 1;
-        auto scene = RogueLikeGame::RogueScene::scene(RogueLikeGame::RogueScene::QuestType::MAIN_QUEST, play_quest_id);
+        auto scene = RogueLikeGame::RogueScene::scene(RoguePlayDto::QuestType::MAIN_QUEST, play_quest_id);
         auto trans = TransitionFadeDown::create(1.0f, scene);
         Director::getInstance()->replaceScene(trans);
     });
@@ -83,7 +84,7 @@ bool QuestPageLayer::init()
             
             // クエスト開始
             int play_quest_id = 1;
-            auto scene = RogueLikeGame::RogueScene::scene(RogueLikeGame::RogueScene::QuestType::DEEP_QUEST, play_quest_id);
+            auto scene = RogueLikeGame::RogueScene::scene(RoguePlayDto::QuestType::DEEP_QUEST, play_quest_id);
             auto trans = TransitionFadeDown::create(1.0f, scene);
             Director::getInstance()->replaceScene(trans);
         }, "いいえ", [](Ref *ref) {}));
@@ -100,5 +101,7 @@ bool QuestPageLayer::init()
     
     return true;
 }
+
+NS_ROGUE_END
 
 
