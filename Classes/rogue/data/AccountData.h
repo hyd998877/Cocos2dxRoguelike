@@ -23,11 +23,13 @@ class AccountData
 {
 public:
     enum GamePlayProgress {
-        INIT            =  0,
-        TUTORIAL_PLAY   = 10,
-        TUTORIAL_CLEAR  = 11,
-        MAINQUEST_PLAY  = 20,
-        MAINQUEST_CLEAR = 21,
+        INIT             =  0,
+        TUTORIAL_PLAY    = 10,
+        TUTORIAL_CLEAR   = 11,
+        MAINQUEST_PLAY   = 20,
+        MAINQUEST_CLEAR  = 21,
+        MAINQUEST2_CLEAR = 22,
+        DEEPQUEST_CLEAR  = 23,
     };
     
     // シングルトン
@@ -61,6 +63,7 @@ public:
     long getGameObjectId() const;
     void putPlayScore(const std::string &questKey, int score);
     AccountData::GamePlayProgress getGamePlayProgress();
+    void clearQuestTypeWithUpdateGamePlayProgress(RogueLikeGame::RogueScene::QuestType questType);
     void updateGamePlayProgress(AccountData::GamePlayProgress progress);
     
     // イベントリ系

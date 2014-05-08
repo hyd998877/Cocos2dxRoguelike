@@ -27,11 +27,13 @@
 #include "MAccessoryDao.h"
 #include "MMonster.h"
 #include "MPlayer.h"
+
 #include "MRogueMap.h"
 
 #include "AccountData.h"
 
 #include "MypageScene.h"
+#include "NovelScene.h"
 
 NS_ROGUE_BEGIN
 
@@ -587,7 +589,7 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
     GameStatus beforeGameStatus = rogue_play_data_.game_status;
     rogue_play_data_.game_status = gameStatus;
     
-    if (beforeGameStatus == GameStatus::GAME_OVER) {
+    if (beforeGameStatus == GameStatus::GAME_OVER || beforeGameStatus == GameStatus::QUEST_CLEAR) {
         return;
     }
     
@@ -603,7 +605,21 @@ void RogueScene::changeGameStatus(GameStatus gameStatus) {
         // マイページへ
         changeScene(MypageScene::scene());
         return;
-            
+    } else if (rogue_play_data_.game_status == GameStatus::QUEST_CLEAR) {
+        // セーブ消去
+        AccountData::getInstance()->resetRoguePlayData();
+        
+        // クリアフラグ更新
+        AccountData::getInstance()->clearQuestTypeWithUpdateGamePlayProgress(this->rogue_play_data_._questType);
+        
+        // クリア演出ADVパートへ(TODO: とりあえずquestType=ノベルIDにしてる)
+        changeScene(NovelScene::scene((int)this->rogue_play_data_._questType, 0, [this]() {
+            // ADVパート終わったらマイページへ
+            auto trans = TransitionProgressOutIn::create(0.5f, MypageScene::scene());
+            Director::getInstance()->replaceScene(trans);
+        }));
+        return;
+        
     } else if ((beforeGameStatus == GameStatus::PLAYER_TURN || beforeGameStatus == GameStatus::PLAYER_ACTION || beforeGameStatus == GameStatus::PLAYER_NO_ACTION)
         && rogue_play_data_.game_status == GameStatus::ENEMY_TURN) {
         // 敵のターン開始時
@@ -954,9 +970,16 @@ void RogueScene::touchKaidan() {
         AccountData::getInstance()->save(this->rogue_play_data_,
                                          playerActor,
                                          this->_itemInventory);
-        // 画面遷移
-        this->changeScene(RogueScene::scene(rogue_play_data_._questType, rogue_play_data_.quest_id));
         
+        auto questData = RogueGameConfig::getQuestData(findQuestKey(rogue_play_data_._questType));
+        int clearCount = questData.at("clearCount").asInt();
+        if (clearCount < this->rogue_play_data_.quest_id) {
+            // クエストクリア
+            this->changeGameStatus(RogueLikeGame::RogueScene::GameStatus::QUEST_CLEAR);
+        } else {
+            // 画面遷移
+            this->changeScene(RogueScene::scene(rogue_play_data_._questType, rogue_play_data_.quest_id));
+        }
     }, "いいえ", [](Ref *ref) {});
     this->addChild(alertDialog, ZOrders::ModalLayerZOrder);
 }
@@ -1527,10 +1550,12 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
 const ValueMap RogueScene::getRogueMapData() {
     // フロア情報のIndexを用意する（データがない場合は最終データで補正）
     int questIndex = rogue_play_data_.quest_id - 1;
-    if (RogueGameConfig::datas_.size() <= questIndex) {
-        questIndex = RogueGameConfig::datas_.size() - 1;
+    auto questData = RogueGameConfig::getQuestData(findQuestKey(rogue_play_data_._questType));
+    auto datas = questData.at("floor").asValueVector();
+    if (datas.size() <= questIndex) {
+        questIndex = datas.size() - 1;
     }
-    Value rogueMapData = RogueGameConfig::datas_[questIndex];
+    Value rogueMapData = datas[questIndex];
     return rogueMapData.asValueMap();
 }
 
@@ -1540,6 +1565,21 @@ ActorSprite* RogueScene::getPlayerActorSprite(int seqNo) {
 
 RogueTMXTiledMap* RogueScene::getRogueMapLayer() {
     return static_cast<RogueTMXTiledMap*>(this->getChildByTag(Tags::TiledMapLayerTag));
+}
+
+const std::string& RogueScene::findQuestKey(RogueScene::QuestType questType) {
+    switch (questType) {
+        case RogueScene::QuestType::TUTORIAL:
+            return RogueGameConfig::TUTORIAL_KEY;
+        case RogueScene::QuestType::MAIN_QUEST:
+            return RogueGameConfig::MAIN_QUEST_KEY;
+        case RogueScene::QuestType::MAIN_QUEST2:
+            return RogueGameConfig::MAIN_QUEST2_KEY;
+        case RogueScene::QuestType::DEEP_QUEST:
+            return RogueGameConfig::DEEP_QUEST_KEY;
+        default:
+            return RogueGameConfig::TUTORIAL_KEY;
+    }
 }
 
 NS_ROGUE_END

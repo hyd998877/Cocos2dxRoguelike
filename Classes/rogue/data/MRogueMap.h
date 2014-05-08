@@ -177,6 +177,34 @@ namespace RogueGameConfig {
         // 10〜
         cocos2d::Value(floor2_)
     };
+    
+    const std::string TUTORIAL_KEY    = "TUTORIAL_KEY";
+    const std::string MAIN_QUEST_KEY  = "MAIN_QUEST_KEY";
+    const std::string MAIN_QUEST2_KEY = "MAIN_QUEST2_KEY";
+    const std::string DEEP_QUEST_KEY  = "DEEP_QUEST_KEY";
+    
+    const static cocos2d::ValueMap questData_{
+        {TUTORIAL_KEY, cocos2d::Value(cocos2d::ValueMap{
+            {"floor", cocos2d::Value(datas_)},
+            {"clearCount", cocos2d::Value(3)}
+        })},
+        {MAIN_QUEST_KEY, cocos2d::Value(cocos2d::ValueMap{
+            {"floor", cocos2d::Value(datas_)},
+            {"clearCount", cocos2d::Value(24)}
+        })},
+        {MAIN_QUEST2_KEY, cocos2d::Value(cocos2d::ValueMap{
+            {"floor", cocos2d::Value(datas_)},
+            {"clearCount", cocos2d::Value(99)}
+        })},
+        {DEEP_QUEST_KEY, cocos2d::Value(cocos2d::ValueMap{
+            {"floor", cocos2d::Value(datas_)},
+            {"clearCount", cocos2d::Value(99)}
+        })},
+    };
+
+    const static cocos2d::ValueMap& getQuestData(std::string questKey) {
+        return questData_.at(questKey).asValueMap();
+    }
 }
 
 #endif

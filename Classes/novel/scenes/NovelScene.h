@@ -19,7 +19,7 @@ using namespace extension;
 class NovelScene : public cocos2d::Layer
 {
     // コールバック
-    typedef std::function<void()> NovelTextEndCallback;
+    typedef std::function<void(void)> NovelTextEndCallback;
 private:
     
     // --------------- 変数 -------------------

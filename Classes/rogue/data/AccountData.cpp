@@ -324,6 +324,26 @@ AccountData::GamePlayProgress AccountData::getGamePlayProgress()
     return static_cast<AccountData::GamePlayProgress>(this->_systemData.getGameProgress());
 }
 
+void AccountData::clearQuestTypeWithUpdateGamePlayProgress(RogueLikeGame::RogueScene::QuestType clearQuestType)
+{
+    switch (clearQuestType) {
+        case RogueLikeGame::RogueScene::QuestType::TUTORIAL:
+            updateGamePlayProgress(AccountData::GamePlayProgress::TUTORIAL_CLEAR);
+            break;
+        case RogueLikeGame::RogueScene::QuestType::MAIN_QUEST:
+            updateGamePlayProgress(AccountData::GamePlayProgress::MAINQUEST_CLEAR);
+            break;
+        case RogueLikeGame::RogueScene::QuestType::MAIN_QUEST2:
+            updateGamePlayProgress(AccountData::GamePlayProgress::MAINQUEST2_CLEAR);
+            break;
+        case RogueLikeGame::RogueScene::QuestType::DEEP_QUEST:
+            updateGamePlayProgress(AccountData::GamePlayProgress::DEEPQUEST_CLEAR);
+            break;
+        default:
+            break;
+    }
+}
+
 void AccountData::updateGamePlayProgress(AccountData::GamePlayProgress progress)
 {
     if (this->_systemData.getGameProgress() < progress) {

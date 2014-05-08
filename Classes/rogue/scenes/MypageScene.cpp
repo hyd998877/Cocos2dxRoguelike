@@ -133,7 +133,7 @@ void MypageScene::initQuestPage()
 {
     // 未プレイはチュートリアルADVへ
     if (AccountData::getInstance()->getGamePlayProgress() == AccountData::GamePlayProgress::INIT) {
-        Scene* scene = NovelScene::scene(2, 0, [this]() {
+        Scene* scene = NovelScene::scene(0, 0, [this]() {
             AccountData::getInstance()->updateGamePlayProgress(AccountData::GamePlayProgress::TUTORIAL_PLAY);
             int play_quest_id = 1;
             auto scene = RogueScene::scene(RogueScene::QuestType::TUTORIAL, play_quest_id);
@@ -171,7 +171,7 @@ Menu* MypageScene::createGlobalMenu()
     item_menu3->setTag(GlobalMenuTags::STOCK);
     
     auto item_menu4 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "の　べ　る"), WAKU_PADDING, [this](Ref *ref) {
-        Scene* scene = NovelScene::scene(1, 0, [this]() {
+        Scene* scene = NovelScene::scene(99, 0, [this]() {
             CCLOG("novel end");
             Scene* scene = MypageScene::scene();
             TransitionProgressOutIn* trans = TransitionProgressOutIn::create(1, scene);

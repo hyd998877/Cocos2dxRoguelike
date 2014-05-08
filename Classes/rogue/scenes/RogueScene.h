@@ -31,10 +31,13 @@ class RogueScene : public cocos2d::Layer
 public:
     
     enum class QuestType {
-        TUTORIAL,         /// > 初心者の洞窟
-        MAIN_QUEST,       /// > 不思議な洞窟
-        DEEP_QUEST        /// > 最果ての洞窟
+        TUTORIAL     = 1, /// > 初心者の洞窟
+        MAIN_QUEST   = 2, /// > 不思議な洞窟
+        MAIN_QUEST2  = 3, /// > 不思議な洞窟（クリア後）
+        DEEP_QUEST   = 4  /// > 最果ての洞窟
     };
+    
+    const static std::string& findQuestKey(RogueScene::QuestType questType);
     
     // ゲームステート
     enum class GameStatus {
@@ -44,6 +47,7 @@ public:
         PLAYER_NO_ACTION  = 12,
         ENEMY_TURN        = 20,
         ENEMY_ACTION      = 21,
+        QUEST_CLEAR       = 97,
         ESCAPE            = 98,
         GAME_OVER         = 99,
     };
