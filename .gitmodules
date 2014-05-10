@@ -4,3 +4,6 @@
 [submodule "cocos2d"]
 	path = cocos2d
 	url = https://github.com/kyokomi/cocosNew_cocos2d.git
+[submodule "Classes/modules/json11"]
+	path = Classes/modules/json11
+	url = https://github.com/dropbox/json11.git

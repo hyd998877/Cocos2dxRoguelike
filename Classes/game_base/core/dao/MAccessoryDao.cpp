@@ -9,9 +9,15 @@
 #include "MAccessoryDao.h"
 
 #include "cocos2d.h"
-#include "spine/Json.h"
+#include "json11.hpp"
 
 USING_NS_CC;
+
+MAccessoryDao::MAccessoryDao()
+: m_accessoryList()
+{
+    
+};
 
 // シングルトン
 static MAccessoryDao *s_m_accessory_dao_instance = nullptr;
@@ -30,33 +36,26 @@ MAccessoryDao* MAccessoryDao::getInstance()
 void MAccessoryDao::init()
 {
     // Jsonを読み込む
-    auto accessoryMasterFile = FileUtils::getInstance()->getDataFromFile("test_master/M_ACCESSORY.json");
-    Json* json = Json_create((char *)accessoryMasterFile.getBytes());
-    Json* accessoryMasterJsonList = Json_getItem(Json_getItem(Json_getItem(json, "srpgquest"), "M_ACCESSORY"), "row");
-    accessoryMasterFile.clear();
+    auto jsonStringFile = FileUtils::getInstance()->getStringFromFile("test_master/M_ACCESSORY.json");
     
-    int accessoryListSize = accessoryMasterJsonList->size;
-    Json* item = nullptr;
-    CCLOG("accessory size = %d", accessoryListSize);
-    for (int i = 0; i < accessoryListSize; i++)
-    {
-        if (item == nullptr)
-        {
-            item = accessoryMasterJsonList->child;
-        }
-        else
-        {
-            item = item->next;
-        }
+    std::string err;
+    auto json = json11::Json::parse(jsonStringFile, err);
+    if (!err.empty()) {
+        CCLOG("error = %s", err.c_str());
+    } else {
+        CCLOG("%s", json["srpgquest"].dump().c_str());
         
-        MAccessory accessory = MAccessory(Json_getInt(item, "ACCESSORY_ID", 0),
-                                    Json_getInt(item, "ACCESSORY_IMAGE_ID", 0),
-                                    Json_getString(item, "ACCESSORY_NAME", ""),
-                                    Json_getString(item, "ACCESSORY_DETAIL", ""),
-                                    Json_getInt(item, "DEFENSE_POINT", 0));
-        m_accessoryList.push_back(accessory);
+        auto jsonArray = json["srpgquest"]["M_ACCESSORY"]["row"].array_items();
+        
+        for (auto &item : jsonArray) {
+            MAccessory mAccessory(item["ACCESSORY_ID"].int_value(),
+                                  item["ACCESSORY_IMAGE_ID"].int_value(),
+                                  item["ACCESSORY_NAME"].string_value(),
+                                  item["ACCESSORY_DETAIL"].string_value(),
+                                  item["DEFENSE_POINT"].int_value());
+            this->m_accessoryList.push_back(mAccessory);
+        }
     }
-    Json_dispose(json);
 }
 
 const MAccessory MAccessoryDao::selectById(int accessoryId) const

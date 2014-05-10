@@ -12,10 +12,6 @@
 #include "cocos2d.h"
 #include "spine/Json.h"
 
-USING_NS_CC;
-using namespace std;
-using namespace extension;
-
 class NovelScene : public cocos2d::Layer
 {
     // コールバック
@@ -40,6 +36,7 @@ private:
     
     /** 初期処理 */
     void initNovelJson(int sceneNo, int novelIndex);
+    
     /** ノベルパート終了 */
     void endNovel();
     
@@ -47,25 +44,25 @@ private:
     void nextNovelJson();
     
     /** 選択肢ボタンの生成 */
-    void makeSelectSpriteButton(const string& str1, int next1Id, const string& str2, int next2Id);
+    void makeSelectSpriteButton(const std::string& str1, int next1Id, const std::string& str2, int next2Id);
     /** 選択肢を選んだ時のコールバック */
     void menuSelectCallback(Ref *pSender);
     
     /** テキストを表示させる */
-    void dispText(string text);
+    void dispText(const std::string& text);
     /** 名前を表示させる */
-    void dispName(string name);
+    void dispName(const std::string& name);
     
     void makeActorImage(const char* imageFilePath, int dict);
     void removeActorImage(int dict);
     void shadeActorImage(int dict);
     void resetShadeActorImage(int dict);
     
-    void changeBackgroundAnimation(const string& imgFilePath);
+    void changeBackgroundAnimation(const std::string& imgFilePath);
 //    FiniteTimeAction* changeBackgroundAnimation(const string&  imgFilePath);
 //    void changeBackground(Ref *pSender, void* node);
     
-    void logMenuSelectCallback(Ref *pSender);
+    void logMenuSelectCallback(cocos2d::Ref *pSender);
     void showTextLog(int showTextIndex);
     void hideTextLog();
     
@@ -119,15 +116,17 @@ protected:
     
 public:
     NovelScene();
-    ~NovelScene();
+    virtual ~NovelScene();
+    
+//    CREATE_FUNC(NovelScene);
     
     bool init(int sceneNo, int novelIndex, const NovelTextEndCallback& callback);
     static cocos2d::Scene* scene(int sceneNo, int novelIndex, const NovelTextEndCallback& callback);
     static NovelScene* create(int sceneNo, int novelIndex, const NovelTextEndCallback& callback);
     
-    virtual bool onTouchBegan(Touch *touch, Event *unused_event);
+    virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     //virtual void onTouchMoved(Touch *touch, Event *unused_event);
-    virtual void onTouchEnded(Touch *touch, Event *unused_event);
+    virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     //virtual void onTouchCancelled(Touch *touch, Event *unused_event);
 };
 

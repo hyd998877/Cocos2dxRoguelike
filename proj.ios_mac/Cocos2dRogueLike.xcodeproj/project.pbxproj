@@ -58,6 +58,7 @@
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CE046FA0191A2973004D442D /* QuestPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE046F9E191A2973004D442D /* QuestPageLayer.cpp */; };
+		CE0A550A191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE0A5508191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
 		CE119DDB1919F1730047B44D /* ItemStockPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */; };
 		CE119DDE1919F1A50047B44D /* TopPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DDC1919F1A50047B44D /* TopPageLayer.cpp */; };
@@ -108,6 +109,7 @@
 		CE9A70441918BBF300F685A4 /* SystemDataDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9A70421918BBF300F685A4 /* SystemDataDto.cpp */; };
 		CEA247F319152C8100B0656A /* ItemDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA247F119152C8100B0656A /* ItemDto.cpp */; };
 		CEB1A5E71881895A00D26BAE /* ui in Resources */ = {isa = PBXBuildFile; fileRef = CEB1A5E61881895A00D26BAE /* ui */; };
+		CEBF3B92191E5C0200014017 /* json11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEBF3B8B191E5C0200014017 /* json11.cpp */; };
 		CECE37AD18B9A08C0086C8A0 /* bg in Resources */ = {isa = PBXBuildFile; fileRef = CECE37AC18B9A08C0086C8A0 /* bg */; };
 		CECE37B518B9A6EA0086C8A0 /* battle in Resources */ = {isa = PBXBuildFile; fileRef = CECE37B418B9A6EA0086C8A0 /* battle */; };
 		CEF46A6818B87A0200F887CA /* actor in Resources */ = {isa = PBXBuildFile; fileRef = CEF46A6718B87A0200F887CA /* actor */; };
@@ -306,6 +308,8 @@
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE046F9E191A2973004D442D /* QuestPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QuestPageLayer.cpp; sourceTree = "<group>"; };
 		CE046F9F191A2973004D442D /* QuestPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestPageLayer.h; sourceTree = "<group>"; };
+		CE0A5508191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TMXXmlGeneratorUtil.cpp; sourceTree = "<group>"; };
+		CE0A5509191B63C1001AEFB2 /* TMXXmlGeneratorUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMXXmlGeneratorUtil.h; sourceTree = "<group>"; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
 		CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemStockPageLayer.cpp; sourceTree = "<group>"; };
 		CE119DDA1919F1730047B44D /* ItemStockPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemStockPageLayer.h; sourceTree = "<group>"; };
@@ -404,6 +408,8 @@
 		CEA247F119152C8100B0656A /* ItemDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemDto.cpp; sourceTree = "<group>"; };
 		CEA247F219152C8100B0656A /* ItemDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemDto.h; sourceTree = "<group>"; };
 		CEB1A5E61881895A00D26BAE /* ui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ui; sourceTree = "<group>"; };
+		CEBF3B8B191E5C0200014017 /* json11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = json11.cpp; sourceTree = "<group>"; };
+		CEBF3B8C191E5C0200014017 /* json11.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json11.hpp; sourceTree = "<group>"; };
 		CECE37AC18B9A08C0086C8A0 /* bg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bg; sourceTree = "<group>"; };
 		CECE37B418B9A6EA0086C8A0 /* battle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = battle; sourceTree = "<group>"; };
 		CEF46A6718B87A0200F887CA /* actor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = actor; sourceTree = "<group>"; };
@@ -480,6 +486,7 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CEBF3B88191E5C0200014017 /* modules */,
 				CE626D6B1914BEF6005925DC /* battle */,
 				CE626D761914BEF6005925DC /* game_base */,
 				CE626DB61914BEF6005925DC /* novel */,
@@ -794,6 +801,8 @@
 				CE626D901914BEF6005925DC /* CommonWindowUtil.h */,
 				CE626D911914BEF6005925DC /* LayerActionUtils.h */,
 				CE8670DC1915085C0055C092 /* MenuItemUtil.h */,
+				CE0A5508191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp */,
+				CE0A5509191B63C1001AEFB2 /* TMXXmlGeneratorUtil.h */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -1118,6 +1127,24 @@
 			path = util;
 			sourceTree = "<group>";
 		};
+		CEBF3B88191E5C0200014017 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				CEBF3B89191E5C0200014017 /* json11 */,
+			);
+			name = modules;
+			path = ../Classes/modules;
+			sourceTree = "<group>";
+		};
+		CEBF3B89191E5C0200014017 /* json11 */ = {
+			isa = PBXGroup;
+			children = (
+				CEBF3B8B191E5C0200014017 /* json11.cpp */,
+				CEBF3B8C191E5C0200014017 /* json11.hpp */,
+			);
+			path = json11;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1382,10 +1409,12 @@
 				CE626E071914BEF6005925DC /* RogueScene.cpp in Sources */,
 				CE626E061914BEF6005925DC /* MypageScene.cpp in Sources */,
 				CE626DF71914BEF6005925DC /* MAccessory.cpp in Sources */,
+				CEBF3B92191E5C0200014017 /* json11.cpp in Sources */,
 				CE5C0F27191B892F002FE6F3 /* RoguePlayDto.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				CE119DE11919F44F0047B44D /* ItemMixedPageLayer.cpp in Sources */,
 				CE626DFA1914BEF6005925DC /* MWeapon.cpp in Sources */,
+				CE0A550A191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp in Sources */,
 				CE626DF91914BEF6005925DC /* MUseItem.cpp in Sources */,
 				CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */,
 				CE626E0A1914BEF6005925DC /* SRPGScene.cpp in Sources */,

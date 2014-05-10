@@ -9,7 +9,7 @@
 #include "MWeaponDao.h"
 
 #include "cocos2d.h"
-#include "spine/Json.h"
+#include "json11.hpp"
 
 USING_NS_CC;
 
@@ -30,33 +30,23 @@ MWeaponDao* MWeaponDao::getInstance()
 void MWeaponDao::init()
 {
     // Jsonを読み込む
-    auto weaponMasterFile = FileUtils::getInstance()->getDataFromFile("test_master/M_WEAPON.json");
-    Json* json = Json_create((char *)weaponMasterFile.getBytes());
-    Json* weaponMasterJsonList = Json_getItem(Json_getItem(Json_getItem(json, "srpgquest"), "M_WEAPON"), "row");
-    weaponMasterFile.clear();
-    
-    int weaponListSize = weaponMasterJsonList->size;
-    Json* item = nullptr;
-    CCLOG("weapon size = %d", weaponListSize);
-    for (int i = 0; i < weaponListSize; i++)
-    {
-        if (item == nullptr)
-        {
-            item = weaponMasterJsonList->child;
+    auto jsonStringFile = FileUtils::getInstance()->getStringFromFile("test_master/M_WEAPON.json");
+    std::string err;
+    auto json = json11::Json::parse(jsonStringFile, err);
+    if (!err.empty()) {
+        CCLOG("error = %s", err.c_str());
+    } else {
+        CCLOG("%s", json["srpgquest"].dump().c_str());
+        auto jsonArray = json["srpgquest"]["M_WEAPON"]["row"].array_items();
+        for (auto &item : jsonArray) {
+            MWeapon weapon(item["WEAPON_ID"].int_value(),
+                           item["WEAPON_IMAGE_ID"].int_value(),
+                           item["WEAPON_NAME"].string_value(),
+                           item["WEAPON_DETAIL"].string_value(),
+                           item["ATTACK_POINT"].int_value());
+            this->m_weaponList.push_back(weapon);
         }
-        else
-        {
-            item = item->next;
-        }
-        
-        MWeapon weapon = MWeapon(Json_getInt(item, "WEAPON_ID", 0),
-                                 Json_getInt(item, "WEAPON_IMAGE_ID", 0),
-                                 Json_getString(item, "WEAPON_NAME", ""),
-                                 Json_getString(item, "WEAPON_DETAIL", ""),
-                                 Json_getInt(item, "ATTACK_POINT", 0));
-        m_weaponList.push_back(weapon);
     }
-    Json_dispose(json);
 }
 
 const MWeapon MWeaponDao::selectById(int weaponId) const

@@ -12,6 +12,8 @@
 	<dict>
 		<key>EA96E879-8C01-4736-A280-8D66E733EFE6</key>
 		<string>http://github.com/cocos2d/cocos2d-x.git</string>
+		<key>FBD0CF5E-9FF7-41C0-93AC-C95852CCD461</key>
+		<string>https://github.com/dropbox/json11.git</string>
 		<key>FF7D9194-4289-4966-8C77-0B364D68341E</key>
 		<string>https://bitbucket.org/kyokomi/cocos2droguelike.git</string>
 	</dict>
@@ -21,6 +23,8 @@
 	<dict>
 		<key>EA96E879-8C01-4736-A280-8D66E733EFE6</key>
 		<string>../../../cocos2d</string>
+		<key>FBD0CF5E-9FF7-41C0-93AC-C95852CCD461</key>
+		<string>../../../Classes/modules/json11</string>
 		<key>FF7D9194-4289-4966-8C77-0B364D68341E</key>
 		<string>../../..</string>
 	</dict>
@@ -47,6 +51,14 @@
 			<string>FF7D9194-4289-4966-8C77-0B364D68341E</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Cocos2dRogueLike</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FBD0CF5E-9FF7-41C0-93AC-C95852CCD461</string>
+			<key>IDESourceControlWCCName</key>
+			<string>json11</string>
 		</dict>
 	</array>
 </dict>

@@ -9,7 +9,8 @@
 #include "MUseItemDao.h"
 
 #include "cocos2d.h"
-#include "spine/Json.h"
+
+#include "json11.hpp"
 
 USING_NS_CC;
 
@@ -41,36 +42,25 @@ MUseItemDao* MUseItemDao::getInstance()
 void MUseItemDao::init()
 {
     // Jsonを読み込む
-    auto useItemMasterFile = FileUtils::getInstance()->getDataFromFile("test_master/M_USE_ITEM.json");
-    Json* json = Json_create((char *)useItemMasterFile.getBytes());
-    Json* useItemMasterJsonList = Json_getItem(Json_getItem(Json_getItem(json, "srpgquest"), "M_USE_ITEM"), "row");
-    useItemMasterFile.clear();
-    
-    int useItemListSize = useItemMasterJsonList->size;
-    Json* item = nullptr;
-    CCLOG("useItem size = %d", useItemListSize);
-    for (int i = 0; i < useItemListSize; i++)
-    {
-        if (item == nullptr)
-        {
-            item = useItemMasterJsonList->child;
-        }
-        else
-        {
-            item = item->next;
-        }
+    auto jsonStringFile = FileUtils::getInstance()->getStringFromFile("test_master/M_USE_ITEM.json");
+    std::string err;
+    auto json = json11::Json::parse(jsonStringFile, err);
+    if (!err.empty()) {
+        CCLOG("error = %s", err.c_str());
+    } else {
+        CCLOG("%s", json["srpgquest"].dump().c_str());
+        auto jsonArray = json["srpgquest"]["M_USE_ITEM"]["row"].array_items();
         
-        MUseItem::ItemType itemType = static_cast<MUseItem::ItemType>(Json_getInt(item, "USE_ITEM_TYPE", 0));
-        
-        MUseItem useItem = MUseItem(Json_getInt(item, "USE_ITEM_ID", 0),
-                                    Json_getInt(item, "USE_ITEM_IMAGE_ID", 0),
-                                    itemType,
-                                    Json_getString(item, "USE_ITEM_NAME", ""),
-                                    Json_getString(item, "USE_ITEM_DETAIL", ""),
-                                    Json_getInt(item, "USE_ITEM_PARAM", 0));
-        m_useItemList.push_back(useItem);
+        for (auto &item : jsonArray) {
+            MUseItem mUseItem(item["USE_ITEM_ID"].int_value(),
+                              item["USE_ITEM_IMAGE_ID"].int_value(),
+                              static_cast<MUseItem::ItemType>(item["USE_ITEM_TYPE"].int_value()),
+                              item["USE_ITEM_NAME"].string_value(),
+                              item["USE_ITEM_DETAIL"].string_value(),
+                              item["USE_ITEM_PARAM"].int_value());
+            this->m_useItemList.push_back(mUseItem);
+        }
     }
-    Json_dispose(json);
 }
 
 const MUseItem & MUseItemDao::selectById(int useItemId) const

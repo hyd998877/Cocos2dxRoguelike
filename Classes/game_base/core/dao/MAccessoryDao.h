@@ -22,11 +22,7 @@ public:
     
     const MAccessory selectById(int accessoryId) const;
     
-    MAccessoryDao()
-    :m_accessoryList(std::list<MAccessory>())
-    {
-        
-    };
+    MAccessoryDao();
     
     ~MAccessoryDao();
 private:
