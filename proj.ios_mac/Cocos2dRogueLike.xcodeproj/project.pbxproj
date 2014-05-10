@@ -58,7 +58,6 @@
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		CE046FA0191A2973004D442D /* QuestPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE046F9E191A2973004D442D /* QuestPageLayer.cpp */; };
-		CE0A550A191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE0A5508191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp */; };
 		CE0D522B188A507F00ECB309 /* icon_set in Resources */ = {isa = PBXBuildFile; fileRef = CE0D522A188A507F00ECB309 /* icon_set */; };
 		CE119DDB1919F1730047B44D /* ItemStockPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */; };
 		CE119DDE1919F1A50047B44D /* TopPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE119DDC1919F1A50047B44D /* TopPageLayer.cpp */; };
@@ -308,8 +307,6 @@
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE046F9E191A2973004D442D /* QuestPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QuestPageLayer.cpp; sourceTree = "<group>"; };
 		CE046F9F191A2973004D442D /* QuestPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestPageLayer.h; sourceTree = "<group>"; };
-		CE0A5508191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TMXXmlGeneratorUtil.cpp; sourceTree = "<group>"; };
-		CE0A5509191B63C1001AEFB2 /* TMXXmlGeneratorUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMXXmlGeneratorUtil.h; sourceTree = "<group>"; };
 		CE0D522A188A507F00ECB309 /* icon_set */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icon_set; sourceTree = "<group>"; };
 		CE119DD91919F1730047B44D /* ItemStockPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemStockPageLayer.cpp; sourceTree = "<group>"; };
 		CE119DDA1919F1730047B44D /* ItemStockPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemStockPageLayer.h; sourceTree = "<group>"; };
@@ -801,8 +798,6 @@
 				CE626D901914BEF6005925DC /* CommonWindowUtil.h */,
 				CE626D911914BEF6005925DC /* LayerActionUtils.h */,
 				CE8670DC1915085C0055C092 /* MenuItemUtil.h */,
-				CE0A5508191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp */,
-				CE0A5509191B63C1001AEFB2 /* TMXXmlGeneratorUtil.h */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -1414,7 +1409,6 @@
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				CE119DE11919F44F0047B44D /* ItemMixedPageLayer.cpp in Sources */,
 				CE626DFA1914BEF6005925DC /* MWeapon.cpp in Sources */,
-				CE0A550A191B63C1001AEFB2 /* TMXXmlGeneratorUtil.cpp in Sources */,
 				CE626DF91914BEF6005925DC /* MUseItem.cpp in Sources */,
 				CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */,
 				CE626E0A1914BEF6005925DC /* SRPGScene.cpp in Sources */,
