@@ -99,7 +99,6 @@ void RogueTMXTiledMap::initRogue() {
         floor_layer->setVisible(false);
         floor_count++;
     }
-
     // ----------------
     // 階段
     // ----------------
