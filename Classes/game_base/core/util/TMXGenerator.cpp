@@ -163,6 +163,29 @@ std::string TMXGenerator::generator()
     const int MAP_SIZE_HEIGHT = 20;
     const int TILE_SIZE = 32;
     
+    std::vector<std::vector<int>> tileIdArray(MAP_SIZE_WIDTH);
+    for (int x = 0; x < MAP_SIZE_WIDTH; x++) {
+        tileIdArray[x] = std::vector<int>(MAP_SIZE_HEIGHT);
+        for (int y = 0; y < MAP_SIZE_HEIGHT; y++) {
+            tileIdArray[x][y] = 0;
+        }
+    }
+    for (int y = 5+1; y < 10; y++) {
+        tileIdArray[3][y] = 84;
+    }
+    for (int x = 5+1; x < 10; x++) {
+        tileIdArray[x][12] = 84;
+    }
+    for (int x = 14+1; x < 20; x++) {
+        tileIdArray[x][12] = 84;
+    }
+    for (int y = 5+1; y < 10; y++) {
+        tileIdArray[22][y] = 84;
+    }
+    for (int x = 5+1; x < 10; x++) {
+        tileIdArray[x][3] = 84;
+    }
+    
     // 左、上、下、右
     std::list<TMXLayerData> floorLayerList{
         {1, 5, 5,  1, 1, std::list<TMXLayerData::MapIndex>{ // OK
@@ -223,8 +246,12 @@ std::string TMXGenerator::generator()
                 auto dataNode = backgroundLayerNode.append_child("data");
                 for (int y = 0; y < MAP_SIZE_HEIGHT; y++) {
                     for (int x = 0; x < MAP_SIZE_WIDTH; x++) {
-                        auto tileId = TMXLayerData::checkBackgroundTileId(floorLayerList, x, y);
-                        dataNode.append_child("tile").append_attribute("gid").set_value(tileId);
+                        if (tileIdArray[x][y] != 0) {
+                            dataNode.append_child("tile").append_attribute("gid").set_value(tileIdArray[x][y]);
+                        } else {
+                            auto tileId = TMXLayerData::checkBackgroundTileId(floorLayerList, x, y);
+                            dataNode.append_child("tile").append_attribute("gid").set_value(tileId);
+                        }
                     }
                 }
             }
@@ -238,8 +265,12 @@ std::string TMXGenerator::generator()
                 auto dataNode = colisionLayerNode.append_child("data");
                 for (int y = 0; y < MAP_SIZE_HEIGHT; y++) {
                     for (int x = 0; x < MAP_SIZE_WIDTH; x++) {
-                        int tileId = TMXLayerData::checkTileId(floorLayerList, x, y);
-                        dataNode.append_child("tile").append_attribute("gid").set_value(tileId);
+                        if (tileIdArray[x][y] != 0) {
+                            dataNode.append_child("tile").append_attribute("gid").set_value(TMXLayerData::NonTileId);
+                        } else {
+                            int tileId = TMXLayerData::checkTileId(floorLayerList, x, y);
+                            dataNode.append_child("tile").append_attribute("gid").set_value(tileId);
+                        }
                     }
                 }
             }
