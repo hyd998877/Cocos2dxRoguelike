@@ -8,6 +8,8 @@
 
 #include "RogueTMXTiledMap.h"
 
+#include "TMXGenerator.h"
+
 NS_ROGUE_BEGIN
 
 RogueTMXTiledMap::RogueTMXTiledMap()
@@ -25,7 +27,11 @@ RogueTMXTiledMap::~RogueTMXTiledMap()
 
 RogueTMXTiledMap * RogueTMXTiledMap::create(const std::string& tmxFile) {
     RogueTMXTiledMap *ret = new RogueTMXTiledMap();
-    if (ret->initWithTMXFile(tmxFile)) {
+    
+    std::string tmxString = TMXGenerator::generator();
+
+    if (ret->initWithXML(tmxString, FileUtils::getInstance()->fullPathForFilename("tmx"))) {
+//    if (ret->initWithTMXFile(tmxFile)) {
         ret->initRogue();
         ret->autorelease();
         return ret;

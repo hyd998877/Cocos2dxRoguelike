@@ -98,6 +98,8 @@
 		CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DE01914BEF6005925DC /* SRPGMapLayer.cpp */; };
 		CE626E0A1914BEF6005925DC /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626DE41914BEF6005925DC /* SRPGScene.cpp */; };
 		CE626E0D1914C68B005925DC /* ItemInventoryDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE626E0B1914C68B005925DC /* ItemInventoryDto.cpp */; };
+		CE69D628191F338300E90ACF /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE69D625191F338300E90ACF /* pugixml.cpp */; };
+		CE69D62E191F342500E90ACF /* TMXGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE69D62C191F342500E90ACF /* TMXGenerator.cpp */; };
 		CE6E644C18DB33CF0008C116 /* game_over.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE6E644B18DB33CF0008C116 /* game_over.jpg */; };
 		CE73FB2418B0A3F1009273D0 /* test_master in Resources */ = {isa = PBXBuildFile; fileRef = CE73FB2318B0A3F1009273D0 /* test_master */; };
 		CE81F79618940AA900A8162B /* kaidan.png in Resources */ = {isa = PBXBuildFile; fileRef = CE81F79518940AA900A8162B /* kaidan.png */; };
@@ -391,6 +393,11 @@
 		CE626E0B1914C68B005925DC /* ItemInventoryDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemInventoryDto.cpp; sourceTree = "<group>"; };
 		CE626E0C1914C68B005925DC /* ItemInventoryDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInventoryDto.h; sourceTree = "<group>"; };
 		CE626E0F1914C6FE005925DC /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
+		CE69D624191F338300E90ACF /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pugiconfig.hpp; sourceTree = "<group>"; };
+		CE69D625191F338300E90ACF /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pugixml.cpp; sourceTree = "<group>"; };
+		CE69D626191F338300E90ACF /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pugixml.hpp; sourceTree = "<group>"; };
+		CE69D62C191F342500E90ACF /* TMXGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TMXGenerator.cpp; sourceTree = "<group>"; };
+		CE69D62D191F342500E90ACF /* TMXGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMXGenerator.h; sourceTree = "<group>"; };
 		CE6E644B18DB33CF0008C116 /* game_over.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = game_over.jpg; sourceTree = "<group>"; };
 		CE73FB2318B0A3F1009273D0 /* test_master */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_master; sourceTree = "<group>"; };
 		CE81F79518940AA900A8162B /* kaidan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kaidan.png; sourceTree = "<group>"; };
@@ -881,6 +888,8 @@
 			children = (
 				CE626DB51914BEF6005925DC /* LotteryUtils.h */,
 				CE626E0F1914C6FE005925DC /* StringUtils.h */,
+				CE69D62C191F342500E90ACF /* TMXGenerator.cpp */,
+				CE69D62D191F342500E90ACF /* TMXGenerator.h */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -1122,9 +1131,20 @@
 			path = util;
 			sourceTree = "<group>";
 		};
+		CE69D622191F338300E90ACF /* pugixml */ = {
+			isa = PBXGroup;
+			children = (
+				CE69D624191F338300E90ACF /* pugiconfig.hpp */,
+				CE69D625191F338300E90ACF /* pugixml.cpp */,
+				CE69D626191F338300E90ACF /* pugixml.hpp */,
+			);
+			path = pugixml;
+			sourceTree = "<group>";
+		};
 		CEBF3B88191E5C0200014017 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				CE69D622191F338300E90ACF /* pugixml */,
 				CEBF3B89191E5C0200014017 /* json11 */,
 			);
 			name = modules;
@@ -1385,6 +1405,7 @@
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				CE626DEE1914BEF6005925DC /* ModalLayer.cpp in Sources */,
 				CE626E041914BEF6005925DC /* RogueTMXTiledMap.cpp in Sources */,
+				CE69D62E191F342500E90ACF /* TMXGenerator.cpp in Sources */,
 				CE1EFC7B191A047500E5EFE4 /* MypageHeaderLayer.cpp in Sources */,
 				CE626DF11914BEF6005925DC /* ActorSprite.cpp in Sources */,
 				CE046FA0191A2973004D442D /* QuestPageLayer.cpp in Sources */,
@@ -1413,6 +1434,7 @@
 				CE626E091914BEF6005925DC /* SRPGMapLayer.cpp in Sources */,
 				CE626E0A1914BEF6005925DC /* SRPGScene.cpp in Sources */,
 				CE626E0D1914C68B005925DC /* ItemInventoryDto.cpp in Sources */,
+				CE69D628191F338300E90ACF /* pugixml.cpp in Sources */,
 				CE626DF31914BEF6005925DC /* MAccessoryDao.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
