@@ -18,8 +18,8 @@ endif(DEBUG_MODE)
 set(CMAKE_C_FLAGS_DEBUG "-g -Wall -DCOCOS2D_DEBUG=1")
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 
-set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-std=c99")
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 if(USE_CHIPMUNK)
   message("Using chipmunk ...")
@@ -48,30 +48,28 @@ set(GAME_SRC
 set(COCOS2D_ROOT ${CMAKE_SOURCE_DIR}/cocos2d)
 
 include_directories(
+  /usr/local/include/GLFW
   ${COCOS2D_ROOT}
   ${COCOS2D_ROOT}/cocos
   ${COCOS2D_ROOT}/cocos/audio/include
-  ${COCOS2D_ROOT}/cocos/2d
-  ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/2d/platform
-  ${COCOS2D_ROOT}/cocos/2d/platform/linux
-  ${COCOS2D_ROOT}/cocos/base
-  ${COCOS2D_ROOT}/cocos/physics
+  ${COCOS2D_ROOT}/cocos/platform
+  ${COCOS2D_ROOT}/cocos/platform/desktop
+  ${COCOS2D_ROOT}/cocos/platform/linux
   ${COCOS2D_ROOT}/cocos/editor-support
-  ${COCOS2D_ROOT}/cocos/math/kazmath/include
   ${COCOS2D_ROOT}/extensions
   ${COCOS2D_ROOT}/external
   ${COCOS2D_ROOT}/external/edtaa3func
   ${COCOS2D_ROOT}/external/jpeg/include/linux
   ${COCOS2D_ROOT}/external/tiff/include/linux
   ${COCOS2D_ROOT}/external/webp/include/linux
-  ${COCOS2D_ROOT}/external/glfw3/include/linux
-  ${COCOS2D_ROOT}/external/curl/include/linux/${ARCH_DIR}
   ${COCOS2D_ROOT}/external/tinyxml2
   ${COCOS2D_ROOT}/external/unzip
   ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
   ${COCOS2D_ROOT}/external/freetype2/include/linux
+  ${COCOS2D_ROOT}/external/websockets/include/linux
+  ${COCOS2D_ROOT}/external/spidermonkey/include/linux
   ${COCOS2D_ROOT}/external/linux-specific/fmod/include/${ARCH_DIR}
+  ${COCOS2D_ROOT}/external/xxhash
 )
 
 link_directories(
@@ -80,12 +78,10 @@ link_directories(
   ${COCOS2D_ROOT}/external/tiff/prebuilt/linux/${ARCH_DIR}
   ${COCOS2D_ROOT}/external/webp/prebuilt/linux/${ARCH_DIR}
   ${COCOS2D_ROOT}/external/freetype2/prebuilt/linux/${ARCH_DIR}
-  ${COCOS2D_ROOT}/external/curl/prebuilt/linux/${ARCH_DIR}
+  ${COCOS2D_ROOT}/external/websockets/prebuilt/linux/${ARCH_DIR}
+  ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/linux/${ARCH_DIR}
   ${COCOS2D_ROOT}/external/linux-specific/fmod/prebuilt/${ARCH_DIR}
 )
-
-# kazmath
-add_subdirectory(${COCOS2D_ROOT}/cocos/math/kazmath)
 
 # chipmunk library
 add_subdirectory(${COCOS2D_ROOT}/external/chipmunk/src)
@@ -102,17 +98,11 @@ add_subdirectory(${COCOS2D_ROOT}/external/tinyxml2)
 # audio
 add_subdirectory(${COCOS2D_ROOT}/cocos/audio)
 
-# cocos base library
-add_subdirectory(${COCOS2D_ROOT}/cocos/base)
+# xxhash library
+add_subdirectory(${COCOS2D_ROOT}/external/xxhash)
 
-# cocos 2d library
-add_subdirectory(${COCOS2D_ROOT}/cocos/2d)
-
-# gui
-add_subdirectory(${COCOS2D_ROOT}/cocos/gui)
-
-# network
-add_subdirectory(${COCOS2D_ROOT}/cocos/network)
+# cocos2d
+add_subdirectory(${COCOS2D_ROOT}/cocos)
 
 # extensions
 add_subdirectory(${COCOS2D_ROOT}/extensions)
@@ -140,8 +130,6 @@ set(FMOD_LIB "fmodex")
 endif()
 
 target_link_libraries(${APP_NAME}
-  gui
-  network
   spine
   cocostudio
   cocosbuilder
