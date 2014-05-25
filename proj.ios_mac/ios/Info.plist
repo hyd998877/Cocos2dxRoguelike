@@ -58,11 +58,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>
-	<array>
-		<string>fonts/PixelMplus10-Regular.ttf</string>
-		<string>fonts/PixelMplus12-Regular.ttf</string>
-		<string>fonts/misaki_gothic.ttf</string>
-	</array>
+	<array/>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
