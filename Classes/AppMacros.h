@@ -42,12 +42,12 @@ namespace FontUtils {
     const static std::string GAME_FONT(int fontSize)
     {
         fontSize = GAME_FONT_SIZE(fontSize);
-        if (fontSize % 8 == 0) {
-            return MisakiFont;
+        if (fontSize % 12 == 0) {
+            return PixelMpkus12Font;
         } else if (fontSize % 10 == 0) {
             return PixelMpkus10Font;
-        } else if (fontSize % 12 == 0) {
-            return PixelMpkus12Font;
+        } else if (fontSize % 8 == 0) {
+            return MisakiFont;
         } else {
             CCLOG("font_size = %d", fontSize);
             return "";
@@ -63,6 +63,11 @@ namespace FontUtils {
         const int fontSize = 32;
         return getDefaultFontTTFConfig(fontSize);
     }
+    const static cocos2d::TTFConfig getBigTitleFontTTFConfig()
+    {
+        const int fontSize = 39;
+        return getDefaultFontTTFConfig(fontSize);
+    }
     const static cocos2d::TTFConfig getStrongFontTTFConfig()
     {
         const int fontSize = 47;
@@ -70,7 +75,7 @@ namespace FontUtils {
     }
 }
 
-class StringUtil
+class StringUtils
 {
 public:
     static std::vector<std::string> split(std::string&& s)

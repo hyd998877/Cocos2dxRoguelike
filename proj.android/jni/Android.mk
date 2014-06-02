@@ -10,24 +10,15 @@ CPP_FILES := $(shell find $(LOCAL_PATH)/../../Classes -name *.cpp)
 LOCAL_SRC_FILES := roguelike/main.cpp 
 LOCAL_SRC_FILES += $(CPP_FILES:$(LOCAL_PATH)/%=%)
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
-                   $(LOCAL_PATH)/../../Classes/dao \
-                   $(LOCAL_PATH)/../../Classes/data \
-                   $(LOCAL_PATH)/../../Classes/layers_nodes \
-                   $(LOCAL_PATH)/../../Classes/util \
-                   $(LOCAL_PATH)/../../Classes/account \
-                   $(LOCAL_PATH)/../../Classes/battle \
-                   $(LOCAL_PATH)/../../Classes/mypage \
-                   $(LOCAL_PATH)/../../Classes/ui \
-                   $(LOCAL_PATH)/../../Classes/quest \
-                   $(LOCAL_PATH)/../../Classes/actor \
-                   $(LOCAL_PATH)/../../Classes/logic \
-                   $(LOCAL_PATH)/../../Classes/game_object \
-                   $(LOCAL_PATH)/../../Classes/ui/table \
-                   $(LOCAL_PATH)/../../Classes/map \
-                   $(LOCAL_PATH)/../../Classes/novel \
-                   $(LOCAL_PATH)/../../Classes/rogue
+ifeq ($(HOST_OS),windows)
+  LOCAL_C_INCLUDES := $(shell dir $(LOCAL_PATH)/../../Classes /b/ad/s)                   
+else
+  LOCAL_C_INCLUDES := $(shell find $(LOCAL_PATH)/../../Classes -type d)                   
+endif
 
+ifeq ($(APP_OPTIM),debug)
+  LOCAL_CFLAGS := -w -g
+endif
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosbuilder_static
