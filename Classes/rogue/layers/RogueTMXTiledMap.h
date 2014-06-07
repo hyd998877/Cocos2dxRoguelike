@@ -20,8 +20,8 @@
 USING_NS_CC;
 
 NS_ROGUE_BEGIN
-
-#define MINI_MAP_SCALE (4.16f / GAME_SCALE)
+//#define GAME_SCALE (Director::getInstance()->getVisibleSize().width / 960.0f)
+#define MINI_MAP_SCALE (8)
 
 class RogueTMXTiledMap : public TMXTiledMap
 {

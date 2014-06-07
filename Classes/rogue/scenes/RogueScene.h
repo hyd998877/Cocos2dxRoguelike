@@ -22,8 +22,6 @@
 
 USING_NS_CC;
 
-#define MINI_MAP_SCALE (4.16f / GAME_SCALE)
-
 NS_ROGUE_BEGIN
     
 class RogueScene : public cocos2d::Layer

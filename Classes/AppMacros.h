@@ -15,9 +15,6 @@
 #define NS_ROGUE_BEGIN                     namespace RogueLikeGame {
 #define NS_ROGUE_END                       }
 
-//#define GAME_SCALE (1)
-#define GAME_SCALE (0.52f)
-
 typedef struct tagResource
 {
     cocos2d::Size size;
@@ -37,7 +34,7 @@ namespace FontUtils {
     
     // 最適なフォント取得
     const static int GAME_FONT_SIZE(int font_size) {
-        return (int)((float)font_size * GAME_SCALE);
+        return (int)((float)font_size * 1);
     }
     const static std::string GAME_FONT(int fontSize)
     {
@@ -54,32 +51,24 @@ namespace FontUtils {
         }
     }
     
-    const static cocos2d::TTFConfig getDefaultFontTTFConfig(const int& fontSize = 20)
+    const static cocos2d::TTFConfig getDefaultFontTTFConfig(const int& fontSize = 10)
     {
         return cocos2d::TTFConfig(FontUtils::GAME_FONT(fontSize).c_str(), FontUtils::GAME_FONT_SIZE(fontSize));
     }
     const static cocos2d::TTFConfig getTitleFontTTFConfig()
     {
-        const int fontSize = 32;
+        const int fontSize = 16;
         return getDefaultFontTTFConfig(fontSize);
     }
     const static cocos2d::TTFConfig getBigTitleFontTTFConfig()
     {
-        if (GAME_SCALE == 1) {
-            return getTitleFontTTFConfig();
-        } else {
-            const int fontSize = 39;
-            return getDefaultFontTTFConfig(fontSize);
-        }
+        const int fontSize = 20;
+        return getDefaultFontTTFConfig(fontSize);
     }
     const static cocos2d::TTFConfig getStrongFontTTFConfig()
     {
-        if (GAME_SCALE == 1) {
-            return getTitleFontTTFConfig();
-        } else {
-            const int fontSize = 47;
-            return getDefaultFontTTFConfig(fontSize);
-        }
+        const int fontSize = 24;
+        return getDefaultFontTTFConfig(fontSize);
     }
 }
 

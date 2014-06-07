@@ -13,6 +13,7 @@
 #include "pugixml.hpp"
 
 #include <unordered_map>
+#include <string>
 
 #include "MapManager.h"
 #include "AppMacros.h"
@@ -334,6 +335,7 @@ typedef std::vector<std::vector<FloorMap>> MapData;
 
 void TMXGenerator::makeMapData()
 {
+#if 0
     // 2 x 4 = 8区画（1区画 Max 10x10マス）
 
     ///////////// init /////////////
@@ -410,6 +412,7 @@ void TMXGenerator::makeMapData()
         }
         printf("\n");
     }
+#endif
 }
 
 

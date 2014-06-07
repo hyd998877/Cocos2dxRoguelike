@@ -187,12 +187,12 @@ Menu* MypageScene::createGlobalMenu()
     });
     item_menu5->setTag(GlobalMenuTags::MIXED);
     
-    auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "て　す　と"), WAKU_PADDING, [this](Ref *ref) {
-        this->showDebugMenu();
-    });
-    item_menu6->setTag(GlobalMenuTags::TEST);
+//    auto item_menu6 = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "て　す　と"), WAKU_PADDING, [this](Ref *ref) {
+//        this->showDebugMenu();
+//    });
+//    item_menu6->setTag(GlobalMenuTags::TEST);
     
-    auto menu = Menu::create(item_menu1, item_menu2, item_menu3, item_menu4, item_menu5, item_menu6, NULL);
+    auto menu = Menu::create(item_menu1, item_menu2, item_menu3, item_menu4, item_menu5, NULL);
     // 4間隔で横に並べる
     menu->alignItemsHorizontallyWithPadding(4);
     menu->setPosition(Point(menu->getContentSize().width / 2, item_menu1->getContentSize().height / 2 + WAKU_PADDING.height / 2));

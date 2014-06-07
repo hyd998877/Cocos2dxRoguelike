@@ -27,16 +27,44 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
     // チラツキ対策
     Director::getInstance()->setDepthTest(false);
-  
-    // 800x480基準
+
+#if 1
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    int widthDiff = (int)visibleSize.width % (int)480.f;
+    int heightDiff = (int)visibleSize.height % (int)320.f;
+    CCLOG("############ %f %f wdif = %d hdif = %d", visibleSize.width, visibleSize.height, widthDiff, heightDiff);
+    if (widthDiff == 0 && heightDiff == 0) {
+        // 800x480基準
+        glview->setDesignResolutionSize(
+                                        480 * 0.75,
+                                        320 * 0.75,
+                                        //                                    800.0f * GAME_SCALE, // 13
+                                        //                                    480.0f * GAME_SCALE, //  7.8
+                                        //                                     32 * 13,// 352 416   704 800
+                                        //                                     32 * 7 ,// 224 249.6 448 480
+                                        ResolutionPolicy::SHOW_ALL);
+    } else {
+        if (widthDiff > heightDiff) {
+            // 横のほうがずれがでかいので左と右に黒い帯がでる感じ。なんとかする
+            float scale = (480.0f * 0.75) / visibleSize.width;
+            glview->setDesignResolutionSize(
+                                            (480 * 0.75) * (1 + scale),
+                                            (320 * 0.75),
+                                            ResolutionPolicy::SHOW_ALL);
+        } else {
+            // 縦のほうがずれがでかいので下と上に黒い帯が出る感じ
+            glview->setDesignResolutionSize(
+                                            (480 * 0.75),
+                                            (320 * 0.75),
+                                            ResolutionPolicy::SHOW_ALL);
+        }
+    }
+#else 
     glview->setDesignResolutionSize(
-                                    480,
-                                    320,
-//                                    800.0f * GAME_SCALE, // 13
-//                                    480.0f * GAME_SCALE, //  7.8
-//                                     32 * 13,// 352 416   704 800
-//                                     32 * 7 ,// 224 249.6 448 480
-                                     ResolutionPolicy::SHOW_ALL);
+                                    (960 * 0.75),
+                                    (640 * 0.75),
+                                    ResolutionPolicy::SHOW_ALL);
+#endif
     
     // turn on display FPS
     director->setDisplayStats(true);
