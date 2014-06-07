@@ -88,6 +88,7 @@ private:
     // 所持アイテム
     ItemInventoryDto _itemInventory;
     
+    MapManager _mapManager;
 public:
     RogueScene();
     virtual ~RogueScene();
@@ -158,6 +159,9 @@ private:
     // 呪文
     void enemyMappingAllShow();
     void itemMappingAllShow();
+    
+    ///////////
+    MapManager* getMapManager();
 };
 
 NS_ROGUE_END

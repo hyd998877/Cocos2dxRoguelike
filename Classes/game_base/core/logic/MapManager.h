@@ -101,9 +101,7 @@ public:
         // マップ移動経路リスト
         std::list<MapIndex> map_move_point_list;
     } MapData;
-    
-    // シングルトン
-    static MapManager* getInstance();
+
     static std::list<MapIndex> createRelatedMapIndexList(MapIndex baseMapIndex);
     static MapIndex checkTouchEventIndex(const MapIndex& target_map_index, const MapIndex& touch_point_map_index);
     
@@ -117,6 +115,8 @@ private:
     MapData map_data_;
     
 public:
+    MapManager();
+    ~MapManager();
     void initMapping(int top, int bottom, int left, int right);
     
     std::list<MapIndex> createActorFindDist(const MapIndex& mapIndex, int dist);
@@ -126,7 +126,7 @@ public:
     void addActor(const ActorMapItem& actorMapItem);
     void moveActor(const ActorMapItem& actorMapItem, const MapIndex& beforeMapIndex, const MapIndex& afterMapIndex);
     void addDropItem(const DropMapItem& dropMapItem);
-    void addObstacle(MapIndex* pMapIndex);
+    void addObstacle(const MapIndex& obsMapIndex);
     
     void removeMapItem(const MapItem& mapItem);
     
@@ -138,22 +138,55 @@ public:
     MoveDirectionType checkMoveDirectionType(MapIndex fromMapIndex, MapIndex toMapIndex);
     MapItem searchTargetMapItem(const std::list<MapIndex>& searchMapIndexList);
     
-    std::list<ActorMapItem> findEnemyMapItem();
+    std::list<ActorMapItem> findActorMapItem() const;
+    std::list<ActorMapItem> findEnemyMapItem() const;
+    std::list<ActorMapItem> findMapObjectByDataType(MapDataType mapDataType) const;
     
     void addMapping(const MapIndex& mapIndex);
     std::vector<std::vector<bool>> getMappingData();
    
     MapData getMapData() const { return map_data_; }
     
-private:
-    MapManager();
-    ~MapManager();
+    // MapItemの初期データを作ります
+    template <typename TYPE>
+    static TYPE createNoneMapItem(int x, int y)
+    {
+        TYPE mapItem;
+        mapItem.mapDataType = MapDataType::NONE;
+        mapItem.mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
+        mapItem.moveDist = 0;
+        mapItem.attackDist = 0;
+        return mapItem;
+    }
     
+    static bool equalMapItem(const MapItem& m1, const MapItem& m2)
+    {
+        if (m1.mapDataType != m2.mapDataType) {
+            return false;
+        }
+        if (m1.mapIndex.x != m2.mapIndex.x) {
+            return false;
+        }
+        if (m1.mapIndex.y != m2.mapIndex.y) {
+            return false;
+        }
+        if (m1.moveDist != m2.moveDist) {
+            return false;
+        }
+        if (m1.attackDist != m2.attackDist) {
+            return false;
+        }
+        return true;
+    }
+private:
     void init();
     
     bool vaildateInit() const
     {
-        if (map_data_.map_data_setting.bottom == 0 && map_data_.map_data_setting.left == 0 && map_data_.map_data_setting.right == 0 && map_data_.map_data_setting.top == 0)
+        if (map_data_.map_data_setting.bottom == 0 &&
+            map_data_.map_data_setting.left == 0 &&
+            map_data_.map_data_setting.right == 0 &&
+            map_data_.map_data_setting.top == 0)
         {
             return false;
         }
@@ -194,18 +227,6 @@ private:
         }
     }
     
-    // MapItemの初期データを作ります
-    template <typename TYPE>
-    TYPE createNoneMapItem(int x, int y)
-    {
-        TYPE mapItem;
-        mapItem.mapDataType = MapDataType::NONE;
-        mapItem.mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
-        mapItem.moveDist = 0;
-        mapItem.attackDist = 0;
-        return mapItem;
-    }
-    
     void findDist(int x, int y, int dist, bool first);
     void findMovePointList(int moveX, int moveY, int moveDist, const MapItem& moveToMapItem);
     bool chkMove(int mapPointX, int mapPointY, int dist) const;
@@ -214,26 +235,6 @@ private:
     
     std::string logOutString(MapItem mapItem);
     void DEBUG_LOG_MAP_ITEM_LAYER(); // デバッグ用のマップログ出力
-    
-    static bool equalMapItem(const MapItem& m1, const MapItem& m2)
-    {
-        if (m1.mapDataType != m2.mapDataType) {
-            return false;
-        }
-        if (m1.mapIndex.x != m2.mapIndex.x) {
-            return false;
-        }
-        if (m1.mapIndex.y != m2.mapIndex.y) {
-            return false;
-        }
-        if (m1.moveDist != m2.moveDist) {
-            return false;
-        }
-        if (m1.attackDist != m2.attackDist) {
-            return false;
-        }
-        return true;
-    }
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__MapManager__) */

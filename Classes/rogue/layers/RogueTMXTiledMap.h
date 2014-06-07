@@ -59,6 +59,7 @@ class RogueTMXTiledMap : public TMXTiledMap
     
 private:
     LayerColor* mini_map_layer_;
+    MapManager _mapManager;
     
     int enemyCount_;
     // 千里眼
@@ -116,6 +117,8 @@ public:
     
     void setItemAllShow(bool isAllShow) { itemAllShow_ = isAllShow; };
     void setEnemyAllShow(bool isAllShow) { enemyAllShow_ = isAllShow; };
+    
+    MapManager* getMapManager() { return &_mapManager; }
     
 protected:
     RogueTMXTiledMap();

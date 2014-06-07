@@ -13,8 +13,6 @@
 
 #define DEBUG_LOG_MAP_ITEM_LAYER_FLG 0
 
-static MapManager *s_map_manager_instance;
-
 MapManager::MapManager()
 :map_data_()
 {
@@ -28,17 +26,6 @@ MapManager::~MapManager()
     map_data_.mapping_array.clear();
     map_data_.map_move_cursor_list.clear();
     map_data_.map_move_point_list.clear();
-}
-
-MapManager* MapManager::getInstance()
-{
-    if (!s_map_manager_instance)
-    {
-        s_map_manager_instance = new MapManager();
-        s_map_manager_instance->init();
-    }
-    
-    return s_map_manager_instance;
 }
 
 void MapManager::init()
@@ -326,18 +313,18 @@ void MapManager::addDropItem(const DropMapItem& dropMapItem)
 /**
  * 障害物の追加
  */
-void MapManager::addObstacle(MapIndex* pMapIndex)
+void MapManager::addObstacle(const MapIndex& obsMapIndex)
 {
     assert(vaildateInit());
     
     // TODO: とりあえずactorと同じにする。。。大丈夫か？
-    ActorMapItem mapItem = createNoneMapItem<ActorMapItem>(pMapIndex->x, pMapIndex->y);
+    ActorMapItem mapItem = createNoneMapItem<ActorMapItem>(obsMapIndex.x, obsMapIndex.y);
     mapItem.mapDataType = MapDataType::OBSTACLE;
     mapItem.seqNo = 0;
     mapItem.moveDone = false;
     mapItem.attackDone = false;
     
-    map_data_.map_object_data_array[pMapIndex->x][pMapIndex->y] = mapItem;
+    map_data_.map_object_data_array[obsMapIndex.x][obsMapIndex.y] = mapItem;
 }
 
 /**
@@ -491,23 +478,35 @@ void MapManager::findMovePointList(int moveX, int moveY, int moveDist, const Map
     }
 }
 
-std::list<ActorMapItem> MapManager::findEnemyMapItem() {
+std::list<ActorMapItem> MapManager::findActorMapItem()  const
+{
+    return findMapObjectByDataType(MapDataType::PLAYER);
+}
+
+std::list<ActorMapItem> MapManager::findEnemyMapItem() const
+{
+    return findMapObjectByDataType(MapDataType::ENEMY);
+}
+
+std::list<ActorMapItem> MapManager::findMapObjectByDataType(MapDataType mapDataType) const
+{
     assert(vaildateInit());
     
-    std::list<ActorMapItem> enemyMapItem;
+    std::list<ActorMapItem> mapItemList;
     //enemyMapItem.clear();
     
     long xCount = map_data_.map_object_data_array.size();
     for (int x = 0; x < xCount; x++) {
         long yCount = map_data_.map_object_data_array[x].size();
         for (int y = 0; y < yCount; y++) {
-            if (map_data_.map_object_data_array[x][y].mapDataType == MapDataType::ENEMY) {
-                enemyMapItem.push_back(map_data_.map_object_data_array[x][y]);
+            if (map_data_.map_object_data_array[x][y].mapDataType == mapDataType) {
+                mapItemList.push_back(map_data_.map_object_data_array[x][y]);
             }
         }
     }
-    return enemyMapItem;
+    return mapItemList;
 }
+
 
 #pragma mark
 #pragma mark staticメソッド

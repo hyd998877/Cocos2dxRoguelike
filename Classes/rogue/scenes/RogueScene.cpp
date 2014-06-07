@@ -119,7 +119,8 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // TODO: (kyokomi)ランダムなマップIDを指定する
     this->_roguePlayDto.setFloorId(2);
     
-    auto tiled_map_layer = RogueTMXTiledMap::create(cocos2d::StringUtils::format("tmx/quest_%d.tmx", this->_roguePlayDto.getFloorId()));
+    auto tmxFileName = cocos2d::StringUtils::format("tmx/quest_%d.tmx", this->_roguePlayDto.getFloorId());
+    auto tiled_map_layer = RogueTMXTiledMap::create(tmxFileName);
 
     tiled_map_layer->setPosition(Point::ZERO);
     this->addChild(tiled_map_layer, ZOrders::TiledMapLayerZOrder, Tags::TiledMapLayerTag);
@@ -650,7 +651,7 @@ void RogueScene::changeGameStatus(RoguePlayDto::GameStatus gameStatus) {
     } else if (this->_gameStatus == RoguePlayDto::GameStatus::PLAYER_NO_ACTION) {
         this->_roguePlayDto.countUpNoAction();
     } else if (this->_gameStatus == RoguePlayDto::GameStatus::PLAYER_TURN) {
-        MapManager::getInstance()->clearCursor();
+        this->getMapManager()->clearCursor();
         // ターン数を進める
         _roguePlayDto.countUpTurn();
         
@@ -711,7 +712,7 @@ void RogueScene::enemyTurn() {
     auto rogue_map_layer = getRogueMapLayer();
     
     // モンスターの数だけ繰り返す
-    std::list<ActorMapItem> enemyList = MapManager::getInstance()->findEnemyMapItem();
+    std::list<ActorMapItem> enemyList = this->getMapManager()->findEnemyMapItem();
     for (ActorMapItem enemyMapItem : enemyList) {
         // TODO: ランダムでとどまるか移動するかきめる
         int rand = GetRandom(2, 2);
@@ -747,14 +748,14 @@ void RogueScene::enemyTurn() {
                 
             } else {
                 // 移動可能な経路情報を設定
-                MapManager::getInstance()->createActorFindDist(enemyMapItem.mapIndex, enemyMapItem.moveDist);
+                this->getMapManager()->createActorFindDist(enemyMapItem.mapIndex, enemyMapItem.moveDist);
                 
                 // 最も移動コストがかからない場所を抽出
-                MapItem targetMoveDistMapItem = MapManager::getInstance()->searchTargetMapItem(searchMapIndexList);
+                MapItem targetMoveDistMapItem = this->getMapManager()->searchTargetMapItem(searchMapIndexList);
                 
                 // 移動リスト作成
                 if (targetMoveDistMapItem.mapDataType == MapDataType::MOVE_DIST) {
-                    std::list<MapIndex> moveList = MapManager::getInstance()->createMovePointList(targetMoveDistMapItem.mapIndex, enemyMapItem);
+                    std::list<MapIndex> moveList = this->getMapManager()->createMovePointList(targetMoveDistMapItem.mapIndex, enemyMapItem);
                     if (moveList.size() > 1) {
                         std::list<MapIndex>::iterator it = moveList.begin();
                         it++;
@@ -770,7 +771,7 @@ void RogueScene::enemyTurn() {
             MapIndex addMoveIndex = {
                 moveMapIndex.x - pEnemySprite->getActorMapItem().mapIndex.x,
                 moveMapIndex.y - pEnemySprite->getActorMapItem().mapIndex.y,
-                MapManager::getInstance()->checkMoveDirectionType(moveMapIndex, pEnemySprite->getActorMapItem().mapIndex)
+                this->getMapManager()->checkMoveDirectionType(moveMapIndex, pEnemySprite->getActorMapItem().mapIndex)
             };
             pEnemySprite->runMoveAction(addMoveIndex);
             // 行動前にする
@@ -786,7 +787,7 @@ void RogueScene::enemyTurn() {
                 logMessage("壁ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
                 pEnemySprite->moveDone();
                 
-            } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::ENEMY) {
+            } else if (this->getMapManager()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::ENEMY) {
                 
                 if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, moveMapIndex)) {
                     //logMessage("待機 seqNo = %d (%d, %d)");
@@ -795,7 +796,7 @@ void RogueScene::enemyTurn() {
                 }
                 pEnemySprite->moveDone();
                 
-            } else if (MapManager::getInstance()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::PLAYER) {
+            } else if (this->getMapManager()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::PLAYER) {
                 // 移動中のステータスへ
                 changeGameStatus(RoguePlayDto::GameStatus::ENEMY_ACTION);
                 
@@ -842,7 +843,7 @@ void RogueScene::enemyTurn() {
 
 void RogueScene::checkEnmeyTurnEnd() {
     bool isTurnEnd = true;
-    std::list<ActorMapItem> enemyList = MapManager::getInstance()->findEnemyMapItem();
+    std::list<ActorMapItem> enemyList = this->getMapManager()->findEnemyMapItem();
     for (ActorMapItem enemyMapItem : enemyList) {
         auto pEnemySprite = getRogueMapLayer()->getEnemyActorSprite(enemyMapItem.seqNo);
         auto pEnemyMapItem = pEnemySprite->getActorMapItem();
@@ -894,7 +895,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     actor_sprite->runMoveAction(addMoveIndex);
     
     // 敵をタッチした
-    auto enemy_map_item = MapManager::getInstance()->getActorMapItem(touchPointMapIndex);
+    auto enemy_map_item = this->getMapManager()->getActorMapItem(touchPointMapIndex);
     if (enemy_map_item.mapDataType == MapDataType::ENEMY) {
         // 向きだけ変えてターン経過しない
         return;
@@ -911,7 +912,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
         
         changeGameStatus(RoguePlayDto::GameStatus::PLAYER_NO_ACTION);
 
-        auto touch_point_map_item = MapManager::getInstance()->getMapItem(touchPointMapIndex);
+        auto touch_point_map_item = this->getMapManager()->getMapItem(touchPointMapIndex);
         
         // 移動処理
         rogue_map_layer->movePlayerMap(actor_sprite, addMoveIndex, getAnimationSpeed(), CallFunc::create([this, touch_point_map_item](void) {
@@ -919,7 +920,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
             // アイテムに重なったときの拾う処理
             if (touch_point_map_item.mapDataType == MapDataType::MAP_ITEM) {
                 // item
-                auto dropMapItem = MapManager::getInstance()->getDropMapItem(touch_point_map_item.mapIndex);
+                auto dropMapItem = this->getMapManager()->getDropMapItem(touch_point_map_item.mapIndex);
                 this->touchDropItem(dropMapItem);
                 
             } else if (touch_point_map_item.mapDataType == MapDataType::KAIDAN) {
@@ -1039,7 +1040,7 @@ void RogueScene::attack() {
 
     ActorSprite* pEnemySprite = NULL;
     // 敵をタッチした
-    auto pEnemyMapItem = MapManager::getInstance()->getActorMapItem(attackMapIndex);
+    auto pEnemyMapItem = this->getMapManager()->getActorMapItem(attackMapIndex);
     if (pEnemyMapItem.mapDataType == MapDataType::ENEMY) {
         pEnemySprite = rogue_map_layer->getEnemyActorSprite(pEnemyMapItem.seqNo);
     } else {
@@ -1581,8 +1582,14 @@ const ValueMap RogueScene::getRogueMapData() {
     return rogueMapData.asValueMap();
 }
 
-ActorSprite* RogueScene::getPlayerActorSprite(int seqNo) {
+ActorSprite* RogueScene::getPlayerActorSprite(int seqNo)
+{
     return static_cast<ActorSprite*>(getChildByTag(Tags::ActorPlayerTag + seqNo));
+}
+
+MapManager* RogueScene::getMapManager()
+{
+    return getRogueMapLayer()->getMapManager();
 }
 
 RogueTMXTiledMap* RogueScene::getRogueMapLayer() {
