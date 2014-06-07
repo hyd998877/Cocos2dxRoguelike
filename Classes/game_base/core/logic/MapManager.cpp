@@ -492,6 +492,8 @@ std::list<ActorMapItem> MapManager::findMapObjectByDataType(MapDataType mapDataT
 {
     assert(vaildateInit());
     
+    assert(mapDataType == MapDataType::PLAYER || mapDataType == MapDataType::ENEMY);
+    
     std::list<ActorMapItem> mapItemList;
     //enemyMapItem.clear();
     
@@ -507,6 +509,24 @@ std::list<ActorMapItem> MapManager::findMapObjectByDataType(MapDataType mapDataT
     return mapItemList;
 }
 
+std::list<DropMapItem> MapManager::findDropMapItem() const
+{
+    assert(vaildateInit());
+    
+    std::list<DropMapItem> mapItemList;
+    //enemyMapItem.clear();
+    
+    long xCount = map_data_.map_drop_item_data_array.size();
+    for (int x = 0; x < xCount; x++) {
+        long yCount = map_data_.map_drop_item_data_array[x].size();
+        for (int y = 0; y < yCount; y++) {
+            if (map_data_.map_drop_item_data_array[x][y].mapDataType == MapDataType::MAP_ITEM) {
+                mapItemList.push_back(map_data_.map_drop_item_data_array[x][y]);
+            }
+        }
+    }
+    return mapItemList;
+}
 
 #pragma mark
 #pragma mark staticメソッド
