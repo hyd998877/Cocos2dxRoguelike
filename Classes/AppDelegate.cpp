@@ -30,8 +30,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
   
     // 800x480基準
     glview->setDesignResolutionSize(
-                                     800.0f * GAME_SCALE, // 13
-                                     480.0f * GAME_SCALE, //  7.8
+                                    480,
+                                    320,
+//                                    800.0f * GAME_SCALE, // 13
+//                                    480.0f * GAME_SCALE, //  7.8
 //                                     32 * 13,// 352 416   704 800
 //                                     32 * 7 ,// 224 249.6 448 480
                                      ResolutionPolicy::SHOW_ALL);
