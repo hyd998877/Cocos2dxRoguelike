@@ -190,8 +190,8 @@ TMXMapData TMXGenerator::createTMXMapData()
         layerData._no = floorIdx + 1;
         
         // TODO: 座標決め
-        int randX = 1;
-        int randY = 1;
+        int randX = GetRandom(0, 2);
+        int randY = GetRandom(0, 2);
         
         int x = floorIdx % 4;
         int y = floorIdx / 4;
@@ -206,9 +206,11 @@ TMXMapData TMXGenerator::createTMXMapData()
         layerData._width = randWidth;
         layerData._height = randHeight;
 
-        for (int x = layerData._x; x < layerData._width; x++) {
-            for (int y = layerData._y; y < layerData._height; y++) {
-                mapManager.addObstacle(MapIndex{x, y, MoveDirectionType::MOVE_NONE});
+        {
+            for (int x = layerData._x; x < (layerData._x + layerData._width); x++) {
+                for (int y = layerData._y; y < (layerData._y + layerData._height); y++) {
+                    mapManager.addObstacle(MapIndex{x, y, MoveDirectionType::MOVE_NONE});
+                }
             }
         }
         
@@ -228,7 +230,9 @@ TMXMapData TMXGenerator::createTMXMapData()
             if (!layerData.isKado(gateX, gateY) && isMapInLine(gateX, gateY)) {
                 gateList.push_back(TMXLayerData::MapIndex{gateX, gateY});
                 CCLOG("gate In!!!");
-                mapManager.removeMapItem(MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY));
+                auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
+                obj.mapDataType = MapDataType::OBSTACLE;
+                mapManager.removeMapItem(obj);
                 auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
                 mapItem.mapDataType = MapDataType::PLAYER;
                 mapManager.addActor(mapItem);
@@ -243,7 +247,9 @@ TMXMapData TMXGenerator::createTMXMapData()
             if (!layerData.isKado(gateX, gateY) && isMapInLine(gateX, gateY)) {
                 gateList.push_back(TMXLayerData::MapIndex{gateX, gateY});
                 CCLOG("gate In!!!");
-                mapManager.removeMapItem(MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY));
+                auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
+                obj.mapDataType = MapDataType::OBSTACLE;
+                mapManager.removeMapItem(obj);
                 auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
                 mapItem.mapDataType = MapDataType::PLAYER;
                 mapManager.addActor(mapItem);
@@ -258,7 +264,9 @@ TMXMapData TMXGenerator::createTMXMapData()
             if (!layerData.isKado(gateX, gateY) && isMapInLine(gateX, gateY)) {
                 gateList.push_back(TMXLayerData::MapIndex{gateX, gateY});
                 CCLOG("gate In!!!");
-                mapManager.removeMapItem(MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY));
+                auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
+                obj.mapDataType = MapDataType::OBSTACLE;
+                mapManager.removeMapItem(obj);
                 auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
                 mapItem.mapDataType = MapDataType::PLAYER;
                 mapManager.addActor(mapItem);
@@ -273,7 +281,9 @@ TMXMapData TMXGenerator::createTMXMapData()
             if (!layerData.isKado(gateX, gateY) && isMapInLine(gateX, gateY)) {
                 gateList.push_back(TMXLayerData::MapIndex{gateX, gateY});
                 CCLOG("gate In!!!");
-                mapManager.removeMapItem(MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY));
+                auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
+                obj.mapDataType = MapDataType::OBSTACLE;
+                mapManager.removeMapItem(obj);
                 auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
                 mapItem.mapDataType = MapDataType::PLAYER;
                 mapManager.addActor(mapItem);
@@ -288,13 +298,17 @@ TMXMapData TMXGenerator::createTMXMapData()
     // 最短経路の通路を作成
     
     std::list<TMXLayerData::MapIndex> walkMapIndexList;
+//    std::list<TMXLayerData::MapIndex> closeMapIndexList;
     
     auto actorMapList = mapManager.findActorMapItem();
     for (auto mapItem : actorMapList) {
         CCLOG("mapItem x = %d y = %d ->", mapItem.mapIndex.x, mapItem.mapIndex.y);
         
         std::list<MapIndex> moveMapIndexList;
+        moveMapIndexList.clear();
         mapManager.createActorFindDist(mapItem.mapIndex, 10);
+        mapManager.showDebug();
+        
         for (auto targetMapItem : actorMapList) {
             if (MapManager::equalMapItem(targetMapItem, mapItem)) {
                 // 自分
@@ -304,6 +318,7 @@ TMXMapData TMXGenerator::createTMXMapData()
             std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(targetMapItem.mapIndex);
             MapItem targetMoveDistMapItem = mapManager.searchTargetMapItem(searchMapIndexList);
             //CCLOG("target x =%d y = %d", targetMoveDistMapItem.mapIndex.x, targetMoveDistMapItem.mapIndex.y);
+            mapItem.mapDataType = MapDataType::PLAYER;
             auto targetMoveMapIndexList = mapManager.createMovePointList(targetMoveDistMapItem.mapIndex, mapItem);
             if (targetMoveMapIndexList.size() == 1) {
                 auto moveMapIndex = *(targetMoveMapIndexList.begin());
@@ -316,7 +331,16 @@ TMXMapData TMXGenerator::createTMXMapData()
             //CCLOG("size %ld", targetMoveMapIndexList.size());
             
             if (moveMapIndexList.empty() || moveMapIndexList.size() > targetMoveMapIndexList.size()) {
-                moveMapIndexList = targetMoveMapIndexList;
+                
+                bool isMapLineIn = false;
+                for (auto moveMapIndexCheck : targetMoveMapIndexList) {
+                    if (!TMXGenerator::isMapInLine(moveMapIndexCheck.x, moveMapIndexCheck.y)) {
+                        isMapLineIn = true;
+                    }
+                }
+                if (!isMapLineIn) {
+                    moveMapIndexList = targetMoveMapIndexList;
+                }
             }
         }
         for (auto mapIndex : moveMapIndexList) {
