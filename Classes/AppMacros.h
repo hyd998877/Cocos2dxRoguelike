@@ -65,13 +65,21 @@ namespace FontUtils {
     }
     const static cocos2d::TTFConfig getBigTitleFontTTFConfig()
     {
-        const int fontSize = 39;
-        return getDefaultFontTTFConfig(fontSize);
+        if (GAME_SCALE == 1) {
+            return getTitleFontTTFConfig();
+        } else {
+            const int fontSize = 39;
+            return getDefaultFontTTFConfig(fontSize);
+        }
     }
     const static cocos2d::TTFConfig getStrongFontTTFConfig()
     {
-        const int fontSize = 47;
-        return getDefaultFontTTFConfig(fontSize);
+        if (GAME_SCALE == 1) {
+            return getTitleFontTTFConfig();
+        } else {
+            const int fontSize = 47;
+            return getDefaultFontTTFConfig(fontSize);
+        }
     }
 }
 
