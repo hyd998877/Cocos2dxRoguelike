@@ -31,6 +31,6 @@ include $(BUILD_SHARED_LIBRARY)
 $(call import-module,extensions)
 $(call import-module,editor-support/cocosbuilder)
 $(call import-module,editor-support/spine)
-$(call import-module,2d)
+$(call import-module,.)
 $(call import-module,audio/android)
 
