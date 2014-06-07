@@ -141,6 +141,7 @@ public:
     std::list<ActorMapItem> findActorMapItem() const;
     std::list<ActorMapItem> findEnemyMapItem() const;
     std::list<ActorMapItem> findMapObjectByDataType(MapDataType mapDataType) const;
+    std::list<DropMapItem> findDropMapItem() const;
     
     void addMapping(const MapIndex& mapIndex);
     std::vector<std::vector<bool>> getMappingData();
@@ -178,6 +179,8 @@ public:
         }
         return true;
     }
+    void showDebug() const;
+    
 private:
     void init();
     
@@ -233,8 +236,8 @@ private:
     bool chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataType ignoreMapDataType);
     void addDistCursor(int mapPointX, int mapPointY, int dist);
     
-    std::string logOutString(MapItem mapItem);
-    void DEBUG_LOG_MAP_ITEM_LAYER(); // デバッグ用のマップログ出力
+    std::string logOutString(MapItem mapItem) const;
+    void DEBUG_LOG_MAP_ITEM_LAYER() const; // デバッグ用のマップログ出力
 };
 
 #endif /* defined(__Cocos2dxSRPGQuest__MapManager__) */

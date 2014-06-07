@@ -11,7 +11,7 @@
 #include <string>
 #include <cassert>
 
-#define DEBUG_LOG_MAP_ITEM_LAYER_FLG 0
+#define DEBUG_LOG_MAP_ITEM_LAYER_FLG 1
 
 MapManager::MapManager()
 :map_data_()
@@ -577,14 +577,20 @@ MapIndex MapManager::checkTouchEventIndex(const MapIndex& target_map_index, cons
 #pragma mark
 #pragma mark DEBUG関連
 
-void MapManager::DEBUG_LOG_MAP_ITEM_LAYER() {
+void MapManager::showDebug() const
+{
+    DEBUG_LOG_MAP_ITEM_LAYER();
+}
+
+void MapManager::DEBUG_LOG_MAP_ITEM_LAYER() const
+{
     assert(vaildateInit());
     
 #if DEBUG_LOG_MAP_ITEM_LAYER_FLG
     std::string buffer;
-	for (int y = m_bottom - 1; y >= 0; y--) {
+	for (int y = map_data_.map_data_setting.bottom - 1; y >= 0; y--) {
         buffer = "";
-		for (int x = 0; x < m_right; x++) {
+		for (int x = 0; x < map_data_.map_data_setting.right; x++) {
             std::string outPutStr = "-";
             std::string dropItemLayerStr = logOutString(map_data_.map_drop_item_data_array[x][y]);
 			std::string objectLayerStr = logOutString(map_data_.map_object_data_array[x][y]);
@@ -600,10 +606,12 @@ void MapManager::DEBUG_LOG_MAP_ITEM_LAYER() {
 		}
         printf("%s\n", buffer.c_str());
 	}
+    printf("\n");
 #endif
 }
 
-std::string MapManager::logOutString(MapItem mapItem) {
+std::string MapManager::logOutString(MapItem mapItem) const
+{
     assert(vaildateInit());
     
 	if (mapItem.mapDataType == MapDataType::NONE) {
