@@ -9,7 +9,6 @@
 #ifndef __Cocos2dRogueLike__TMXGenerator__
 #define __Cocos2dRogueLike__TMXGenerator__
 
-#include "cocos2d.h"
 #include "MapManager.h"
 
 class MapManager;
@@ -169,7 +168,6 @@ public:
     static std::string generator();
     static std::string generator(TMXMapData tmxMapData);
     static TMXMapData createTMXMapData();
-    static void makeMapData();
     
     static bool isMapInLine(const TMXCreateBaseConfig& config, int x, int y) {
         if (x <= 1 || x >= config.mapSizeWidth-1) {
