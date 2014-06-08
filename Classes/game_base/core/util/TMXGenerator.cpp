@@ -184,24 +184,33 @@ TMXMapData TMXGenerator::createTMXMapData()
     
     std::list<TMXLayerData> floorLayerList;
     
-    const int FLOOR_SIZE_MAX = config.baseMapLayout.size() * config.baseMapLayout[0].size();
+    const int FLOOR_Y_COUNT = config.baseMapLayout.size();
+    const int FLOOR_X_COUNT = config.baseMapLayout[0].size();
+    const int FLOOR_SIZE_MAX = FLOOR_Y_COUNT * FLOOR_X_COUNT;
     for (int floorIdx = 0; floorIdx < FLOOR_SIZE_MAX; floorIdx++) {
         TMXLayerData layerData;
         layerData._no = floorIdx + 1;
         
         // 座標決め
-        int randX = GetRandom(0, 2);
-        int randY = GetRandom(0, 2);
+        int randX = GetRandom(1, 3);
+        int randY = GetRandom(1, 3);
         
-        int x = floorIdx % 4;
-        int y = floorIdx / 4;
+        int x = floorIdx % FLOOR_X_COUNT;
+        int y = floorIdx / FLOOR_X_COUNT;
         CCLOG("x = %d y = %d", x, y);
         layerData._x = randX + config.baseMapLayout[y][x].mapIndex._x;
         layerData._y = randY + config.baseMapLayout[y][x].mapIndex._y;
         
-        // サイズ決め
-        int randWidth = GetRandom(5, config.baseMapLayout[y][x].mapSize._width - randX);
-        int randHeight = GetRandom(5, config.baseMapLayout[y][x].mapSize._height - randY);
+        // 通路が作れないケースがあるので-1引く
+        int randWidthMax = config.baseMapLayout[y][x].mapSize._width - randX;
+        int randHeightMax = config.baseMapLayout[y][x].mapSize._height - randY;
+        if (randWidthMax <= 5 || randHeightMax <= 5) {
+            // 5以下の部屋は狭すぎるのでナシ
+            continue;
+        }
+        // サイズ決め（最小サイズはMaxとギリギリサイズ5の中間値で出来るだけ大きくする）
+        int randWidth = GetRandom((randWidthMax + 5) / 2, randWidthMax-1);
+        int randHeight = GetRandom((randHeightMax + 5) / 2, randHeightMax-1);
         
         layerData._width = randWidth;
         layerData._height = randHeight;
@@ -296,63 +305,84 @@ TMXMapData TMXGenerator::createTMXMapData()
 // private
 TMXCreateBaseConfig TMXGenerator::createTMXCreateConfig()
 {
-    // TODO: とりあえず固定40x20 10x10 4x2フロア数
-    int mapWidth    = 40;
-    int mapHeight   = 20;
+    // TODO: とりあえず固定40x20 10x10 最低4x2フロア数
+    int mapWidth    = GetRandom(4, 8) * 10;
+    int mapHeight   = GetRandom(2, 3) * 10;
     int floorWidth  = 10;
     int floorHeight = 10;
     
-    return TMXCreateBaseConfig {
-        mapWidth, mapHeight, TMXCreateBaseConfig::BaseMapLayout {
-            {
-                {
-                    TMXFloorConfig{
-                        TMXLayerData::MapIndex{floorWidth*0, floorHeight*0},
-                        TMXLayerData::MapSize{floorWidth, floorHeight}
-                    },
-                    TMXFloorConfig{
-                        TMXLayerData::MapIndex{floorWidth*1, floorHeight*0},
-                        TMXLayerData::MapSize{floorWidth, floorHeight}
-                    },
-                    TMXFloorConfig{
-                        TMXLayerData::MapIndex{floorWidth*2, floorHeight*0},
-                        TMXLayerData::MapSize{floorWidth, floorHeight}
-                    },
-                    TMXFloorConfig{
-                        TMXLayerData::MapIndex{floorWidth*3, floorHeight*0},
-                        TMXLayerData::MapSize{floorWidth, floorHeight}
+    int floorCountY = mapHeight / floorHeight;
+    int floorCountX = mapWidth / floorWidth;
+    
+    // 1フロア基準でデータ作成
+    std::vector<std::vector<TMXLayerData::MapSize>> randomSizeArray(floorCountY);
+    for (int y = 0; y < floorCountY; y++) {
+        std::vector<TMXLayerData::MapSize> mapSizeArray(floorCountX);
+        for (int x = 0; x < floorCountX; x++) {
+            mapSizeArray[x] = TMXLayerData::MapSize{1, 1};
+        }
+        randomSizeArray[y] = mapSizeArray;
+    }
+    
+    // ランダムに部屋をつなげる
+    for (int y = 0; y < floorCountY; y++) {
+        for (int x = 0; x < floorCountX; x++) {
+            // すでに拡張で潰された部屋はスルーするー
+            if (randomSizeArray[y][x]._width == 0 || randomSizeArray[y][x]._height == 0) {
+                continue;
+            }
+            // 表現可能な範囲でランダムにサイズを取る
+            int randW = GetRandom(1, floorCountX - x);
+            int randH = GetRandom(1, floorCountY - y);
+            
+            // 横か縦どちらかが拡張される場合のみ処理する
+            if (randW > 1 || randH > 1) {
+                // 拡張分の部屋をすべて0で埋める
+                for (int yy = y; yy < (y + randH); yy++) {
+                    for (int xx = x; xx < (x + randW); xx++) {
+                        randomSizeArray[yy][xx]._width = 0;
+                        randomSizeArray[yy][xx]._height = 0;
                     }
                 }
-            },
-            {
-                {
-                    TMXFloorConfig{
-                        TMXLayerData::MapIndex{floorWidth*0, floorHeight*1},
-                        TMXLayerData::MapSize{floorWidth, floorHeight}
-                    },
-                    TMXFloorConfig{
-                        TMXLayerData::MapIndex{floorWidth*1, floorHeight*1},
-                        TMXLayerData::MapSize{floorWidth, floorHeight}
-                    },
-                    TMXFloorConfig{
-                        TMXLayerData::MapIndex{floorWidth*2, floorHeight*1},
-                        TMXLayerData::MapSize{floorWidth, floorHeight}
-                    },
-                    TMXFloorConfig{
-                        TMXLayerData::MapIndex{floorWidth*3, floorHeight*1},
-                        TMXLayerData::MapSize{floorWidth, floorHeight}
-                    }
-                }
+                // 拡張対象だけ再設定
+                randomSizeArray[y][x]._width = randW;
+                randomSizeArray[y][x]._height = randH;
             }
         }
-    };
+    }
+    
+    // ランダムデータを元にマップの部屋レイアウトを作成
+    TMXCreateBaseConfig::BaseMapLayout layout(floorCountY);
+    for (int y = 0; y < floorCountY; y++) {
+        
+        std::vector<TMXFloorConfig> configVector(floorCountX);
+        for (int x = 0; x < floorCountX; x++) {
+            TMXLayerData::MapIndex mapIndex{floorWidth*x, floorHeight*y};
+            TMXLayerData::MapSize mapSize{floorWidth, floorHeight};
+            
+            TMXLayerData::MapSize floorLayoutSize = randomSizeArray[y][x];
+            if (floorLayoutSize._width == 0 || floorLayoutSize._height == 0) {
+                mapSize._width  = 0;
+                mapSize._height = 0;
+            } else {
+                mapSize._width  *= floorLayoutSize._width;
+                mapSize._height *= floorLayoutSize._height;
+            }
+            
+            configVector[x] = TMXFloorConfig {mapIndex, mapSize};
+        }
+        layout[y] = configVector;
+    }
+    
+    return TMXCreateBaseConfig {mapWidth, mapHeight, layout};
 }
 
-bool TMXGenerator::addFloorGate(MapManager* mapManager, const TMXCreateBaseConfig& config, const TMXLayerData& layerData, const TMXLayerData::MapIndex& gateMapIndex)
+bool TMXGenerator::addFloorGate(MapManager* mapManager,
+                                const TMXCreateBaseConfig& config,
+                                const TMXLayerData& layerData,
+                                const TMXLayerData::MapIndex& gateMapIndex)
 {
     if (!layerData.isKado(gateMapIndex._x, gateMapIndex._y) && isMapInLine(config, gateMapIndex._x, gateMapIndex._y)) {
-        //gateList.push_back(gateMapIndex);
-        
         auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateMapIndex._x, gateMapIndex._y);
         obj.mapDataType = MapDataType::OBSTACLE;
         mapManager->removeMapItem(obj);
@@ -389,7 +419,7 @@ std::list<MapIndex> TMXGenerator::createWalkMapIndexList(MapManager* mapManager,
 {
     std::list<MapIndex> moveMapIndexList;
     // TODO: 通路口の探索範囲10マス以内
-    mapManager->createActorFindDist(baseMapItem.mapIndex, 10);
+    mapManager->createActorFindDist(baseMapItem.mapIndex, 15);
     mapManager->showDebug();
     
     for (auto targetMapItem : mapManager->findActorMapItem()) {
