@@ -73,6 +73,7 @@ public:
     void showMapCursor(MapDataType mapDataType);
     void hideMapCursor(MapDataType mapDataType);
     
+    MapManager* getMapManager() { return &_mapManager; }
 private:
     bool m_moveAnimation;
 
@@ -80,6 +81,8 @@ private:
     Size m_baseContentSize;
     Size m_baseMapSize;
     Size m_baseTileSize;
+    
+    MapManager _mapManager;
     
     // カーソル追加
     void addMapCursor(MapDataType pMapDataType, std::list<MapIndex> moveMapPointList);

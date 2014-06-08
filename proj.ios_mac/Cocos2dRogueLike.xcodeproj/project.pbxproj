@@ -114,6 +114,11 @@
 		CE19BEA219322B0D007715BA /* DropItemSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE6919322B0D007715BA /* DropItemSprite.cpp */; };
 		CE19BEA319322B0D007715BA /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7119322B0D007715BA /* SRPGMapLayer.cpp */; };
 		CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7519322B0D007715BA /* SRPGScene.cpp */; };
+		CE836F931942EB4900880652 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE836F921942EB4900880652 /* XCTest.framework */; };
+		CE836F941942EB4900880652 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		CE836F951942EB4900880652 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		CE836F9B1942EB4900880652 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE836F991942EB4900880652 /* InfoPlist.strings */; };
+		CE836F9D1942EB4900880652 /* Cocos2dRogueLike_iOS_Tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = CE836F9C1942EB4900880652 /* Cocos2dRogueLike_iOS_Tests.mm */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
@@ -260,6 +265,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = A07A4F9F178387730073F6A7;
 			remoteInfo = "CocosDenshion iOS";
+		};
+		CE836F9F1942EB4900880652 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
+			remoteInfo = "Cocos2dRogueLike iOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -417,6 +429,12 @@
 		CE19BE7219322B0D007715BA /* SRPGMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGMapLayer.h; sourceTree = "<group>"; };
 		CE19BE7519322B0D007715BA /* SRPGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SRPGScene.cpp; sourceTree = "<group>"; };
 		CE19BE7619322B0D007715BA /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
+		CE836F911942EB4900880652 /* Cocos2dRogueLike iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cocos2dRogueLike iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE836F921942EB4900880652 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		CE836F981942EB4900880652 /* Cocos2dRogueLike iOS Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Cocos2dRogueLike iOS Tests-Info.plist"; sourceTree = "<group>"; };
+		CE836F9A1942EB4900880652 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CE836F9C1942EB4900880652 /* Cocos2dRogueLike_iOS_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Cocos2dRogueLike_iOS_Tests.mm; sourceTree = "<group>"; };
+		CE836F9E1942EB4900880652 /* Cocos2dRogueLike iOS Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cocos2dRogueLike iOS Tests-Prefix.pch"; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -469,6 +487,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CE836F8E1942EB4900880652 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE836F931942EB4900880652 /* XCTest.framework in Frameworks */,
+				CE836F951942EB4900880652 /* UIKit.framework in Frameworks */,
+				CE836F941942EB4900880652 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -509,6 +537,7 @@
 			children = (
 				1D6058910D05DD3D006BFB54 /* Cocos2dRogueLike iOS.app */,
 				5087E76F17EB910900C73F5D /* Cocos2dRogueLike Mac.app */,
+				CE836F911942EB4900880652 /* Cocos2dRogueLike iOS Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -535,6 +564,7 @@
 			children = (
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
 				15AA9C4015B7EC450033D6C2 /* Classes */,
+				CE836F961942EB4900880652 /* Cocos2dRogueLike iOS Tests */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				080E96DDFE201D6D7F000001 /* ios */,
 				503AE10617EB990700D1A890 /* mac */,
@@ -562,6 +592,7 @@
 				BF170DB012928DE900B8313A /* OpenGLES.framework */,
 				BF1C47EA1293683800B63C5D /* QuartzCore.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				CE836F921942EB4900880652 /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1160,6 +1191,25 @@
 			path = util;
 			sourceTree = "<group>";
 		};
+		CE836F961942EB4900880652 /* Cocos2dRogueLike iOS Tests */ = {
+			isa = PBXGroup;
+			children = (
+				CE836F9C1942EB4900880652 /* Cocos2dRogueLike_iOS_Tests.mm */,
+				CE836F971942EB4900880652 /* Supporting Files */,
+			);
+			path = "Cocos2dRogueLike iOS Tests";
+			sourceTree = "<group>";
+		};
+		CE836F971942EB4900880652 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CE836F981942EB4900880652 /* Cocos2dRogueLike iOS Tests-Info.plist */,
+				CE836F991942EB4900880652 /* InfoPlist.strings */,
+				CE836F9E1942EB4900880652 /* Cocos2dRogueLike iOS Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1208,6 +1258,24 @@
 			productReference = 5087E76F17EB910900C73F5D /* Cocos2dRogueLike Mac.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CE836F901942EB4900880652 /* Cocos2dRogueLike iOS Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE836FA51942EB4900880652 /* Build configuration list for PBXNativeTarget "Cocos2dRogueLike iOS Tests" */;
+			buildPhases = (
+				CE836F8D1942EB4900880652 /* Sources */,
+				CE836F8E1942EB4900880652 /* Frameworks */,
+				CE836F8F1942EB4900880652 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE836FA01942EB4900880652 /* PBXTargetDependency */,
+			);
+			name = "Cocos2dRogueLike iOS Tests";
+			productName = "Cocos2dRogueLike iOS Tests";
+			productReference = CE836F911942EB4900880652 /* Cocos2dRogueLike iOS Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1218,6 +1286,9 @@
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = MDDB52YB8L;
+					};
+					CE836F901942EB4900880652 = {
+						TestTargetID = 1D6058900D05DD3D006BFB54;
 					};
 				};
 			};
@@ -1230,6 +1301,7 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -1243,6 +1315,7 @@
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Cocos2dRogueLike iOS */,
 				5087E73D17EB910900C73F5D /* Cocos2dRogueLike Mac */,
+				CE836F901942EB4900880652 /* Cocos2dRogueLike iOS Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -1365,6 +1438,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CE836F8F1942EB4900880652 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE836F9B1942EB4900880652 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -1449,6 +1530,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CE836F8D1942EB4900880652 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE836F9D1942EB4900880652 /* Cocos2dRogueLike_iOS_Tests.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1502,7 +1591,23 @@
 			name = "CocosDenshion iOS";
 			targetProxy = 1AC6FB2C180E99E1004C840B /* PBXContainerItemProxy */;
 		};
+		CE836FA01942EB4900880652 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D6058900D05DD3D006BFB54 /* Cocos2dRogueLike iOS */;
+			targetProxy = CE836F9F1942EB4900880652 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CE836F991942EB4900880652 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE836F9A1942EB4900880652 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
@@ -1680,6 +1785,129 @@
 			};
 			name = Release;
 		};
+		CE836FA11942EB4900880652 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Cocos2dRogueLike iOS.app/Cocos2dRogueLike iOS";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Cocos2dRogueLike iOS Tests/Cocos2dRogueLike iOS Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					CC_TARGET_OS_IPHONE,
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../cocos2d",
+					"$(SRCROOT)/../cocos2d/cocos",
+					"$(SRCROOT)/../cocos2d/cocos/base",
+					"$(SRCROOT)/../cocos2d/cocos/physics",
+					"$(SRCROOT)/../cocos2d/cocos/math",
+					"$(SRCROOT)/../cocos2d/cocos/2d",
+					"$(SRCROOT)/../cocos2d/cocos/ui",
+					"$(SRCROOT)/../cocos2d/cocos/network",
+					"$(SRCROOT)/../cocos2d/cocos/audio/include",
+					"$(SRCROOT)/../cocos2d/cocos/editor-support",
+					"$(SRCROOT)/../cocos2d/extensions",
+					"$(SRCROOT)/../cocos2d/external",
+					"$(SRCROOT)/../cocos2d/external/chipmunk/include/chipmunk",
+					"$(SRCROOT)/../cocos2d/cocos/platform/ios",
+					"$(SRCROOT)/../cocos2d/cocos/platform/ios/Simulation",
+				);
+				INFOPLIST_FILE = "Cocos2dRogueLike iOS Tests/Cocos2dRogueLike iOS Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		CE836FA21942EB4900880652 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Cocos2dRogueLike iOS.app/Cocos2dRogueLike iOS";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Cocos2dRogueLike iOS Tests/Cocos2dRogueLike iOS Tests-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../cocos2d",
+					"$(SRCROOT)/../cocos2d/cocos",
+					"$(SRCROOT)/../cocos2d/cocos/base",
+					"$(SRCROOT)/../cocos2d/cocos/physics",
+					"$(SRCROOT)/../cocos2d/cocos/math",
+					"$(SRCROOT)/../cocos2d/cocos/2d",
+					"$(SRCROOT)/../cocos2d/cocos/ui",
+					"$(SRCROOT)/../cocos2d/cocos/network",
+					"$(SRCROOT)/../cocos2d/cocos/audio/include",
+					"$(SRCROOT)/../cocos2d/cocos/editor-support",
+					"$(SRCROOT)/../cocos2d/extensions",
+					"$(SRCROOT)/../cocos2d/external",
+					"$(SRCROOT)/../cocos2d/external/chipmunk/include/chipmunk",
+					"$(SRCROOT)/../cocos2d/cocos/platform/ios",
+					"$(SRCROOT)/../cocos2d/cocos/platform/ios/Simulation",
+				);
+				INFOPLIST_FILE = "Cocos2dRogueLike iOS Tests/Cocos2dRogueLike iOS Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1706,6 +1934,15 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CE836FA51942EB4900880652 /* Build configuration list for PBXNativeTarget "Cocos2dRogueLike iOS Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE836FA11942EB4900880652 /* Debug */,
+				CE836FA21942EB4900880652 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

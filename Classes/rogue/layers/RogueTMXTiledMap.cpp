@@ -13,10 +13,11 @@
 NS_ROGUE_BEGIN
 
 RogueTMXTiledMap::RogueTMXTiledMap()
-:mini_map_layer_(nullptr),
-enemyCount_(0),
-itemAllShow_(false),
-enemyAllShow_(false)
+: mini_map_layer_(nullptr)
+, enemyCount_(0)
+, itemAllShow_(false)
+, enemyAllShow_(false)
+, _tmxMapData()
 {
 }
 
@@ -25,11 +26,12 @@ RogueTMXTiledMap::~RogueTMXTiledMap()
     mini_map_layer_->removeFromParentAndCleanup(true);
 }
 
-RogueTMXTiledMap * RogueTMXTiledMap::create(const std::string& tmxFile) {
+RogueTMXTiledMap * RogueTMXTiledMap::create(const std::string& tmxFile /* = "" */) {
     RogueTMXTiledMap *ret = new RogueTMXTiledMap();
     
-    std::string tmxString = TMXGenerator::generator();
-
+    // 自動生成
+    ret->_tmxMapData = TMXGenerator::createTMXMapData();
+    std::string tmxString = TMXGenerator::generator(ret->_tmxMapData);
     if (ret->initWithXML(tmxString, FileUtils::getInstance()->fullPathForFilename("tmx"))) {
 //    if (ret->initWithTMXFile(tmxFile)) {
         ret->initRogue();
@@ -44,7 +46,9 @@ void RogueTMXTiledMap::initRogue() {
     
     auto win_size = getContentSize();
     
-    MapManager::getInstance()->initMapping(0, (int)this->getMapSize().height, 0, (int)this->getMapSize().width);
+    _mapManager = MapManager();
+    this->getMapManager()->initMapping(0, (int)this->getMapSize().height, 0, (int)this->getMapSize().width);
+    
     // フロントレイヤー
     auto pFrontLayer = Layer::create();
     this->addChild(pFrontLayer, TiledMapIndexs::TiledMapFrontZOrder, TiledMapTags::TiledMapFrontLayerTag);
@@ -74,11 +78,11 @@ void RogueTMXTiledMap::initRogue() {
             MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
             auto tileMapIndex = mapIndexToTileIndex(mapIndex);
             if (pColisionLayer->getTileAt(Point(x, y))) {
-                MapManager::getInstance()->addObstacle(&tileMapIndex);
+                this->getMapManager()->addObstacle(tileMapIndex);
             } else {
                 // ミニマップ更新
                 int tag = 10000 * x + 100 * y;
-                addMiniMapItem(MapManager::getInstance()->getMapItem(tileMapIndex), tag);
+                addMiniMapItem(this->getMapManager()->getMapItem(tileMapIndex), tag);
             }
         }
     }
@@ -90,14 +94,12 @@ void RogueTMXTiledMap::initRogue() {
     }
     
     // floor_%dは、部屋の明かり用Layerなので隠す
-    int floor_count = 1;
-    while (true) {
-        auto floor_layer = this->getLayer(cocos2d::StringUtils::format("floor_%d", floor_count));
+    for (auto tmxLayerData : this->_tmxMapData._tmxLayerDataList) {
+        auto floor_layer = this->getLayer(cocos2d::StringUtils::format("floor_%d", tmxLayerData._no));
         if (!floor_layer) {
             break;
         }
         floor_layer->setVisible(false);
-        floor_count++;
     }
     // ----------------
     // 階段
@@ -115,7 +117,7 @@ void RogueTMXTiledMap::initRogue() {
     kaidanMapItem.moveDist = 0;
     kaidanMapItem.attackDist = 0;
     kaidanMapItem.mapDataType = MapDataType::KAIDAN;
-    MapManager::getInstance()->addDropItem(kaidanMapItem);
+    this->getMapManager()->addDropItem(kaidanMapItem);
     
     // ミニマップも更新
     addMiniMapItem(kaidanMapItem, TiledMapTags::TiledMapObjectTag);
@@ -123,7 +125,7 @@ void RogueTMXTiledMap::initRogue() {
 }
 
 void RogueTMXTiledMap::setPlayerActorMapItem(const ActorMapItem& actorMapItem, int tag) {
-    MapManager::getInstance()->addActor(actorMapItem);
+    this->getMapManager()->addActor(actorMapItem);
     // プレイヤーの位置表示用（同じく1/8サイズ）
     addMiniMapItem(actorMapItem, tag);
 }
@@ -159,7 +161,7 @@ ActorMapItem RogueTMXTiledMap::startPlayerRandomPosition(const ActorDto& actor_d
 bool RogueTMXTiledMap::tileSetEnemyActorMapItem(ActorDto enemyActorDto, MapIndex mapIndex) {
     
     // すでにプレイヤーが置いてある場合は置けない
-    if (MapManager::getInstance()->getActorMapItem(mapIndex).mapDataType != MapDataType::NONE) {
+    if (this->getMapManager()->getActorMapItem(mapIndex).mapDataType != MapDataType::NONE) {
         return false;
     }
     
@@ -183,7 +185,7 @@ bool RogueTMXTiledMap::tileSetEnemyActorMapItem(ActorDto enemyActorDto, MapIndex
     pEnemyLayer->addChild(enemySprite, TiledMapIndexs::TiledMapEnemyBaseZOrder, (TiledMapTags::TiledMapEnemyBaseTag + enemyMapItem.seqNo));
     
     // マップに追加
-    MapManager::getInstance()->addActor(enemySprite->getActorMapItem());
+    this->getMapManager()->addActor(enemySprite->getActorMapItem());
     
     // ミニマップも更新
     addMiniMapItem(enemySprite->getActorMapItem(), enemySprite->getTag());
@@ -195,7 +197,7 @@ void RogueTMXTiledMap::removeEnemyActorSprite(ActorSprite* pEnemySprite) {
     auto pEnemyMapLayer = this->getChildByTag(TiledMapTags::TiledMapEnemyBaseTag);
     
     // mapManagerから消す
-    MapManager::getInstance()->removeMapItem(pEnemySprite->getActorMapItem());
+    this->getMapManager()->removeMapItem(pEnemySprite->getActorMapItem());
     
     // ミニマップを更新
     getGridSpriteBatchNode()->removeChildByTag(pEnemySprite->getTag());
@@ -212,7 +214,7 @@ bool RogueTMXTiledMap::tileSetDropMapItem(const ItemDto& itemDto, MapIndex mapIn
     }
     
     // すでにアイテムが置いてある場合は置けない
-    if (!MapManager::getInstance()->isDropMapItemIndex(mapIndex)) {
+    if (!this->getMapManager()->isDropMapItemIndex(mapIndex)) {
         return false;
     }
     
@@ -232,7 +234,7 @@ bool RogueTMXTiledMap::tileSetDropMapItem(const ItemDto& itemDto, MapIndex mapIn
     pDropItemLayer->addChild(dropItemSprite, TiledMapIndexs::TiledMapDropItemBaseZOrder, TiledMapTags::TiledMapDropItemBaseTag + dropMapItem.seqNo);
     
     // マップに追加
-    MapManager::getInstance()->addDropItem(dropItemSprite->getDropMapItem());
+    this->getMapManager()->addDropItem(dropItemSprite->getDropMapItem());
     
     // ミニマップも更新
     addMiniMapItem(dropItemSprite->getDropMapItem(), dropItemSprite->getTag());
@@ -242,7 +244,7 @@ bool RogueTMXTiledMap::tileSetDropMapItem(const ItemDto& itemDto, MapIndex mapIn
 
 void RogueTMXTiledMap::removeDropItemSprite(DropItemSprite* pDropItemSprite) {
     // mapManagerから消す
-    MapManager::getInstance()->removeMapItem(pDropItemSprite->getDropMapItem());
+    this->getMapManager()->removeMapItem(pDropItemSprite->getDropMapItem());
     
     // ミニマップを更新
     getGridSpriteBatchNode()->removeChildByTag(pDropItemSprite->getTag());
@@ -367,7 +369,7 @@ void RogueTMXTiledMap::moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex,
     // actor情報も更新
     actorMapItem.mapIndex = moveMapIndex;
     pActorSprite->setActorMapItem(actorMapItem);
-    MapManager::getInstance()->moveActor(actorMapItem, beforeMapIndex, moveMapIndex);
+    this->getMapManager()->moveActor(actorMapItem, beforeMapIndex, moveMapIndex);
 
     // ミニマップも更新
     auto pMiniMapLayer = getGridSpriteBatchNode();
@@ -384,15 +386,21 @@ void RogueTMXTiledMap::moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex,
 
 #pragma mark
 #pragma mark 照明
+void RogueTMXTiledMap::refreshAllFloorMapping()
+{
+    refreshAutoMapping(MapIndex{0,0}, MapIndex{(int)this->getMapSize().width, (int)this->getMapSize().height});
+}
 
-void RogueTMXTiledMap::refreshPlayerRectAutoMapping(const MapIndex& actor_map_index) {
+void RogueTMXTiledMap::refreshPlayerRectAutoMapping(const MapIndex& actor_map_index)
+{
     Rect floorInfoPlayerIndexRect = createPlayerRect(actor_map_index, 1);
     refreshAutoMapping(floorInfoPlayerIndexRect);
     // プレイヤー視野でマップをリフレッシュする
     tiledMapItemLighting(floorInfoPlayerIndexRect, true);
 }
 
-void RogueTMXTiledMap::refreshFloorRectAutoMapping(const Rect& floorInfoIndexRect) {
+void RogueTMXTiledMap::refreshFloorRectAutoMapping(const Rect& floorInfoIndexRect)
+{
     // マッピング更新
     refreshAutoMapping(floorInfoIndexRect);
     // マップ情報も更新
@@ -585,13 +593,19 @@ Rect RogueTMXTiledMap::createPlayerRect(const MapIndex& actor_map_index, int rec
                 this->getTileSize().width * (rectSize * 2 + 1));
 }
 
-void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect) {
-    
-    MapIndex minMapIndex = pointToIndex(Point(floorInfoIndexRect.getMinX() + this->getTileSize().width / 2, floorInfoIndexRect.getMinY() + this->getTileSize().height / 2));
-    MapIndex maxMapIndex = pointToIndex(Point(floorInfoIndexRect.getMaxX() + this->getTileSize().width / 2, floorInfoIndexRect.getMaxY()+ this->getTileSize().height / 2));
-    
+void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect)
+{
+    MapIndex min = pointToIndex(Point(floorInfoIndexRect.getMinX() + this->getTileSize().width  / 2,
+                                      floorInfoIndexRect.getMinY() + this->getTileSize().height / 2));
+    MapIndex max = pointToIndex(Point(floorInfoIndexRect.getMaxX() + this->getTileSize().width  / 2,
+                                      floorInfoIndexRect.getMaxY() + this->getTileSize().height / 2));
+    refreshAutoMapping(min, max);
+}
+
+void RogueTMXTiledMap::refreshAutoMapping(const MapIndex& minMapIndex, const MapIndex& maxMapIndex)
+{
     auto pBatchNode = getGridSpriteBatchNode();
-    auto mappingData = MapManager::getInstance()->getMappingData();
+    auto mappingData = this->getMapManager()->getMappingData();
     for (int x = minMapIndex.x; x < maxMapIndex.x; x++) {
         for (int y = minMapIndex.y; y < maxMapIndex.y; y++) {
             MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
@@ -600,12 +614,13 @@ void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect) {
             int tag = 10000 * tileMapIndex.x + 100 * tileMapIndex.y;
             auto pNode = pBatchNode->getChildByTag(tag);
             if (pNode) {
-                MapManager::getInstance()->addMapping(tileMapIndex);
+                this->getMapManager()->addMapping(tileMapIndex);
                 pNode->setVisible(true);
             }
         }
     }
 }
+
 
 #pragma mark
 #pragma mark その他
@@ -665,7 +680,7 @@ bool RogueTMXTiledMap::isFloorMapIndex(const MapIndex& mapIndex) {
 }
 
 bool RogueTMXTiledMap::isActorInstMapIndex(const MapIndex& mapIndex) {
-    auto targetMapItem = MapManager::getInstance()->getMapItem(mapIndex);
+    auto targetMapItem = this->getMapManager()->getMapItem(mapIndex);
     
     // アイテムの上もOK
     if (targetMapItem.mapDataType == MapDataType::NONE || targetMapItem.mapDataType == MapDataType::MAP_ITEM) {
@@ -675,7 +690,7 @@ bool RogueTMXTiledMap::isActorInstMapIndex(const MapIndex& mapIndex) {
 }
 
 bool RogueTMXTiledMap::isDropItemInstMapIndex(const MapIndex& mapIndex) {
-    auto targetMapItem = MapManager::getInstance()->getMapItem(mapIndex);
+    auto targetMapItem = this->getMapManager()->getMapItem(mapIndex);
     
     if (targetMapItem.mapDataType == MapDataType::NONE) {
         return true;
