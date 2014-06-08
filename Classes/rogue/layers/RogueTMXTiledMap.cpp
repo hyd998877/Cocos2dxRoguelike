@@ -13,10 +13,11 @@
 NS_ROGUE_BEGIN
 
 RogueTMXTiledMap::RogueTMXTiledMap()
-:mini_map_layer_(nullptr),
-enemyCount_(0),
-itemAllShow_(false),
-enemyAllShow_(false)
+: mini_map_layer_(nullptr)
+, enemyCount_(0)
+, itemAllShow_(false)
+, enemyAllShow_(false)
+, _tmxMapData()
 {
 }
 
@@ -25,12 +26,12 @@ RogueTMXTiledMap::~RogueTMXTiledMap()
     mini_map_layer_->removeFromParentAndCleanup(true);
 }
 
-RogueTMXTiledMap * RogueTMXTiledMap::create(const std::string& tmxFile) {
+RogueTMXTiledMap * RogueTMXTiledMap::create(const std::string& tmxFile /* = "" */) {
     RogueTMXTiledMap *ret = new RogueTMXTiledMap();
     
     // 自動生成
-    std::string tmxString = TMXGenerator::generator();
-
+    ret->_tmxMapData = TMXGenerator::createTMXMapData();
+    std::string tmxString = TMXGenerator::generator(ret->_tmxMapData);
     if (ret->initWithXML(tmxString, FileUtils::getInstance()->fullPathForFilename("tmx"))) {
 //    if (ret->initWithTMXFile(tmxFile)) {
         ret->initRogue();
@@ -93,14 +94,12 @@ void RogueTMXTiledMap::initRogue() {
     }
     
     // floor_%dは、部屋の明かり用Layerなので隠す
-    int floor_count = 1;
-    while (true) {
-        auto floor_layer = this->getLayer(cocos2d::StringUtils::format("floor_%d", floor_count));
+    for (auto tmxLayerData : this->_tmxMapData._tmxLayerDataList) {
+        auto floor_layer = this->getLayer(cocos2d::StringUtils::format("floor_%d", tmxLayerData._no));
         if (!floor_layer) {
             break;
         }
         floor_layer->setVisible(false);
-        floor_count++;
     }
     // ----------------
     // 階段
@@ -387,15 +386,21 @@ void RogueTMXTiledMap::moveMap(ActorSprite* pActorSprite, MapIndex addMoveIndex,
 
 #pragma mark
 #pragma mark 照明
+void RogueTMXTiledMap::refreshAllFloorMapping()
+{
+    refreshAutoMapping(MapIndex{0,0}, MapIndex{(int)this->getMapSize().width, (int)this->getMapSize().height});
+}
 
-void RogueTMXTiledMap::refreshPlayerRectAutoMapping(const MapIndex& actor_map_index) {
+void RogueTMXTiledMap::refreshPlayerRectAutoMapping(const MapIndex& actor_map_index)
+{
     Rect floorInfoPlayerIndexRect = createPlayerRect(actor_map_index, 1);
     refreshAutoMapping(floorInfoPlayerIndexRect);
     // プレイヤー視野でマップをリフレッシュする
     tiledMapItemLighting(floorInfoPlayerIndexRect, true);
 }
 
-void RogueTMXTiledMap::refreshFloorRectAutoMapping(const Rect& floorInfoIndexRect) {
+void RogueTMXTiledMap::refreshFloorRectAutoMapping(const Rect& floorInfoIndexRect)
+{
     // マッピング更新
     refreshAutoMapping(floorInfoIndexRect);
     // マップ情報も更新
@@ -588,11 +593,17 @@ Rect RogueTMXTiledMap::createPlayerRect(const MapIndex& actor_map_index, int rec
                 this->getTileSize().width * (rectSize * 2 + 1));
 }
 
-void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect) {
-    
-    MapIndex minMapIndex = pointToIndex(Point(floorInfoIndexRect.getMinX() + this->getTileSize().width / 2, floorInfoIndexRect.getMinY() + this->getTileSize().height / 2));
-    MapIndex maxMapIndex = pointToIndex(Point(floorInfoIndexRect.getMaxX() + this->getTileSize().width / 2, floorInfoIndexRect.getMaxY()+ this->getTileSize().height / 2));
-    
+void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect)
+{
+    MapIndex min = pointToIndex(Point(floorInfoIndexRect.getMinX() + this->getTileSize().width  / 2,
+                                      floorInfoIndexRect.getMinY() + this->getTileSize().height / 2));
+    MapIndex max = pointToIndex(Point(floorInfoIndexRect.getMaxX() + this->getTileSize().width  / 2,
+                                      floorInfoIndexRect.getMaxY() + this->getTileSize().height / 2));
+    refreshAutoMapping(min, max);
+}
+
+void RogueTMXTiledMap::refreshAutoMapping(const MapIndex& minMapIndex, const MapIndex& maxMapIndex)
+{
     auto pBatchNode = getGridSpriteBatchNode();
     auto mappingData = this->getMapManager()->getMappingData();
     for (int x = minMapIndex.x; x < maxMapIndex.x; x++) {
@@ -609,6 +620,7 @@ void RogueTMXTiledMap::refreshAutoMapping(const Rect& floorInfoIndexRect) {
         }
     }
 }
+
 
 #pragma mark
 #pragma mark その他

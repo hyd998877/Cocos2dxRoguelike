@@ -1205,9 +1205,9 @@ void RogueScene::showSystemMenu() {
         menuButtonInfoList.push_back(menu3);
         menuButtonInfoList.push_back(menu4);
         menuButtonInfoList.push_back(menu5);
-        menuButtonInfoList.push_back(SystemMenuLayer::SystemMenuButtonInfo("未設定", [this, systemMenuModalLayer]() {
+        menuButtonInfoList.push_back(SystemMenuLayer::SystemMenuButtonInfo("明かり", [this, systemMenuModalLayer]() {
             CCLOG("Menu6ボタンが押された！");
-            this->hideSystemMenu();
+            this->floorMappingAllShow();
         }));
         menuButtonInfoList.push_back(SystemMenuLayer::SystemMenuButtonInfo("持ち帰", [this, systemMenuModalLayer]() {
             CCLOG("Menu7ボタンが押された！");
@@ -1225,7 +1225,7 @@ void RogueScene::showSystemMenu() {
             this->hideSystemMenu();
         }));
         
-        auto systemMenuLayer = SystemMenuLayer::create(win_size * 0.5, "その他・システムメニュー");
+        auto systemMenuLayer = SystemMenuLayer::create(win_size * 0.6, "その他・システムメニュー");
         systemMenuLayer->setPosition(CommonWindowUtil::createPointCenter(systemMenuLayer, systemMenuModalLayer));
         systemMenuLayer->setMenuButtonList(menuButtonInfoList);
         
@@ -1440,6 +1440,13 @@ void RogueScene::enemyMappingAllShow() {
 
 void RogueScene::itemMappingAllShow() {
     getRogueMapLayer()->setItemAllShow(true);
+    rogueMapLighting();
+}
+
+void RogueScene::floorMappingAllShow() {
+    getRogueMapLayer()->setItemAllShow(true);
+    getRogueMapLayer()->setEnemyAllShow(true);
+    getRogueMapLayer()->refreshAllFloorMapping();
     rogueMapLighting();
 }
 

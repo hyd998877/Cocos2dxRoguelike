@@ -157,6 +157,7 @@ private:
     // 呪文
     void enemyMappingAllShow();
     void itemMappingAllShow();
+    void floorMappingAllShow();
     
     ///////////
     MapManager* getMapManager();

@@ -17,6 +17,8 @@
 #include "ActorSprite.h"
 #include "DropItemSprite.h"
 
+#include "TMXGenerator.h"
+
 USING_NS_CC;
 
 NS_ROGUE_BEGIN
@@ -67,8 +69,10 @@ private:
     // 地獄耳
     bool enemyAllShow_;
     
+    TMXMapData _tmxMapData;
+    
 public:
-    static RogueTMXTiledMap* create(const std::string& tmxFile);
+    static RogueTMXTiledMap* create(const std::string& tmxFile = "");
     
     ActorMapItem startPlayerRandomPosition(const ActorDto& actor_dto, const MapIndex& base_actor_index);
     void setPlayerActorMapItem(const ActorMapItem& actorMapItem, int tag);
@@ -85,6 +89,7 @@ public:
     void moveEnemyMap(int enemy_seq_no, MapIndex addMoveIndex, float animation_speed, CallFunc* moveFinishedCallFunc);
     
     // 照明
+    void refreshAllFloorMapping();
     void refreshPlayerRectAutoMapping(const MapIndex& actor_map_index);
     void refreshFloorRectAutoMapping(const Rect& floorInfoIndexRect);
     Rect getTileMapFloorInfo(const MapIndex& actor_map_index);
@@ -143,6 +148,7 @@ private:
     Rect createPlayerRect(const MapIndex& actor_map_index, int rectSize);
     
     void refreshAutoMapping(const Rect& floorInfoIndexRect);
+    void refreshAutoMapping(const MapIndex& minMapIndex, const MapIndex& maxMapIndex);
 };
 
 NS_ROGUE_END
