@@ -17,6 +17,11 @@ class MapManager;
 class TMXLayerData
 {
 public:
+    struct MapSize {
+        int _width;
+        int _height;
+    };
+    
     struct MapIndex {
         int _x;
         int _y;
@@ -130,9 +135,28 @@ public:
     }
 };
 
+class TMXFloorConfig
+{
+public:
+    TMXLayerData::MapIndex mapIndex;
+    TMXLayerData::MapSize mapSize;
+};
+
+class TMXCreateBaseConfig
+{
+public:
+    typedef std::vector<std::vector<TMXFloorConfig>> BaseMapLayout;
+    
+    int mapSizeWidth;     /// tile数
+    int mapSizeHeight;    /// tile数
+    
+    BaseMapLayout baseMapLayout;
+};
+
 class TMXMapData
 {
 public:
+    TMXCreateBaseConfig _tmxCreateBaseConfig;
     std::list<TMXLayerData> _tmxLayerDataList;
     std::list<TMXLayerData::MapIndex> _walkMapIndex;
 };
@@ -140,9 +164,6 @@ public:
 class TMXGenerator
 {
 public:
-    const static int MAP_SIZE_WIDTH = 40;
-    const static int MAP_SIZE_HEIGHT = 20;
-    const static int ONE_FLOOR_SIZE = 10; // 縦横10x10
     const static int TILE_SIZE = 32;
     
     static std::string generator();
@@ -150,11 +171,11 @@ public:
     static TMXMapData createTMXMapData();
     static void makeMapData();
     
-    static bool isMapInLine(int x, int y) {
-        if (x <= 1 || x >= MAP_SIZE_WIDTH-1) {
+    static bool isMapInLine(const TMXCreateBaseConfig& config, int x, int y) {
+        if (x <= 1 || x >= config.mapSizeWidth-1) {
             return false;
         }
-        if (y <= 1 || y >= MAP_SIZE_HEIGHT-1) {
+        if (y <= 1 || y >= config.mapSizeHeight-1) {
             return false;
         }
         return true;
@@ -164,9 +185,11 @@ private:
     virtual ~TMXGenerator();
     
     // Helper
-    static bool addFloorGate(MapManager* mapManager, const TMXLayerData& layerData, const TMXLayerData::MapIndex& gateMapIndex);
+    static bool addFloorGate(MapManager* mapManager, const TMXCreateBaseConfig& config, const TMXLayerData& layerData, const TMXLayerData::MapIndex& gateMapIndex);
     static void closeNotWalkMapIndex(const TMXLayerData::MapIndex& closeMapIndex, std::list<TMXLayerData>* floorLayerList);
-    static std::list<MapIndex> createWalkMapIndexList(MapManager* mapManager, const MapItem& baseMapItem);
+    static std::list<MapIndex> createWalkMapIndexList(MapManager* mapManager, const TMXCreateBaseConfig& config, const MapItem& baseMapItem);
+    static TMXCreateBaseConfig createTMXCreateConfig();
 };
+
 
 #endif /* defined(__Cocos2dRogueLike__TMXGenerator__) */
