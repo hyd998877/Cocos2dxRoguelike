@@ -10,36 +10,9 @@
 #define __Cocos2dRogueLike__TMXGenerator__
 
 #include "cocos2d.h"
+#include "MapManager.h"
 
-class TMXLayerData;
-class TMXMapData;
-
-class TMXGenerator
-{
-public:
-    const static int MAP_SIZE_WIDTH = 40;
-    const static int MAP_SIZE_HEIGHT = 20;
-    const static int ONE_FLOOR_SIZE = 10; // 縦横10x10
-    const static int TILE_SIZE = 32;
-    
-    static std::string generator();
-    static std::string generator(TMXMapData tmxMapData);
-    static TMXMapData createTMXMapData();
-    static void makeMapData();
-    
-    static bool isMapInLine(int x, int y) {
-        if (x <= 1 || x >= MAP_SIZE_WIDTH-1) {
-            return false;
-        }
-        if (y <= 1 || y >= MAP_SIZE_HEIGHT-1) {
-            return false;
-        }
-        return true;
-    }
-private:
-    TMXGenerator();
-    virtual ~TMXGenerator();
-};
+class MapManager;
 
 class TMXLayerData
 {
@@ -53,7 +26,7 @@ public:
     int _height;
     int _x;
     int _y;
-    std::list<MapIndex> _gateWayMapIndexList;
+    std::list<TMXLayerData::MapIndex> _gateWayMapIndexList;
     
     bool isGateWay(int x, int y) const {
         for (auto mapIndex : _gateWayMapIndexList) {
@@ -164,5 +137,36 @@ public:
     std::list<TMXLayerData::MapIndex> _walkMapIndex;
 };
 
+class TMXGenerator
+{
+public:
+    const static int MAP_SIZE_WIDTH = 40;
+    const static int MAP_SIZE_HEIGHT = 20;
+    const static int ONE_FLOOR_SIZE = 10; // 縦横10x10
+    const static int TILE_SIZE = 32;
+    
+    static std::string generator();
+    static std::string generator(TMXMapData tmxMapData);
+    static TMXMapData createTMXMapData();
+    static void makeMapData();
+    
+    static bool isMapInLine(int x, int y) {
+        if (x <= 1 || x >= MAP_SIZE_WIDTH-1) {
+            return false;
+        }
+        if (y <= 1 || y >= MAP_SIZE_HEIGHT-1) {
+            return false;
+        }
+        return true;
+    }
+private:
+    TMXGenerator();
+    virtual ~TMXGenerator();
+    
+    // Helper
+    static bool addFloorGate(MapManager* mapManager, const TMXLayerData& layerData, const TMXLayerData::MapIndex& gateMapIndex);
+    static void closeNotWalkMapIndex(const TMXLayerData::MapIndex& closeMapIndex, std::list<TMXLayerData>* floorLayerList);
+    static std::list<MapIndex> createWalkMapIndexList(MapManager* mapManager, const MapItem& baseMapItem);
+};
 
 #endif /* defined(__Cocos2dRogueLike__TMXGenerator__) */

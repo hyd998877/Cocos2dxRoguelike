@@ -175,8 +175,10 @@ std::string TMXGenerator::generator(TMXMapData tmxMapData)
 TMXMapData TMXGenerator::createTMXMapData()
 {
     auto mapManager = MapManager();
+    // 部屋のサイズ
     mapManager.initMapping(0, MAP_SIZE_HEIGHT, 0, MAP_SIZE_WIDTH);
     
+    // TODO: 部屋割り 4x2固定
     TMXLayerData::MapIndex FLOOR_BASE_INDEX[2][4] = {
         {{ 0,              0}, {ONE_FLOOR_SIZE,              0}, {ONE_FLOOR_SIZE*2,              0}, {ONE_FLOOR_SIZE*3,              0}},
         {{ 0, ONE_FLOOR_SIZE}, {ONE_FLOOR_SIZE, ONE_FLOOR_SIZE}, {ONE_FLOOR_SIZE*2, ONE_FLOOR_SIZE}, {ONE_FLOOR_SIZE*3, ONE_FLOOR_SIZE}}
@@ -189,7 +191,7 @@ TMXMapData TMXGenerator::createTMXMapData()
         TMXLayerData layerData;
         layerData._no = floorIdx + 1;
         
-        // TODO: 座標決め
+        // 座標決め
         int randX = GetRandom(0, 2);
         int randY = GetRandom(0, 2);
         
@@ -199,18 +201,16 @@ TMXMapData TMXGenerator::createTMXMapData()
         layerData._x = randX + FLOOR_BASE_INDEX[y][x]._x;
         layerData._y = randY + FLOOR_BASE_INDEX[y][x]._y;
         
-        // TODO: サイズ決め
+        // サイズ決め
         int randWidth = GetRandom(5, ONE_FLOOR_SIZE - randX);
         int randHeight = GetRandom(5, ONE_FLOOR_SIZE - randY);
         
         layerData._width = randWidth;
         layerData._height = randHeight;
 
-        {
-            for (int x = layerData._x; x < (layerData._x + layerData._width); x++) {
-                for (int y = layerData._y; y < (layerData._y + layerData._height); y++) {
-                    mapManager.addObstacle(MapIndex{x, y, MoveDirectionType::MOVE_NONE});
-                }
+        for (int x = layerData._x; x < (layerData._x + layerData._width); x++) {
+            for (int y = layerData._y; y < (layerData._y + layerData._height); y++) {
+                mapManager.addObstacle(MapIndex{x, y, MoveDirectionType::MOVE_NONE});
             }
         }
         
@@ -223,73 +223,44 @@ TMXMapData TMXGenerator::createTMXMapData()
         // また、部屋の角の場合も通路作成を無効化
         // 下
         {
-            int gateX = layerData._x + layerData._width / 2;
-            int gateY = layerData._y + layerData._height - 1;
-            
-            CCLOG("gateX = %d gateY = %d", gateX, gateY);
-            if (!layerData.isKado(gateX, gateY) && isMapInLine(gateX, gateY)) {
-                gateList.push_back(TMXLayerData::MapIndex{gateX, gateY});
-                CCLOG("gate In!!!");
-                auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
-                obj.mapDataType = MapDataType::OBSTACLE;
-                mapManager.removeMapItem(obj);
-                auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
-                mapItem.mapDataType = MapDataType::PLAYER;
-                mapManager.addActor(mapItem);
+            auto gateMapIndex = TMXLayerData::MapIndex{
+                layerData._x + layerData._width / 2,
+                layerData._y + layerData._height - 1
+            };
+            if (addFloorGate(&mapManager, layerData, gateMapIndex)) {
+                gateList.push_back(gateMapIndex);
             }
         }
         // 上
         {
-            int gateX = layerData._x + layerData._width / 2;
-            int gateY = layerData._y;
-            
-            CCLOG("gateX = %d gateY = %d", gateX, gateY);
-            if (!layerData.isKado(gateX, gateY) && isMapInLine(gateX, gateY)) {
-                gateList.push_back(TMXLayerData::MapIndex{gateX, gateY});
-                CCLOG("gate In!!!");
-                auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
-                obj.mapDataType = MapDataType::OBSTACLE;
-                mapManager.removeMapItem(obj);
-                auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
-                mapItem.mapDataType = MapDataType::PLAYER;
-                mapManager.addActor(mapItem);
+            auto gateMapIndex = TMXLayerData::MapIndex{
+                layerData._x + layerData._width / 2,
+                layerData._y
+            };
+            if (addFloorGate(&mapManager, layerData, gateMapIndex)) {
+                gateList.push_back(gateMapIndex);
             }
         }
         // 左
         {
-            int gateX = layerData._x;
-            int gateY = layerData._y + layerData._height / 2;
-            
-            CCLOG("gateX = %d gateY = %d", gateX, gateY);
-            if (!layerData.isKado(gateX, gateY) && isMapInLine(gateX, gateY)) {
-                gateList.push_back(TMXLayerData::MapIndex{gateX, gateY});
-                CCLOG("gate In!!!");
-                auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
-                obj.mapDataType = MapDataType::OBSTACLE;
-                mapManager.removeMapItem(obj);
-                auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
-                mapItem.mapDataType = MapDataType::PLAYER;
-                mapManager.addActor(mapItem);
+            auto gateMapIndex = TMXLayerData::MapIndex{
+                layerData._x,
+                layerData._y + layerData._height / 2
+            };
+            if (addFloorGate(&mapManager, layerData, gateMapIndex)) {
+                gateList.push_back(gateMapIndex);
             }
         }
         // 右
         {
-            int gateX = layerData._x + layerData._width -1;
-            int gateY = layerData._y + layerData._height / 2;
-            
-            CCLOG("gateX = %d gateY = %d", gateX, gateY);
-            if (!layerData.isKado(gateX, gateY) && isMapInLine(gateX, gateY)) {
-                gateList.push_back(TMXLayerData::MapIndex{gateX, gateY});
-                CCLOG("gate In!!!");
-                auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
-                obj.mapDataType = MapDataType::OBSTACLE;
-                mapManager.removeMapItem(obj);
-                auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateX, gateY);
-                mapItem.mapDataType = MapDataType::PLAYER;
-                mapManager.addActor(mapItem);
+            auto gateMapIndex = TMXLayerData::MapIndex{
+                layerData._x + layerData._width -1,
+                layerData._y + layerData._height / 2
+            };
+            if (addFloorGate(&mapManager, layerData, gateMapIndex)) {
+                gateList.push_back(gateMapIndex);
             }
         }
-        
         layerData._gateWayMapIndexList = gateList;
         
         floorLayerList.push_back(layerData);
@@ -298,58 +269,111 @@ TMXMapData TMXGenerator::createTMXMapData()
     // 最短経路の通路を作成
     
     std::list<TMXLayerData::MapIndex> walkMapIndexList;
-//    std::list<TMXLayerData::MapIndex> closeMapIndexList;
+    std::list<TMXLayerData::MapIndex> closeMapIndexList;
     
     auto actorMapList = mapManager.findActorMapItem();
     for (auto mapItem : actorMapList) {
-        CCLOG("mapItem x = %d y = %d ->", mapItem.mapIndex.x, mapItem.mapIndex.y);
+        //CCLOG("mapItem x = %d y = %d ->", mapItem.mapIndex.x, mapItem.mapIndex.y);
         
-        std::list<MapIndex> moveMapIndexList;
-        moveMapIndexList.clear();
-        mapManager.createActorFindDist(mapItem.mapIndex, 10);
-        mapManager.showDebug();
-        
-        for (auto targetMapItem : actorMapList) {
-            if (MapManager::equalMapItem(targetMapItem, mapItem)) {
-                // 自分
-                //CCLOG("equal targetMapItem x = %d y = %d ->", targetMapItem.mapIndex.x, targetMapItem.mapIndex.y);
-                continue;
+        std::list<MapIndex> moveMapIndexList = createWalkMapIndexList(&mapManager, mapItem);
+        if (moveMapIndexList.empty()) {
+            // 通路ができなかった通路口を確保
+            closeMapIndexList.push_back(TMXLayerData::MapIndex{mapItem.mapIndex.x, mapItem.mapIndex.y});
+        } else {
+            for (auto mapIndex : moveMapIndexList) {
+                //CCLOG("move x=%d y=%d", mapIndex.x, mapIndex.y);
+                walkMapIndexList.push_back(TMXLayerData::MapIndex{mapIndex.x, mapIndex.y});
             }
-            std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(targetMapItem.mapIndex);
-            MapItem targetMoveDistMapItem = mapManager.searchTargetMapItem(searchMapIndexList);
-            //CCLOG("target x =%d y = %d", targetMoveDistMapItem.mapIndex.x, targetMoveDistMapItem.mapIndex.y);
-            mapItem.mapDataType = MapDataType::PLAYER;
-            auto targetMoveMapIndexList = mapManager.createMovePointList(targetMoveDistMapItem.mapIndex, mapItem);
-            if (targetMoveMapIndexList.size() == 1) {
-                auto moveMapIndex = *(targetMoveMapIndexList.begin());
-                if (moveMapIndex.x == 0 && moveMapIndex.y == 0) {
-                    // 移動なし
-                    //CCLOG("移動なし x = %d y = %d ->", targetMapItem.mapIndex.x, targetMapItem.mapIndex.y);
-                    continue;
-                }
-            }
-            //CCLOG("size %ld", targetMoveMapIndexList.size());
-            
-            if (moveMapIndexList.empty() || moveMapIndexList.size() > targetMoveMapIndexList.size()) {
-                
-                bool isMapLineIn = false;
-                for (auto moveMapIndexCheck : targetMoveMapIndexList) {
-                    if (!TMXGenerator::isMapInLine(moveMapIndexCheck.x, moveMapIndexCheck.y)) {
-                        isMapLineIn = true;
-                    }
-                }
-                if (!isMapLineIn) {
-                    moveMapIndexList = targetMoveMapIndexList;
-                }
-            }
-        }
-        for (auto mapIndex : moveMapIndexList) {
-            CCLOG("move x=%d y=%d", mapIndex.x, mapIndex.y);
-            walkMapIndexList.push_back(TMXLayerData::MapIndex{mapIndex.x, mapIndex.y});
         }
     }
     
+    // 通路を作れなかった通路口を閉じる
+    for (auto closeMapIndex : closeMapIndexList) {
+        closeNotWalkMapIndex(closeMapIndex, &floorLayerList);
+    }
+    
     return TMXMapData{floorLayerList, walkMapIndexList};
+}
+
+// private
+
+bool TMXGenerator::addFloorGate(MapManager* mapManager, const TMXLayerData& layerData, const TMXLayerData::MapIndex& gateMapIndex)
+{
+    if (!layerData.isKado(gateMapIndex._x, gateMapIndex._y) && isMapInLine(gateMapIndex._x, gateMapIndex._y)) {
+        //gateList.push_back(gateMapIndex);
+        
+        auto obj = MapManager::createNoneMapItem<ActorMapItem>(gateMapIndex._x, gateMapIndex._y);
+        obj.mapDataType = MapDataType::OBSTACLE;
+        mapManager->removeMapItem(obj);
+        auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateMapIndex._x, gateMapIndex._y);
+        mapItem.mapDataType = MapDataType::PLAYER;
+        mapManager->addActor(mapItem);
+        
+        return true;
+    }
+    return false;
+}
+
+void TMXGenerator::closeNotWalkMapIndex(const TMXLayerData::MapIndex& closeMapIndex, std::list<TMXLayerData>* floorLayerList)
+{
+    auto floorIt = floorLayerList->begin();
+    while (!(floorIt == floorLayerList->end())) {
+        
+        auto it = (*floorIt)._gateWayMapIndexList.begin();
+        while (!(it == (*floorIt)._gateWayMapIndexList.end())) {
+            auto gateWayMapIndex = *it;
+            
+            if (closeMapIndex._x == gateWayMapIndex._x && closeMapIndex._y == gateWayMapIndex._y) {
+                //CCLOG("通路作れなかったので閉じる(%ld) x=%d y=%d", (*floorIt)._gateWayMapIndexList.size(), gateWayMapIndex._x, gateWayMapIndex._y);
+                (*floorIt)._gateWayMapIndexList.erase(it);
+                //CCLOG("通路作れなかったので閉じた(%ld)", (*floorIt)._gateWayMapIndexList.size());
+            }
+            it++;
+        }
+        floorIt++;
+    }
+}
+
+std::list<MapIndex> TMXGenerator::createWalkMapIndexList(MapManager* mapManager, const MapItem& baseMapItem)
+{
+    std::list<MapIndex> moveMapIndexList;
+    mapManager->createActorFindDist(baseMapItem.mapIndex, 10);
+    mapManager->showDebug();
+    
+    for (auto targetMapItem : mapManager->findActorMapItem()) {
+        if (MapManager::equalMapItem(targetMapItem, baseMapItem)) {
+            // 自分
+            //CCLOG("equal targetMapItem x = %d y = %d ->", targetMapItem.mapIndex.x, targetMapItem.mapIndex.y);
+            continue;
+        }
+        std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(targetMapItem.mapIndex);
+        MapItem targetMoveDistMapItem = mapManager->searchTargetMapItem(searchMapIndexList);
+        //CCLOG("target x =%d y = %d", targetMoveDistMapItem.mapIndex.x, targetMoveDistMapItem.mapIndex.y);
+        auto targetMoveMapIndexList = mapManager->createMovePointList(targetMoveDistMapItem.mapIndex, baseMapItem);
+        if (targetMoveMapIndexList.size() == 1) {
+            auto moveMapIndex = *(targetMoveMapIndexList.begin());
+            if (moveMapIndex.x == 0 && moveMapIndex.y == 0) {
+                // 移動なし
+                //CCLOG("移動なし x = %d y = %d ->", targetMapItem.mapIndex.x, targetMapItem.mapIndex.y);
+                continue;
+            }
+        }
+        //CCLOG("size %ld", targetMoveMapIndexList.size());
+        
+        if (moveMapIndexList.empty() || moveMapIndexList.size() > targetMoveMapIndexList.size()) {
+            
+            bool isMapLineIn = false;
+            for (auto moveMapIndexCheck : targetMoveMapIndexList) {
+                if (!TMXGenerator::isMapInLine(moveMapIndexCheck.x, moveMapIndexCheck.y)) {
+                    isMapLineIn = true;
+                }
+            }
+            if (!isMapLineIn) {
+                moveMapIndexList = targetMoveMapIndexList;
+            }
+        }
+    }
+    return moveMapIndexList;
 }
 
 // ////////////////////////////////////////////////////////////
