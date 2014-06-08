@@ -295,8 +295,17 @@ TMXMapData TMXGenerator::createTMXMapData()
     }
     
     // 通路を作れなかった通路口を閉じる
-    for (auto closeMapIndex : closeMapIndexList) {
-        closeNotWalkMapIndex(closeMapIndex, &floorLayerList);
+    auto it = floorLayerList.begin();
+    while (it != floorLayerList.end()) {
+        for (auto closeMapIndex : closeMapIndexList) {
+            (*it)._gateWayMapIndexList.remove_if([closeMapIndex](TMXLayerData::MapIndex mapIndex) -> bool {
+                if (closeMapIndex._x == mapIndex._x && closeMapIndex._y == mapIndex._y) {
+                    return true;
+                }
+                return false;
+            });
+        }
+        it++;
     }
     
     return TMXMapData{config, floorLayerList, walkMapIndexList};
@@ -393,26 +402,6 @@ bool TMXGenerator::addFloorGate(MapManager* mapManager,
         return true;
     }
     return false;
-}
-
-void TMXGenerator::closeNotWalkMapIndex(const TMXLayerData::MapIndex& closeMapIndex, std::list<TMXLayerData>* floorLayerList)
-{
-    auto floorIt = floorLayerList->begin();
-    while (!(floorIt == floorLayerList->end())) {
-        
-        auto it = (*floorIt)._gateWayMapIndexList.begin();
-        while (!(it == (*floorIt)._gateWayMapIndexList.end())) {
-            auto gateWayMapIndex = *it;
-            
-            if (closeMapIndex._x == gateWayMapIndex._x && closeMapIndex._y == gateWayMapIndex._y) {
-                //CCLOG("通路作れなかったので閉じる(%ld) x=%d y=%d", (*floorIt)._gateWayMapIndexList.size(), gateWayMapIndex._x, gateWayMapIndex._y);
-                (*floorIt)._gateWayMapIndexList.erase(it);
-                //CCLOG("通路作れなかったので閉じた(%ld)", (*floorIt)._gateWayMapIndexList.size());
-            }
-            it++;
-        }
-        floorIt++;
-    }
 }
 
 std::list<MapIndex> TMXGenerator::createWalkMapIndexList(MapManager* mapManager, const TMXCreateBaseConfig& config, const MapItem& baseMapItem)
