@@ -95,6 +95,12 @@ public:
     static const int BackgroundTileId = 84;
     static const int FloorTileId = 80;
     
+    static const int LeftTileId = 179;
+    static const int RightTileId = 177;
+    static const int TopTileId = 194;
+    static const int BottomTileId = 162;
+    static const int KadoTileId = 178;
+    
     static int checkFloorTileId(const TMXLayerData& layerData, int x, int y) {
         if (layerData.isRect(x, y)) {
             return TMXLayerData::FloorTileId;
@@ -117,15 +123,15 @@ public:
             if (layerData.isGateWay(x, y)) {
                 return TMXLayerData::NonTileId;
             } else if (layerData.isKado(x, y)) {
-                return 178;
+                return TMXLayerData::KadoTileId;
             } else if (layerData.isRight(x, y)) {
-                return 177;
+                return TMXLayerData::RightTileId;
             } else if (layerData.isLeft(x, y)) {
-                return 179;
+                return TMXLayerData::LeftTileId;
             } else if (layerData.isTop(x, y)) {
-                return 194;
+                return TMXLayerData::TopTileId;
             } else if (layerData.isBottom(x, y)) {
-                return 162;
+                return TMXLayerData::BottomTileId;
             } else if (layerData.isRect(x, y)) {
                 return TMXLayerData::NonTileId;
             }

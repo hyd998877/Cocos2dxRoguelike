@@ -99,7 +99,7 @@ std::string TMXGenerator::generator(TMXMapData tmxMapData)
                         if (tileIdArray[x][y] != 0) {
                             dataNode.append_child("tile").append_attribute("gid").set_value(tileIdArray[x][y]);
                         } else {
-                            auto tileId = TMXLayerData::checkBackgroundTileId(tmxMapData._tmxLayerDataList, x, y);
+                            auto tileId = TMXLayerData::checkBackgroundTileId(tmxMapData._tmxLayerDataList, x, y);                            
                             dataNode.append_child("tile").append_attribute("gid").set_value(tileId);
                         }
                     }
@@ -119,6 +119,24 @@ std::string TMXGenerator::generator(TMXMapData tmxMapData)
                             dataNode.append_child("tile").append_attribute("gid").set_value(TMXLayerData::NonTileId);
                         } else {
                             int tileId = TMXLayerData::checkTileId(tmxMapData._tmxLayerDataList, x, y);
+                            if (tileId == TMXLayerData::ClearTileId) {
+                                
+                                // 通路の壁設定
+                                if (x-1 >= 0 && tileIdArray[x-1][y] != 0) {
+                                    tileId = TMXLayerData::KadoTileId;
+                                } else if (x+1 < config.mapSizeWidth && tileIdArray[x+1][y] != 0) {
+                                    tileId = TMXLayerData::KadoTileId;
+                                } else if (y-1 >= 0 && tileIdArray[x][y-1] != 0) {
+                                    tileId = TMXLayerData::KadoTileId;
+                                } else if (y+1 < config.mapSizeHeight && tileIdArray[x][y+1] != 0) {
+                                    tileId = TMXLayerData::KadoTileId;
+                                } else if ((y-1 >= 0                   && x-1 >= 0                  && tileIdArray[x-1][y-1] != 0) ||
+                                           (y-1 >= 0                   && x+1 < config.mapSizeWidth && tileIdArray[x+1][y-1] != 0) ||
+                                           (y+1 < config.mapSizeHeight && x-1 >= 0                  && tileIdArray[x-1][y+1] != 0) ||
+                                           (y+1 < config.mapSizeHeight && x+1 < config.mapSizeWidth && tileIdArray[x+1][y+1] != 0)) {
+                                    tileId = TMXLayerData::KadoTileId;
+                                }
+                            }
                             dataNode.append_child("tile").append_attribute("gid").set_value(tileId);
                         }
                     }
