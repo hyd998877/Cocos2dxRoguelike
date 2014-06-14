@@ -184,9 +184,9 @@ TMXMapData TMXGenerator::createTMXMapData()
     
     std::list<TMXLayerData> floorLayerList;
     
-    const int FLOOR_Y_COUNT = config.baseMapLayout.size();
-    const int FLOOR_X_COUNT = config.baseMapLayout[0].size();
-    const int FLOOR_SIZE_MAX = FLOOR_Y_COUNT * FLOOR_X_COUNT;
+    const size_t FLOOR_Y_COUNT = config.baseMapLayout.size();
+    const size_t FLOOR_X_COUNT = config.baseMapLayout[0].size();
+    const size_t FLOOR_SIZE_MAX = FLOOR_Y_COUNT * FLOOR_X_COUNT;
     for (int floorIdx = 0; floorIdx < FLOOR_SIZE_MAX; floorIdx++) {
         TMXLayerData layerData;
         layerData._no = floorIdx + 1;
