@@ -340,9 +340,26 @@ TMXCreateBaseConfig TMXGenerator::createTMXCreateConfig()
             if (randomSizeArray[y][x]._width == 0 || randomSizeArray[y][x]._height == 0) {
                 continue;
             }
+            
+            // 拡張可能なサイズを計測する
+            int xSize = 0;
+            for (int x2 = x; x2 < floorCountX; x2++) {
+                if (randomSizeArray[y][x2]._width == 0 || randomSizeArray[y][x2]._height == 0) {
+                    break;
+                }
+                xSize++;
+            }
+            int ySize = 0;
+            for (int y2 = y; y2 < floorCountY; y2++) {
+                if (randomSizeArray[y2][x]._width == 0 || randomSizeArray[y2][x]._height == 0) {
+                    break;
+                }
+                ySize++;
+            }
+            
             // 表現可能な範囲でランダムにサイズを取る
-            int randW = GetRandom(1, floorCountX - x);
-            int randH = GetRandom(1, floorCountY - y);
+            int randW = GetRandom(1, xSize);
+            int randH = GetRandom(1, ySize);
             
             // 横か縦どちらかが拡張される場合のみ処理する
             if (randW > 1 || randH > 1) {
