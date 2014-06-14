@@ -218,7 +218,7 @@ void MypageScene::showDebugMenu()
             
             for (int i = 0; i < 10; i++) {
                 MUseItem mUseItem = MUseItemDao::getInstance()->selectById(1);
-                int objectId = AccountData::getInstance()->getGameObjectId();
+                long objectId = AccountData::getInstance()->getGameObjectId();
                 ItemDto itemDto(objectId, mUseItem, 0);
                 this->_itemInventory.addItemDto(itemDto);
                 AccountData::getInstance()->gameObjectCountUp();

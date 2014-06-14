@@ -184,9 +184,9 @@ TMXMapData TMXGenerator::createTMXMapData()
     
     std::list<TMXLayerData> floorLayerList;
     
-    const int FLOOR_Y_COUNT = config.baseMapLayout.size();
-    const int FLOOR_X_COUNT = config.baseMapLayout[0].size();
-    const int FLOOR_SIZE_MAX = FLOOR_Y_COUNT * FLOOR_X_COUNT;
+    const size_t FLOOR_Y_COUNT = config.baseMapLayout.size();
+    const size_t FLOOR_X_COUNT = config.baseMapLayout[0].size();
+    const size_t FLOOR_SIZE_MAX = FLOOR_Y_COUNT * FLOOR_X_COUNT;
     for (int floorIdx = 0; floorIdx < FLOOR_SIZE_MAX; floorIdx++) {
         TMXLayerData layerData;
         layerData._no = floorIdx + 1;
@@ -282,16 +282,41 @@ TMXMapData TMXGenerator::createTMXMapData()
     for (auto mapItem : actorMapList) {
         //CCLOG("mapItem x = %d y = %d ->", mapItem.mapIndex.x, mapItem.mapIndex.y);
         
+        // ふさがっていたら探索しない
+        if (mapManager.getActorMapItem(mapItem.mapIndex).mapDataType != MapDataType::PLAYER) {
+            continue;
+        }
+        
         std::list<MapIndex> moveMapIndexList = createWalkMapIndexList(&mapManager, config, mapItem);
         if (moveMapIndexList.empty()) {
-            // 通路ができなかった通路口を確保
-            closeMapIndexList.push_back(TMXLayerData::MapIndex{mapItem.mapIndex.x, mapItem.mapIndex.y});
-        } else {
-            for (auto mapIndex : moveMapIndexList) {
-                //CCLOG("move x=%d y=%d", mapIndex.x, mapIndex.y);
-                walkMapIndexList.push_back(TMXLayerData::MapIndex{mapIndex.x, mapIndex.y});
+            // 1回だけ探索範囲を拡張してリトライ
+            std::list<MapIndex> moveMapIndexList2 = createWalkMapIndexList(&mapManager, config, mapItem, 20);
+            if (moveMapIndexList2.empty()) {
+                // 通路ができなかった通路口を確保
+                closeMapIndexList.push_back(TMXLayerData::MapIndex{mapItem.mapIndex.x, mapItem.mapIndex.y});
+                continue;
             }
+            moveMapIndexList = moveMapIndexList2;
         }
+        
+        for (auto mapIndex : moveMapIndexList) {
+            //CCLOG("move x=%d y=%d", mapIndex.x, mapIndex.y);
+            TMXLayerData::MapIndex walkMapIndex{mapIndex.x, mapIndex.y};
+            walkMapIndexList.push_back(walkMapIndex);
+            
+            // 道も通路扱いにする（閉じない）
+            int floorNo = mapItem.seqNo;
+            auto targetLayerData = std::find_if(floorLayerList.begin(), floorLayerList.end(), [floorNo](TMXLayerData layerData) {
+                if (layerData._no == floorNo) {
+                    return true;
+                }
+                return false;
+            });
+            addFloorGate(&mapManager, config, *targetLayerData, walkMapIndex);
+        }
+        
+        // つないだ通路は埋める
+        mapManager.removeMapItem(mapItem);
     }
     
     // 通路を作れなかった通路口を閉じる
@@ -340,9 +365,26 @@ TMXCreateBaseConfig TMXGenerator::createTMXCreateConfig()
             if (randomSizeArray[y][x]._width == 0 || randomSizeArray[y][x]._height == 0) {
                 continue;
             }
+            
+            // 拡張可能なサイズを計測する
+            int xSize = 0;
+            for (int x2 = x; x2 < floorCountX; x2++) {
+                if (randomSizeArray[y][x2]._width == 0 || randomSizeArray[y][x2]._height == 0) {
+                    break;
+                }
+                xSize++;
+            }
+            int ySize = 0;
+            for (int y2 = y; y2 < floorCountY; y2++) {
+                if (randomSizeArray[y2][x]._width == 0 || randomSizeArray[y2][x]._height == 0) {
+                    break;
+                }
+                ySize++;
+            }
+            
             // 表現可能な範囲でランダムにサイズを取る
-            int randW = GetRandom(1, floorCountX - x);
-            int randH = GetRandom(1, floorCountY - y);
+            int randW = GetRandom(1, xSize);
+            int randH = GetRandom(1, ySize);
             
             // 横か縦どちらかが拡張される場合のみ処理する
             if (randW > 1 || randH > 1) {
@@ -397,6 +439,7 @@ bool TMXGenerator::addFloorGate(MapManager* mapManager,
         mapManager->removeMapItem(obj);
         auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateMapIndex._x, gateMapIndex._y);
         mapItem.mapDataType = MapDataType::PLAYER;
+        mapItem.seqNo = layerData._no; // フロアNoを持たせて管理する
         mapManager->addActor(mapItem);
         
         return true;
@@ -404,32 +447,36 @@ bool TMXGenerator::addFloorGate(MapManager* mapManager,
     return false;
 }
 
-std::list<MapIndex> TMXGenerator::createWalkMapIndexList(MapManager* mapManager, const TMXCreateBaseConfig& config, const MapItem& baseMapItem)
+std::list<MapIndex> TMXGenerator::createWalkMapIndexList(MapManager* mapManager, const TMXCreateBaseConfig& config, const ActorMapItem& baseMapItem, int searchRange /*  = 15 */)
 {
     std::list<MapIndex> moveMapIndexList;
-    // TODO: 通路口の探索範囲10マス以内
-    mapManager->createActorFindDist(baseMapItem.mapIndex, 15);
+    ActorMapItem moveTargetMapItem = MapManager::createNoneMapItem<ActorMapItem>(0, 0);
+    moveTargetMapItem.mapDataType = MapDataType::NONE;
+    
+    // 通路口の探索範囲を作成
+    mapManager->createActorFindDist(baseMapItem.mapIndex, searchRange);
     mapManager->showDebug();
     
     for (auto targetMapItem : mapManager->findActorMapItem()) {
         if (MapManager::equalMapItem(targetMapItem, baseMapItem)) {
             // 自分
-            //CCLOG("equal targetMapItem x = %d y = %d ->", targetMapItem.mapIndex.x, targetMapItem.mapIndex.y);
             continue;
         }
+        if (baseMapItem.seqNo == targetMapItem.seqNo) {
+            // 同じフロア
+            continue;
+        }
+        
         std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(targetMapItem.mapIndex);
         MapItem targetMoveDistMapItem = mapManager->searchTargetMapItem(searchMapIndexList);
-        //CCLOG("target x =%d y = %d", targetMoveDistMapItem.mapIndex.x, targetMoveDistMapItem.mapIndex.y);
         auto targetMoveMapIndexList = mapManager->createMovePointList(targetMoveDistMapItem.mapIndex, baseMapItem);
         if (targetMoveMapIndexList.size() == 1) {
             auto moveMapIndex = *(targetMoveMapIndexList.begin());
             if (moveMapIndex.x == 0 && moveMapIndex.y == 0) {
                 // 移動なし
-                //CCLOG("移動なし x = %d y = %d ->", targetMapItem.mapIndex.x, targetMapItem.mapIndex.y);
                 continue;
             }
         }
-        //CCLOG("size %ld", targetMoveMapIndexList.size());
         
         if (moveMapIndexList.empty() || moveMapIndexList.size() > targetMoveMapIndexList.size()) {
             
@@ -441,8 +488,16 @@ std::list<MapIndex> TMXGenerator::createWalkMapIndexList(MapManager* mapManager,
             }
             if (!isMapLineIn) {
                 moveMapIndexList = targetMoveMapIndexList;
+                // つないだ通路は埋めるので保持する
+                moveTargetMapItem = targetMapItem;
             }
         }
     }
+
+    // つないだ通路は埋める
+    if (moveTargetMapItem.mapDataType == PLAYER) {
+        mapManager->removeMapItem(moveTargetMapItem);
+    }
+    
     return moveMapIndexList;
 }

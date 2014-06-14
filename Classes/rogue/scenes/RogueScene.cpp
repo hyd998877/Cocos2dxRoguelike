@@ -475,7 +475,7 @@ void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
     auto player_sprite = this->getPlayerActorSprite(1);
     
     if (!itemDto.isEquip()) {
-        int relaseObjectId = 0;
+        long relaseObjectId = 0L;
         
         if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
             // 解除
@@ -1257,7 +1257,7 @@ void RogueScene::refreshStatus() {
         auto pPlayerDto = pPlayerSprite->getActorDto();
         int questId = _roguePlayDto.getQuestId(); // フロア情報（クエストID=フロア数でいい？)
         // 作成
-        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10ld G",
+        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G",
                                              questId,
                                              pPlayerDto->getLv(),
                                              pPlayerDto->getHitPoint(),
@@ -1512,7 +1512,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             // Master取得
             MUseItem mUseItem = MUseItemDao::getInstance()->selectById(hitId);
             // ドロップアイテム情報を生成
-            int objectId = AccountData::getInstance()->getGameObjectId();
+            long objectId = AccountData::getInstance()->getGameObjectId();
             ItemDto itemDto(
                 objectId,
                 mUseItem.getUseItemId(),
@@ -1533,7 +1533,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             // 武器
             MWeapon mWeapon = MWeaponDao::getInstance()->selectById(hitId);
             
-            int objectId = AccountData::getInstance()->getGameObjectId();
+            long objectId = AccountData::getInstance()->getGameObjectId();
             ItemDto itemDto(
                 objectId,
                 mWeapon.getWeaponId(),
@@ -1553,7 +1553,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
             // 防具
             MAccessory mAccessory = MAccessoryDao::getInstance()->selectById(hitId);
             
-            int objectId = AccountData::getInstance()->getGameObjectId();
+            long objectId = AccountData::getInstance()->getGameObjectId();
             ItemDto itemDto(
                 objectId,
                 mAccessory.getAccessoryId(),
@@ -1579,7 +1579,7 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
 // ローグマップ基本データ取得
 const ValueMap RogueScene::getRogueMapData() {
     // フロア情報のIndexを用意する（データがない場合は最終データで補正）
-    int questIndex = _roguePlayDto.getQuestId() - 1;
+    long questIndex = _roguePlayDto.getQuestId() - 1;
     auto questData = RogueGameConfig::getQuestData(RoguePlayDto::findQuestKey(_roguePlayDto.getQuestType()));
     auto datas = questData.at("floor").asValueVector();
     if (datas.size() <= questIndex) {

@@ -16,7 +16,7 @@ ItemInventoryDto::ItemInventoryDto()
 {
 }
 
-ItemInventoryDto::ItemInventoryDto(std::string name, long gold, int size, ItemList itemList)
+ItemInventoryDto::ItemInventoryDto(std::string name, int gold, int size, ItemList itemList)
 : _name(name)
 , _gold(gold)
 , _size(size)

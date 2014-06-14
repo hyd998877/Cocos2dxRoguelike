@@ -233,7 +233,10 @@ private:
     void findDist(int x, int y, int dist, bool first);
     void findMovePointList(int moveX, int moveY, int moveDist, const MapItem& moveToMapItem);
     bool chkMove(int mapPointX, int mapPointY, int dist) const;
-    bool chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataType ignoreMapDataType);
+    
+    bool chkMovePoint(MapIndex mapIndex, int dist, MapDataType ignoreType);
+    bool chkMovePoint(int pointX, int pointY, int dist, MapDataType ignoreType);
+    
     void addDistCursor(int mapPointX, int mapPointY, int dist);
     
     std::string logOutString(MapItem mapItem) const;

@@ -184,7 +184,7 @@ private:
     
     // Helper
     static bool addFloorGate(MapManager* mapManager, const TMXCreateBaseConfig& config, const TMXLayerData& layerData, const TMXLayerData::MapIndex& gateMapIndex);
-    static std::list<MapIndex> createWalkMapIndexList(MapManager* mapManager, const TMXCreateBaseConfig& config, const MapItem& baseMapItem);
+    static std::list<MapIndex> createWalkMapIndexList(MapManager* mapManager, const TMXCreateBaseConfig& config, const ActorMapItem& baseMapItem, int searchRange = 15);
     static TMXCreateBaseConfig createTMXCreateConfig();
 };
 

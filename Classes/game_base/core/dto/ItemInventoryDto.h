@@ -24,10 +24,10 @@ public:
     typedef std::function<bool(const ItemDto& o1, const ItemDto& o2)> Comparator;
     
     ItemInventoryDto();
-    ItemInventoryDto(std::string name, long gold, int size, ItemList itemList = ItemList());
+    ItemInventoryDto(std::string name, int gold, int size, ItemList itemList = ItemList());
     virtual ~ItemInventoryDto();
     
-    long getGold() const { return _gold; }
+    int getGold() const { return _gold; }
     const std::string& getName() const { return _name; }
     ItemList getItemList() const { return _itemList; }
     int getLimitSize() const { return _size; }
@@ -57,7 +57,7 @@ private:
     ItemDto* findItemDto(long objectId);
     
     std::string _name;
-    long _gold;
+    int _gold;
     int _size;
     ItemList _itemList;
 };

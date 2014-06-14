@@ -216,16 +216,20 @@ bool MapManager::chkMove(int mapPointX, int mapPointY, int dist) const
     return false;
 }
 
-bool MapManager::chkMovePoint(int mapPointX, int mapPointY, int dist, MapDataType ignoreMapDataType)
+bool MapManager::chkMovePoint(int pointX, int pointY, int dist, MapDataType ignoreType)
+{
+    return chkMovePoint(MapIndex{pointX, pointY, MoveDirectionType::MOVE_NONE}, dist, ignoreType);
+}
+bool MapManager::chkMovePoint(MapIndex mapIndex, int dist, MapDataType ignoreType)
 {
     assert(vaildateInit());
     
-    MapIndex mapIndex = {mapPointX, mapPointY, MoveDirectionType::MOVE_NONE};
     MapItem mapItem = getMapItem(mapIndex);
     if (mapItem.mapDataType == MapDataType::OBSTACLE) {
         return false;
     }
-    if (mapItem.moveDist == dist && mapItem.mapDataType != ignoreMapDataType)
+    
+    if (mapItem.moveDist == dist && mapItem.mapDataType != ignoreType)
     {
         return true;
     }
