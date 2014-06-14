@@ -422,6 +422,7 @@ bool TMXGenerator::addFloorGate(MapManager* mapManager,
         mapManager->removeMapItem(obj);
         auto mapItem = MapManager::createNoneMapItem<ActorMapItem>(gateMapIndex._x, gateMapIndex._y);
         mapItem.mapDataType = MapDataType::PLAYER;
+        mapItem.seqNo = layerData._no; // フロアNoを持たせて管理する
         mapManager->addActor(mapItem);
         
         return true;
@@ -442,6 +443,11 @@ std::list<MapIndex> TMXGenerator::createWalkMapIndexList(MapManager* mapManager,
             //CCLOG("equal targetMapItem x = %d y = %d ->", targetMapItem.mapIndex.x, targetMapItem.mapIndex.y);
             continue;
         }
+        if (baseMapItem.seqNo == targetMapItem.seqNo) {
+            // 同じフロア
+            continue;
+        }
+        
         std::list<MapIndex> searchMapIndexList = MapManager::createRelatedMapIndexList(targetMapItem.mapIndex);
         MapItem targetMoveDistMapItem = mapManager->searchTargetMapItem(searchMapIndexList);
         //CCLOG("target x =%d y = %d", targetMoveDistMapItem.mapIndex.x, targetMoveDistMapItem.mapIndex.y);
