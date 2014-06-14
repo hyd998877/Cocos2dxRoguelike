@@ -245,7 +245,7 @@ void AccountData::resetAll() {
 
 std::string AccountData::createQuestSaveDetailText() const {
     // TODO: ダンジョン名が仮
-    return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %ld G",
+    return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %d G",
                         "初心者の洞窟",
                         this->_roguePlayData.getQuestId(),
                         this->_playerActor.getLv(),

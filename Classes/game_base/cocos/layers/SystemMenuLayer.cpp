@@ -85,7 +85,7 @@ void SystemMenuLayer::setMenuButtonList(const std::list<SystemMenuButtonInfo> me
     Point center = Point(this->getContentSize().width / 2, this->getContentSize().height / 2);
     
     Size gridSize;
-    int count = menu->getChildrenCount();
+    auto count = menu->getChildrenCount();
     if (count == 8 || count == 7 || count == 5 || count == 0) {
         // 8個 無理
         // 7個 無理
