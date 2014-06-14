@@ -282,6 +282,11 @@ TMXMapData TMXGenerator::createTMXMapData()
     for (auto mapItem : actorMapList) {
         //CCLOG("mapItem x = %d y = %d ->", mapItem.mapIndex.x, mapItem.mapIndex.y);
         
+        // ふさがっていたら探索しない
+        if (mapManager.getActorMapItem(mapItem.mapIndex).mapDataType != MapDataType::PLAYER) {
+            continue;
+        }
+        
         std::list<MapIndex> moveMapIndexList = createWalkMapIndexList(&mapManager, config, mapItem);
         if (moveMapIndexList.empty()) {
             // 通路ができなかった通路口を確保
@@ -292,6 +297,9 @@ TMXMapData TMXGenerator::createTMXMapData()
                 walkMapIndexList.push_back(TMXLayerData::MapIndex{mapIndex.x, mapIndex.y});
             }
         }
+        
+        // つないだ通路は埋める
+        mapManager.removeMapItem(mapItem);
     }
     
     // 通路を作れなかった通路口を閉じる
@@ -458,8 +466,16 @@ std::list<MapIndex> TMXGenerator::createWalkMapIndexList(MapManager* mapManager,
             }
             if (!isMapLineIn) {
                 moveMapIndexList = targetMoveMapIndexList;
+                // つないだ通路は埋めるので保持する
+                moveTargetMapItem = targetMapItem;
             }
         }
     }
+
+    // つないだ通路は埋める
+    if (moveTargetMapItem.mapDataType == PLAYER) {
+        mapManager->removeMapItem(moveTargetMapItem);
+    }
+    
     return moveMapIndexList;
 }
