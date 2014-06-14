@@ -52,7 +52,10 @@ static AppDelegate s_sharedApplication;
                                    multiSampling: NO
                                  numberOfSamples: 0];
 
-    // Use RootViewController manage CCEAGLView 
+    // マルチタッチ
+    [eaglView setMultipleTouchEnabled:YES];
+    
+    // Use RootViewController manage CCEAGLView
     _viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     _viewController.wantsFullScreenLayout = YES;
     _viewController.view = eaglView;
