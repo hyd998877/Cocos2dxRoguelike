@@ -22,6 +22,8 @@
 
 #include "MypageHeaderLayer.h"
 
+#include "BankScene.h"
+
 USING_NS_CC;
 
 ItemStockPageLayer::ItemStockPageLayer()
@@ -80,6 +82,7 @@ bool ItemStockPageLayer::init()
     auto iconNode2 = Sprite::create("icon_set/item_671.png");
     auto menuItem2 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode2, FontUtils::getDefaultFontTTFConfig(), "銀行を開く", [this](Ref *ref) {
         // TODO: 銀行表示
+        Director::getInstance()->replaceScene(BankScene::scene());
     });
     
     auto menu = Menu::create(menuItem1, menuItem2, NULL);

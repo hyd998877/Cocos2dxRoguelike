@@ -114,11 +114,13 @@
 		CE19BEA219322B0D007715BA /* DropItemSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE6919322B0D007715BA /* DropItemSprite.cpp */; };
 		CE19BEA319322B0D007715BA /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7119322B0D007715BA /* SRPGMapLayer.cpp */; };
 		CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7519322B0D007715BA /* SRPGScene.cpp */; };
+		CE6651BB194D71A200333345 /* cocostudio in Resources */ = {isa = PBXBuildFile; fileRef = CE6651BA194D71A200333345 /* cocostudio */; };
 		CE836F931942EB4900880652 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE836F921942EB4900880652 /* XCTest.framework */; };
 		CE836F941942EB4900880652 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		CE836F951942EB4900880652 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		CE836F9B1942EB4900880652 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE836F991942EB4900880652 /* InfoPlist.strings */; };
 		CE836F9D1942EB4900880652 /* Cocos2dRogueLike_iOS_Tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = CE836F9C1942EB4900880652 /* Cocos2dRogueLike_iOS_Tests.mm */; };
+		CEC1EB6C194D73FB007C8595 /* BankScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEC1EB6A194D73FB007C8595 /* BankScene.cpp */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
@@ -429,12 +431,15 @@
 		CE19BE7219322B0D007715BA /* SRPGMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGMapLayer.h; sourceTree = "<group>"; };
 		CE19BE7519322B0D007715BA /* SRPGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SRPGScene.cpp; sourceTree = "<group>"; };
 		CE19BE7619322B0D007715BA /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
+		CE6651BA194D71A200333345 /* cocostudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cocostudio; sourceTree = "<group>"; };
 		CE836F911942EB4900880652 /* Cocos2dRogueLike iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cocos2dRogueLike iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE836F921942EB4900880652 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		CE836F981942EB4900880652 /* Cocos2dRogueLike iOS Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Cocos2dRogueLike iOS Tests-Info.plist"; sourceTree = "<group>"; };
 		CE836F9A1942EB4900880652 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE836F9C1942EB4900880652 /* Cocos2dRogueLike_iOS_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Cocos2dRogueLike_iOS_Tests.mm; sourceTree = "<group>"; };
 		CE836F9E1942EB4900880652 /* Cocos2dRogueLike iOS Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cocos2dRogueLike iOS Tests-Prefix.pch"; sourceTree = "<group>"; };
+		CEC1EB6A194D73FB007C8595 /* BankScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BankScene.cpp; sourceTree = "<group>"; };
+		CEC1EB6B194D73FB007C8595 /* BankScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BankScene.h; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -645,6 +650,7 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CE6651BA194D71A200333345 /* cocostudio */,
 				CE19BDC819322AFA007715BA /* actor */,
 				CE19BDC919322AFA007715BA /* battle */,
 				CE19BDCA19322AFA007715BA /* bg */,
@@ -1071,6 +1077,8 @@
 				CE19BE5D19322B0D007715BA /* page */,
 				CE19BE6619322B0D007715BA /* RogueScene.cpp */,
 				CE19BE6719322B0D007715BA /* RogueScene.h */,
+				CEC1EB6A194D73FB007C8595 /* BankScene.cpp */,
+				CEC1EB6B194D73FB007C8595 /* BankScene.h */,
 			);
 			path = scenes;
 			sourceTree = "<group>";
@@ -1408,6 +1416,7 @@
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				CE19BDDB19322AFA007715BA /* icon_set in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
+				CE6651BB194D71A200333345 /* cocostudio in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				CE19BDD619322AFA007715BA /* battle in Resources */,
 				CE19BDE019322AFA007715BA /* tmx in Resources */,
@@ -1500,6 +1509,7 @@
 				CE19BE8C19322B0D007715BA /* ActorDto.cpp in Sources */,
 				CE19BE8D19322B0D007715BA /* ActorEquipDto.cpp in Sources */,
 				CE19BE8619322B0D007715BA /* MUseItemDao.cpp in Sources */,
+				CEC1EB6C194D73FB007C8595 /* BankScene.cpp in Sources */,
 				CE19BE8019322B0D007715BA /* SystemMenuLayer.cpp in Sources */,
 				CE19BE7D19322B0D007715BA /* ItemWindowLayer.cpp in Sources */,
 				CE19BE9919322B0D007715BA /* RoguePlayDto.cpp in Sources */,
