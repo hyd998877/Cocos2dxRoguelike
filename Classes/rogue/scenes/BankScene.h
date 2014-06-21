@@ -14,7 +14,7 @@ Cocos2dRogueLike
 #ifndef __Cocos2dRogueLike__BankScene__
 #define __Cocos2dRogueLike__BankScene__
 
-#include "cocos2d.h"
+#include "MyPageBaseScene.h"
 
 /**
 @class BankScene BankScene.h
@@ -26,19 +26,23 @@ detail description
 @author kyokomi
 @date 2014/06/15
 */
-class BankScene : public cocos2d::Layer
+class BankScene : public MyPageBaseScene
 {
     
 public:
     BankScene();
     virtual ~BankScene();
-    virtual bool init();
     CREATE_FUNC(BankScene);
 
-    static cocos2d::Scene* scene();
 protected:
     
 private:
+    const std::string TITLE_NAME = "銀行屋";
+    const int MENU_ID = 3;
+    
+    cocos2d::Node* initLayout();
+    const std::string& getTitleName() { return TITLE_NAME; }
+    int getMenuId() { return MENU_ID; }
 
 };
 

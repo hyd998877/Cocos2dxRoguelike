@@ -2,8 +2,7 @@
 #include "AppMacros.h"
 #include "extensions/cocos-ext.h"
 
-#include "MypageScene.h"
-#include "RogueScene.h"
+#include "TopScene.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -75,7 +74,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    auto scene = RogueLikeGame::MypageScene::scene();
+    auto scene = MyPageBaseScene::scene<TopScene>();
     
     // run
     director->runWithScene(scene);

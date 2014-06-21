@@ -11,7 +11,6 @@
 #include "AccountData.h"
 
 #include "CommonWindowUtil.h"
-#include "MypageHeaderLayer.h"
 #include "AlertDialogLayer.h"
 
 #include "RogueScene.h"
@@ -94,10 +93,6 @@ bool QuestPageLayer::init()
     menu->setPosition(Point(winSize.width/5, winSize.height/2));
     menu->alignItemsVerticallyWithPadding(5);
     this->addChild(menu);
-    
-    auto headerLayer = MypageHeaderLayer::create();
-    headerLayer->setTitleText("くえすと選択");
-    this->addChild(headerLayer);
     
     return true;
 }

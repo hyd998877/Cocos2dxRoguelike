@@ -16,8 +16,6 @@
 
 #include "CommonWindowUtil.h"
 
-#include "MypageHeaderLayer.h"
-
 USING_NS_CC;
 
 TopPageLayer::TopPageLayer()
@@ -72,10 +70,6 @@ bool TopPageLayer::init()
     messageTextLabel->setPosition(Point(messageLayer->getContentSize().width / 2, messageLayer->getContentSize().height / 2));
     // 枠
     CommonWindowUtil::attachWindowWaku(messageLayer);
-    
-    auto headerLayer = MypageHeaderLayer::create();
-    headerLayer->setTitleText("とっぷぺーじ");
-    this->addChild(headerLayer);
     
     return true;
 }

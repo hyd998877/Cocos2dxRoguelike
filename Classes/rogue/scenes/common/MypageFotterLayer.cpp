@@ -14,9 +14,13 @@ Cocos2dRogueLike
 #include "MypageFotterLayer.h"
 #include "WidgetUtil.h"
 
+#include "TopScene.h"
+#include "QuestChoiceScene.h"
 #include "MypageScene.h"
 #include "RogueScene.h"
 #include "BankScene.h"
+#include "ItemStockScene.h"
+#include "ItemMixedScene.h"
 
 USING_NS_CC;
 
@@ -49,23 +53,23 @@ bool MypageFotterLayer::init()
     //攻撃ボタンイベントの登録
     WidgetUtil::onTouchEventEnded(layout, "fotter_button_0", [](Ref *ref, cocos2d::ui::Widget::TouchEventType type) {
         CCLOG("onTouchEventEnded 0");
-        Director::getInstance()->replaceScene(RogueLikeGame::MypageScene::scene());
+        Director::getInstance()->replaceScene(MyPageBaseScene::scene<TopScene>());
     });
     WidgetUtil::onTouchEventEnded(layout, "fotter_button_1", [](Ref *ref, cocos2d::ui::Widget::TouchEventType type) {
         CCLOG("onTouchEventEnded 1");
-        Director::getInstance()->replaceScene(RogueLikeGame::MypageScene::scene());
+        Director::getInstance()->replaceScene(MyPageBaseScene::scene<QuestChoiceScene>());
     });
     WidgetUtil::onTouchEventEnded(layout, "fotter_button_2", [](Ref *ref, cocos2d::ui::Widget::TouchEventType type) {
         CCLOG("onTouchEventEnded 2");
-        Director::getInstance()->replaceScene(BankScene::scene());
+        Director::getInstance()->replaceScene(MyPageBaseScene::scene<ItemStockScene>());
     });
     WidgetUtil::onTouchEventEnded(layout, "fotter_button_3", [](Ref *ref, cocos2d::ui::Widget::TouchEventType type) {
         CCLOG("onTouchEventEnded 3");
-        Director::getInstance()->replaceScene(RogueLikeGame::MypageScene::scene());
+        Director::getInstance()->replaceScene(MyPageBaseScene::scene<BankScene>());
     });
     WidgetUtil::onTouchEventEnded(layout, "fotter_button_4", [](Ref *ref, cocos2d::ui::Widget::TouchEventType type) {
         CCLOG("onTouchEventEnded 4");
-        Director::getInstance()->replaceScene(RogueLikeGame::MypageScene::scene());
+        Director::getInstance()->replaceScene(MyPageBaseScene::scene<ItemMixedScene>());
     });
     _baseLayout = layout;
     

@@ -20,8 +20,6 @@
 
 #include "ItemLogic.h"
 
-#include "MypageHeaderLayer.h"
-
 USING_NS_CC;
 
 ItemMixedPageLayer::ItemMixedPageLayer()
@@ -119,10 +117,6 @@ bool ItemMixedPageLayer::init()
     auto menu = Menu::create(baseItemMenuLabel, materialItemlayer, mixedMenuItem, NULL);
     menu->setPosition(Point::ZERO);
     this->addChild(menu);
-    
-    auto headerLayer = MypageHeaderLayer::create();
-    headerLayer->setTitleText("合成屋");
-    this->addChild(headerLayer);
     
     return true;
 }
