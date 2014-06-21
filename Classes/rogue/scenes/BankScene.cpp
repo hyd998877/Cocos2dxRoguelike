@@ -13,11 +13,13 @@ Cocos2dRogueLike
 
 #include "BankScene.h"
 
-#include "cocostudio/CocoStudio.h"
+#include "WidgetUtil.h"
+#include "MypageFotterLayer.h"
 
 USING_NS_CC;
 
 using namespace cocostudio;
+using namespace ui;
 
 BankScene::BankScene()
 {
@@ -48,6 +50,11 @@ bool BankScene::init()
     bankUiLayout->setPosition(Vec2(visibleSize.width/2 - bankUiLayout->getContentSize().width/2*bankUiLayout->getScaleX(),
                                    visibleSize.height/2 - bankUiLayout->getContentSize().height/2*bankUiLayout->getScaleY()));
     this->addChild(bankUiLayout);
+    
+    // Fotter
+    auto fotter = MypageFotterLayer::create();
+    fotter->setLockMenu(2);
+    this->addChild(fotter);
     
     return true;
 }
