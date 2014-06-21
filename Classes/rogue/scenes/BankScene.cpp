@@ -15,6 +15,7 @@ Cocos2dRogueLike
 
 #include "WidgetUtil.h"
 #include "MypageFotterLayer.h"
+#include "MypageHeaderLayer.h"
 
 USING_NS_CC;
 
@@ -50,6 +51,11 @@ bool BankScene::init()
     bankUiLayout->setPosition(Vec2(visibleSize.width/2 - bankUiLayout->getContentSize().width/2*bankUiLayout->getScaleX(),
                                    visibleSize.height/2 - bankUiLayout->getContentSize().height/2*bankUiLayout->getScaleY()));
     this->addChild(bankUiLayout);
+
+    // Header
+    auto header = MypageHeaderLayer::create();
+    header->setTitleText("銀行屋");
+    this->addChild(header);
     
     // Fotter
     auto fotter = MypageFotterLayer::create();
