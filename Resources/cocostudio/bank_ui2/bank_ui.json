@@ -397,10 +397,10 @@
               "areaHeight": 0,
               "areaWidth": 0,
               "fontFile": null,
-              "fontName": "fonts/PixelMplus10-Regular.ttf",
-              "fontSize": 20,
+              "fontName": "fonts/misaki_gothic.ttf",
+              "fontSize": 16,
               "hAlignment": 0,
-              "text": "Text Label aaaaaaaaaaaa",
+              "text": "ここはお金を預けたり、引き出したりできるわ。",
               "touchScaleEnable": false,
               "vAlignment": 0
             }
