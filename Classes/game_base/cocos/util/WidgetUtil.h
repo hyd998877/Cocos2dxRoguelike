@@ -17,24 +17,16 @@
 class WidgetUtil
 {
 public:
-    static cocos2d::ui::Widget* getChildByNameRecursion(cocos2d::ui::Widget* rootWidget, std::string name)
-    {
-        for (auto& child : rootWidget->getChildren())
-        {
-            if (child)
-            {
+    static cocos2d::ui::Widget* getChildByNameRecursion(cocos2d::ui::Widget* rootWidget, std::string name) {
+        for (auto& child : rootWidget->getChildren()) {
+            if (child) {
                 cocos2d::ui::Widget* widgetChild = dynamic_cast<cocos2d::ui::Widget*>(child);
-                if (widgetChild)
-                {
-                    if (widgetChild->getName() == name)
-                    {
+                if (widgetChild) {
+                    if (widgetChild->getName() == name) {
                         return widgetChild;
-                    }
-                    else
-                    {
+                    } else {
                         auto widgetGrandChild = getChildByNameRecursion(widgetChild, name);
-                        if (widgetGrandChild)
-                        {
+                        if (widgetGrandChild) {
                             return widgetGrandChild;
                         }
                     }
@@ -55,6 +47,11 @@ public:
                 callback(ref, type);
             }
         });
+    }
+    
+    static void settingCenterPosition(cocos2d::ui::Widget* widget) {
+        auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+        widget->setPosition(cocos2d::Vec2(visibleSize.width/2 - widget->getContentSize().width/2*widget->getScaleX(), visibleSize.height/2 - widget->getContentSize().height/2*widget->getScaleY()));
     }
 };
 
