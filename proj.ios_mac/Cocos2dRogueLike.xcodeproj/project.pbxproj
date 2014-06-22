@@ -108,7 +108,6 @@
 		CE19BE9819322B0D007715BA /* AccountData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE4D19322B0D007715BA /* AccountData.cpp */; };
 		CE19BE9919322B0D007715BA /* RoguePlayDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE5119322B0D007715BA /* RoguePlayDto.cpp */; };
 		CE19BE9A19322B0D007715BA /* RogueTMXTiledMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE5419322B0D007715BA /* RogueTMXTiledMap.cpp */; };
-		CE19BE9C19322B0D007715BA /* MypageScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE5B19322B0D007715BA /* MypageScene.cpp */; };
 		CE19BE9D19322B0D007715BA /* ItemMixedPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE5E19322B0D007715BA /* ItemMixedPageLayer.cpp */; };
 		CE19BE9E19322B0D007715BA /* ItemStockPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE6019322B0D007715BA /* ItemStockPageLayer.cpp */; };
 		CE19BE9F19322B0D007715BA /* QuestPageLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE6219322B0D007715BA /* QuestPageLayer.cpp */; };
@@ -425,8 +424,6 @@
 		CE19BE5219322B0D007715BA /* RoguePlayDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoguePlayDto.h; sourceTree = "<group>"; };
 		CE19BE5419322B0D007715BA /* RogueTMXTiledMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RogueTMXTiledMap.cpp; sourceTree = "<group>"; };
 		CE19BE5519322B0D007715BA /* RogueTMXTiledMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RogueTMXTiledMap.h; sourceTree = "<group>"; };
-		CE19BE5B19322B0D007715BA /* MypageScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MypageScene.cpp; sourceTree = "<group>"; };
-		CE19BE5C19322B0D007715BA /* MypageScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageScene.h; sourceTree = "<group>"; };
 		CE19BE5E19322B0D007715BA /* ItemMixedPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemMixedPageLayer.cpp; sourceTree = "<group>"; };
 		CE19BE5F19322B0D007715BA /* ItemMixedPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemMixedPageLayer.h; sourceTree = "<group>"; };
 		CE19BE6019322B0D007715BA /* ItemStockPageLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemStockPageLayer.cpp; sourceTree = "<group>"; };
@@ -1093,12 +1090,10 @@
 			children = (
 				CE19BE5819322B0D007715BA /* common */,
 				CE19BE5D19322B0D007715BA /* page */,
-				CE19BE5B19322B0D007715BA /* MypageScene.cpp */,
-				CE19BE5C19322B0D007715BA /* MypageScene.h */,
-				CE19BE6619322B0D007715BA /* RogueScene.cpp */,
-				CE19BE6719322B0D007715BA /* RogueScene.h */,
 				CE068DA91955D1910007786F /* TopScene.cpp */,
 				CE068DAA1955D1910007786F /* TopScene.h */,
+				CE19BE6619322B0D007715BA /* RogueScene.cpp */,
+				CE19BE6719322B0D007715BA /* RogueScene.h */,
 				CE068DAF1955DC420007786F /* QuestChoiceScene.cpp */,
 				CE068DB01955DC420007786F /* QuestChoiceScene.h */,
 				CE068DB41955E27A0007786F /* ItemStockScene.cpp */,
@@ -1535,7 +1530,6 @@
 				CE19BE7F19322B0D007715BA /* ModalLayer.cpp in Sources */,
 				CE19BE8219322B0D007715BA /* ActorSprite.cpp in Sources */,
 				CE19BE8719322B0D007715BA /* MWeaponDao.cpp in Sources */,
-				CE19BE9C19322B0D007715BA /* MypageScene.cpp in Sources */,
 				CE19BE8919322B0D007715BA /* MLevel.cpp in Sources */,
 				CE19BE9D19322B0D007715BA /* ItemMixedPageLayer.cpp in Sources */,
 				CE068DAB1955D1910007786F /* TopScene.cpp in Sources */,
