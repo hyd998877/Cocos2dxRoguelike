@@ -15,6 +15,7 @@ Cocos2dRogueLike
 #define __Cocos2dRogueLike__QuestChoiceScene__
 
 #include "MyPageBaseScene.h"
+#include "RoguePlayDto.h"
 
 /**
 @class QuestChoiceScene QuestChoiceScene.h
@@ -35,14 +36,15 @@ public:
     CREATE_FUNC(QuestChoiceScene);
     
 protected:
-    
-private:
     const std::string TITLE_NAME = "くえすと選択";
     const int MENU_ID = 1;
     
     cocos2d::Node* initLayout();
     const std::string& getTitleName() { return TITLE_NAME; }
     int getMenuId() { return MENU_ID; }
+private:
+    void showBadPlayQuest();
+    void playQuest(RogueLikeGame::RoguePlayDto::QuestType questType, int questId);
 };
 
 #endif /* defined(__Cocos2dRogueLike__QuestChoiceScene__) */

@@ -16,7 +16,6 @@ Cocos2dRogueLike
 
 #include "TopScene.h"
 #include "QuestChoiceScene.h"
-#include "MypageScene.h"
 #include "RogueScene.h"
 #include "BankScene.h"
 #include "ItemStockScene.h"

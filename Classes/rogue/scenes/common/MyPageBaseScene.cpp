@@ -59,3 +59,8 @@ bool MyPageBaseScene::init()
     return true;
 }
 
+void MyPageBaseScene::addChildDialog(Node* node)
+{
+    _dialogLayer->addChild(node);
+}
+

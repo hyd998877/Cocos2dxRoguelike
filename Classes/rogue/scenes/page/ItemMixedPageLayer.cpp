@@ -12,17 +12,22 @@
 
 #include "ItemMixedPageLayer.h"
 
-#include "AccountData.h"
-
+#include "AppMacros.h"
 #include "CommonWindowUtil.h"
-#include "AlertDialogLayer.h"
-#include "ItemInventoryLayer.h"
 
+#include "ItemDto.h"
 #include "ItemLogic.h"
 
 USING_NS_CC;
 
 ItemMixedPageLayer::ItemMixedPageLayer()
+: _menuCallback1(nullptr)
+, _menuCallback2(nullptr)
+, _menuCallback3(nullptr)
+, _baseSprite(nullptr)
+, _materialSprite(nullptr)
+, _baseMenuItemLabel(nullptr)
+, _materialMenuItemLabel(nullptr)
 {
     
 }
@@ -37,8 +42,6 @@ bool ItemMixedPageLayer::init()
     if (!Layer::init()) {
         return false;
     }
-
-    this->loadInventory();
 
     Size winSize = Director::getInstance()->getWinSize();
     Size resolutionSize = Director::getInstance()->getOpenGLView()->getDesignResolutionSize();
@@ -66,24 +69,24 @@ bool ItemMixedPageLayer::init()
     // ベース
     auto baseSprite = cocos2d::Sprite::createWithSpriteFrame(imageSpriteFrame);
     auto baseItemMenuLabel = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, baseSprite, FontUtils::getDefaultFontTTFConfig(), "ベースを選択してください", [this, baseSprite](Ref *ref) {
-        auto label = static_cast<Label*>(static_cast<MenuItemLabel*>(ref)->getLabel());
-        this->showMixedItemSelectWindow([this, label, baseSprite](const ItemDto &itemDto) {
-            this->refreshSelectItem(baseSprite, label, itemDto);
-            this->setBaseItem(itemDto);
-        });
+        if (_menuCallback1) {
+            _menuCallback1(ref);
+        }
     });
     baseItemMenuLabel->setPosition(Point(winSize.width*0.275, winSize.height*0.7));
+    _baseSprite = baseSprite;
+    _baseMenuItemLabel = baseItemMenuLabel;
     
     // 素材
     auto materialSprite = cocos2d::Sprite::createWithSpriteFrame(imageSpriteFrame);
     auto materialItemlayer = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, materialSprite, FontUtils::getDefaultFontTTFConfig(), "そざいを選択してください",[this, materialSprite](Ref *ref) {
-        auto label = static_cast<Label*>(static_cast<MenuItemLabel*>(ref)->getLabel());
-        this->showMixedItemSelectWindow([this, label, materialSprite](const ItemDto &itemDto) {
-            this->refreshSelectItem(materialSprite, label, itemDto);
-            this->setMaterialItem(itemDto);
-        });
+        if (_menuCallback2) {
+            _menuCallback2(ref);
+        }
     });
     materialItemlayer->setPosition(Point(winSize.width*0.275, winSize.height*0.3));
+    _materialSprite = materialSprite;
+    _materialMenuItemLabel = materialItemlayer;
     
     // L表示
     auto sprite1 = Sprite::create("ui/l_image.png");
@@ -96,21 +99,9 @@ bool ItemMixedPageLayer::init()
     
     // 合成ボタン
     auto mixedMenuItem = CommonWindowUtil::createMenuItemLabelWaku(Label::createWithTTF(FontUtils::getStrongFontTTFConfig(), "合成"), Size(16, 8), [this, baseSprite, baseItemMenuLabel, materialSprite, materialItemlayer](Ref *ref) {
-        // 合成実行
-        this->mixedItem([this, baseSprite, baseItemMenuLabel, materialSprite, materialItemlayer]() {
-            // セーブ
-            this->saveInventory();
-            
-            // 成功したらベースと素材を未選択にする
-            auto emptyItemDto = ItemDto();
-            auto baseLabel = static_cast<Label*>(static_cast<MenuItemLabel*>(baseItemMenuLabel)->getLabel());
-            this->refreshSelectItem(baseSprite, baseLabel, emptyItemDto);
-            this->setBaseItem(emptyItemDto);
-            auto materialLabel = static_cast<Label*>(static_cast<MenuItemLabel*>(materialItemlayer)->getLabel());
-            this->refreshSelectItem(materialSprite, materialLabel, emptyItemDto);
-            this->setMaterialItem(emptyItemDto);
-
-        });
+        if (_menuCallback3) {
+            _menuCallback3(ref);
+        }
     });
     mixedMenuItem->setPosition(Point(winSize.width*0.675, winSize.height*0.5));
     
@@ -121,114 +112,20 @@ bool ItemMixedPageLayer::init()
     return true;
 }
 
-bool ItemMixedPageLayer::checkMixedItem()
+void ItemMixedPageLayer::refreshSelectBase(const ItemDto &itemDto)
 {
-    return checkMixedItem(this->_baseItemDto, this->_materialItemDto, this->_itemInventory);
+    refreshSelectItem(_baseSprite, _baseMenuItemLabel, itemDto);
 }
-bool ItemMixedPageLayer::checkMixedItem(const ItemDto &baseItem, const ItemDto &materialItem, const ItemInventoryDto &itemInventory)
+
+void ItemMixedPageLayer::refreshSelectMaterial(const ItemDto &itemDto)
 {
-    // 選択チェック
-    if (baseItem.getObjectId() == 0 || materialItem.getObjectId() == 0) {
-        CCLOG("ベースか素材が選択されていません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("ベースか素材が選択されていません", "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer, ZOrders::DIALOG);
-        return false;
-    }
+    refreshSelectItem(_materialSprite, _materialMenuItemLabel, itemDto);
+}
+
+void ItemMixedPageLayer::refreshSelectItem(Sprite* materialSprite, MenuItem* menuItem, const ItemDto &itemDto)
+{
+    auto label = static_cast<Label*>(static_cast<MenuItemLabel*>(menuItem)->getLabel());
     
-    // 合成可能かチェック
-    if (!ItemLogic::isMixedItem(baseItem, materialItem)) {
-        CCLOG("その組み合わせは合成できません");
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal("その組み合わせは合成できません", "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer, ZOrders::DIALOG);
-        return false;
-    }
-    // 金額計算して支払う
-    int mixedGold = ItemLogic::calcMixedItemGold(baseItem, materialItem);
-    if (itemInventory.getGold() < mixedGold) {
-        CCLOG("お金がたりません");
-        std::string messageText = GameCore::StringUtils::format("お金がたりません。\n\n合成金額 %d ゴールド", mixedGold);
-        auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(messageText, "とじる", [](Ref *ref) {});
-        this->addChild(dialogLayer, ZOrders::DIALOG);
-        return false;
-    }
-    // 合成できる
-    return true;
-}
-
-void ItemMixedPageLayer::mixedItem(std::function<void(void)> mixedCallback)
-{
-    if (!this->checkMixedItem()) {
-        return;
-    }
-    
-    int mixedGold = ItemLogic::calcMixedItemGold(this->_baseItemDto, this->_materialItemDto);
-    std::string messageText = GameCore::StringUtils::format("合成に %d ゴールド必要ですが\nよろしいですか？\n\n所持ゴールド %10ld",
-                                                            mixedGold, this->_itemInventory.getGold());
-    this->addChild(AlertDialogLayer::createWithContentSizeModal(messageText, "は　い", [this, mixedGold, mixedCallback](Ref *ref) {
-        // 合成!
-        auto mixedItemDto = ItemLogic::mixedItem(this->_baseItemDto, this->_materialItemDto);
-        
-        // ベースと素材のアイテムを削除
-        this->_itemInventory.addGold(-1 * mixedGold);
-        this->_itemInventory.removeItemDto(this->_baseItemDto.getObjectId());
-        this->_itemInventory.removeItemDto(this->_materialItemDto.getObjectId());
-        
-        // 合成結果のアイテムをインベントリに追加してsaveする
-        this->_itemInventory.addItemDto(mixedItemDto);
-        std::string messageText = GameCore::StringUtils::format("%d ゴールドと%sを素材にして\n\n%s\n\nの合成に成功しました。",
-                                                                mixedGold,
-                                                                this->_materialItemDto.createItemName().c_str(),
-                                                                mixedItemDto.createItemName().c_str());
-        mixedCallback();
-        this->addChild(AlertDialogLayer::createWithContentSizeModal(messageText, "とじる", [](Ref *ref) {}), ZOrders::DIALOG);
-    }, "いいえ", [](Ref *ref) {}));
-}
-
-void ItemMixedPageLayer::showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback)
-{
-    // アイテムリストを設定
-    Size winSize = Director::getInstance()->getWinSize();
-    
-    auto itemWindow = ItemInventoryLayer::create(this->_itemInventory);
-    itemWindow->setPosition(CommonWindowUtil::createPointCenter(itemWindow, this));
-    itemWindow->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
-        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_MIXED, ItemInventoryLayer::CloseType::CLOSE,
-            [this, selectItemCallback](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                CCLOG("itemName = %s", itemDto.getName().c_str());
-                
-                this->_itemInventory.removeItemDto(itemDto.getObjectId());
-                selectItemCallback(itemDto);
-            }
-        }
-    });
-    itemWindow->setCloseCallback([this]() {
-        //
-    });
-    this->addChild(itemWindow, ZOrders::DIALOG);
-}
-
-
-void ItemMixedPageLayer::loadInventory()
-{
-    this->_itemInventory = RogueLikeGame::AccountData::getInstance()->getItemInventory();
-    this->_itemInventory.sortItemList(ItemDto::compare_dropItem_weapon_with_accessory);
-}
-
-void ItemMixedPageLayer::saveInventory()
-{
-    RogueLikeGame::AccountData::getInstance()->saveInventory(this->_itemInventory);
-}
-
-void ItemMixedPageLayer::setBaseItem(const ItemDto &itemDto)
-{
-    this->_baseItemDto = itemDto;
-}
-void ItemMixedPageLayer::setMaterialItem(const ItemDto &itemDto)
-{
-    this->_materialItemDto = itemDto;
-}
-void ItemMixedPageLayer::refreshSelectItem(Sprite* materialSprite, Label* label, const ItemDto &itemDto)
-{
     if (itemDto.getObjectId() != 0) {
         auto itemSprite = Sprite::create(ItemLogic::createItemImageFileName(itemDto.getImageResId()));
         materialSprite->setTexture(itemSprite->getTexture());
@@ -244,4 +141,13 @@ void ItemMixedPageLayer::refreshSelectItem(Sprite* materialSprite, Label* label,
         label->setString("");
     }
 }
+
+void ItemMixedPageLayer::mixedItemAfter()
+{
+    // 成功したらベースと素材を未選択にする
+    auto emptyItemDto = ItemDto();
+    this->refreshSelectItem(_baseSprite, _baseMenuItemLabel, emptyItemDto);
+    this->refreshSelectItem(_materialSprite, _materialMenuItemLabel, emptyItemDto);
+}
+
 

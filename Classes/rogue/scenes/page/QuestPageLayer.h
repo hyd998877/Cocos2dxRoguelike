@@ -31,7 +31,14 @@ public:
     virtual ~QuestPageLayer();
     
     virtual bool init();
+    
+    void setMenuCallback1(const cocos2d::ccMenuCallback& callback) { _menuCallback1 = callback; }
+    void setMenuCallback2(const cocos2d::ccMenuCallback& callback) { _menuCallback2 = callback; }
+    void setMenuCallback3(const cocos2d::ccMenuCallback& callback) { _menuCallback3 = callback; }
 private:
+    cocos2d::ccMenuCallback _menuCallback1;
+    cocos2d::ccMenuCallback _menuCallback2;
+    cocos2d::ccMenuCallback _menuCallback3;
 };
 
 NS_ROGUE_END

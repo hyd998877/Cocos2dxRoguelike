@@ -35,14 +35,13 @@ public:
     CREATE_FUNC(BankScene);
 
 protected:
-    
-private:
     const std::string TITLE_NAME = "銀行屋";
     const int MENU_ID = 3;
     
     cocos2d::Node* initLayout();
     const std::string& getTitleName() { return TITLE_NAME; }
     int getMenuId() { return MENU_ID; }
+private:
 
 };
 

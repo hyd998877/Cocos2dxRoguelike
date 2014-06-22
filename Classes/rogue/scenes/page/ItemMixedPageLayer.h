@@ -15,7 +15,7 @@
 
 #include "cocos2d.h"
 
-#include "ItemInventoryDto.h"
+class ItemDto;
 
 /**
  @class ItemMixedPageLayer ItemMixedPageLayer.h
@@ -33,25 +33,26 @@ public:
     virtual ~ItemMixedPageLayer();
     
     virtual bool init();
+    
+    void setMenuCallback1(const cocos2d::ccMenuCallback& callback) { _menuCallback1 = callback; }
+    void setMenuCallback2(const cocos2d::ccMenuCallback& callback) { _menuCallback2 = callback; }
+    void setMenuCallback3(const cocos2d::ccMenuCallback& callback) { _menuCallback3 = callback; }
+    
+    void refreshSelectBase(const ItemDto &itemDto);
+    void refreshSelectMaterial(const ItemDto &itemDto);
+    void mixedItemAfter();
 private:
-    void showMixedItemSelectWindow(std::function<void(const ItemDto &itemDto)> selectItemCallback);
-    bool checkMixedItem();
-    bool checkMixedItem(const ItemDto &baseItem, const ItemDto &materialItem, const ItemInventoryDto &itemInventory);
-    void mixedItem(std::function<void(void)> mixedCallback);
-    void loadInventory();
-    void saveInventory();
+    void refreshSelectItem(cocos2d::Sprite* materialSprite, cocos2d::MenuItem* menuItem, const ItemDto &itemDto);
     
-    void setBaseItem(const ItemDto &itemDto);
-    void setMaterialItem(const ItemDto &itemDto);
-    void refreshSelectItem(cocos2d::Sprite* materialSprite, cocos2d::Label* label, const ItemDto &itemDto);
+private:
+    cocos2d::ccMenuCallback _menuCallback1;
+    cocos2d::ccMenuCallback _menuCallback2;
+    cocos2d::ccMenuCallback _menuCallback3;
     
-    enum ZOrders {
-        DIALOG = 10
-    };
-    
-    ItemInventoryDto _itemInventory;
-    ItemDto _baseItemDto;
-    ItemDto _materialItemDto;
+    cocos2d::Sprite* _baseSprite;
+    cocos2d::Sprite* _materialSprite;
+    cocos2d::MenuItem* _baseMenuItemLabel;
+    cocos2d::MenuItem* _materialMenuItemLabel;
 };
 
 #endif /* defined(__Cocos2dRogueLike__ItemMixedPageLayer__) */

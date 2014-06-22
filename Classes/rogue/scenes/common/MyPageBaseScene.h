@@ -48,9 +48,8 @@ public:
     }
     
     cocos2d::Layer* getDialogLayer() { return _dialogLayer; }
-    
 protected:
-
+    void addChildDialog(Node* node);
 private:
     enum ZOrder {
         BODY   =   100,

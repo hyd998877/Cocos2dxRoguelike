@@ -542,7 +542,6 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				CE19BDE219322B0C007715BA /* AppMacros.h */,
 				CE19BDE319322B0C007715BA /* battle */,
 				CE19BDEE19322B0C007715BA /* game_base */,
 				CE19BE3719322B0D007715BA /* modules */,
@@ -551,6 +550,7 @@
 				CE19BE6C19322B0D007715BA /* srpg */,
 				1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */,
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
+				CE19BDE219322B0C007715BA /* AppMacros.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -1097,14 +1097,14 @@
 				CE19BE5C19322B0D007715BA /* MypageScene.h */,
 				CE19BE6619322B0D007715BA /* RogueScene.cpp */,
 				CE19BE6719322B0D007715BA /* RogueScene.h */,
-				CEC1EB6A194D73FB007C8595 /* BankScene.cpp */,
-				CEC1EB6B194D73FB007C8595 /* BankScene.h */,
 				CE068DA91955D1910007786F /* TopScene.cpp */,
 				CE068DAA1955D1910007786F /* TopScene.h */,
 				CE068DAF1955DC420007786F /* QuestChoiceScene.cpp */,
 				CE068DB01955DC420007786F /* QuestChoiceScene.h */,
 				CE068DB41955E27A0007786F /* ItemStockScene.cpp */,
 				CE068DB51955E27A0007786F /* ItemStockScene.h */,
+				CEC1EB6A194D73FB007C8595 /* BankScene.cpp */,
+				CEC1EB6B194D73FB007C8595 /* BankScene.h */,
 				CE068DB71955E37E0007786F /* ItemMixedScene.cpp */,
 				CE068DB81955E37E0007786F /* ItemMixedScene.h */,
 			);

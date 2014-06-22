@@ -36,19 +36,12 @@ public:
     virtual ~ItemStockPageLayer();
     
     virtual bool init();
-private:
-    void showItemInventory();
-    std::list<ItemInventoryDto> loadItemInventory();
-    void saveInventory();
-    ItemInventoryDto* findTargetInventory(long objectId);
-    void refreshItemInventory(ItemInventoryLayer* itemWindow, const ItemInventoryDto &targetInventory);
-    ItemInventoryDto* changeInventory(long objectId);
     
-    enum ZOrders {
-        DIALOG = 10
-    };
-    ItemInventoryDto _itemInventory;
-    ItemInventoryDto _itemInventoryStock;
+    void setMenuCallback1(const cocos2d::ccMenuCallback& callback) { _menuCallback1 = callback; }
+    void setMenuCallback2(const cocos2d::ccMenuCallback& callback) { _menuCallback2 = callback; }
+private:
+    cocos2d::ccMenuCallback _menuCallback1;
+    cocos2d::ccMenuCallback _menuCallback2;
 };
 
 #endif /* defined(__Cocos2dRogueLike__ItemStockPageLayer__) */

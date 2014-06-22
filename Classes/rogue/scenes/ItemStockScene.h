@@ -16,6 +16,9 @@ Cocos2dRogueLike
 
 #include "MyPageBaseScene.h"
 
+#include "ItemInventoryDto.h"
+class ItemInventoryLayer;
+
 /**
 @class ItemStockScene ItemStockScene.h
 
@@ -35,14 +38,22 @@ public:
     CREATE_FUNC(ItemStockScene);
     
 protected:
-    
-private:
     const std::string TITLE_NAME = "倉庫";
     const int MENU_ID = 2;
     
     cocos2d::Node* initLayout();
     const std::string& getTitleName() { return TITLE_NAME; }
     int getMenuId() { return MENU_ID; }
+private:
+    void showItemInventory();
+    std::list<ItemInventoryDto> loadItemInventory();
+    void saveInventory();
+    ItemInventoryDto* findTargetInventory(long objectId);
+    void refreshItemInventory(ItemInventoryLayer* itemWindow, const ItemInventoryDto &targetInventory);
+    ItemInventoryDto* changeInventory(long objectId);
+private:
+    ItemInventoryDto _itemInventory;
+    ItemInventoryDto _itemInventoryStock;
 };
 
 #endif /* defined(__Cocos2dRogueLike__ItemStockScene__) */
