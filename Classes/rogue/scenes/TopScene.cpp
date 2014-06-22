@@ -53,12 +53,11 @@ void TopScene::initQuestSave()
     std::string saveDetail = RogueLikeGame::AccountData::getInstance()->createQuestSaveDetailText();
     std::string dialogTitle = saveTitle + "\n\n" + saveDetail + "\n\n※いいえを選択すると、\n所持していたアイテムは消えます";
     
-    auto dialogLayer = AlertDialogLayer::createWithContentSizeModal(dialogTitle, "はい", [](Ref *ref) {
+    this->addChildDialog(AlertDialogLayer::createWithContentSizeModal(dialogTitle, "はい", [](Ref *ref) {
         auto scene = RogueLikeGame::RogueScene::scene(RogueLikeGame::AccountData::getInstance()->getRoguePlayData().getQuestType(), RogueLikeGame::AccountData::getInstance()->getRoguePlayData().getQuestId());
         auto trans = TransitionFadeDown::create(1, scene);
         Director::getInstance()->replaceScene(trans);
     }, "いいえ", [this](Ref *ref) {
         RogueLikeGame::AccountData::getInstance()->resetRoguePlayData();
-    });
-    this->addChild(dialogLayer);
+    }));
 }

@@ -71,7 +71,7 @@ Node* QuestChoiceScene::initLayout()
         }
 
         // アイテムとゴールド所持の警告
-        this->getDialogLayer()->addChild(AlertDialogLayer::createWithContentSizeModal("このダンジョンは\nアイテムやゴールドを持ち込むことはできません。\n持っているアイテムやゴールドをすべて失いますが\nそれでもいいですか？", "は　い", [this](Ref *ref) {
+        this->addChildDialog(AlertDialogLayer::createWithContentSizeModal("このダンジョンは\nアイテムやゴールドを持ち込むことはできません。\n持っているアイテムやゴールドをすべて失いますが\nそれでもいいですか？", "は　い", [this](Ref *ref) {
             // データリセット
             AccountData::getInstance()->resetRoguePlayDataAndInventory();
             // クエスト開始
@@ -84,7 +84,7 @@ Node* QuestChoiceScene::initLayout()
 
 void QuestChoiceScene::showBadPlayQuest()
 {
-    this->getDialogLayer()->addChild(AlertDialogLayer::createWithContentSizeModal("このダンジョンはまだプレイできません。", "とじる", [](Ref *ref) {}));
+    this->addChildDialog(AlertDialogLayer::createWithContentSizeModal("このダンジョンはまだプレイできません。", "とじる", [](Ref *ref) {}));
 }
 
 void QuestChoiceScene::playQuest(RoguePlayDto::QuestType questType, int questId)
