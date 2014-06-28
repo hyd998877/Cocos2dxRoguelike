@@ -2,8 +2,7 @@
 #include "AppMacros.h"
 #include "extensions/cocos-ext.h"
 
-#include "MypageScene.h"
-#include "RogueScene.h"
+#include "TopScene.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -28,43 +27,26 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // チラツキ対策
     Director::getInstance()->setDepthTest(false);
 
-#if 1
+    const float baseScale  = 0.75f;
+    const float baseWidth  = 480.0f;
+    const float baseHeight = 320.0f;
+    const float baseScaleWidth  = baseWidth * baseScale;
+    const float baseScaleHeight = baseHeight * baseScale;
+    
     auto visibleSize = Director::getInstance()->getVisibleSize();
-    int widthDiff = (int)visibleSize.width % (int)480.f;
-    int heightDiff = (int)visibleSize.height % (int)320.f;
-    CCLOG("############ %f %f wdif = %d hdif = %d", visibleSize.width, visibleSize.height, widthDiff, heightDiff);
+    const int widthDiff = (int)visibleSize.width % (int)baseWidth;
+    const int heightDiff = (int)visibleSize.height % (int)baseHeight;
+
     if (widthDiff == 0 && heightDiff == 0) {
-        // 800x480基準
-        glview->setDesignResolutionSize(
-                                        480 * 0.75,
-                                        320 * 0.75,
-                                        //                                    800.0f * GAME_SCALE, // 13
-                                        //                                    480.0f * GAME_SCALE, //  7.8
-                                        //                                     32 * 13,// 352 416   704 800
-                                        //                                     32 * 7 ,// 224 249.6 448 480
-                                        ResolutionPolicy::SHOW_ALL);
+        glview->setDesignResolutionSize(baseScaleWidth, baseScaleHeight, ResolutionPolicy::SHOW_ALL);
     } else {
-        if (widthDiff > heightDiff) {
-            // 横のほうがずれがでかいので左と右に黒い帯がでる感じ。なんとかする
-            float scale = (480.0f * 0.75) / visibleSize.width;
-            glview->setDesignResolutionSize(
-                                            (480 * 0.75) * (1 + scale),
-                                            (320 * 0.75),
-                                            ResolutionPolicy::SHOW_ALL);
-        } else {
-            // 縦のほうがずれがでかいので下と上に黒い帯が出る感じ
-            glview->setDesignResolutionSize(
-                                            (480 * 0.75),
-                                            (320 * 0.75),
-                                            ResolutionPolicy::SHOW_ALL);
-        }
+        float divX = visibleSize.width / baseWidth;
+        float divY = visibleSize.height / baseHeight;
+        glview->setDesignResolutionSize(baseScaleWidth + (widthDiff / divX),
+                                        baseScaleHeight + (heightDiff / divY),
+                                        ResolutionPolicy::SHOW_ALL);
+        CCLOG("###### designSize w=%f h=%f", (baseScaleWidth + (widthDiff / divX)), (baseScaleHeight + (heightDiff / divY)));
     }
-#else 
-    glview->setDesignResolutionSize(
-                                    (960 * 0.75),
-                                    (640 * 0.75),
-                                    ResolutionPolicy::SHOW_ALL);
-#endif
     
     // turn on display FPS
     director->setDisplayStats(true);
@@ -73,7 +55,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    auto scene = RogueLikeGame::MypageScene::scene();
+    auto scene = MyPageBaseScene::scene<TopScene>();
     
     // run
     director->runWithScene(scene);

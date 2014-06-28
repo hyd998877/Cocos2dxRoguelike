@@ -1,17 +1,23 @@
-//
-//  MypageHeaderLayer.cpp
-//  Cocos2dRogueLike
-//
-//  Created by kyokomi on 2014/05/07.
-//
-//
+/**
+
+@file  MypageHeaderLayer.cpp
+
+@brief description
+
+Cocos2dRogueLike
+
+@author kyokomi
+@date 2014/06/21
+
+*/
 
 #include "MypageHeaderLayer.h"
-#include "AppMacros.h"
-
-#include "CommonWindowUtil.h"
+#include "WidgetUtil.h"
 
 USING_NS_CC;
+
+using namespace cocostudio;
+using namespace ui;
 
 MypageHeaderLayer::MypageHeaderLayer()
 {
@@ -29,30 +35,27 @@ bool MypageHeaderLayer::init()
         return false;
     }
     
-    Size winSize = Director::getInstance()->getWinSize();
-
-    // タイトル表示
-    auto title_layer = LayerColor::create(Color4B::BLACK);
-    title_layer->setContentSize(Size(winSize.width, winSize.height / 8));
-    title_layer->setPosition(Point(0, winSize.height - title_layer->getContentSize().height));
-    this->addChild(title_layer);
+    auto visibleSize = Director::getInstance()->getVisibleSize();
     
-    auto titleTextlabel = Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), " ");
-    titleTextlabel->setHorizontalAlignment(cocos2d::TextHAlignment::CENTER);
-    titleTextlabel->setVerticalAlignment(cocos2d::TextVAlignment::CENTER);
-    titleTextlabel->setPosition(Point(title_layer->getContentSize().width /2, title_layer->getContentSize().height / 2));
-    title_layer->addChild(titleTextlabel);
-    this->_titleTextLabel = titleTextlabel;
+    auto layout = GUIReader::getInstance()->widgetFromJsonFile("cocostudio/mypage_header.json");
+    layout->setScale(0.75f);
+    layout->setPosition(Vec2(visibleSize.width/2 - layout->getContentSize().width/2*layout->getScaleX(),
+                             visibleSize.height - layout->getContentSize().height*layout->getScaleY()));
+    this->addChild(layout);
     
-    // 枠
-    auto window_waku = CommonWindowUtil::createWindowWaku(Size(winSize.width, titleTextlabel->getContentSize().height + titleTextlabel->getSystemFontSize()));
-    title_layer->addChild(window_waku);
+    _baseLayout = layout;
     
     return true;
 }
 
-void MypageHeaderLayer::setTitleText(const std::string &titleText)
+
+Size MypageHeaderLayer::getBaseLayoutSize()
 {
-    this->_titleTextLabel->setString(titleText);
+    return _baseLayout->getContentSize();
 }
 
+void MypageHeaderLayer::setTitleText(const std::string& titleName)
+{
+    auto label = dynamic_cast<Text*>(WidgetUtil::getChildByNameRecursion(_baseLayout, "header_title_label"));
+    label->setString(titleName);
+}

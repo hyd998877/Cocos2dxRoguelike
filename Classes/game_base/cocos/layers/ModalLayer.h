@@ -16,6 +16,8 @@ public:
     ModalLayer();
     virtual ~ModalLayer();
     
+    virtual bool init();
+    
     virtual bool init(const cocos2d::Color3B& color, const GLubyte& opacity);
     static ModalLayer* create(const cocos2d::Color3B& color = cocos2d::Color3B::BLACK, const GLubyte& opacity = 192);
     static ModalLayer* createWithAttachCenterPosition(Node* attachNode, const cocos2d::Color3B& color = cocos2d::Color3B::BLACK, const GLubyte& opacity = 192);

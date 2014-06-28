@@ -32,7 +32,7 @@
 
 #include "AccountData.h"
 
-#include "MypageScene.h"
+#include "TopScene.h"
 #include "NovelScene.h"
 
 NS_ROGUE_BEGIN
@@ -577,7 +577,7 @@ void RogueScene::playGameOverCutIn() {
         modalLayer->setVisible(false);
         modalLayer->removeAllChildrenWithCleanup(true);
         // マイページへ
-        this->changeScene(MypageScene::scene());
+        this->changeScene(TopScene::scene<TopScene>());
     });
 }
 
@@ -618,7 +618,7 @@ void RogueScene::changeGameStatus(RoguePlayDto::GameStatus gameStatus) {
             // セーブ消去
             AccountData::getInstance()->resetRoguePlayData();
             // マイページへ
-            changeScene(MypageScene::scene());
+            changeScene(TopScene::scene<TopScene>());
             return;
         case RoguePlayDto::GameStatus::QUEST_CLEAR:
             // セーブ消去
@@ -630,7 +630,7 @@ void RogueScene::changeGameStatus(RoguePlayDto::GameStatus gameStatus) {
             // クリア演出ADVパートへ(TODO: とりあえずquestType=ノベルIDにしてる)
             changeScene(NovelScene::scene((int)this->_roguePlayDto.getQuestType(), 0, [this]() {
                 // ADVパート終わったらマイページへ
-                auto trans = TransitionProgressOutIn::create(0.5f, MypageScene::scene());
+                auto trans = TransitionProgressOutIn::create(0.5f, TopScene::scene<TopScene>());
                 Director::getInstance()->replaceScene(trans);
             }));
             return;
