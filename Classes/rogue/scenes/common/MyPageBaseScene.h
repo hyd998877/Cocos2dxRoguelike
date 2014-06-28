@@ -43,10 +43,6 @@ public:
         return scene;
     }
     
-    static cocos2d::ui::Widget* createCocoStudioWidget(const std::string& cocostudioFilePath) {
-        return cocostudio::GUIReader::getInstance()->widgetFromJsonFile(cocostudioFilePath.c_str());
-    }
-    
     cocos2d::Layer* getDialogLayer() { return _dialogLayer; }
 protected:
     void addChildDialog(Node* node);

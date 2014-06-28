@@ -26,7 +26,8 @@ ModalLayer* ModalLayer::createWithAttachCenterPosition(Node* attachNode, const c
     return modalLayer;
 }
 
-ModalLayer* ModalLayer::create(const cocos2d::Color3B& color /* = cocos2d::Color3B::BLACK */, const GLubyte& opacity /* = 192 */) {
+ModalLayer* ModalLayer::create(const cocos2d::Color3B& color /* = cocos2d::Color3B::BLACK */, const GLubyte& opacity /* = 192 */)
+{
     ModalLayer *pRet = new ModalLayer();
     if (pRet && pRet->init(color, opacity)) {
         pRet->autorelease();
@@ -38,7 +39,13 @@ ModalLayer* ModalLayer::create(const cocos2d::Color3B& color /* = cocos2d::Color
     }
 }
 
-bool ModalLayer::init(const cocos2d::Color3B& color, const GLubyte& opacity) {
+bool ModalLayer::init()
+{
+    return init(cocos2d::Color3B::BLACK, 192);
+}
+
+bool ModalLayer::init(const cocos2d::Color3B& color, const GLubyte& opacity)
+{
     if (!LayerColor::init()) {
         return false;
     }
@@ -56,7 +63,8 @@ bool ModalLayer::init(const cocos2d::Color3B& color, const GLubyte& opacity) {
     return true;
 }
 
-bool ModalLayer::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event) {
+bool ModalLayer::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event)
+{
     if (this->isVisible()) {
         // モーダル以降のイベントを強制停止する
         return true;

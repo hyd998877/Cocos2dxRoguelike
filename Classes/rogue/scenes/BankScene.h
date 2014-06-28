@@ -42,7 +42,7 @@ protected:
     const std::string& getTitleName() { return TITLE_NAME; }
     int getMenuId() { return MENU_ID; }
 private:
-
+    void showGold(cocos2d::ui::Widget* layout);
 };
 
 #endif /* defined(__Cocos2dRogueLike__BankScene__) */

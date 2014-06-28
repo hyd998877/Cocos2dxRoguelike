@@ -116,6 +116,7 @@
 		CE19BEA219322B0D007715BA /* DropItemSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE6919322B0D007715BA /* DropItemSprite.cpp */; };
 		CE19BEA319322B0D007715BA /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7119322B0D007715BA /* SRPGMapLayer.cpp */; };
 		CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7519322B0D007715BA /* SRPGScene.cpp */; };
+		CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */; };
 		CE6651BB194D71A200333345 /* cocostudio in Resources */ = {isa = PBXBuildFile; fileRef = CE6651BA194D71A200333345 /* cocostudio */; };
 		CE836F931942EB4900880652 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE836F921942EB4900880652 /* XCTest.framework */; };
 		CE836F941942EB4900880652 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -440,6 +441,8 @@
 		CE19BE7219322B0D007715BA /* SRPGMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGMapLayer.h; sourceTree = "<group>"; };
 		CE19BE7519322B0D007715BA /* SRPGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SRPGScene.cpp; sourceTree = "<group>"; };
 		CE19BE7619322B0D007715BA /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
+		CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditTextDialogLayout.cpp; sourceTree = "<group>"; };
+		CE2D0482195EFEA900267EFB /* EditTextDialogLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTextDialogLayout.h; sourceTree = "<group>"; };
 		CE6651BA194D71A200333345 /* cocostudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cocostudio; sourceTree = "<group>"; };
 		CE75E79D1955317C0048742B /* WidgetUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WidgetUtil.h; sourceTree = "<group>"; };
 		CE836F911942EB4900880652 /* Cocos2dRogueLike iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cocos2dRogueLike iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1088,6 +1091,7 @@
 		CE19BE5719322B0D007715BA /* scenes */ = {
 			isa = PBXGroup;
 			children = (
+				CE2D047E195EFE5800267EFB /* part */,
 				CE19BE5819322B0D007715BA /* common */,
 				CE19BE5D19322B0D007715BA /* page */,
 				CE068DA91955D1910007786F /* TopScene.cpp */,
@@ -1224,6 +1228,15 @@
 			children = (
 			);
 			path = util;
+			sourceTree = "<group>";
+		};
+		CE2D047E195EFE5800267EFB /* part */ = {
+			isa = PBXGroup;
+			children = (
+				CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */,
+				CE2D0482195EFEA900267EFB /* EditTextDialogLayout.h */,
+			);
+			path = part;
 			sourceTree = "<group>";
 		};
 		CE836F961942EB4900880652 /* Cocos2dRogueLike iOS Tests */ = {
@@ -1554,6 +1567,7 @@
 				CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */,
 				CE068DB11955DC420007786F /* QuestChoiceScene.cpp in Sources */,
 				CE19BE8B19322B0D007715BA /* MWeapon.cpp in Sources */,
+				CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */,
 				CE19BE8A19322B0D007715BA /* MUseItem.cpp in Sources */,
 				CE19BE9619322B0D007715BA /* pugixml.cpp in Sources */,
 				CE19BE8419322B0D007715BA /* MAccessoryDao.cpp in Sources */,

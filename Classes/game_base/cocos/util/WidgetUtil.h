@@ -17,6 +17,10 @@
 class WidgetUtil
 {
 public:
+    static cocos2d::ui::Widget* createCocoStudioWidget(const std::string& cocostudioFilePath) {
+        return cocostudio::GUIReader::getInstance()->widgetFromJsonFile(cocostudioFilePath.c_str());
+    }
+    
     static cocos2d::ui::Widget* getChildByNameRecursion(cocos2d::ui::Widget* rootWidget, std::string name) {
         for (auto& child : rootWidget->getChildren()) {
             if (child) {
