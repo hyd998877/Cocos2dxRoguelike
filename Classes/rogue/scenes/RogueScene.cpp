@@ -35,6 +35,8 @@
 #include "TopScene.h"
 #include "NovelScene.h"
 
+#include "KeypadLayout.h"
+
 NS_ROGUE_BEGIN
 
 // プロトタイプ宣言
@@ -50,6 +52,7 @@ std::size_t f_r(const std::string& s, char c)
 RogueScene::RogueScene()
 : _roguePlayDto()
 , _itemInventory()
+, _keypadLayout(nullptr)
 {
     CCLOG("new rogueScene");
 }
@@ -232,17 +235,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // -------------------------------
     // メニュー
     // -------------------------------
-    
-    // keypad
-    auto keypadMenuArray = createKeypadMenuItemArray();
-    auto pMenu = Menu::createWithArray(keypadMenuArray);
-    pMenu->setPosition(Point::ZERO);
-    this->addChild(pMenu, ZOrders::MenuLayerZOrder, Tags::KeypadMenuTag);
-
-    auto buttondMenuArray = createButtonMenuItemArray();
-    auto pMenuButton = Menu::createWithArray(buttondMenuArray);
-    pMenuButton->setPosition(Point::ZERO);
-    this->addChild(pMenuButton, ZOrders::MenuLayerZOrder, Tags::ButtonMenuTag);
+    setupKeypadLayout();
     
     // ---------------------------------
     // プレイヤーの先行
@@ -255,77 +248,69 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     return true;
 }
 
-MenuItem* RogueScene::createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback) {
-    auto pKeypad = Sprite::createWithSpriteFrame(pBaseSpriteFrame);
-    auto pKeypadPress = Sprite::createWithSpriteFrame(pBasePressSpriteFrame);
-    
-    pKeypadPress->setColor(Color3B::GRAY);
-    auto pMenuKey = MenuItemSprite::create(pKeypad, pKeypadPress, callback);
-    pMenuKey->setOpacity(128);
-    return pMenuKey;
+void RogueScene::setupKeypadLayout()
+{
+    auto keypad = KeypadLayout::create();
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::UP, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        auto mapIndex = getNowRogueMapIndex();
+        this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y + 1));
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::LEFT, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        auto mapIndex = getNowRogueMapIndex();
+        this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x - 1, mapIndex.y));
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::RIGHT, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        auto mapIndex = getNowRogueMapIndex();
+        this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x + 1, mapIndex.y));
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::DOWN, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        auto mapIndex = getNowRogueMapIndex();
+        this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y - 1));
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::A, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        this->attack();
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::B, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::C, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        this->showSystemMenu();
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::D, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        this->showItemInventoryWindow();
+    });
+    this->addChild(keypad, ZOrders::MenuLayerZOrder);
+    _keypadLayout = keypad;
 }
 
-Vector<MenuItem*> RogueScene::createKeypadMenuItemArray() {
-    Vector<MenuItem*> resultArray;
-    
-    auto pKeyBase = Sprite::create("ui/keypad.png");
-    auto pKeyBasePress = Sprite::create("ui/keypad_press.png");
-    
-    auto rogue_map_layer = getRogueMapLayer();
-    
-    auto pMenuKeyUp = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
-        CCLOG("pMenuKeyUpが押された！");
-        if (this->isKeypadControll()) {
-            auto winSize = Director::getInstance()->getWinSize();
-            Point point = Point(winSize.width / 2, winSize.height / 2);
-            MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
-            this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y + 1));
-        }
-    });
-    
-    pMenuKeyUp->setPosition(rogue_map_layer->indexToPoint(1, 2));
-    resultArray.pushBack(pMenuKeyUp);
-    
-    auto pMenuKeyRight = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
-        CCLOG("pMenuKeyRightが押された！");
-        if (this->isKeypadControll()) {
-            auto winSize = Director::getInstance()->getWinSize();
-            Point point = Point(winSize.width / 2, winSize.height / 2);
-            MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
-            this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x + 1, mapIndex.y));
-        }
-    });
-    pMenuKeyRight->setRotation(90.0f);
-    pMenuKeyRight->setPosition(rogue_map_layer->indexToPoint(2, 1));
-    resultArray.pushBack(pMenuKeyRight);
-    
-    auto pMenuKeyDown = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
-        CCLOG("pMenuKeyDownが押された！");
-        if (this->isKeypadControll()) {
-            auto winSize = Director::getInstance()->getWinSize();
-            Point point = Point(winSize.width / 2, winSize.height / 2);
-            MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
-            this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y - 1));
-        }
-    });
-    pMenuKeyDown->setRotation(180.0f);
-    pMenuKeyDown->setPosition(rogue_map_layer->indexToPoint(1, 0));
-    resultArray.pushBack(pMenuKeyDown);
-    
-    auto pMenuKeyLeft = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
-        CCLOG("pMenuKeyLeftが押された！");
-        if (this->isKeypadControll()) {
-            auto winSize = Director::getInstance()->getWinSize();
-            Point point = Point(winSize.width / 2, winSize.height / 2);
-            MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
-            this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x - 1, mapIndex.y));
-        }
-    });
-    pMenuKeyLeft->setRotation(270.0f);
-    pMenuKeyLeft->setPosition(rogue_map_layer->indexToPoint(0, 1));
-    resultArray.pushBack(pMenuKeyLeft);
- 
-    return resultArray;
+MapIndex RogueScene::getNowRogueMapIndex()
+{
+    auto winSize = Director::getInstance()->getWinSize();
+    Point point = Point(winSize.width / 2, winSize.height / 2);
+    return getRogueMapLayer()->pointToIndex(point);
 }
 
 bool RogueScene::isKeypadControll() {
@@ -336,71 +321,11 @@ bool RogueScene::isKeypadControll() {
     return false;
 }
 
-Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
-    Size win_size = Director::getInstance()->getWinSize();
-    
-    Vector<MenuItem*> resultArray;
-    
-    auto a_button = Sprite::create("ui/a_button.png");
-    auto a_buttonPress = Sprite::create("ui/a_button_press.png");
-    a_buttonPress->setOpacity(128);
-    auto pA_MenuButton = MenuItemSprite::create(a_button, a_buttonPress, [this](Ref* pSender) {
-        CCLOG("Aボタンが押された！");
-        if (this->isKeypadControll()) {
-            this->attack();
-        }
-    });
-    auto rogu_map_layer = getRogueMapLayer();
-    Size base_tile_size = rogu_map_layer->getTileSize();
-    
-    pA_MenuButton->setPosition(Point(win_size.width - base_tile_size.width, rogu_map_layer->indexToPoint(12, 1).y));
-    pA_MenuButton->setTag(Tags::A_ButtonMenuTag);
-    resultArray.pushBack(pA_MenuButton);
-    
-    auto b_button = Sprite::create("ui/b_button.png");
-    auto b_buttonPress = Sprite::create("ui/b_button_press.png");
-    b_buttonPress->setOpacity(128);
-    auto pB_MenuButton = MenuItemSprite::create(b_button, b_buttonPress, [this](Ref* pSender) {
-        CCLOG("Bボタンが押された！");
-    });
-    pB_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 2, rogu_map_layer->indexToPoint(11, 0).y));
-    pB_MenuButton->setTag(Tags::B_ButtonMenuTag);
-    resultArray.pushBack(pB_MenuButton);
-    
-    auto c_button = Sprite::create("ui/c_button.png");
-    auto c_buttonPress = Sprite::create("ui/c_button_press.png");
-    c_buttonPress->setOpacity(128);
-    auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Ref* pSender) {
-        CCLOG("Cボタンが押された！");
-        if (this->isKeypadControll()) {
-            this->showSystemMenu();
-        }
-    });
-    pC_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 3, rogu_map_layer->indexToPoint(10, 1).y));
-    pC_MenuButton->setTag(Tags::C_ButtonMenuTag);
-    resultArray.pushBack(pC_MenuButton);
-    
-    auto d_button = Sprite::create("ui/d_button.png");
-    auto d_buttonPress = Sprite::create("ui/d_button_press.png");
-    d_buttonPress->setOpacity(128);
-    auto pD_MenuButton = MenuItemSprite::create(d_button, d_buttonPress, [this](Ref* pSender) {
-        CCLOG("Dボタンが押された！");
-        if (this->isKeypadControll()) {
-            this->showItemInventoryWindow();
-        }
-    });
-    pD_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 2, rogu_map_layer->indexToPoint(11, 2).y));
-    pD_MenuButton->setTag(Tags::D_ButtonMenuTag);
-    resultArray.pushBack(pD_MenuButton);
-    
-    return resultArray;
-}
 
 void RogueScene::showItemInventoryWindow()
 {
     // メニュー消す
-    this->getChildByTag(Tags::KeypadMenuTag)->setVisible(false);
-    this->getChildByTag(Tags::ButtonMenuTag)->setVisible(false);
+    _keypadLayout->hideKeypadMenu();
     
     auto itemWindowLayer = ItemInventoryLayer::create(this->_itemInventory);
     itemWindowLayer->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
@@ -428,8 +353,7 @@ void RogueScene::showItemInventoryWindow()
     });
     itemWindowLayer->setCloseCallback([this]() {
         // メニュー戻す
-        this->getChildByTag(Tags::KeypadMenuTag)->setVisible(true);
-        this->getChildByTag(Tags::ButtonMenuTag)->setVisible(true);
+        _keypadLayout->showKeypadMenu();
     });
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
     
@@ -695,12 +619,8 @@ void RogueScene::changeScene(Scene* scene) {
 }
 
 float RogueScene::getAnimationSpeed() {
-    auto pMenu = getChildByTag(Tags::ButtonMenuTag);
-    if (pMenu) {
-        auto pB_ButtonMenuItem = static_cast<MenuItem*>(pMenu->getChildByTag(Tags::B_ButtonMenuTag));
-        if (pB_ButtonMenuItem && pB_ButtonMenuItem->isSelected()) {
-            return 0.0f;
-        }
+    if (_keypadLayout->isKeypadDashed()) {
+        return 0.0f;
     }
     return 0.2f;
 }

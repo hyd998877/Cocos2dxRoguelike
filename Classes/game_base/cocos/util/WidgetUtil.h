@@ -40,12 +40,12 @@ public:
         return nullptr;
     }
     
-    static void onTouchEvent(cocos2d::ui::Widget* rootWidget, const std::string& buttonName, cocos2d::ui::Widget::ccWidgetTouchCallback callback) {
+    static void onTouchEvent(cocos2d::ui::Widget* rootWidget, const std::string& buttonName, const cocos2d::ui::Widget::ccWidgetTouchCallback& callback) {
         auto button = dynamic_cast<cocos2d::ui::Button*>(WidgetUtil::getChildByNameRecursion(rootWidget, buttonName));
         button->addTouchEventListener(callback);
     }
     
-    static void onTouchEventEnded(cocos2d::ui::Widget* rootWidget, const std::string& buttonName, cocos2d::ui::Widget::ccWidgetTouchCallback callback) {
+    static void onTouchEventEnded(cocos2d::ui::Widget* rootWidget, const std::string& buttonName, const cocos2d::ui::Widget::ccWidgetTouchCallback& callback) {
         onTouchEvent(rootWidget, buttonName, [callback](cocos2d::Ref *ref, cocos2d::ui::Widget::TouchEventType type) {
             if (type == cocos2d::ui::Widget::TouchEventType::ENDED) {
                 callback(ref, type);
