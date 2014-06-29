@@ -68,6 +68,9 @@ public:
                 if (count == 0) {
                     callback(ref, type);
                 }
+            } else if (type == cocos2d::ui::Widget::TouchEventType::CANCELED) {
+                rootWidget->getScheduler()->unschedule("longTouchEvent", rootWidget);
+                CCLOG("stop longTouchEvent");
             }
         });
     }
