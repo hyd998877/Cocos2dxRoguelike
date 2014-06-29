@@ -51,7 +51,7 @@ Node* KeypadLayout::initLayout()
     keypad->setScale(baseScale);
     
     keypad->setPositionX(win_size.width/2 - (keypad->getLayoutSize().width/2 * baseScale));
-    keypad->setPositionY(win_size.height/12);
+    keypad->setPositionY(win_size.height/32);
     
     auto panelLeft = WidgetUtil::getChildByNameRecursion(keypad, "Panel_L");
     panelLeft->setPositionX(panelLeft->getPositionX() - keypad->getPositionX());
