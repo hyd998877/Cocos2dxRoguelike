@@ -37,6 +37,8 @@
 
 #include "KeypadLayout.h"
 
+#include "WidgetUtil.h"
+
 NS_ROGUE_BEGIN
 
 // プロトタイプ宣言
@@ -138,9 +140,13 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // あとで更新するやつ
     auto sampleText = Label::createWithTTF(FontUtils::getTitleFontTTFConfig(),
                                            " --F Lv-- HP ---/--- 満腹度 ---/---          - G");
+    // TODO: test
+    sampleText->setOpacity(0);
     
     sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
     statusLayer->addChild(sampleText);
+    // TODO: test
+    statusLayer->setOpacity(0);
     
     // 装備情報（武器）ステータスバーの下
     int attackPoint = actor_dto.getAttackPoint();
@@ -174,6 +180,21 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
         equipAccessoryLayer->setTag(Tags::StatusBarEquipAccessoryTag);
         statusLayer->addChild(equipAccessoryLayer);
     }
+
+    auto statusBarLayout = WidgetUtil::createCocoStudioWidget("cocostudio/RogueScene_status.json");
+    {
+        statusBarLayout->setScale(0.75f);
+        statusBarLayout->setPositionY(win_size.height - (statusBarLayout->getLayoutSize().height * 0.75f));
+        auto goldText = dynamic_cast<ui::Text*>(WidgetUtil::getChildByNameRecursion(statusBarLayout, "Label_goldText"));
+        goldText->setPositionX(win_size.width - goldText->getTextAreaSize().width * 0.75f);
+
+        auto hpBar = WidgetUtil::getChildByNameRecursion(statusBarLayout, "HP_bar");
+        hpBar->setScaleX(0.8f);
+        
+        auto mpBar = WidgetUtil::getChildByNameRecursion(statusBarLayout, "MP_bar");
+        mpBar->setScaleX(0.5f);
+        this->addChild(statusBarLayout, ZOrders::StatusBarLayerZOrder+1);
+    }
     
     this->addChild(statusLayer, ZOrders::StatusBarLayerZOrder, Tags::StatusBarLayerTag);
     
@@ -199,7 +220,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // ------------------------
     auto mini_map_layer = tiled_map_layer->getMiniMapLayer();
     // ステータスバーの下くらい
-    mini_map_layer->setPosition(0, mini_map_layer->getPositionY() + win_size.height - mini_map_layer->getContentSize().height - statusLayer->getContentSize().height);
+    mini_map_layer->setPosition(0, mini_map_layer->getPositionY() + win_size.height - mini_map_layer->getContentSize().height - (win_size.height * 0.1));
     this->addChild(mini_map_layer, ZOrders::MiniMapLayerZOrder, Tags::MiniMapLayerTag);
     
     // ---------------------
