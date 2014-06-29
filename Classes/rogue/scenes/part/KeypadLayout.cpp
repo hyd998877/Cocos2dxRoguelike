@@ -57,17 +57,17 @@ Node* KeypadLayout::initLayout()
     panelRight->setPositionX(panelRight->getPositionX() + (win_size.width - (keypad->getPositionX() + keypad->getLayoutSize().width * 0.75f)));
     this->addChild(keypad);
     
-    WidgetUtil::onTouchEventEnded(keypad, "Button_Up", [this](Ref *ref, ui::Widget::TouchEventType eventType) {
+    WidgetUtil::onTouchEventLongTouch(keypad, "Button_Up", [this](Ref *ref, ui::Widget::TouchEventType eventType) {
         _keypadCallbacks[ButtonType::UP]();
     });
     
-    WidgetUtil::onTouchEventEnded(keypad, "Button_Left", [this](Ref *ref, ui::Widget::TouchEventType eventType) {
+    WidgetUtil::onTouchEventLongTouch(keypad, "Button_Left", [this](Ref *ref, ui::Widget::TouchEventType eventType) {
         _keypadCallbacks[ButtonType::LEFT]();
     });
-    WidgetUtil::onTouchEventEnded(keypad, "Button_Right", [this](Ref *ref, ui::Widget::TouchEventType eventType) {
+    WidgetUtil::onTouchEventLongTouch(keypad, "Button_Right", [this](Ref *ref, ui::Widget::TouchEventType eventType) {
         _keypadCallbacks[ButtonType::RIGHT]();
     });
-    WidgetUtil::onTouchEventEnded(keypad, "Button_Down", [this](Ref *ref, ui::Widget::TouchEventType eventType) {
+    WidgetUtil::onTouchEventLongTouch(keypad, "Button_Down", [this](Ref *ref, ui::Widget::TouchEventType eventType) {
         _keypadCallbacks[ButtonType::DOWN]();
     });
     

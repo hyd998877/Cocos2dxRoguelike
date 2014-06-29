@@ -53,6 +53,25 @@ public:
         });
     }
     
+    static void onTouchEventLongTouch(cocos2d::ui::Widget* rootWidget, const std::string& buttonName, const cocos2d::ui::Widget::ccWidgetTouchCallback& callback) {
+        onTouchEvent(rootWidget, buttonName, [rootWidget, callback](cocos2d::Ref *ref, cocos2d::ui::Widget::TouchEventType type) {
+            int count = 0;
+            if (type == cocos2d::ui::Widget::TouchEventType::BEGAN) {
+                rootWidget->getScheduler()->schedule([rootWidget, callback, ref, type, &count](float dt) {
+                    (count)++;
+                    CCLOG("longTouchEvent %f", dt);
+                    callback(ref, type);
+                }, rootWidget, 0.05, kRepeatForever, 0.3, false, "longTouchEvent");
+            } else if (type == cocos2d::ui::Widget::TouchEventType::ENDED) {
+                rootWidget->getScheduler()->unschedule("longTouchEvent", rootWidget);
+                CCLOG("stop longTouchEvent");
+                if (count == 0) {
+                    callback(ref, type);
+                }
+            }
+        });
+    }
+    
     static void settingCenterPosition(cocos2d::ui::Widget* widget) {
         auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
         widget->setPosition(cocos2d::Vec2(visibleSize.width/2 - widget->getContentSize().width/2*widget->getScaleX(), visibleSize.height/2 - widget->getContentSize().height/2*widget->getScaleY()));
