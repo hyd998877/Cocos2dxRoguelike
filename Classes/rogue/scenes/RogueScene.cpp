@@ -52,9 +52,12 @@ std::size_t f_r(const std::string& s, char c)
 #pragma mark main
 
 RogueScene::RogueScene()
-: _roguePlayDto()
+: _beforeGameStatus(RoguePlayDto::GameStatus::INIT)
+, _gameStatus(RoguePlayDto::GameStatus::INIT)
+, _roguePlayDto()
 , _itemInventory()
 , _keypadLayout(nullptr)
+, _statusWidget(nullptr)
 {
     CCLOG("new rogueScene");
 }
@@ -111,7 +114,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     this->_itemInventory = AccountData::getInstance()->getItemInventory();
     
     auto win_size = Director::getInstance()->getWinSize();
-
+    auto visibleSize = Director::getInstance()->getVisibleSize();
     
     // ---------------------
     // フロア開始カットイン表示
@@ -133,70 +136,45 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     //-------------------------
     // ステータスバー？
     //-------------------------
-    auto statusLayer = LayerColor::create(Color4B::BLACK);
-    statusLayer->setContentSize(Size(win_size.width, win_size.height / 7));
-    statusLayer->setPosition(Point(0, win_size.height - statusLayer->getContentSize().height));
-    
-    // あとで更新するやつ
-    auto sampleText = Label::createWithTTF(FontUtils::getTitleFontTTFConfig(),
-                                           " --F Lv-- HP ---/--- 満腹度 ---/---          - G");
-    // TODO: test
-    sampleText->setOpacity(0);
-    
-    sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
-    statusLayer->addChild(sampleText);
-    // TODO: test
-    statusLayer->setOpacity(0);
-    
-    // 装備情報（武器）ステータスバーの下
-    int attackPoint = actor_dto.getAttackPoint();
-    if (actor_dto.isEquipWeapon()) {
-        attackPoint += actor_dto.getWeaponEquip().getTotalParam();
-    }
-    std::string attackPointText = cocos2d::StringUtils::format("%3d", attackPoint);
-    auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), attackPointText);
-    // 2つあるうちの左側なので2かけてます
-    {
-        equipWeaponLayer->getChildByTag(1)->setVisible(false);
-        float pointX = statusLayer->getContentSize().width - (equipWeaponLayer->getContentSize().width * 2);
-        float pointY = (statusLayer->getContentSize().height / 2 + equipWeaponLayer->getContentSize().height / 2) * -1;
-        equipWeaponLayer->setPosition(cocos2d::Point(pointX, pointY));
-        equipWeaponLayer->setTag(Tags::StatusBarEquipWeaponTag);
-        statusLayer->addChild(equipWeaponLayer);
-    }
-    
-    // 装備情報（防具）ステータスバーの下
-    int defencePoint = actor_dto.getDefencePoint();
-    if (actor_dto.isEquipAccessory()) {
-        defencePoint += actor_dto.getAccessoryEquip().getTotalParam();
-    }
-    std::string defencePointText = cocos2d::StringUtils::format("%3d", defencePoint);
-    auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), defencePointText);
-    {
-        equipAccessoryLayer->getChildByTag(1)->setVisible(false);
-        float pointX = statusLayer->getContentSize().width - equipAccessoryLayer->getContentSize().width;
-        float pointY = (statusLayer->getContentSize().height / 2 + equipAccessoryLayer->getContentSize().height / 2) * -1;
-        equipAccessoryLayer->setPosition(cocos2d::Point(pointX, pointY));
-        equipAccessoryLayer->setTag(Tags::StatusBarEquipAccessoryTag);
-        statusLayer->addChild(equipAccessoryLayer);
-    }
-
     auto statusBarLayout = WidgetUtil::createCocoStudioWidget("cocostudio/RogueScene_status.json");
+    statusBarLayout->setScale(0.75f);
+    statusBarLayout->setPositionY(win_size.height - (statusBarLayout->getLayoutSize().height * 0.75f));
     {
-        statusBarLayout->setScale(0.75f);
-        statusBarLayout->setPositionY(win_size.height - (statusBarLayout->getLayoutSize().height * 0.75f));
-        auto goldText = dynamic_cast<ui::Text*>(WidgetUtil::getChildByNameRecursion(statusBarLayout, "Label_goldText"));
+        auto goldText = WidgetUtil::getChildByNameRecursion<ui::Text>(statusBarLayout, "Label_goldText");
         goldText->setPositionX(win_size.width - goldText->getTextAreaSize().width * 0.75f);
 
-        auto hpBar = WidgetUtil::getChildByNameRecursion(statusBarLayout, "HP_bar");
-        hpBar->setScaleX(0.8f);
+        // 装備情報（武器）ステータスバーの下
+        int attackPoint = actor_dto.getAttackPoint();
+        if (actor_dto.isEquipWeapon()) {
+            attackPoint += actor_dto.getWeaponEquip().getTotalParam();
+        }
+        std::string attackPointText = cocos2d::StringUtils::format("%3d", attackPoint);
+        auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), attackPointText);
+        {
+            equipWeaponLayer->getChildByTag(1)->setVisible(false);
+            float pointX = visibleSize.width; // 左
+            equipWeaponLayer->setPosition(cocos2d::Vec2(pointX, 0));
+            equipWeaponLayer->setTag(Tags::StatusBarEquipWeaponTag);
+            statusBarLayout->addChild(equipWeaponLayer);
+        }
         
-        auto mpBar = WidgetUtil::getChildByNameRecursion(statusBarLayout, "MP_bar");
-        mpBar->setScaleX(0.5f);
-        this->addChild(statusBarLayout, ZOrders::StatusBarLayerZOrder+1);
+        // 装備情報（防具）ステータスバーの下
+        int defencePoint = actor_dto.getDefencePoint();
+        if (actor_dto.isEquipAccessory()) {
+            defencePoint += actor_dto.getAccessoryEquip().getTotalParam();
+        }
+        std::string defencePointText = cocos2d::StringUtils::format("%3d", defencePoint);
+        auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), defencePointText);
+        {
+            equipAccessoryLayer->getChildByTag(1)->setVisible(false);
+            float pointX = visibleSize.width + equipAccessoryLayer->getContentSize().width; // 右
+            equipAccessoryLayer->setPosition(cocos2d::Vec2(pointX, 0));
+            equipAccessoryLayer->setTag(Tags::StatusBarEquipAccessoryTag);
+            statusBarLayout->addChild(equipAccessoryLayer);
+        }
     }
-    
-    this->addChild(statusLayer, ZOrders::StatusBarLayerZOrder, Tags::StatusBarLayerTag);
+    this->addChild(statusBarLayout, ZOrders::StatusBarLayerZOrder+1);
+    this->_statusWidget = statusBarLayout;
     
     //-------------------------
     // ゲームログ表示
@@ -1182,53 +1160,61 @@ void RogueScene::hideSystemMenu() {
     }
 }
 
-void RogueScene::refreshStatus() {
-    
-    auto pStatusBarLayer = getChildByTag(Tags::StatusBarLayerTag);
-    if (!pStatusBarLayer) {
+void RogueScene::refreshStatus()
+{
+    if (!_statusWidget) {
         return;
     }
     
+    auto pPlayerSprite = getPlayerActorSprite(1);
+    auto pPlayerDto = pPlayerSprite->getActorDto();
+    
      // TODO: とりあえず1要素なので。。。
-    auto pStatusText = pStatusBarLayer->getChildren().at(0);
+    auto pStatusText = WidgetUtil::getChildByNameRecursion<ui::Text>(_statusWidget, "Label_statusText");
     if (pStatusText) {
         
         // プレイヤー取得
-        auto pPlayerSprite = getPlayerActorSprite(1);
-        auto pPlayerDto = pPlayerSprite->getActorDto();
         int questId = _roguePlayDto.getQuestId(); // フロア情報（クエストID=フロア数でいい？)
         // 作成
-        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G",
+        auto pStr = String::createWithFormat("%2dF Lv %2d HP %3d/%3d 満腹度 %3d/%3d",
                                              questId,
                                              pPlayerDto->getLv(),
                                              pPlayerDto->getHitPoint(),
                                              pPlayerDto->getHitPointLimit(),
                                              pPlayerDto->getMagicPoint(),
-                                             pPlayerDto->getMagicPointLimit(),
-                                             this->_itemInventory.getGold());
+                                             pPlayerDto->getMagicPointLimit());
+        pStatusText->setString(pStr->getCString());
         
-        auto pLabelText = static_cast<Label*>(pStatusText);
-        pLabelText->setString(pStr->getCString());
-        pLabelText->setPositionX(pLabelText->getContentSize().width / 2);
-        
-        // TODO: 死亡判定ここで？
-        if (pPlayerDto->getHitPoint() == 0) {
-            logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
-            changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
-        } else if (pPlayerDto->getMagicPoint() == 0) {
-            logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
-            changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
+        auto hpBar = WidgetUtil::getChildByNameRecursion(_statusWidget, "HP_bar");
+        hpBar->setScaleX((float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit());
+        auto mpBar = WidgetUtil::getChildByNameRecursion(_statusWidget, "MP_bar");
+        mpBar->setScaleX((float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit());
+    }
+    
+    auto labelGoldText = WidgetUtil::getChildByNameRecursion<ui::Text>(_statusWidget, "Label_goldText");
+    if (labelGoldText) {
+        auto goldTextStr = String::createWithFormat("%10d G", this->_itemInventory.getGold());
+        labelGoldText->setString(goldTextStr->getCString());
+    }
+    
+    
+    // TODO: 死亡判定ここで？
+    if (pPlayerDto->getHitPoint() == 0) {
+        logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
+        changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
+    } else if (pPlayerDto->getMagicPoint() == 0) {
+        logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
+        changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
+    } else {
+        // 残りHPで文字色を変える
+        float hitPointDiv = (float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit();
+        float mpDiv = (float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit();
+        if (hitPointDiv <= 0.25 || mpDiv <= 0.10) {
+//            pLabelText->setColor(Color3B::RED);
+        } else if (hitPointDiv <= 0.50 || mpDiv <= 0.30) {
+//            pLabelText->setColor(Color3B::YELLOW);
         } else {
-            // 残りHPで文字色を変える
-            float hitPointDiv = (float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit();
-            float mpDiv = (float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit();
-            if (hitPointDiv <= 0.25 || mpDiv <= 0.10) {
-                pLabelText->setColor(Color3B::RED);
-            } else if (hitPointDiv <= 0.50 || mpDiv <= 0.30) {
-                pLabelText->setColor(Color3B::YELLOW);
-            } else {
-                pLabelText->setColor(Color3B::WHITE);
-            }
+//            pLabelText->setColor(Color3B::WHITE);
         }
     }
 }
@@ -1236,10 +1222,9 @@ void RogueScene::refreshStatus() {
 // 装備状態更新
 void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
     
-    auto statusLayer = dynamic_cast<Layer*>(getChildByTag(Tags::StatusBarLayerTag));
-    if (statusLayer) {
+    if (_statusWidget) {
         // 武器
-        auto equipWeaponLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(Tags::StatusBarEquipWeaponTag));
+        auto equipWeaponLayer = dynamic_cast<Layer*>(_statusWidget->getChildByTag(Tags::StatusBarEquipWeaponTag));
         if (equipWeaponLayer) {
             // TODO: (kyokomi) とりあえず...サーセン
             const int SpriteTag = 1;
@@ -1267,7 +1252,7 @@ void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
         }
         
         // 防具
-        auto equipAccessoryLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(Tags::StatusBarEquipAccessoryTag));
+        auto equipAccessoryLayer = dynamic_cast<Layer*>(_statusWidget->getChildByTag(Tags::StatusBarEquipAccessoryTag));
         if (equipAccessoryLayer) {
             // TODO: (kyokomi) とりあえず...サーセン
             const int SpriteTag = 1;

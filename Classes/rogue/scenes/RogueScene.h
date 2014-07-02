@@ -113,7 +113,6 @@ private:
         RoguePlayerLightTag       = 110001,  // 明る部分
         RoguePlayerLightMaskTag   = 110002,  // 暗い部分
         MiniMapLayerTag           = 150000,
-        StatusBarLayerTag         = 200000,
         // この辺StatusBarがいまいち
         StatusBarEquipWeaponTag            = 200100,
         StatusBarEquipWeaponSpriteTag      = 200101,
@@ -158,7 +157,12 @@ private:
     
     MapManager _mapManager;
     
+    // --------- cocostudio ---------
+    
+    // キーパッド
     KeypadLayout* _keypadLayout;
+    
+    cocos2d::ui::Widget* _statusWidget;
 };
 
 NS_ROGUE_END

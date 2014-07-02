@@ -21,17 +21,18 @@ public:
         return cocostudio::GUIReader::getInstance()->widgetFromJsonFile(cocostudioFilePath.c_str());
     }
     
-    static cocos2d::ui::Widget* getChildByNameRecursion(cocos2d::ui::Widget* rootWidget, std::string name) {
+    template<class T = cocos2d::ui::Widget>
+    static T* getChildByNameRecursion(cocos2d::ui::Widget* rootWidget, std::string name) {
         for (auto& child : rootWidget->getChildren()) {
             if (child) {
                 cocos2d::ui::Widget* widgetChild = dynamic_cast<cocos2d::ui::Widget*>(child);
                 if (widgetChild) {
                     if (widgetChild->getName() == name) {
-                        return widgetChild;
+                        return dynamic_cast<T*>(widgetChild);
                     } else {
                         auto widgetGrandChild = getChildByNameRecursion(widgetChild, name);
                         if (widgetGrandChild) {
-                            return widgetGrandChild;
+                            return dynamic_cast<T*>(widgetGrandChild);
                         }
                     }
                 }
