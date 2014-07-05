@@ -118,6 +118,7 @@
 		CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7519322B0D007715BA /* SRPGScene.cpp */; };
 		CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */; };
 		CE6651BB194D71A200333345 /* cocostudio in Resources */ = {isa = PBXBuildFile; fileRef = CE6651BA194D71A200333345 /* cocostudio */; };
+		CE72EB5F19683729006FDA87 /* HeaderStatusLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */; };
 		CE836F931942EB4900880652 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE836F921942EB4900880652 /* XCTest.framework */; };
 		CE836F941942EB4900880652 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		CE836F951942EB4900880652 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -127,6 +128,7 @@
 		CE8B222A1955A6490085EB9B /* MypageFotterLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE8B22281955A6490085EB9B /* MypageFotterLayer.cpp */; };
 		CE8B22301955BA8B0085EB9B /* MypageHeaderLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE8B222E1955BA8B0085EB9B /* MypageHeaderLayer.cpp */; };
 		CEC1EB6C194D73FB007C8595 /* BankScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEC1EB6A194D73FB007C8595 /* BankScene.cpp */; };
+		CEC35535196004A000769E36 /* KeypadLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEC35533196004A000769E36 /* KeypadLayout.cpp */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
@@ -444,6 +446,8 @@
 		CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditTextDialogLayout.cpp; sourceTree = "<group>"; };
 		CE2D0482195EFEA900267EFB /* EditTextDialogLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTextDialogLayout.h; sourceTree = "<group>"; };
 		CE6651BA194D71A200333345 /* cocostudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cocostudio; sourceTree = "<group>"; };
+		CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeaderStatusLayout.cpp; sourceTree = "<group>"; };
+		CE72EB5E19683729006FDA87 /* HeaderStatusLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderStatusLayout.h; sourceTree = "<group>"; };
 		CE75E79D1955317C0048742B /* WidgetUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WidgetUtil.h; sourceTree = "<group>"; };
 		CE836F911942EB4900880652 /* Cocos2dRogueLike iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cocos2dRogueLike iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE836F921942EB4900880652 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -459,6 +463,8 @@
 		CE8B222F1955BA8B0085EB9B /* MypageHeaderLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MypageHeaderLayer.h; sourceTree = "<group>"; };
 		CEC1EB6A194D73FB007C8595 /* BankScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BankScene.cpp; sourceTree = "<group>"; };
 		CEC1EB6B194D73FB007C8595 /* BankScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BankScene.h; sourceTree = "<group>"; };
+		CEC35533196004A000769E36 /* KeypadLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeypadLayout.cpp; sourceTree = "<group>"; };
+		CEC35534196004A000769E36 /* KeypadLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeypadLayout.h; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -1235,6 +1241,10 @@
 			children = (
 				CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */,
 				CE2D0482195EFEA900267EFB /* EditTextDialogLayout.h */,
+				CEC35533196004A000769E36 /* KeypadLayout.cpp */,
+				CEC35534196004A000769E36 /* KeypadLayout.h */,
+				CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */,
+				CE72EB5E19683729006FDA87 /* HeaderStatusLayout.h */,
 			);
 			path = part;
 			sourceTree = "<group>";
@@ -1525,6 +1535,7 @@
 				CE19BEA219322B0D007715BA /* DropItemSprite.cpp in Sources */,
 				CE19BE8119322B0D007715BA /* TableViewTestLayer.cpp in Sources */,
 				CE19BE9419322B0D007715BA /* TMXGenerator.cpp in Sources */,
+				CE72EB5F19683729006FDA87 /* HeaderStatusLayout.cpp in Sources */,
 				CE19BE9319322B0D007715BA /* MapManager.cpp in Sources */,
 				CE8B22301955BA8B0085EB9B /* MypageHeaderLayer.cpp in Sources */,
 				CE19BE9A19322B0D007715BA /* RogueTMXTiledMap.cpp in Sources */,
@@ -1540,6 +1551,7 @@
 				CE19BE9819322B0D007715BA /* AccountData.cpp in Sources */,
 				CE19BEA019322B0D007715BA /* TopPageLayer.cpp in Sources */,
 				CE19BE7B19322B0D007715BA /* AlertDialogLayer.cpp in Sources */,
+				CEC35535196004A000769E36 /* KeypadLayout.cpp in Sources */,
 				CE19BE7F19322B0D007715BA /* ModalLayer.cpp in Sources */,
 				CE19BE8219322B0D007715BA /* ActorSprite.cpp in Sources */,
 				CE19BE8719322B0D007715BA /* MWeaponDao.cpp in Sources */,

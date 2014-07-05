@@ -35,6 +35,11 @@
 #include "TopScene.h"
 #include "NovelScene.h"
 
+#include "KeypadLayout.h"
+#include "HeaderStatusLayout.h"
+
+#include "WidgetUtil.h"
+
 NS_ROGUE_BEGIN
 
 // プロトタイプ宣言
@@ -48,8 +53,12 @@ std::size_t f_r(const std::string& s, char c)
 #pragma mark main
 
 RogueScene::RogueScene()
-: _roguePlayDto()
+: _beforeGameStatus(RoguePlayDto::GameStatus::INIT)
+, _gameStatus(RoguePlayDto::GameStatus::INIT)
+, _roguePlayDto()
 , _itemInventory()
+, _keypadLayout(nullptr)
+, _statusWidget(nullptr)
 {
     CCLOG("new rogueScene");
 }
@@ -106,7 +115,6 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     this->_itemInventory = AccountData::getInstance()->getItemInventory();
     
     auto win_size = Director::getInstance()->getWinSize();
-
     
     // ---------------------
     // フロア開始カットイン表示
@@ -126,53 +134,10 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     this->addChild(tiled_map_layer, ZOrders::TiledMapLayerZOrder, Tags::TiledMapLayerTag);
     
     //-------------------------
-    // ステータスバー？
+    // ステータスバー
     //-------------------------
-    auto statusLayer = LayerColor::create(Color4B::BLACK);
-    statusLayer->setContentSize(Size(win_size.width, win_size.height / 7));
-    statusLayer->setPosition(Point(0, win_size.height - statusLayer->getContentSize().height));
-    
-    // あとで更新するやつ
-    auto sampleText = Label::createWithTTF(FontUtils::getTitleFontTTFConfig(),
-                                           " --F Lv-- HP ---/--- 満腹度 ---/---          - G");
-    
-    sampleText->setPosition(Point(sampleText->getContentSize().width / 2, statusLayer->getContentSize().height / 2));
-    statusLayer->addChild(sampleText);
-    
-    // 装備情報（武器）ステータスバーの下
-    int attackPoint = actor_dto.getAttackPoint();
-    if (actor_dto.isEquipWeapon()) {
-        attackPoint += actor_dto.getWeaponEquip().getTotalParam();
-    }
-    std::string attackPointText = cocos2d::StringUtils::format("%3d", attackPoint);
-    auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), attackPointText);
-    // 2つあるうちの左側なので2かけてます
-    {
-        equipWeaponLayer->getChildByTag(1)->setVisible(false);
-        float pointX = statusLayer->getContentSize().width - (equipWeaponLayer->getContentSize().width * 2);
-        float pointY = (statusLayer->getContentSize().height / 2 + equipWeaponLayer->getContentSize().height / 2) * -1;
-        equipWeaponLayer->setPosition(cocos2d::Point(pointX, pointY));
-        equipWeaponLayer->setTag(Tags::StatusBarEquipWeaponTag);
-        statusLayer->addChild(equipWeaponLayer);
-    }
-    
-    // 装備情報（防具）ステータスバーの下
-    int defencePoint = actor_dto.getDefencePoint();
-    if (actor_dto.isEquipAccessory()) {
-        defencePoint += actor_dto.getAccessoryEquip().getTotalParam();
-    }
-    std::string defencePointText = cocos2d::StringUtils::format("%3d", defencePoint);
-    auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), defencePointText);
-    {
-        equipAccessoryLayer->getChildByTag(1)->setVisible(false);
-        float pointX = statusLayer->getContentSize().width - equipAccessoryLayer->getContentSize().width;
-        float pointY = (statusLayer->getContentSize().height / 2 + equipAccessoryLayer->getContentSize().height / 2) * -1;
-        equipAccessoryLayer->setPosition(cocos2d::Point(pointX, pointY));
-        equipAccessoryLayer->setTag(Tags::StatusBarEquipAccessoryTag);
-        statusLayer->addChild(equipAccessoryLayer);
-    }
-    
-    this->addChild(statusLayer, ZOrders::StatusBarLayerZOrder, Tags::StatusBarLayerTag);
+    this->_statusWidget = HeaderStatusLayout::create();
+    this->addChild(this->_statusWidget, ZOrders::StatusBarLayerZOrder);
     
     //-------------------------
     // ゲームログ表示
@@ -196,7 +161,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // ------------------------
     auto mini_map_layer = tiled_map_layer->getMiniMapLayer();
     // ステータスバーの下くらい
-    mini_map_layer->setPosition(0, mini_map_layer->getPositionY() + win_size.height - mini_map_layer->getContentSize().height - statusLayer->getContentSize().height);
+    mini_map_layer->setPosition(0, mini_map_layer->getPositionY() + win_size.height - mini_map_layer->getContentSize().height - (win_size.height * 0.1));
     this->addChild(mini_map_layer, ZOrders::MiniMapLayerZOrder, Tags::MiniMapLayerTag);
     
     // ---------------------
@@ -232,17 +197,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // -------------------------------
     // メニュー
     // -------------------------------
-    
-    // keypad
-    auto keypadMenuArray = createKeypadMenuItemArray();
-    auto pMenu = Menu::createWithArray(keypadMenuArray);
-    pMenu->setPosition(Point::ZERO);
-    this->addChild(pMenu, ZOrders::MenuLayerZOrder, Tags::KeypadMenuTag);
-
-    auto buttondMenuArray = createButtonMenuItemArray();
-    auto pMenuButton = Menu::createWithArray(buttondMenuArray);
-    pMenuButton->setPosition(Point::ZERO);
-    this->addChild(pMenuButton, ZOrders::MenuLayerZOrder, Tags::ButtonMenuTag);
+    setupKeypadLayout();
     
     // ---------------------------------
     // プレイヤーの先行
@@ -255,77 +210,69 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     return true;
 }
 
-MenuItem* RogueScene::createKeypadMenuItemSprite(SpriteFrame* pBaseSpriteFrame, SpriteFrame* pBasePressSpriteFrame, const ccMenuCallback& callback) {
-    auto pKeypad = Sprite::createWithSpriteFrame(pBaseSpriteFrame);
-    auto pKeypadPress = Sprite::createWithSpriteFrame(pBasePressSpriteFrame);
-    
-    pKeypadPress->setColor(Color3B::GRAY);
-    auto pMenuKey = MenuItemSprite::create(pKeypad, pKeypadPress, callback);
-    pMenuKey->setOpacity(128);
-    return pMenuKey;
+void RogueScene::setupKeypadLayout()
+{
+    auto keypad = KeypadLayout::create();
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::UP, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        auto mapIndex = getNowRogueMapIndex();
+        this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y + 1));
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::LEFT, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        auto mapIndex = getNowRogueMapIndex();
+        this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x - 1, mapIndex.y));
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::RIGHT, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        auto mapIndex = getNowRogueMapIndex();
+        this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x + 1, mapIndex.y));
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::DOWN, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        auto mapIndex = getNowRogueMapIndex();
+        this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y - 1));
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::A, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        this->attack();
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::B, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::C, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        this->showSystemMenu();
+    });
+    keypad->setKeypadCallback(KeypadLayout::ButtonType::D, [this]() {
+        if (!this->isKeypadControll()) {
+            return;
+        }
+        this->showItemInventoryWindow();
+    });
+    this->addChild(keypad, ZOrders::MenuLayerZOrder);
+    _keypadLayout = keypad;
 }
 
-Vector<MenuItem*> RogueScene::createKeypadMenuItemArray() {
-    Vector<MenuItem*> resultArray;
-    
-    auto pKeyBase = Sprite::create("ui/keypad.png");
-    auto pKeyBasePress = Sprite::create("ui/keypad_press.png");
-    
-    auto rogue_map_layer = getRogueMapLayer();
-    
-    auto pMenuKeyUp = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
-        CCLOG("pMenuKeyUpが押された！");
-        if (this->isKeypadControll()) {
-            auto winSize = Director::getInstance()->getWinSize();
-            Point point = Point(winSize.width / 2, winSize.height / 2);
-            MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
-            this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y + 1));
-        }
-    });
-    
-    pMenuKeyUp->setPosition(rogue_map_layer->indexToPoint(1, 2));
-    resultArray.pushBack(pMenuKeyUp);
-    
-    auto pMenuKeyRight = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
-        CCLOG("pMenuKeyRightが押された！");
-        if (this->isKeypadControll()) {
-            auto winSize = Director::getInstance()->getWinSize();
-            Point point = Point(winSize.width / 2, winSize.height / 2);
-            MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
-            this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x + 1, mapIndex.y));
-        }
-    });
-    pMenuKeyRight->setRotation(90.0f);
-    pMenuKeyRight->setPosition(rogue_map_layer->indexToPoint(2, 1));
-    resultArray.pushBack(pMenuKeyRight);
-    
-    auto pMenuKeyDown = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
-        CCLOG("pMenuKeyDownが押された！");
-        if (this->isKeypadControll()) {
-            auto winSize = Director::getInstance()->getWinSize();
-            Point point = Point(winSize.width / 2, winSize.height / 2);
-            MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
-            this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y - 1));
-        }
-    });
-    pMenuKeyDown->setRotation(180.0f);
-    pMenuKeyDown->setPosition(rogue_map_layer->indexToPoint(1, 0));
-    resultArray.pushBack(pMenuKeyDown);
-    
-    auto pMenuKeyLeft = createKeypadMenuItemSprite(pKeyBase->getSpriteFrame(), pKeyBasePress->getSpriteFrame(), [this](Ref *pSender) {
-        CCLOG("pMenuKeyLeftが押された！");
-        if (this->isKeypadControll()) {
-            auto winSize = Director::getInstance()->getWinSize();
-            Point point = Point(winSize.width / 2, winSize.height / 2);
-            MapIndex mapIndex = getRogueMapLayer()->pointToIndex(point);
-            this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x - 1, mapIndex.y));
-        }
-    });
-    pMenuKeyLeft->setRotation(270.0f);
-    pMenuKeyLeft->setPosition(rogue_map_layer->indexToPoint(0, 1));
-    resultArray.pushBack(pMenuKeyLeft);
- 
-    return resultArray;
+MapIndex RogueScene::getNowRogueMapIndex()
+{
+    auto winSize = Director::getInstance()->getWinSize();
+    Point point = Point(winSize.width / 2, winSize.height / 2);
+    return getRogueMapLayer()->pointToIndex(point);
 }
 
 bool RogueScene::isKeypadControll() {
@@ -336,71 +283,11 @@ bool RogueScene::isKeypadControll() {
     return false;
 }
 
-Vector<MenuItem*> RogueScene::createButtonMenuItemArray() {
-    Size win_size = Director::getInstance()->getWinSize();
-    
-    Vector<MenuItem*> resultArray;
-    
-    auto a_button = Sprite::create("ui/a_button.png");
-    auto a_buttonPress = Sprite::create("ui/a_button_press.png");
-    a_buttonPress->setOpacity(128);
-    auto pA_MenuButton = MenuItemSprite::create(a_button, a_buttonPress, [this](Ref* pSender) {
-        CCLOG("Aボタンが押された！");
-        if (this->isKeypadControll()) {
-            this->attack();
-        }
-    });
-    auto rogu_map_layer = getRogueMapLayer();
-    Size base_tile_size = rogu_map_layer->getTileSize();
-    
-    pA_MenuButton->setPosition(Point(win_size.width - base_tile_size.width, rogu_map_layer->indexToPoint(12, 1).y));
-    pA_MenuButton->setTag(Tags::A_ButtonMenuTag);
-    resultArray.pushBack(pA_MenuButton);
-    
-    auto b_button = Sprite::create("ui/b_button.png");
-    auto b_buttonPress = Sprite::create("ui/b_button_press.png");
-    b_buttonPress->setOpacity(128);
-    auto pB_MenuButton = MenuItemSprite::create(b_button, b_buttonPress, [this](Ref* pSender) {
-        CCLOG("Bボタンが押された！");
-    });
-    pB_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 2, rogu_map_layer->indexToPoint(11, 0).y));
-    pB_MenuButton->setTag(Tags::B_ButtonMenuTag);
-    resultArray.pushBack(pB_MenuButton);
-    
-    auto c_button = Sprite::create("ui/c_button.png");
-    auto c_buttonPress = Sprite::create("ui/c_button_press.png");
-    c_buttonPress->setOpacity(128);
-    auto pC_MenuButton = MenuItemSprite::create(c_button, c_buttonPress, [this](Ref* pSender) {
-        CCLOG("Cボタンが押された！");
-        if (this->isKeypadControll()) {
-            this->showSystemMenu();
-        }
-    });
-    pC_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 3, rogu_map_layer->indexToPoint(10, 1).y));
-    pC_MenuButton->setTag(Tags::C_ButtonMenuTag);
-    resultArray.pushBack(pC_MenuButton);
-    
-    auto d_button = Sprite::create("ui/d_button.png");
-    auto d_buttonPress = Sprite::create("ui/d_button_press.png");
-    d_buttonPress->setOpacity(128);
-    auto pD_MenuButton = MenuItemSprite::create(d_button, d_buttonPress, [this](Ref* pSender) {
-        CCLOG("Dボタンが押された！");
-        if (this->isKeypadControll()) {
-            this->showItemInventoryWindow();
-        }
-    });
-    pD_MenuButton->setPosition(Point(win_size.width - base_tile_size.width * 2, rogu_map_layer->indexToPoint(11, 2).y));
-    pD_MenuButton->setTag(Tags::D_ButtonMenuTag);
-    resultArray.pushBack(pD_MenuButton);
-    
-    return resultArray;
-}
 
 void RogueScene::showItemInventoryWindow()
 {
     // メニュー消す
-    this->getChildByTag(Tags::KeypadMenuTag)->setVisible(false);
-    this->getChildByTag(Tags::ButtonMenuTag)->setVisible(false);
+    _keypadLayout->hideKeypadMenu();
     
     auto itemWindowLayer = ItemInventoryLayer::create(this->_itemInventory);
     itemWindowLayer->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
@@ -428,8 +315,7 @@ void RogueScene::showItemInventoryWindow()
     });
     itemWindowLayer->setCloseCallback([this]() {
         // メニュー戻す
-        this->getChildByTag(Tags::KeypadMenuTag)->setVisible(true);
-        this->getChildByTag(Tags::ButtonMenuTag)->setVisible(true);
+        _keypadLayout->showKeypadMenu();
     });
     itemWindowLayer->setPosition(CommonWindowUtil::createPointCenter(itemWindowLayer, this));
     
@@ -695,12 +581,8 @@ void RogueScene::changeScene(Scene* scene) {
 }
 
 float RogueScene::getAnimationSpeed() {
-    auto pMenu = getChildByTag(Tags::ButtonMenuTag);
-    if (pMenu) {
-        auto pB_ButtonMenuItem = static_cast<MenuItem*>(pMenu->getChildByTag(Tags::B_ButtonMenuTag));
-        if (pB_ButtonMenuItem && pB_ButtonMenuItem->isSelected()) {
-            return 0.0f;
-        }
+    if (_keypadLayout->isKeypadDashed()) {
+        return 0.0f;
     }
     return 0.2f;
 }
@@ -1241,119 +1123,44 @@ void RogueScene::hideSystemMenu() {
     }
 }
 
-void RogueScene::refreshStatus() {
-    
-    auto pStatusBarLayer = getChildByTag(Tags::StatusBarLayerTag);
-    if (!pStatusBarLayer) {
+void RogueScene::refreshStatus()
+{
+    if (!_statusWidget) {
         return;
     }
     
-     // TODO: とりあえず1要素なので。。。
-    auto pStatusText = pStatusBarLayer->getChildren().at(0);
-    if (pStatusText) {
-        
-        // プレイヤー取得
-        auto pPlayerSprite = getPlayerActorSprite(1);
-        auto pPlayerDto = pPlayerSprite->getActorDto();
-        int questId = _roguePlayDto.getQuestId(); // フロア情報（クエストID=フロア数でいい？)
-        // 作成
-        auto pStr = String::createWithFormat(" %2dF Lv%3d HP %3d/%3d 満腹度 %d/%d %10d G",
-                                             questId,
-                                             pPlayerDto->getLv(),
-                                             pPlayerDto->getHitPoint(),
-                                             pPlayerDto->getHitPointLimit(),
-                                             pPlayerDto->getMagicPoint(),
-                                             pPlayerDto->getMagicPointLimit(),
-                                             this->_itemInventory.getGold());
-        
-        auto pLabelText = static_cast<Label*>(pStatusText);
-        pLabelText->setString(pStr->getCString());
-        pLabelText->setPositionX(pLabelText->getContentSize().width / 2);
-        
-        // TODO: 死亡判定ここで？
-        if (pPlayerDto->getHitPoint() == 0) {
-            logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
-            changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
-        } else if (pPlayerDto->getMagicPoint() == 0) {
-            logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
-            changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
+    auto pPlayerSprite = getPlayerActorSprite(1);
+    auto pPlayerDto = pPlayerSprite->getActorDto();
+
+    int questId = _roguePlayDto.getQuestId(); // フロア情報（クエストID=フロア数でいい？)
+    _statusWidget->setStatus(questId, *pPlayerDto, this->_itemInventory.getGold());
+    
+    // TODO: 死亡判定ここで？
+    if (pPlayerDto->getHitPoint() == 0) {
+        logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
+        changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
+    } else if (pPlayerDto->getMagicPoint() == 0) {
+        logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
+        changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
+    } else {
+        // 残りHPで文字色を変える
+        float hitPointDiv = (float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit();
+        float mpDiv = (float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit();
+        if (hitPointDiv <= 0.25 || mpDiv <= 0.10) {
+//            pLabelText->setColor(Color3B::RED);
+        } else if (hitPointDiv <= 0.50 || mpDiv <= 0.30) {
+//            pLabelText->setColor(Color3B::YELLOW);
         } else {
-            // 残りHPで文字色を変える
-            float hitPointDiv = (float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit();
-            float mpDiv = (float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit();
-            if (hitPointDiv <= 0.25 || mpDiv <= 0.10) {
-                pLabelText->setColor(Color3B::RED);
-            } else if (hitPointDiv <= 0.50 || mpDiv <= 0.30) {
-                pLabelText->setColor(Color3B::YELLOW);
-            } else {
-                pLabelText->setColor(Color3B::WHITE);
-            }
+//            pLabelText->setColor(Color3B::WHITE);
         }
     }
 }
 
 // 装備状態更新
-void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
-    
-    auto statusLayer = dynamic_cast<Layer*>(getChildByTag(Tags::StatusBarLayerTag));
-    if (statusLayer) {
-        // 武器
-        auto equipWeaponLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(Tags::StatusBarEquipWeaponTag));
-        if (equipWeaponLayer) {
-            // TODO: (kyokomi) とりあえず...サーセン
-            const int SpriteTag = 1;
-            auto sprite = dynamic_cast<Sprite*>(equipWeaponLayer->getChildByTag(SpriteTag));
-            // TODO: (kyokomi) とりあえず...サーセン
-            const int LabelTag = 2;
-            auto label = dynamic_cast<Label*>(equipWeaponLayer->getChildByTag(LabelTag));
-            if (actorDto.isEquipWeapon()) {
-                std::string spriteFileName = ItemLogic::createItemImageFileName(actorDto.getWeaponEquip().getImgResId());
-                auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
-                if (!equipSpriteFrame) {
-                    equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
-                    cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipSpriteFrame, spriteFileName);
-                }
-                sprite->setVisible(true);
-                sprite->setSpriteFrame(equipSpriteFrame);
-                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getAttackPoint() + actorDto.getWeaponEquip().getTotalParam());
-                label->setString(labelText);
-            } else {
-                sprite->setVisible(false);
-                
-                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getAttackPoint());
-                label->setString(labelText);
-            }
-        }
-        
-        // 防具
-        auto equipAccessoryLayer = dynamic_cast<Layer*>(statusLayer->getChildByTag(Tags::StatusBarEquipAccessoryTag));
-        if (equipAccessoryLayer) {
-            // TODO: (kyokomi) とりあえず...サーセン
-            const int SpriteTag = 1;
-            auto sprite = dynamic_cast<Sprite*>(equipAccessoryLayer->getChildByTag(SpriteTag));
-            // TODO: (kyokomi) とりあえず...サーセン
-            const int LabelTag = 2;
-            auto label = dynamic_cast<Label*>(equipAccessoryLayer->getChildByTag(LabelTag));
-        
-            if (actorDto.isEquipAccessory()) {
-                std::string spriteFileName = ItemLogic::createItemImageFileName(actorDto.getAccessoryEquip().getImgResId());
-                auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
-                if (!equipSpriteFrame) {
-                    equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
-                    cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipSpriteFrame, spriteFileName);
-                }
-                sprite->setVisible(true);
-                sprite->setSpriteFrame(equipSpriteFrame);
-                
-                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getDefencePoint() + actorDto.getAccessoryEquip().getTotalParam());
-                label->setString(labelText);
-            } else {
-                sprite->setVisible(false);
-                
-                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getDefencePoint());
-                label->setString(labelText);
-            }
-        }
+void RogueScene::refreshStatusEquip(const ActorDto& actorDto)
+{
+    if (_statusWidget) {
+        _statusWidget->setEquip(actorDto);
     }
 }
 

@@ -37,7 +37,7 @@ BankScene::~BankScene()
 
 Node* BankScene::initLayout()
 {
-    auto layout = WidgetUtil::createCocoStudioWidget("cocostudio/bank_ui2/bank_ui.json");
+    auto layout = WidgetUtil::createCocoStudioWidget("cocostudio/bank_ui.json");
     layout->setScale(0.75f);
     WidgetUtil::settingCenterPosition(layout);
     
