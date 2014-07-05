@@ -36,6 +36,7 @@
 #include "NovelScene.h"
 
 #include "KeypadLayout.h"
+#include "HeaderStatusLayout.h"
 
 #include "WidgetUtil.h"
 
@@ -114,7 +115,6 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     this->_itemInventory = AccountData::getInstance()->getItemInventory();
     
     auto win_size = Director::getInstance()->getWinSize();
-    auto visibleSize = Director::getInstance()->getVisibleSize();
     
     // ---------------------
     // フロア開始カットイン表示
@@ -134,47 +134,10 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     this->addChild(tiled_map_layer, ZOrders::TiledMapLayerZOrder, Tags::TiledMapLayerTag);
     
     //-------------------------
-    // ステータスバー？
+    // ステータスバー
     //-------------------------
-    auto statusBarLayout = WidgetUtil::createCocoStudioWidget("cocostudio/RogueScene_status.json");
-    statusBarLayout->setScale(0.75f);
-    statusBarLayout->setPositionY(win_size.height - (statusBarLayout->getLayoutSize().height * 0.75f));
-    {
-        auto goldText = WidgetUtil::getChildByNameRecursion<ui::Text>(statusBarLayout, "Label_goldText");
-        goldText->setPositionX(win_size.width - goldText->getTextAreaSize().width * 0.75f);
-
-        // 装備情報（武器）ステータスバーの下
-        int attackPoint = actor_dto.getAttackPoint();
-        if (actor_dto.isEquipWeapon()) {
-            attackPoint += actor_dto.getWeaponEquip().getTotalParam();
-        }
-        std::string attackPointText = cocos2d::StringUtils::format("%3d", attackPoint);
-        auto equipWeaponLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), attackPointText);
-        {
-            equipWeaponLayer->getChildByTag(1)->setVisible(false);
-            float pointX = visibleSize.width; // 左
-            equipWeaponLayer->setPosition(cocos2d::Vec2(pointX, 0));
-            equipWeaponLayer->setTag(Tags::StatusBarEquipWeaponTag);
-            statusBarLayout->addChild(equipWeaponLayer);
-        }
-        
-        // 装備情報（防具）ステータスバーの下
-        int defencePoint = actor_dto.getDefencePoint();
-        if (actor_dto.isEquipAccessory()) {
-            defencePoint += actor_dto.getAccessoryEquip().getTotalParam();
-        }
-        std::string defencePointText = cocos2d::StringUtils::format("%3d", defencePoint);
-        auto equipAccessoryLayer = CommonWindowUtil::createSpriteWithLabelLayer(Size(win_size.width / 7, win_size.height / 8), "grid32.png", FontUtils::getTitleFontTTFConfig(), defencePointText);
-        {
-            equipAccessoryLayer->getChildByTag(1)->setVisible(false);
-            float pointX = visibleSize.width + equipAccessoryLayer->getContentSize().width; // 右
-            equipAccessoryLayer->setPosition(cocos2d::Vec2(pointX, 0));
-            equipAccessoryLayer->setTag(Tags::StatusBarEquipAccessoryTag);
-            statusBarLayout->addChild(equipAccessoryLayer);
-        }
-    }
-    this->addChild(statusBarLayout, ZOrders::StatusBarLayerZOrder+1);
-    this->_statusWidget = statusBarLayout;
+    this->_statusWidget = HeaderStatusLayout::create();
+    this->addChild(this->_statusWidget, ZOrders::StatusBarLayerZOrder);
     
     //-------------------------
     // ゲームログ表示
@@ -1168,35 +1131,9 @@ void RogueScene::refreshStatus()
     
     auto pPlayerSprite = getPlayerActorSprite(1);
     auto pPlayerDto = pPlayerSprite->getActorDto();
-    
-     // TODO: とりあえず1要素なので。。。
-    auto pStatusText = WidgetUtil::getChildByNameRecursion<ui::Text>(_statusWidget, "Label_statusText");
-    if (pStatusText) {
-        
-        // プレイヤー取得
-        int questId = _roguePlayDto.getQuestId(); // フロア情報（クエストID=フロア数でいい？)
-        // 作成
-        auto pStr = String::createWithFormat("%2dF Lv %2d HP %3d/%3d 満腹度 %3d/%3d",
-                                             questId,
-                                             pPlayerDto->getLv(),
-                                             pPlayerDto->getHitPoint(),
-                                             pPlayerDto->getHitPointLimit(),
-                                             pPlayerDto->getMagicPoint(),
-                                             pPlayerDto->getMagicPointLimit());
-        pStatusText->setString(pStr->getCString());
-        
-        auto hpBar = WidgetUtil::getChildByNameRecursion(_statusWidget, "HP_bar");
-        hpBar->setScaleX((float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit());
-        auto mpBar = WidgetUtil::getChildByNameRecursion(_statusWidget, "MP_bar");
-        mpBar->setScaleX((float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit());
-    }
-    
-    auto labelGoldText = WidgetUtil::getChildByNameRecursion<ui::Text>(_statusWidget, "Label_goldText");
-    if (labelGoldText) {
-        auto goldTextStr = String::createWithFormat("%10d G", this->_itemInventory.getGold());
-        labelGoldText->setString(goldTextStr->getCString());
-    }
-    
+
+    int questId = _roguePlayDto.getQuestId(); // フロア情報（クエストID=フロア数でいい？)
+    _statusWidget->setStatus(questId, *pPlayerDto, this->_itemInventory.getGold());
     
     // TODO: 死亡判定ここで？
     if (pPlayerDto->getHitPoint() == 0) {
@@ -1220,66 +1157,10 @@ void RogueScene::refreshStatus()
 }
 
 // 装備状態更新
-void RogueScene::refreshStatusEquip(const ActorDto& actorDto) {
-    
+void RogueScene::refreshStatusEquip(const ActorDto& actorDto)
+{
     if (_statusWidget) {
-        // 武器
-        auto equipWeaponLayer = dynamic_cast<Layer*>(_statusWidget->getChildByTag(Tags::StatusBarEquipWeaponTag));
-        if (equipWeaponLayer) {
-            // TODO: (kyokomi) とりあえず...サーセン
-            const int SpriteTag = 1;
-            auto sprite = dynamic_cast<Sprite*>(equipWeaponLayer->getChildByTag(SpriteTag));
-            // TODO: (kyokomi) とりあえず...サーセン
-            const int LabelTag = 2;
-            auto label = dynamic_cast<Label*>(equipWeaponLayer->getChildByTag(LabelTag));
-            if (actorDto.isEquipWeapon()) {
-                std::string spriteFileName = ItemLogic::createItemImageFileName(actorDto.getWeaponEquip().getImgResId());
-                auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
-                if (!equipSpriteFrame) {
-                    equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
-                    cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipSpriteFrame, spriteFileName);
-                }
-                sprite->setVisible(true);
-                sprite->setSpriteFrame(equipSpriteFrame);
-                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getAttackPoint() + actorDto.getWeaponEquip().getTotalParam());
-                label->setString(labelText);
-            } else {
-                sprite->setVisible(false);
-                
-                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getAttackPoint());
-                label->setString(labelText);
-            }
-        }
-        
-        // 防具
-        auto equipAccessoryLayer = dynamic_cast<Layer*>(_statusWidget->getChildByTag(Tags::StatusBarEquipAccessoryTag));
-        if (equipAccessoryLayer) {
-            // TODO: (kyokomi) とりあえず...サーセン
-            const int SpriteTag = 1;
-            auto sprite = dynamic_cast<Sprite*>(equipAccessoryLayer->getChildByTag(SpriteTag));
-            // TODO: (kyokomi) とりあえず...サーセン
-            const int LabelTag = 2;
-            auto label = dynamic_cast<Label*>(equipAccessoryLayer->getChildByTag(LabelTag));
-        
-            if (actorDto.isEquipAccessory()) {
-                std::string spriteFileName = ItemLogic::createItemImageFileName(actorDto.getAccessoryEquip().getImgResId());
-                auto equipSpriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFileName);
-                if (!equipSpriteFrame) {
-                    equipSpriteFrame = cocos2d::Sprite::create(spriteFileName)->getSpriteFrame();
-                    cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipSpriteFrame, spriteFileName);
-                }
-                sprite->setVisible(true);
-                sprite->setSpriteFrame(equipSpriteFrame);
-                
-                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getDefencePoint() + actorDto.getAccessoryEquip().getTotalParam());
-                label->setString(labelText);
-            } else {
-                sprite->setVisible(false);
-                
-                std::string labelText = cocos2d::StringUtils::format("%3d", actorDto.getDefencePoint());
-                label->setString(labelText);
-            }
-        }
+        _statusWidget->setEquip(actorDto);
     }
 }
 

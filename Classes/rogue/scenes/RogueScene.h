@@ -23,6 +23,7 @@
 USING_NS_CC;
 
 class KeypadLayout;
+class HeaderStatusLayout;
 
 NS_ROGUE_BEGIN
 
@@ -114,12 +115,6 @@ private:
         RoguePlayerLightMaskTag   = 110002,  // 暗い部分
         MiniMapLayerTag           = 150000,
         // この辺StatusBarがいまいち
-        StatusBarEquipWeaponTag            = 200100,
-        StatusBarEquipWeaponSpriteTag      = 200101,
-        StatusBarEquipWeaponLabelTag       = 200102,
-        StatusBarEquipAccessoryTag         = 200200,
-        StatusBarEquipAccessorySpriteTag   = 200201,
-        StatusBarEquipAccessoryLabelTag    = 200202,
         GameLogLayerTag           = 210000,
         ItemListWindowTag         = 220000,
         CommonWindowTag           = 230000,
@@ -162,7 +157,7 @@ private:
     // キーパッド
     KeypadLayout* _keypadLayout;
     
-    cocos2d::ui::Widget* _statusWidget;
+    HeaderStatusLayout* _statusWidget;
 };
 
 NS_ROGUE_END

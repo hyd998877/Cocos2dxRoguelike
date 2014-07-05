@@ -118,6 +118,7 @@
 		CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7519322B0D007715BA /* SRPGScene.cpp */; };
 		CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */; };
 		CE6651BB194D71A200333345 /* cocostudio in Resources */ = {isa = PBXBuildFile; fileRef = CE6651BA194D71A200333345 /* cocostudio */; };
+		CE72EB5F19683729006FDA87 /* HeaderStatusLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */; };
 		CE836F931942EB4900880652 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE836F921942EB4900880652 /* XCTest.framework */; };
 		CE836F941942EB4900880652 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		CE836F951942EB4900880652 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -445,6 +446,8 @@
 		CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditTextDialogLayout.cpp; sourceTree = "<group>"; };
 		CE2D0482195EFEA900267EFB /* EditTextDialogLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTextDialogLayout.h; sourceTree = "<group>"; };
 		CE6651BA194D71A200333345 /* cocostudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cocostudio; sourceTree = "<group>"; };
+		CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeaderStatusLayout.cpp; sourceTree = "<group>"; };
+		CE72EB5E19683729006FDA87 /* HeaderStatusLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderStatusLayout.h; sourceTree = "<group>"; };
 		CE75E79D1955317C0048742B /* WidgetUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WidgetUtil.h; sourceTree = "<group>"; };
 		CE836F911942EB4900880652 /* Cocos2dRogueLike iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cocos2dRogueLike iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE836F921942EB4900880652 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -1240,6 +1243,8 @@
 				CE2D0482195EFEA900267EFB /* EditTextDialogLayout.h */,
 				CEC35533196004A000769E36 /* KeypadLayout.cpp */,
 				CEC35534196004A000769E36 /* KeypadLayout.h */,
+				CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */,
+				CE72EB5E19683729006FDA87 /* HeaderStatusLayout.h */,
 			);
 			path = part;
 			sourceTree = "<group>";
@@ -1530,6 +1535,7 @@
 				CE19BEA219322B0D007715BA /* DropItemSprite.cpp in Sources */,
 				CE19BE8119322B0D007715BA /* TableViewTestLayer.cpp in Sources */,
 				CE19BE9419322B0D007715BA /* TMXGenerator.cpp in Sources */,
+				CE72EB5F19683729006FDA87 /* HeaderStatusLayout.cpp in Sources */,
 				CE19BE9319322B0D007715BA /* MapManager.cpp in Sources */,
 				CE8B22301955BA8B0085EB9B /* MypageHeaderLayer.cpp in Sources */,
 				CE19BE9A19322B0D007715BA /* RogueTMXTiledMap.cpp in Sources */,
