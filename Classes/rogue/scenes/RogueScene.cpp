@@ -336,7 +336,7 @@ void RogueScene::itemWindowDropItem(const ItemDto &itemDto)
     } else {
         message = itemDto.createItemName() + "を床におけなかった。";
     }
-    this->_gameLogWidget->logMessage(message.c_str());
+    this->logMessage(message);
 }
 
 void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
@@ -366,7 +366,8 @@ void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
             this->_itemInventory.itemEquip(relaseObjectId, false);
         }
         this->_itemInventory.itemEquip(itemDto.getObjectId(), true);
-        this->_gameLogWidget->logMessage("%sを装備した。", itemDto.createItemName().c_str());
+        auto message = cocos2d::StringUtils::format("%sを装備した。", itemDto.createItemName().c_str());
+        this->logMessage(message);
     } else {
         if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
             // 武器解除
@@ -376,7 +377,8 @@ void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
             player_sprite->getActorDto()->equipReleaseAccessory();
         }
         this->_itemInventory.itemEquip(itemDto.getObjectId(), false);
-        this->_gameLogWidget->logMessage("%sの装備をはずした。", itemDto.createItemName().c_str());
+        auto message = cocos2d::StringUtils::format("%sの装備をはずした。", itemDto.createItemName().c_str());
+        this->logMessage(message);
     }
     
     // 装備解除、装備によってステータス変動するためステータスバーを更新
@@ -393,7 +395,7 @@ void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
     // itemIdで処理してくれるlogicへ
     std::string use_message = ItemLogic::use(itemDto.getItemId(), player_sprite->getActorDto());
     
-    this->_gameLogWidget->logMessage(use_message.c_str());
+    this->logMessage(use_message);
     
     this->_itemInventory.removeItemDto(itemDto.getObjectId());
     
@@ -587,7 +589,8 @@ void RogueScene::enemyTurn() {
             pEnemySprite->moveDone();
             
             // とどまる
-            _gameLogWidget->logMessage("様子を見ている seqNo = %d", enemyMapItem.seqNo);
+            auto message = cocos2d::StringUtils::format("様子を見ている seqNo = %d", enemyMapItem.seqNo);
+            this->logMessage(message);
         } else if (rand == 2) {
             // プレイヤーに向かって移動 or プレイヤーに攻撃
             auto pPlayerActorSprite = getPlayerActorSprite(1);
@@ -649,7 +652,9 @@ void RogueScene::enemyTurn() {
                 
             } else if (rogue_map_layer->isTiledMapColisionLayer(moveMapIndex)) {
                 
-                _gameLogWidget->logMessage("壁ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
+                auto message = cocos2d::StringUtils::format("壁ドーン seqNo = %d (%d, %d)",
+                                                            enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
+                this->logMessage(message);
                 pEnemySprite->moveDone();
                 
             } else if (this->getMapManager()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::ENEMY) {
@@ -657,7 +662,9 @@ void RogueScene::enemyTurn() {
                 if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, moveMapIndex)) {
                     //logMessage("待機 seqNo = %d (%d, %d)");
                 } else {
-                    _gameLogWidget->logMessage("敵ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
+                    auto message = cocos2d::StringUtils::format("敵ドーン seqNo = %d (%d, %d)",
+                                                                enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
+                    this->logMessage(message);
                 }
                 pEnemySprite->moveDone();
                 
@@ -677,7 +684,9 @@ void RogueScene::enemyTurn() {
                                         
                     int damage = BattleLogic::exec(*enemy, *player);
                     // 攻撃イベント
-                    this->_gameLogWidget->logMessage("%sの攻撃: %sに%dダメージ", enemy->getName().c_str(), player->getName().c_str(), damage);
+                    auto message = cocos2d::StringUtils::format("%sの攻撃: %sに%dダメージ",
+                                                                enemy->getName().c_str(), player->getName().c_str(), damage);
+                    this->logMessage(message);
                     // オーバーキル判定
                     player->damageHitPoint(damage);
                     
@@ -769,7 +778,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     // 障害物判定
     if (rogue_map_layer->isTiledMapColisionLayer(touchPointMapIndex)) {
         // TODO: ぶつかるSE再生
-        _gameLogWidget->logMessage("壁ドーン SE再生");
+        this->logMessage("壁ドーン SE再生");
         
         // ターン経過なし
         
@@ -814,7 +823,8 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
         // TODO: (kyokomi) 拾うSE再生
         
         // メッセージログ
-        _gameLogWidget->logMessage("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
+        auto message = cocos2d::StringUtils::format("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
+        this->logMessage(message);
         // ゴールドを加算
         this->_itemInventory.addGold(itemDto.getParam());
         
@@ -837,7 +847,7 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
             message = "持ち物が一杯で、\n" + itemDto.createItemName() + "を拾えなかった。";
         }
         // アイテム所持数限界
-        _gameLogWidget->logMessage(message.c_str());
+        this->logMessage(message);
     }
 }
 
@@ -928,18 +938,24 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
     // 攻撃開始
     int damage = BattleLogic::exec(*player, *enemy);
     // 攻撃イベント
-    _gameLogWidget->logMessage("%sの攻撃: %sに%dのダメージ", player->getName().c_str(), enemy->getName().c_str(), damage);
+    auto message = cocos2d::StringUtils::format("%sの攻撃: %sに%dのダメージ",
+                                                player->getName().c_str(), enemy->getName().c_str(), damage);
+    this->logMessage(message);
+    
     // 敵の死亡判定
     bool isDead = enemy->damageHitPoint(damage);
     if (isDead) {
         
-        _gameLogWidget->logMessage("%sを倒した。経験値%dを得た。", enemy->getName().c_str(), enemy->getExp());
+        auto message = cocos2d::StringUtils::format("%sを倒した。経験値%dを得た。",
+                                                    enemy->getName().c_str(), enemy->getExp());
+        this->logMessage(message);
         // TODO: (kyokomi) 経験値更新（計算式 適当）
         if (player->growExpAndLevelUpCheck(enemy->getExp())) {
             
             // TODO: レベルアップ演出（SE？）
-            
-            _gameLogWidget->logMessage("%sはレベル%dになった。", player->getName().c_str(), player->getLv());
+            auto message = cocos2d::StringUtils::format("%sはレベル%dになった。",
+                                                        player->getName().c_str(), player->getLv());
+            this->logMessage(message);
             
             // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
             this->refreshStatusEquip(*player);
@@ -958,6 +974,11 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
 #pragma mark
 #pragma mark UI関連
 
+void RogueScene::logMessage(const std::string& messageText)
+{
+    this->_gameLogWidget->logMessage(messageText.c_str());
+}
+
 void RogueScene::showSystemMenu() {
     
     auto systemMenuModalLayer = dynamic_cast<ModalLayer*>(this->getChildByTag(Tags::SystemMenuWindowTag));
@@ -972,7 +993,7 @@ void RogueScene::showSystemMenu() {
         SystemMenuLayer::SystemMenuButtonInfo menu1("千里眼", [this, systemMenuModalLayer]() {
             CCLOG("Menu1ボタンが押された！");
             
-            this->_gameLogWidget->logMessage("千里眼を発動した。");
+            this->logMessage("千里眼を発動した。");
             
             this->itemMappingAllShow();
             
@@ -983,7 +1004,7 @@ void RogueScene::showSystemMenu() {
         SystemMenuLayer::SystemMenuButtonInfo menu2("地獄耳", [this, systemMenuModalLayer]() {
             CCLOG("Menu2ボタンが押された！");
             
-            this->_gameLogWidget->logMessage("地獄耳を発動した。");
+            this->logMessage("地獄耳を発動した。");
             
             this->enemyMappingAllShow();
             
@@ -1016,7 +1037,7 @@ void RogueScene::showSystemMenu() {
         SystemMenuLayer::SystemMenuButtonInfo menu5("足　元", [this, systemMenuModalLayer]() {
             CCLOG("Menu5ボタンが押された！");
             
-            this->_gameLogWidget->logMessage("足元は何もありません。");
+            this->logMessage("足元は何もありません。");
             
             this->hideSystemMenu();
         });
@@ -1076,10 +1097,12 @@ void RogueScene::refreshStatus()
     
     // TODO: 死亡判定ここで？
     if (pPlayerDto->getHitPoint() == 0) {
-        _gameLogWidget->logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
+        auto message = cocos2d::StringUtils::format("%sは死亡した。", pPlayerDto->getName().c_str());
+        this->logMessage(message);
         changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
     } else if (pPlayerDto->getMagicPoint() == 0) {
-        _gameLogWidget->logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
+        auto message = cocos2d::StringUtils::format("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
+        this->logMessage(message);
         changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
     } else {
         // 残りHPで文字色を変える

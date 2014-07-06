@@ -42,6 +42,7 @@ public:
         
     void onEnter();
     void onEnterTransitionDidFinish();
+    void logMessage(const std::string& messageText);
     
 private:
     void changeGameStatus(RoguePlayDto::GameStatus gameStatus);
