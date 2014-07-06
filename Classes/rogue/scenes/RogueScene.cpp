@@ -37,17 +37,11 @@
 
 #include "KeypadLayout.h"
 #include "HeaderStatusLayout.h"
+#include "GameLogLayout.h"
 
 #include "WidgetUtil.h"
 
 NS_ROGUE_BEGIN
-
-// プロトタイプ宣言
-std::size_t f_r(const std::string& s, char c)
-{
-    std::string::size_type pos = s.find(c);
-    return (pos == std::string::npos) ? 0 : (1 + f_r(s.substr(pos+1), c));
-}
 
 #pragma mark
 #pragma mark main
@@ -142,19 +136,8 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     //-------------------------
     // ゲームログ表示
     //-------------------------
-    auto pGameLogLayer = LayerColor::create(Color4B(0, 0, 0, 192));
-    pGameLogLayer->setContentSize(Size(win_size.width * 0.5, win_size.height * 0.2));
-    pGameLogLayer->setPosition(win_size.width / 2 - pGameLogLayer->getContentSize().width / 2, 0);
-    
-    CommonWindowUtil::attachWindowWaku(pGameLogLayer);
-    
-    auto pLogTextLabel = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), "");
-    pLogTextLabel->setDimensions(0, 0);
-    pLogTextLabel->setAlignment(TextHAlignment::LEFT, TextVAlignment::TOP);
-    pLogTextLabel->setPosition(Point(pLogTextLabel->getContentSize().width / 2 + pLogTextLabel->getSystemFontSize() / 4, pGameLogLayer->getContentSize().height - pLogTextLabel->getContentSize().height / 2 - pLogTextLabel->getSystemFontSize() / 4));
-    pGameLogLayer->addChild(pLogTextLabel);
-    
-    this->addChild(pGameLogLayer, ZOrders::GameLogLayerZOrder, Tags::GameLogLayerTag);
+    this->_gameLogWidget = GameLogLayout::create();
+    this->addChild(this->_gameLogWidget, ZOrders::GameLogLayerZOrder, Tags::GameLogLayerTag);
     
     // ------------------------
     // ミニマップ
@@ -353,7 +336,7 @@ void RogueScene::itemWindowDropItem(const ItemDto &itemDto)
     } else {
         message = itemDto.createItemName() + "を床におけなかった。";
     }
-    this->logMessage(message.c_str());
+    this->_gameLogWidget->logMessage(message.c_str());
 }
 
 void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
@@ -383,7 +366,7 @@ void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
             this->_itemInventory.itemEquip(relaseObjectId, false);
         }
         this->_itemInventory.itemEquip(itemDto.getObjectId(), true);
-        this->logMessage("%sを装備した。", itemDto.createItemName().c_str());
+        this->_gameLogWidget->logMessage("%sを装備した。", itemDto.createItemName().c_str());
     } else {
         if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
             // 武器解除
@@ -393,7 +376,7 @@ void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
             player_sprite->getActorDto()->equipReleaseAccessory();
         }
         this->_itemInventory.itemEquip(itemDto.getObjectId(), false);
-        this->logMessage("%sの装備をはずした。", itemDto.createItemName().c_str());
+        this->_gameLogWidget->logMessage("%sの装備をはずした。", itemDto.createItemName().c_str());
     }
     
     // 装備解除、装備によってステータス変動するためステータスバーを更新
@@ -410,7 +393,7 @@ void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
     // itemIdで処理してくれるlogicへ
     std::string use_message = ItemLogic::use(itemDto.getItemId(), player_sprite->getActorDto());
     
-    this->logMessage(use_message.c_str());
+    this->_gameLogWidget->logMessage(use_message.c_str());
     
     this->_itemInventory.removeItemDto(itemDto.getObjectId());
     
@@ -604,7 +587,7 @@ void RogueScene::enemyTurn() {
             pEnemySprite->moveDone();
             
             // とどまる
-            logMessage("様子を見ている seqNo = %d", enemyMapItem.seqNo);
+            _gameLogWidget->logMessage("様子を見ている seqNo = %d", enemyMapItem.seqNo);
         } else if (rand == 2) {
             // プレイヤーに向かって移動 or プレイヤーに攻撃
             auto pPlayerActorSprite = getPlayerActorSprite(1);
@@ -666,7 +649,7 @@ void RogueScene::enemyTurn() {
                 
             } else if (rogue_map_layer->isTiledMapColisionLayer(moveMapIndex)) {
                 
-                logMessage("壁ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
+                _gameLogWidget->logMessage("壁ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
                 pEnemySprite->moveDone();
                 
             } else if (this->getMapManager()->getActorMapItem(moveMapIndex).mapDataType == MapDataType::ENEMY) {
@@ -674,7 +657,7 @@ void RogueScene::enemyTurn() {
                 if (MAP_INDEX_DIFF(enemyMapItem.mapIndex, moveMapIndex)) {
                     //logMessage("待機 seqNo = %d (%d, %d)");
                 } else {
-                    logMessage("敵ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
+                    _gameLogWidget->logMessage("敵ドーン seqNo = %d (%d, %d)", enemyMapItem.seqNo, moveMapIndex.x, moveMapIndex.y);
                 }
                 pEnemySprite->moveDone();
                 
@@ -694,7 +677,7 @@ void RogueScene::enemyTurn() {
                                         
                     int damage = BattleLogic::exec(*enemy, *player);
                     // 攻撃イベント
-                    this->logMessage("%sの攻撃: %sに%dダメージ", enemy->getName().c_str(), player->getName().c_str(), damage);
+                    this->_gameLogWidget->logMessage("%sの攻撃: %sに%dダメージ", enemy->getName().c_str(), player->getName().c_str(), damage);
                     // オーバーキル判定
                     player->damageHitPoint(damage);
                     
@@ -744,7 +727,7 @@ void RogueScene::checkEnmeyTurnEnd() {
 #pragma mark
 #pragma mark タッチイベント関連
 
-void RogueScene::touchEventExec(cocos2d::Point touchPoint) {
+void RogueScene::touchEventExec(cocos2d::Vec2 touchPoint) {
     
     auto rogue_map_layer = getRogueMapLayer();
     // マップ移動分を考慮
@@ -786,7 +769,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     // 障害物判定
     if (rogue_map_layer->isTiledMapColisionLayer(touchPointMapIndex)) {
         // TODO: ぶつかるSE再生
-        logMessage("壁ドーン SE再生");
+        _gameLogWidget->logMessage("壁ドーン SE再生");
         
         // ターン経過なし
         
@@ -831,7 +814,7 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
         // TODO: (kyokomi) 拾うSE再生
         
         // メッセージログ
-        logMessage("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
+        _gameLogWidget->logMessage("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
         // ゴールドを加算
         this->_itemInventory.addGold(itemDto.getParam());
         
@@ -854,7 +837,7 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
             message = "持ち物が一杯で、\n" + itemDto.createItemName() + "を拾えなかった。";
         }
         // アイテム所持数限界
-        logMessage(message.c_str());
+        _gameLogWidget->logMessage(message.c_str());
     }
 }
 
@@ -945,18 +928,18 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
     // 攻撃開始
     int damage = BattleLogic::exec(*player, *enemy);
     // 攻撃イベント
-    logMessage("%sの攻撃: %sに%dのダメージ", player->getName().c_str(), enemy->getName().c_str(), damage);
+    _gameLogWidget->logMessage("%sの攻撃: %sに%dのダメージ", player->getName().c_str(), enemy->getName().c_str(), damage);
     // 敵の死亡判定
     bool isDead = enemy->damageHitPoint(damage);
     if (isDead) {
         
-        logMessage("%sを倒した。経験値%dを得た。", enemy->getName().c_str(), enemy->getExp());
+        _gameLogWidget->logMessage("%sを倒した。経験値%dを得た。", enemy->getName().c_str(), enemy->getExp());
         // TODO: (kyokomi) 経験値更新（計算式 適当）
         if (player->growExpAndLevelUpCheck(enemy->getExp())) {
             
             // TODO: レベルアップ演出（SE？）
             
-            logMessage("%sはレベル%dになった。", player->getName().c_str(), player->getLv());
+            _gameLogWidget->logMessage("%sはレベル%dになった。", player->getName().c_str(), player->getLv());
             
             // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
             this->refreshStatusEquip(*player);
@@ -975,50 +958,6 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
 #pragma mark
 #pragma mark UI関連
 
-void RogueScene::logMessage(const char * pszFormat, ...) {
-    va_list ap;
-    va_start(ap, pszFormat);
-    char buf[RogueScene::MAX_LOG_LENGTH];
-    vsnprintf(buf, RogueScene::MAX_LOG_LENGTH-3, pszFormat, ap);
-    va_end(ap);
-    
-    CCLOG("logMessage: %s", buf);
-    
-    auto pGameLogNode = getChildByTag(Tags::GameLogLayerTag);
-    // とりあえず子要素がないなら無理
-    if (!pGameLogNode || pGameLogNode->getChildrenCount() <= 0) {
-        return;
-    }
-    
-    // TODO: 1子しかaddしてないから動く。ちゃんとしないと・・・
-    auto pGameLogText = static_cast<Label*>(pGameLogNode->getChildren().at(1));
-    if (pGameLogText) {
-        // TODO: 別クラスにしてログをlistで保持する。デフォルトの表示は1件だけで、center寄せ表示でいいかと
-        auto pMessage = String::create(buf);
-        
-        pMessage->append("\n");
-
-        std::string nowString = pGameLogText->getString();
-        
-        long count = f_r(nowString, '\n');
-        
-        // 3行まで表示
-        if (count >= 3) {
-            long size = nowString.size();
-            unsigned long loc = nowString.find_last_of('\n', size);
-            CCLOG("logMessage: loc = %ld size = %ld", loc, size);
-            if (loc != std::string::npos) {
-                nowString.erase(loc, nowString.size() - loc);
-            }
-        }
-        pMessage->append(nowString);
-        pGameLogText->setString(pMessage->getCString());
-        pGameLogText->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
-        pGameLogText->setHorizontalAlignment(cocos2d::TextHAlignment::LEFT);
-        pGameLogText->setPosition(Point(pGameLogText->getSystemFontSize() / 4 + pGameLogText->getContentSize().width / 2, pGameLogNode->getContentSize().height - pGameLogText->getContentSize().height / 2 - pGameLogText->getSystemFontSize() / 4));
-    }
-}
-
 void RogueScene::showSystemMenu() {
     
     auto systemMenuModalLayer = dynamic_cast<ModalLayer*>(this->getChildByTag(Tags::SystemMenuWindowTag));
@@ -1033,7 +972,7 @@ void RogueScene::showSystemMenu() {
         SystemMenuLayer::SystemMenuButtonInfo menu1("千里眼", [this, systemMenuModalLayer]() {
             CCLOG("Menu1ボタンが押された！");
             
-            this->logMessage("千里眼を発動した。");
+            this->_gameLogWidget->logMessage("千里眼を発動した。");
             
             this->itemMappingAllShow();
             
@@ -1044,7 +983,7 @@ void RogueScene::showSystemMenu() {
         SystemMenuLayer::SystemMenuButtonInfo menu2("地獄耳", [this, systemMenuModalLayer]() {
             CCLOG("Menu2ボタンが押された！");
             
-            this->logMessage("地獄耳を発動した。");
+            this->_gameLogWidget->logMessage("地獄耳を発動した。");
             
             this->enemyMappingAllShow();
             
@@ -1077,7 +1016,7 @@ void RogueScene::showSystemMenu() {
         SystemMenuLayer::SystemMenuButtonInfo menu5("足　元", [this, systemMenuModalLayer]() {
             CCLOG("Menu5ボタンが押された！");
             
-            this->logMessage("足元は何もありません。");
+            this->_gameLogWidget->logMessage("足元は何もありません。");
             
             this->hideSystemMenu();
         });
@@ -1137,10 +1076,10 @@ void RogueScene::refreshStatus()
     
     // TODO: 死亡判定ここで？
     if (pPlayerDto->getHitPoint() == 0) {
-        logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
+        _gameLogWidget->logMessage("%sは死亡した。", pPlayerDto->getName().c_str());
         changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
     } else if (pPlayerDto->getMagicPoint() == 0) {
-        logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
+        _gameLogWidget->logMessage("%sは空腹で倒れた。", pPlayerDto->getName().c_str());
         changeGameStatus(RoguePlayDto::GameStatus::GAME_OVER);
     } else {
         // 残りHPで文字色を変える

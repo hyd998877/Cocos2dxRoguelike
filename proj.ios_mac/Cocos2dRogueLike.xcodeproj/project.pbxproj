@@ -129,6 +129,7 @@
 		CE8B22301955BA8B0085EB9B /* MypageHeaderLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE8B222E1955BA8B0085EB9B /* MypageHeaderLayer.cpp */; };
 		CEC1EB6C194D73FB007C8595 /* BankScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEC1EB6A194D73FB007C8595 /* BankScene.cpp */; };
 		CEC35535196004A000769E36 /* KeypadLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEC35533196004A000769E36 /* KeypadLayout.cpp */; };
+		CED73AB319697EB300D3DF3C /* GameLogLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CED73AB119697EB300D3DF3C /* GameLogLayout.cpp */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
@@ -465,6 +466,8 @@
 		CEC1EB6B194D73FB007C8595 /* BankScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BankScene.h; sourceTree = "<group>"; };
 		CEC35533196004A000769E36 /* KeypadLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeypadLayout.cpp; sourceTree = "<group>"; };
 		CEC35534196004A000769E36 /* KeypadLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeypadLayout.h; sourceTree = "<group>"; };
+		CED73AB119697EB300D3DF3C /* GameLogLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameLogLayout.cpp; sourceTree = "<group>"; };
+		CED73AB219697EB300D3DF3C /* GameLogLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLogLayout.h; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -1245,6 +1248,8 @@
 				CEC35534196004A000769E36 /* KeypadLayout.h */,
 				CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */,
 				CE72EB5E19683729006FDA87 /* HeaderStatusLayout.h */,
+				CED73AB119697EB300D3DF3C /* GameLogLayout.cpp */,
+				CED73AB219697EB300D3DF3C /* GameLogLayout.h */,
 			);
 			path = part;
 			sourceTree = "<group>";
@@ -1578,6 +1583,7 @@
 				CE19BE8E19322B0D007715BA /* ItemDto.cpp in Sources */,
 				CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */,
 				CE068DB11955DC420007786F /* QuestChoiceScene.cpp in Sources */,
+				CED73AB319697EB300D3DF3C /* GameLogLayout.cpp in Sources */,
 				CE19BE8B19322B0D007715BA /* MWeapon.cpp in Sources */,
 				CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */,
 				CE19BE8A19322B0D007715BA /* MUseItem.cpp in Sources */,

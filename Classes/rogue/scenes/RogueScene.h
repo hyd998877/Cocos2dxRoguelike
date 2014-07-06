@@ -24,6 +24,7 @@ USING_NS_CC;
 
 class KeypadLayout;
 class HeaderStatusLayout;
+class GameLogLayout;
 
 NS_ROGUE_BEGIN
 
@@ -54,7 +55,7 @@ private:
     
     // タッチイベント系
     bool isKeypadControll();
-    void touchEventExec(cocos2d::Point touchPoint);
+    void touchEventExec(cocos2d::Vec2 touchPoint);
     void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
     void touchKaidan();
     void touchDropItem(const DropMapItem& drop_map_item);
@@ -63,7 +64,6 @@ private:
     void attackCallback(ActorSprite* player, ActorSprite* enemy);
     
     // UI関連
-    void logMessage(const char * pszFormat, ...);
     
     // カットイン再生
     void playFloorTitleCutIn(int questId);
@@ -104,8 +104,6 @@ private:
     ///////////
     MapManager* getMapManager();
 private:
-    static const int MAX_LOG_LENGTH = 16*1024;
-    
     enum Tags {
         TiledMapLayerTag          =      1,
         GridLineTag               =    100,
@@ -114,7 +112,6 @@ private:
         RoguePlayerLightTag       = 110001,  // 明る部分
         RoguePlayerLightMaskTag   = 110002,  // 暗い部分
         MiniMapLayerTag           = 150000,
-        // この辺StatusBarがいまいち
         GameLogLayerTag           = 210000,
         ItemListWindowTag         = 220000,
         CommonWindowTag           = 230000,
@@ -154,10 +151,9 @@ private:
     
     // --------- cocostudio ---------
     
-    // キーパッド
     KeypadLayout* _keypadLayout;
-    
     HeaderStatusLayout* _statusWidget;
+    GameLogLayout* _gameLogWidget;
 };
 
 NS_ROGUE_END
