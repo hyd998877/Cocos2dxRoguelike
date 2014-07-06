@@ -36,6 +36,7 @@ public:
     CREATE_FUNC(GameLogLayout);
     
     void logMessage(const char * pszFormat, ...);
+    void setStatusColor(cocos2d::Color3B color);
 protected:
     
 private:

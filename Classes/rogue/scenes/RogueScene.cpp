@@ -1086,11 +1086,14 @@ void RogueScene::refreshStatus()
         float hitPointDiv = (float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit();
         float mpDiv = (float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit();
         if (hitPointDiv <= 0.25 || mpDiv <= 0.10) {
-//            pLabelText->setColor(Color3B::RED);
+            _statusWidget->setStatusColor(Color3B::RED);
+            _gameLogWidget->setStatusColor(Color3B::RED);
         } else if (hitPointDiv <= 0.50 || mpDiv <= 0.30) {
-//            pLabelText->setColor(Color3B::YELLOW);
+            _statusWidget->setStatusColor(Color3B::YELLOW);
+            _gameLogWidget->setStatusColor(Color3B::YELLOW);
         } else {
-//            pLabelText->setColor(Color3B::WHITE);
+            _statusWidget->setStatusColor(Color3B::WHITE);
+            _gameLogWidget->setStatusColor(Color3B::WHITE);
         }
     }
 }

@@ -145,3 +145,21 @@ void HeaderStatusLayout::setEquip(const ActorDto& actorDto)
         }
     }
 }
+
+void HeaderStatusLayout::setStatusColor(Color3B color)
+{
+    auto statusWidget = dynamic_cast<ui::Widget*>(_baseLayout);
+    if (!statusWidget) {
+        return;
+    }
+    
+    auto pStatusText = WidgetUtil::getChildByNameRecursion<ui::Text>(statusWidget, "Label_statusText");
+    auto labelGoldText = WidgetUtil::getChildByNameRecursion<ui::Text>(statusWidget, "Label_goldText");
+    auto equip1LabelText = WidgetUtil::getChildByNameRecursion<ui::Text>(statusWidget, "equip1_label");
+    auto equip2LabelText = WidgetUtil::getChildByNameRecursion<ui::Text>(statusWidget, "equip2_label");
+    
+    pStatusText->setColor(color);
+    labelGoldText->setColor(color);
+    equip1LabelText->setColor(color);
+    equip2LabelText->setColor(color);
+}

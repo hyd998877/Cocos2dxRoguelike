@@ -38,6 +38,7 @@ public:
     
     void setStatus(int floorCount, const ActorDto& actorDto, int gold);
     void setEquip(const ActorDto& actorDto);
+    void setStatusColor(cocos2d::Color3B color);
 protected:
     
 private:

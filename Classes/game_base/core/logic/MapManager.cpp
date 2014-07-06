@@ -11,7 +11,7 @@
 #include <string>
 #include <cassert>
 
-#define DEBUG_LOG_MAP_ITEM_LAYER_FLG 1
+#define DEBUG_LOG_MAP_ITEM_LAYER_FLG 0
 
 MapManager::MapManager()
 :map_data_()

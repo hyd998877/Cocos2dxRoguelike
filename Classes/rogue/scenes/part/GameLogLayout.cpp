@@ -105,3 +105,8 @@ void GameLogLayout::logMessage(const char * pszFormat, ...) {
                                         _baseLayer->getContentSize().height - _logTextLabel->getContentSize().height / 2 - _logTextLabel->getSystemFontSize() / 4));
     }
 }
+
+void GameLogLayout::setStatusColor(Color3B color)
+{
+    _logTextLabel->setColor(color);
+}
