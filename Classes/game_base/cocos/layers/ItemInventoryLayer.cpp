@@ -64,7 +64,9 @@ bool ItemInventoryLayer::init(ItemInventoryList itemInventoryList) {
 
 void ItemInventoryLayer::initHeader()
 {
-    Size contentSize = Director::getInstance()->getWinSize() * ItemInventoryLayer::WINDOW_SIZE_SCALE;
+    auto winSize = Director::getInstance()->getWinSize();
+    Size contentSize(winSize.width * ItemInventoryLayer::WINDOW_SIZE_WIDTH_SCALE,
+                     winSize.height * ItemInventoryLayer::WINDOW_SIZE_HEIGHT_SCALE);
     
     // アイテムの詳細ウィンドウ（以下のボタン操作のみ可能なモーダルウィンドウ）
     this->_itemWindowLayer = ItemWindowLayer::createWithContentSize(contentSize);
@@ -130,7 +132,9 @@ void ItemInventoryLayer::initHeader()
 
 void ItemInventoryLayer::initDetail()
 {
-    Size contentSize = Director::getInstance()->getWinSize() * ItemInventoryLayer::WINDOW_SIZE_SCALE;
+    auto winSize = Director::getInstance()->getWinSize();
+    Size contentSize(winSize.width * ItemInventoryLayer::WINDOW_SIZE_WIDTH_SCALE,
+                     winSize.height * ItemInventoryLayer::WINDOW_SIZE_HEIGHT_SCALE);
     
     ////////////////////////////
     // 内容
@@ -142,7 +146,9 @@ void ItemInventoryLayer::initDetail()
 
 void ItemInventoryLayer::initFooter()
 {
-    Size contentSize = Director::getInstance()->getWinSize() * ItemInventoryLayer::WINDOW_SIZE_SCALE;
+    auto winSize = Director::getInstance()->getWinSize();
+    Size contentSize(winSize.width * ItemInventoryLayer::WINDOW_SIZE_WIDTH_SCALE,
+                     winSize.height * ItemInventoryLayer::WINDOW_SIZE_HEIGHT_SCALE);
     ///////////////////////////////////////
     // フッター
     

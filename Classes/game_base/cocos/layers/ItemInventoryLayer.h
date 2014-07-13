@@ -48,7 +48,8 @@ public:
     void setCloseCallback(const CloseCallback &callback) { _closeCallback = callback; }
     void setSortCallback(const SortCallback &callback) { _sortCallback = callback; }
 private:
-    constexpr static const float WINDOW_SIZE_SCALE = 0.8;
+    constexpr static const float WINDOW_SIZE_WIDTH_SCALE = 0.9;
+    constexpr static const float WINDOW_SIZE_HEIGHT_SCALE = 0.8;
     
     ItemInventoryList _itemInventoryList;
     ItemInventoryDto _selectInventory;
