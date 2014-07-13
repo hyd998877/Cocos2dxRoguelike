@@ -18,6 +18,7 @@ class ItemWindowLayer : public cocos2d::LayerColor
 public:
     enum ItemWindowMenuType {
         ITEM_DROP = 1,  /// < 捨てる
+        ITEM_CHANGE,    /// < 交換
         ITEM_USE,       /// < 使う
         ITEM_EQUIP,     /// < 装備/はずす
         

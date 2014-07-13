@@ -258,7 +258,8 @@ MapIndex RogueScene::getNowRogueMapIndex()
     return getRogueMapLayer()->pointToIndex(point);
 }
 
-bool RogueScene::isKeypadControll() {
+bool RogueScene::isKeypadControll()
+{
     if (this->_gameStatus == RoguePlayDto::GameStatus::PLAYER_TURN) {
         return true;
     }
@@ -273,13 +274,31 @@ void RogueScene::showItemInventoryWindow()
     _keypadLayout->hideKeypadMenu();
     
     auto itemWindowLayer = ItemInventoryLayer::create(this->_itemInventory);
-    itemWindowLayer->initMenuActionCallback(std::list<ItemInventoryLayer::ActionCallback> {
-        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_DROP, ItemInventoryLayer::CloseType::CLOSE,
-            [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                CCLOG("RogueScene::itemDropMenuCallback");
-                this->itemWindowDropItem(itemDto);
-            }
-        },
+
+    // 足元にアイテムないがない場合で「捨てる/交換」を切り替える
+    ItemInventoryLayer::ActionCallback itemDropMenuCallback;
+    {
+        auto player_sprite = getPlayerActorSprite(1);
+        MapIndex targetMapIndex = player_sprite->getActorMapItem().mapIndex;
+        
+        if (this->getMapManager()->isDropMapItemIndex(targetMapIndex)) {
+            itemDropMenuCallback = ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_DROP, ItemInventoryLayer::CloseType::CLOSE,
+                    [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
+                    CCLOG("RogueScene::itemDropMenuCallback");
+                    this->itemWindowDropItem(itemDto);
+                }
+            };
+        } else {
+            itemDropMenuCallback = ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_CHANGE, ItemInventoryLayer::CloseType::CLOSE,
+                [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
+                    CCLOG("RogueScene::itemChangeMenuCallback");
+                    this->itemWindowChangeItem(itemDto);
+                }
+            };
+        }
+    }
+    std::list<ItemInventoryLayer::ActionCallback> itemMenuList {
+        itemDropMenuCallback,
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_USE, ItemInventoryLayer::CloseType::CLOSE,
             [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
                 CCLOG("RogueScene::itemUseMenuCallback");
@@ -292,7 +311,8 @@ void RogueScene::showItemInventoryWindow()
                 this->itemWindowEquipItem(itemDto);
             }
         },
-    });
+    };
+    itemWindowLayer->initMenuActionCallback(itemMenuList);
     itemWindowLayer->setSortCallback([this](ItemInventoryDto::Comparator comparator) {
         this->_itemInventory.sortItemList(comparator);
     });
@@ -310,33 +330,66 @@ void RogueScene::showItemInventoryWindow()
 
 void RogueScene::itemWindowDropItem(const ItemDto &itemDto)
 {
-    std::string message = "";
     // アイテムをマップのプレイヤーの足元に置く。ただしすでにアイテムが置いてある場合は置けない
     auto player_sprite = getPlayerActorSprite(1);
     MapIndex targetMapIndex = player_sprite->getActorMapItem().mapIndex;
-    if (this->getRogueMapLayer()->tileSetDropMapItem(itemDto, targetMapIndex)) {
-        message = itemDto.createItemName() + "を床においた。";
-        // もし装備してたら外す
-        if (itemDto.isEquip()) {
-            this->_itemInventory.itemEquip(itemDto.getObjectId(), false);
-            
-            if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
-                player_sprite->getActorDto()->equipReleaseWeapon();
-            } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
-                player_sprite->getActorDto()->equipReleaseAccessory();
-            }
-            
-            // 装備変更でステータス更新
-            this->refreshStatusEquip(*player_sprite->getActorDto());
-        }
-        this->_itemInventory.removeItemDto(itemDto.getObjectId());
-        
-        // ターン消費
-        this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
-    } else {
-        message = itemDto.createItemName() + "を床におけなかった。";
+    if (!this->getRogueMapLayer()->tileSetDropMapItem(itemDto, targetMapIndex)) {
+        this->logMessage(itemDto.createItemName() + "を床におけなかった。");
+        return;
     }
+    
+    std::string message = itemDto.createItemName() + "を床においた。";
+    // もし装備してたら外す
+    unEquipItem(itemDto);
+    this->_itemInventory.removeItemDto(itemDto.getObjectId());
+    
+    // ターン消費
+    this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
+    
     this->logMessage(message);
+}
+
+void RogueScene::unEquipItem(const ItemDto &itemDto)
+{
+    auto playerSprite = getPlayerActorSprite(1);
+    // もし装備してたら外す
+    if (itemDto.isEquip()) {
+        this->_itemInventory.itemEquip(itemDto.getObjectId(), false);
+        if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON) {
+            playerSprite->getActorDto()->equipReleaseWeapon();
+        } else if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
+            playerSprite->getActorDto()->equipReleaseAccessory();
+        }
+        
+        // 装備変更でステータス更新
+        this->refreshStatusEquip(*playerSprite->getActorDto());
+    }
+}
+void RogueScene::itemWindowChangeItem(const ItemDto &itemDto)
+{
+    auto player_sprite = getPlayerActorSprite(1);
+    MapIndex targetMapIndex = player_sprite->getActorMapItem().mapIndex;
+    
+    if (this->getMapManager()->isDropMapItemIndex(targetMapIndex)) {
+        this->logMessage("交換できなかった");
+        return;
+    }
+    
+    // 交換対象
+    auto targetMapItem = this->getMapManager()->getDropMapItem(targetMapIndex);
+    // 拾う
+    auto touchItemDto = touchDropItem(targetMapItem, false);
+
+    // もし装備してたら外す
+    unEquipItem(itemDto);
+    this->getRogueMapLayer()->tileSetDropMapItem(itemDto, targetMapIndex);
+    this->_itemInventory.removeItemDto(itemDto.getObjectId());
+    
+    // ターン消費
+    this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
+    
+    this->logMessage(itemDto.createItemName() + "を床において\n" +
+                     touchItemDto.createItemName() + "を拾った。");
 }
 
 void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
@@ -810,12 +863,14 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     }
 }
 
-void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
+ItemDto RogueScene::touchDropItem(const DropMapItem& drop_map_item, bool isDropMessage /* = true */) {
     auto rogue_map_layer = getRogueMapLayer();
     
     // itemを取得
     auto drop_item_sprite = rogue_map_layer->getDropItemSprite(drop_map_item.seqNo);
     auto itemDto = drop_item_sprite->getItemDto();
+    
+    std::string message;
     
     // ゴールドは別扱い
     if (itemDto.getItemType() == MUseItem::ItemType::GOLD) {
@@ -823,8 +878,8 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
         // TODO: (kyokomi) 拾うSE再生
         
         // メッセージログ
-        auto message = cocos2d::StringUtils::format("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
-        this->logMessage(message);
+        message = cocos2d::StringUtils::format("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
+        
         // ゴールドを加算
         this->_itemInventory.addGold(itemDto.getParam());
         
@@ -835,7 +890,6 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
         // ゴールド以外はインベントリへ
         
         // イベントリに追加する
-        std::string message = "";
         if (this->_itemInventory.addItemDto(itemDto)) {
             message = itemDto.createItemName() + "を拾った。";
             
@@ -844,11 +898,16 @@ void RogueScene::touchDropItem(const DropMapItem& drop_map_item) {
             // Map上から削除する
             rogue_map_layer->removeDropItemSprite(drop_item_sprite);
         } else {
+            // アイテム所持数限界
             message = "持ち物が一杯で、\n" + itemDto.createItemName() + "を拾えなかった。";
         }
-        // アイテム所持数限界
+    }
+    
+    if (isDropMessage) {
         this->logMessage(message);
     }
+    
+    return itemDto;
 }
 
 void RogueScene::touchKaidan() {

@@ -168,6 +168,9 @@ void ItemWindowLayer::initCreateMenu(std::list<ItemWindowLayer::ItemWindowMenuTy
             case ITEM_DROP:
                 labelText = "すてる";
                 break;
+            case ITEM_CHANGE:
+                labelText = "交　換";
+                break;
             case ITEM_SALE:
                 labelText = "売　る";
                 break;

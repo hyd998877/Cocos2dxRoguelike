@@ -59,7 +59,7 @@ private:
     void touchEventExec(cocos2d::Vec2 touchPoint);
     void touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapIndex);
     void touchKaidan();
-    void touchDropItem(const DropMapItem& drop_map_item);
+    ItemDto touchDropItem(const DropMapItem& drop_map_item, bool isDropMessage = true);
     
     void attack();
     void attackCallback(ActorSprite* player, ActorSprite* enemy);
@@ -72,7 +72,9 @@ private:
     
     // イベントリ表示
     void showItemInventoryWindow();
+    void unEquipItem(const ItemDto &itemDto);
     void itemWindowDropItem(const ItemDto &itemDto);
+    void itemWindowChangeItem(const ItemDto &itemDto);
     void itemWindowEquipItem(const ItemDto &itemDto);
     void itemWindowUseItem(const ItemDto &itemDto);
     
