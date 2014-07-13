@@ -15,6 +15,8 @@
 
 #include "RogueScene.h"
 
+#include "MRogueMap.h"
+
 USING_NS_CC;
 
 NS_ROGUE_BEGIN
@@ -50,21 +52,21 @@ bool QuestPageLayer::init()
     Size layerSize = Size(winSize.width*0.35, winSize.height*0.2);
     
     auto iconNode1 = Sprite::create("icon_set/item_0.png");
-    auto menuItem1 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode1, FontUtils::getDefaultFontTTFConfig(), "初心者の洞窟", [this](Ref *ref) {
+    auto menuItem1 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode1, FontUtils::getDefaultFontTTFConfig(), createQuestName(RoguePlayDto::QuestType::TUTORIAL), [this](Ref *ref) {
         if (_menuCallback1) {
             _menuCallback1(ref);
         }
     });
 
     auto iconNode2 = Sprite::create("icon_set/item_0.png");
-    auto menuItem2 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode2, FontUtils::getDefaultFontTTFConfig(), "不思議な洞窟", [this](Ref *ref) {
+    auto menuItem2 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode2, FontUtils::getDefaultFontTTFConfig(), createQuestName(RoguePlayDto::QuestType::MAIN_QUEST), [this](Ref *ref) {
         if (_menuCallback2) {
             _menuCallback2(ref);
         }
     });
         
     auto iconNode3 = Sprite::create("icon_set/item_0.png");
-    auto menuItem3 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode3, FontUtils::getDefaultFontTTFConfig(), "最果ての洞窟", [this](Ref *ref) {
+    auto menuItem3 = CommonWindowUtil::createMenuItemLabelWithSpriteIcon(layerSize, iconNode3, FontUtils::getDefaultFontTTFConfig(), createQuestName(RoguePlayDto::QuestType::DEEP_QUEST), [this](Ref *ref) {
         if (_menuCallback3) {
             _menuCallback3(ref);
         }
@@ -76,6 +78,12 @@ bool QuestPageLayer::init()
     this->addChild(menu);
     
     return true;
+}
+
+std::string QuestPageLayer::createQuestName(const RoguePlayDto::QuestType& questType)
+{
+    auto questKey = RoguePlayDto::findQuestKey(questType);
+    return RogueGameConfig::getQuestData(questKey).at("name").asString();
 }
 
 NS_ROGUE_END

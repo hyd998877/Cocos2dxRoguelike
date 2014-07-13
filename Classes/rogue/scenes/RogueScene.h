@@ -67,7 +67,7 @@ private:
     // UI関連
     
     // カットイン再生
-    void playFloorTitleCutIn(int questId);
+    void playFloorTitleCutIn(int quest_id, RoguePlayDto::QuestType questType);
     void playGameOverCutIn();
     
     // イベントリ表示

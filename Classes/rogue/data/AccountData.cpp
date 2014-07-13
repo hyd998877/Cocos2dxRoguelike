@@ -205,7 +205,8 @@ void AccountData::load()
 }
 
 // もちかえり
-void AccountData::resetRoguePlayData() {
+void AccountData::resetRoguePlayData()
+{
     CCLOG("%s %d resetRoguePlayData ", __FILE__, __LINE__);
     
     clearRoguePlayData();
@@ -218,7 +219,8 @@ void AccountData::resetRoguePlayData() {
 }
 
 // 死亡
-void AccountData::resetRoguePlayDataAndInventory() {
+void AccountData::resetRoguePlayDataAndInventory()
+{
     CCLOG("%s %d resetRoguePlayDataAndInventory ", __FILE__, __LINE__);
     
     clearRoguePlayData();
@@ -228,7 +230,8 @@ void AccountData::resetRoguePlayDataAndInventory() {
     save();
 }
 
-void AccountData::resetAll() {
+void AccountData::resetAll()
+{
     CCLOG("%s %d resetAll ", __FILE__, __LINE__);
     
     clearRoguePlayData();
@@ -243,10 +246,12 @@ void AccountData::resetAll() {
 #pragma mark
 #pragma mark 汎用
 
-std::string AccountData::createQuestSaveDetailText() const {
-    // TODO: ダンジョン名が仮
+std::string AccountData::createQuestSaveDetailText() const
+{
+    auto questKey = RoguePlayDto::findQuestKey(this->_roguePlayData.getQuestType());
+    auto questName = RogueGameConfig::getQuestData(questKey).at("name").asString();
     return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %d G",
-                        "初心者の洞窟",
+                        questName.c_str(),
                         this->_roguePlayData.getQuestId(),
                         this->_playerActor.getLv(),
                         this->_playerActor.getExp(),
@@ -377,11 +382,13 @@ void AccountData::clearSystemData()
 
 ///////////////////////////////////////////////
 
-static std::string createSaveFilePath() {
+static std::string createSaveFilePath()
+{
     return FileUtils::getInstance()->getWritablePath() + "save_data.plist";
 }
 
-static void remoteSaveFile() {
+static void remoteSaveFile()
+{
     std::string save_file_path = createSaveFilePath();
     remove(save_file_path.c_str());
 }

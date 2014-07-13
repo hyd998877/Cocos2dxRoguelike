@@ -185,18 +185,22 @@ namespace RogueGameConfig {
     
     const static cocos2d::ValueMap questData_{
         {TUTORIAL_KEY, cocos2d::Value(cocos2d::ValueMap{
+            {"name", cocos2d::Value("初心者の洞窟")},
             {"floor", cocos2d::Value(datas_)},
             {"clearCount", cocos2d::Value(3)}
         })},
         {MAIN_QUEST_KEY, cocos2d::Value(cocos2d::ValueMap{
+            {"name", cocos2d::Value("不思議な洞窟")},
             {"floor", cocos2d::Value(datas_)},
             {"clearCount", cocos2d::Value(24)}
         })},
         {MAIN_QUEST2_KEY, cocos2d::Value(cocos2d::ValueMap{
+            {"name", cocos2d::Value("もっと不思議な洞窟")},
             {"floor", cocos2d::Value(datas_)},
             {"clearCount", cocos2d::Value(99)}
         })},
         {DEEP_QUEST_KEY, cocos2d::Value(cocos2d::ValueMap{
+            {"name", cocos2d::Value("最果ての洞窟")},
             {"floor", cocos2d::Value(datas_)},
             {"clearCount", cocos2d::Value(99)}
         })},

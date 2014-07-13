@@ -12,6 +12,7 @@
 
 #include "cocos2d.h"
 #include "AppMacros.h"
+#include "RoguePlayDto.h"
 
 NS_ROGUE_BEGIN
 
@@ -35,6 +36,8 @@ public:
     void setMenuCallback1(const cocos2d::ccMenuCallback& callback) { _menuCallback1 = callback; }
     void setMenuCallback2(const cocos2d::ccMenuCallback& callback) { _menuCallback2 = callback; }
     void setMenuCallback3(const cocos2d::ccMenuCallback& callback) { _menuCallback3 = callback; }
+private:
+    std::string createQuestName(const RoguePlayDto::QuestType& questType);
 private:
     cocos2d::ccMenuCallback _menuCallback1;
     cocos2d::ccMenuCallback _menuCallback2;

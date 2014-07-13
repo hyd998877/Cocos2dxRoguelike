@@ -113,7 +113,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // ---------------------
     // フロア開始カットイン表示
     // ---------------------
-    playFloorTitleCutIn(this->_roguePlayDto.getQuestId());
+    playFloorTitleCutIn(this->_roguePlayDto.getQuestId(), this->_roguePlayDto.getQuestType());
     
     // ---------------------
     // タイルマップを生成
@@ -462,7 +462,8 @@ void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
 // floorTitleカットインを生成する
 // タッチイベントでフェードアウトしてremoveする
 // private
-void RogueScene::playFloorTitleCutIn(int quest_id) {
+void RogueScene::playFloorTitleCutIn(int quest_id, RoguePlayDto::QuestType questType)
+{
     auto winSize = Director::getInstance()->getWinSize();
     
     auto modalLayer = ModalLayer::create(Color3B::BLACK, 0);
@@ -471,8 +472,10 @@ void RogueScene::playFloorTitleCutIn(int quest_id) {
     auto floorTitleCutInLayer = LayerColor::create(Color4B::BLACK);
     floorTitleCutInLayer->setContentSize(winSize);
     // テキスト中央
-    // TODO: (kyokomi) タイトルはdaoからとってくる予定
-    auto floorTitleText = cocos2d::StringUtils::format("初心者の洞窟 %d層", quest_id);
+    auto questKey = RoguePlayDto::findQuestKey(questType);
+    auto questName = RogueGameConfig::getQuestData(questKey).at("name").asString();
+    
+    auto floorTitleText = cocos2d::StringUtils::format("%s %d層", questName.c_str(), quest_id);
     auto floorTitleTextLabel = Label::createWithTTF(FontUtils::getStrongFontTTFConfig(), floorTitleText);
     floorTitleTextLabel->setPosition(Point(floorTitleCutInLayer->getContentSize().width / 2, floorTitleCutInLayer->getContentSize().height / 2));
     floorTitleCutInLayer->addChild(floorTitleTextLabel);
