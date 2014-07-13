@@ -48,11 +48,13 @@ Node* ItemMixedScene::initLayout()
     layout->setMenuCallback1([this, layout](Ref *ref) {
         this->showMixedItemSelectWindow([this, layout](const ItemDto &itemDto) {
             layout->refreshSelectBase(itemDto);
+            this->_baseItemDto = itemDto;
         });
     });
     layout->setMenuCallback2([this, layout](Ref *ref) {
         this->showMixedItemSelectWindow([this, layout](const ItemDto &itemDto) {
             layout->refreshSelectMaterial(itemDto);
+            this->_materialItemDto = itemDto;
         });
     });
     layout->setMenuCallback3([this, layout](Ref *ref) {
@@ -78,6 +80,10 @@ void ItemMixedScene::showMixedItemSelectWindow(std::function<void(const ItemDto 
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_MIXED, ItemInventoryLayer::CloseType::CLOSE,
             [this, selectItemCallback](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
                 CCLOG("itemName = %s", itemDto.getName().c_str());
+                
+                if (_baseItemDto.getObjectId() != 0) {
+                    this->_itemInventory.addItemDto(_baseItemDto);
+                }
                 
                 this->_itemInventory.removeItemDto(itemDto.getObjectId());
                 selectItemCallback(itemDto);
@@ -121,6 +127,7 @@ bool ItemMixedScene::checkMixedItem()
 {
     return checkMixedItem(this->_baseItemDto, this->_materialItemDto, this->_itemInventory);
 }
+
 bool ItemMixedScene::checkMixedItem(const ItemDto &baseItem, const ItemDto &materialItem, const ItemInventoryDto &itemInventory)
 {
     // 選択チェック
