@@ -163,31 +163,7 @@ void ItemWindowLayer::initCreateMenu(std::list<ItemWindowLayer::ItemWindowMenuTy
     // メニューボタン
     for (auto menuType : menuTypeList) {
         
-        std::string labelText;
-        switch (menuType) {
-            case ITEM_DROP:
-                labelText = "すてる";
-                break;
-            case ITEM_CHANGE:
-                labelText = "交　換";
-                break;
-            case ITEM_SALE:
-                labelText = "売　る";
-                break;
-            case ITEM_STOCK:
-                labelText = "出・入";
-                break;
-            case ITEM_USE:
-                labelText = "つかう";
-                break;
-            case ITEM_EQUIP:
-                labelText = "そうび"; // はずす
-                break;
-            case ITEM_MIXED:
-                labelText = "えらぶ";
-            default:
-                break;
-        }
+        std::string labelText = getMenuItemKeyText(menuType);
         auto label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), labelText);
         auto menuItem = CommonWindowUtil::createMenuItemLabelWaku(label, WAKU_PADDING, [this, menuType](Ref *pSeneder) {
             CCLOG("item drop menu pressed");
@@ -365,23 +341,18 @@ void ItemWindowLayer::setItemDetail(const ItemDto& itemDto) {
                 if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON ||
                            itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     if (menuItemKey == ItemWindowMenuType::ITEM_USE) {
-                        this->_menuItemMap.at(menuItemKey)->setVisible(false);
-                        this->_menuItemMap.at(menuItemKey)->setEnabled(false);
+                        std::string text = itemDto.isEquip() ? text = "はずす" :  text = "そうび";
+                        setMenuItemTest(menuItemKey, text);
                     } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
                         // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので補正
-                        auto node = dynamic_cast<MenuItemLabel*>(this->_menuItemMap.at(menuItemKey));
-                        CCLOG("begore setString %f %f", node->getPosition().x, node->getPosition().y);
-                        Size beforeSize = node->getContentSize();
-                        if (itemDto.isEquip()) {
-                            node->setString("はずす");
-                        } else {
-                            node->setString("そうび");
-                        }
-                        node->setContentSize(beforeSize);
-                        CCLOG("after setString %f %f", node->getPosition().x, node->getPosition().y);
+                        std::string text = itemDto.isEquip() ? text = "はずす" :  text = "そうび";
+                        setMenuItemTest(menuItemKey, text);
                     }
                 } else {
-                    if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
+                    if (menuItemKey == ItemWindowMenuType::ITEM_USE) {
+                        std::string text = getMenuItemKeyText(ItemWindowMenuType::ITEM_USE);
+                        setMenuItemTest(menuItemKey, text);
+                    } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
                         this->_menuItemMap.at(menuItemKey)->setVisible(false);
                         this->_menuItemMap.at(menuItemKey)->setEnabled(false);
                     }
@@ -391,4 +362,45 @@ void ItemWindowLayer::setItemDetail(const ItemDto& itemDto) {
     }
 }
 
+void ItemWindowLayer::setMenuItemTest(int menuItemKey, const std::string& text)
+{
+    auto node = dynamic_cast<MenuItemLabel*>(this->_menuItemMap.at(menuItemKey));
+    CCLOG("begore setString %f %f", node->getPosition().x, node->getPosition().y);
+    Size beforeSize = node->getContentSize();
+    node->setString(text);
+    node->setContentSize(beforeSize);
+}
+
+std::string ItemWindowLayer::getMenuItemKeyText(ItemWindowMenuType menuType)
+{
+    std::string labelText;
+    switch (menuType) {
+        case ITEM_DROP:
+            labelText = "すてる";
+            break;
+        case ITEM_CHANGE:
+            labelText = "交　換";
+            break;
+        case ITEM_SALE:
+            labelText = "売　る";
+            break;
+        case ITEM_STOCK:
+            labelText = "出・入";
+            break;
+        case ITEM_USE:
+            labelText = "つかう";
+            break;
+        case ITEM_THROW:
+            labelText = "投げる";
+            break;
+        case ITEM_EQUIP:
+            labelText = "そうび"; // はずす
+            break;
+        case ITEM_MIXED:
+            labelText = "えらぶ";
+        default:
+            break;
+    }
+    return labelText;
+}
 

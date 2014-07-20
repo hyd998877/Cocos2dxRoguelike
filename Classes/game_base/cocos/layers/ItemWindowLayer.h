@@ -21,6 +21,7 @@ public:
         ITEM_CHANGE,    /// < 交換
         ITEM_USE,       /// < 使う
         ITEM_EQUIP,     /// < 装備/はずす
+        ITEM_THROW,     /// < 投げる
         
         ITEM_STOCK,     /// < 倉庫へ/持ち物へ
         ITEM_SALE,      /// < 売る
@@ -63,6 +64,8 @@ private:
     
     cocos2d::Label* createDetailTitleLabel(const Node* base, std::string text, float heightPointProportion);
     cocos2d::Label* createDetailTextLabel(const Node* base, std::string text, float heightPointProportion);
+    void setMenuItemTest(int menuItemKey, const std::string& text);
+    std::string getMenuItemKeyText(ItemWindowMenuType menuType);
 private:
     long show_item_detail_idx_;
     

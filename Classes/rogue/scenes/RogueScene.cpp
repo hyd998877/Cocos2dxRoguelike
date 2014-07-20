@@ -301,14 +301,21 @@ void RogueScene::showItemInventoryWindow()
         itemDropMenuCallback,
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_USE, ItemInventoryLayer::CloseType::CLOSE,
             [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                CCLOG("RogueScene::itemUseMenuCallback");
-                this->itemWindowUseItem(itemDto);
+                
+                if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON ||
+                    itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
+                    CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", itemDto.getItemType());
+                    this->itemWindowEquipItem(itemDto);
+                } else {
+                    CCLOG("RogueScene::itemUseMenuCallback");
+                    this->itemWindowUseItem(itemDto);
+                }
             }
         },
-        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_EQUIP, ItemInventoryLayer::CloseType::CLOSE,
+        ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_THROW, ItemInventoryLayer::CloseType::CLOSE,
             [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
-                CCLOG("RogueScene::itemEquipMenuCallback itemType = %d", itemDto.getItemType());
-                this->itemWindowEquipItem(itemDto);
+                CCLOG("RogueScene::itemThrowMenuCallback itemType = %d", itemDto.getItemType());
+                // TODO: アイテム投げる処理
             }
         },
     };
