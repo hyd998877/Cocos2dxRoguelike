@@ -20,6 +20,17 @@ MLevelDao* MLevelDao::getInstance() {
     return s_m_level_dao_instance;
 }
 
+MLevelDao::MLevelDao()
+:m_levelList()
+{
+    
+};
+
+MLevelDao::~MLevelDao()
+{
+    s_m_level_dao_instance = nullptr;
+}
+
 void MLevelDao::init() {
     // TODO: (kyokomi) とりあえず手動でマスタ作成
     for (int i = 0; i < 50; i++) {
@@ -53,8 +64,3 @@ const MLevel MLevelDao::selectById(int lv) {
     return MLevel(0,0,0);
 }
 
-
-MLevelDao::~MLevelDao()
-{
-    s_m_level_dao_instance = nullptr;
-}

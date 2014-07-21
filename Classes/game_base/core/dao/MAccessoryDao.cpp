@@ -8,10 +8,7 @@
 
 #include "MAccessoryDao.h"
 
-#include "cocos2d.h"
 #include "json11.hpp"
-
-USING_NS_CC;
 
 // シングルトン
 static MAccessoryDao *s_m_accessory_dao_instance = nullptr;
@@ -63,7 +60,6 @@ void MAccessoryDao::init()
 
 void MAccessoryDao::init(json11::Json json)
 {
-    CCLOG("%s", json.dump().c_str());
     for (auto &item : json.array_items()) {
         MAccessory mAccessory(item["ACCESSORY_ID"].int_value(),
                               item["ACCESSORY_IMAGE_ID"].int_value(),

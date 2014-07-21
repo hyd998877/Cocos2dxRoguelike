@@ -8,10 +8,7 @@
 
 #include "MWeaponDao.h"
 
-#include "cocos2d.h"
 #include "json11.hpp"
-
-USING_NS_CC;
 
 // シングルトン
 static MWeaponDao *s_m_weapon_dao_instance = nullptr;
@@ -62,7 +59,6 @@ void MWeaponDao::init()
 void MWeaponDao::init(json11::Json json)
 {
     // Jsonを読み込む
-    CCLOG("%s", json.dump().c_str());
     for (auto &item : json.array_items()) {
         MWeapon weapon(item["WEAPON_ID"].int_value(),
                        item["WEAPON_IMAGE_ID"].int_value(),

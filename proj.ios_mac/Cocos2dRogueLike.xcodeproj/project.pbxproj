@@ -57,6 +57,8 @@
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
+		CE019576197D60E400551D6E /* MMonsterDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE019574197D60E400551D6E /* MMonsterDao.cpp */; };
+		CE01957B197D664500551D6E /* MPlayerDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE019579197D664500551D6E /* MPlayerDao.cpp */; };
 		CE068DAB1955D1910007786F /* TopScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE068DA91955D1910007786F /* TopScene.cpp */; };
 		CE068DB11955DC420007786F /* QuestChoiceScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE068DAF1955DC420007786F /* QuestChoiceScene.cpp */; };
 		CE068DB61955E27A0007786F /* ItemStockScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE068DB41955E27A0007786F /* ItemStockScene.cpp */; };
@@ -89,7 +91,6 @@
 		CE19BE8519322B0D007715BA /* MLevelDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE0F19322B0C007715BA /* MLevelDao.cpp */; };
 		CE19BE8619322B0D007715BA /* MUseItemDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1119322B0C007715BA /* MUseItemDao.cpp */; };
 		CE19BE8719322B0D007715BA /* MWeaponDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1319322B0C007715BA /* MWeaponDao.cpp */; };
-		CE19BE8919322B0D007715BA /* MLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1819322B0C007715BA /* MLevel.cpp */; };
 		CE19BE8C19322B0D007715BA /* ActorDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE2119322B0C007715BA /* ActorDto.cpp */; };
 		CE19BE8D19322B0D007715BA /* ActorEquipDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE2319322B0C007715BA /* ActorEquipDto.cpp */; };
 		CE19BE8E19322B0D007715BA /* ItemDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE2519322B0C007715BA /* ItemDto.cpp */; };
@@ -327,6 +328,10 @@
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CE019574197D60E400551D6E /* MMonsterDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MMonsterDao.cpp; sourceTree = "<group>"; };
+		CE019575197D60E400551D6E /* MMonsterDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMonsterDao.h; sourceTree = "<group>"; };
+		CE019579197D664500551D6E /* MPlayerDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPlayerDao.cpp; sourceTree = "<group>"; };
+		CE01957A197D664500551D6E /* MPlayerDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayerDao.h; sourceTree = "<group>"; };
 		CE068DA91955D1910007786F /* TopScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TopScene.cpp; sourceTree = "<group>"; };
 		CE068DAA1955D1910007786F /* TopScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopScene.h; sourceTree = "<group>"; };
 		CE068DAF1955DC420007786F /* QuestChoiceScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QuestChoiceScene.cpp; sourceTree = "<group>"; };
@@ -381,10 +386,6 @@
 		CE19BE1219322B0C007715BA /* MUseItemDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItemDao.h; sourceTree = "<group>"; };
 		CE19BE1319322B0C007715BA /* MWeaponDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeaponDao.cpp; sourceTree = "<group>"; };
 		CE19BE1419322B0C007715BA /* MWeaponDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeaponDao.h; sourceTree = "<group>"; };
-		CE19BE1819322B0C007715BA /* MLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevel.cpp; sourceTree = "<group>"; };
-		CE19BE1919322B0C007715BA /* MLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevel.h; sourceTree = "<group>"; };
-		CE19BE1A19322B0C007715BA /* MMonster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMonster.h; sourceTree = "<group>"; };
-		CE19BE1B19322B0C007715BA /* MPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayer.h; sourceTree = "<group>"; };
 		CE19BE2119322B0C007715BA /* ActorDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorDto.cpp; sourceTree = "<group>"; };
 		CE19BE2219322B0C007715BA /* ActorDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorDto.h; sourceTree = "<group>"; };
 		CE19BE2319322B0C007715BA /* ActorEquipDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorEquipDto.cpp; sourceTree = "<group>"; };
@@ -822,7 +823,6 @@
 			isa = PBXGroup;
 			children = (
 				CE19BE0C19322B0C007715BA /* dao */,
-				CE19BE1519322B0C007715BA /* data */,
 				CE19BE2019322B0C007715BA /* dto */,
 				CE19BE2B19322B0C007715BA /* logic */,
 				CE19BE3219322B0C007715BA /* util */,
@@ -841,19 +841,12 @@
 				CE19BE1219322B0C007715BA /* MUseItemDao.h */,
 				CE19BE1319322B0C007715BA /* MWeaponDao.cpp */,
 				CE19BE1419322B0C007715BA /* MWeaponDao.h */,
+				CE019574197D60E400551D6E /* MMonsterDao.cpp */,
+				CE019575197D60E400551D6E /* MMonsterDao.h */,
+				CE019579197D664500551D6E /* MPlayerDao.cpp */,
+				CE01957A197D664500551D6E /* MPlayerDao.h */,
 			);
 			path = dao;
-			sourceTree = "<group>";
-		};
-		CE19BE1519322B0C007715BA /* data */ = {
-			isa = PBXGroup;
-			children = (
-				CE19BE1819322B0C007715BA /* MLevel.cpp */,
-				CE19BE1919322B0C007715BA /* MLevel.h */,
-				CE19BE1A19322B0C007715BA /* MMonster.h */,
-				CE19BE1B19322B0C007715BA /* MPlayer.h */,
-			);
-			path = data;
 			sourceTree = "<group>";
 		};
 		CE19BE2019322B0C007715BA /* dto */ = {
@@ -1448,8 +1441,8 @@
 				CEC35535196004A000769E36 /* KeypadLayout.cpp in Sources */,
 				CE19BE7F19322B0D007715BA /* ModalLayer.cpp in Sources */,
 				CE19BE8219322B0D007715BA /* ActorSprite.cpp in Sources */,
+				CE019576197D60E400551D6E /* MMonsterDao.cpp in Sources */,
 				CE19BE8719322B0D007715BA /* MWeaponDao.cpp in Sources */,
-				CE19BE8919322B0D007715BA /* MLevel.cpp in Sources */,
 				CE19BE9D19322B0D007715BA /* ItemMixedPageLayer.cpp in Sources */,
 				CE068DAB1955D1910007786F /* TopScene.cpp in Sources */,
 				CE19BE8319322B0D007715BA /* CommonWindowUtil.cpp in Sources */,
@@ -1477,6 +1470,7 @@
 				CE19BE8419322B0D007715BA /* MAccessoryDao.cpp in Sources */,
 				CE19BE9119322B0D007715BA /* BattleLogic.cpp in Sources */,
 				CE19BE9E19322B0D007715BA /* ItemStockPageLayer.cpp in Sources */,
+				CE01957B197D664500551D6E /* MPlayerDao.cpp in Sources */,
 				CE19BE8F19322B0D007715BA /* ItemInventoryDto.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

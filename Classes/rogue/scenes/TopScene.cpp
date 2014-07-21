@@ -20,6 +20,8 @@ Cocos2dRogueLike
 #include "MWeaponDao.h"
 #include "MAccessoryDao.h"
 #include "MUseItemDao.h"
+#include "MPlayerDao.h"
+#include "MMonsterDao.h"
 #include "json11.hpp"
 
 USING_NS_CC;
@@ -81,4 +83,6 @@ void TopScene::loadMasterData()
     MWeaponDao::getInstance()->init(json["M_WEAPON"]);
     MAccessoryDao::getInstance()->init(json["M_ACCESSORY"]);
     MUseItemDao::getInstance()->init(json["M_USER_ITEM"]);
+    MPlayerDao::getInstance()->init(json["M_PLAYER"]);
+    MMonsterDao::getInstance()->init(json["M_MONSTER"]);
 }

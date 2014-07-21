@@ -8,11 +8,7 @@
 
 #include "MUseItemDao.h"
 
-#include "cocos2d.h"
-
 #include "json11.hpp"
-
-USING_NS_CC;
 
 // シングルトン
 static MUseItemDao *s_m_user_item_dao_instance = nullptr;
@@ -64,7 +60,6 @@ void MUseItemDao::init()
 void MUseItemDao::init(json11::Json json)
 {
     // Jsonを読み込む
-    CCLOG("%s", json.dump().c_str());
     for (auto &item : json.array_items()) {
         MUseItem mUseItem(item["USE_ITEM_ID"].int_value(),
                           item["USE_ITEM_IMAGE_ID"].int_value(),

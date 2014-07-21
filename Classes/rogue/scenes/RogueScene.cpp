@@ -26,8 +26,9 @@
 #include "MWeaponDao.h"
 #include "MUseItemDao.h"
 #include "MAccessoryDao.h"
-#include "MMonster.h"
-#include "MPlayer.h"
+#include "MPlayerDao.h"
+#include "MMonsterDao.h"
+
 #include "MRogueMap.h"
 
 #include "AccountData.h"
@@ -99,7 +100,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
         AccountData::getInstance()->resetRoguePlayData();
         this->_roguePlayDto.setPlayQuest(questType, quest_id);
         // デフォルトステータス
-        actor_dto = ActorDto::createActorDto(m_player::data_.at("4").asString());
+        actor_dto = MPlayerDao::getInstance()->selectById(4);
     } else {
         // ロード処理
         this->_roguePlayDto = AccountData::getInstance()->getRoguePlayData();
@@ -1398,10 +1399,10 @@ void RogueScene::institutionEnemy(int probCount) {
     auto tiled_map_layer = getRogueMapLayer();
     
     for (int hitId : hitIds) {
-        std::string hitIdStr = cocos2d::StringUtils::format("%d", hitId);
-        ActorDto enemy_dto = ActorDto::createActorDto(m_monster::data_.at(hitIdStr).asString());
+        CCLOG("monster id = %d", hitId);
+        auto monsterDto = MMonsterDao::getInstance()->selectById(hitId);
         MapIndex enemyMapIndex = tiled_map_layer->getFloorRandomMapIndex(true);
-        tiled_map_layer->tileSetEnemyActorMapItem(enemy_dto, enemyMapIndex);
+        tiled_map_layer->tileSetEnemyActorMapItem(monsterDto, enemyMapIndex);
     }
     hitIds.clear();
 }
