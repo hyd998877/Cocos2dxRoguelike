@@ -533,6 +533,31 @@ std::list<DropMapItem> MapManager::findDropMapItem() const
 }
 
 #pragma mark
+// 画面外かチェック
+bool MapManager::isMapIndexMapOver(const MapIndex& mapIndex)
+{
+    assert(vaildateInit());
+    
+    // 上にいけるか?
+    if (mapIndex.y < map_data_.map_data_setting.top) {
+        return true;
+    }
+    // 下にいけるか?
+    if (mapIndex.y > (map_data_.map_data_setting.bottom - 1)) {
+        return true;
+    }
+    // 左にいけるか?
+    if (mapIndex.x < map_data_.map_data_setting.left) {
+        return true;
+    }
+    // 右にいけるか?
+    if (mapIndex.x > (map_data_.map_data_setting.right - 1)) {
+        return true;
+    }
+    return false;
+}
+
+#pragma mark
 #pragma mark staticメソッド
 
 /**
