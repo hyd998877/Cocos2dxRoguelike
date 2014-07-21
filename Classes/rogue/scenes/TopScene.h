@@ -16,6 +16,10 @@ Cocos2dRogueLike
 
 #include "MyPageBaseScene.h"
 
+namespace json11 {
+    class Json;
+}
+
 /**
 @class TopScene TopScene.h
 
@@ -29,6 +33,8 @@ detail description
 class TopScene : public MyPageBaseScene
 {
 public:
+    typedef std::function<void(bool error, json11::Json json)> RequestMasterDataCallback;
+    
     TopScene();
     virtual ~TopScene();
     CREATE_FUNC(TopScene);
@@ -45,7 +51,7 @@ private:
     
     void initQuestSave();
     
-    void loadMasterData();
+    void requestMasterData(RequestMasterDataCallback callback);
 };
 
 #endif /* defined(__Cocos2dRogueLike__TopScene__) */

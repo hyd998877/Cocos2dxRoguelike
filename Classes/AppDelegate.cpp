@@ -2,7 +2,7 @@
 #include "AppMacros.h"
 #include "extensions/cocos-ext.h"
 
-#include "TopScene.h"
+#include "StartScene.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -55,7 +55,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    auto scene = MyPageBaseScene::scene<TopScene>();
+    auto scene = StartScene::scene();
     
     // run
     director->runWithScene(scene);

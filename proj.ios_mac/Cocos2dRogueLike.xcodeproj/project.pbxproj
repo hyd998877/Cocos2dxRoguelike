@@ -115,6 +115,7 @@
 		CE19BEA319322B0D007715BA /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7119322B0D007715BA /* SRPGMapLayer.cpp */; };
 		CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7519322B0D007715BA /* SRPGScene.cpp */; };
 		CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */; };
+		CE524067197DD3BC007AC6D2 /* StartScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE524065197DD3BC007AC6D2 /* StartScene.cpp */; };
 		CE6651BB194D71A200333345 /* cocostudio in Resources */ = {isa = PBXBuildFile; fileRef = CE6651BA194D71A200333345 /* cocostudio */; };
 		CE72EB5F19683729006FDA87 /* HeaderStatusLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */; };
 		CE836F931942EB4900880652 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE836F921942EB4900880652 /* XCTest.framework */; };
@@ -438,6 +439,8 @@
 		CE19BE7619322B0D007715BA /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
 		CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditTextDialogLayout.cpp; sourceTree = "<group>"; };
 		CE2D0482195EFEA900267EFB /* EditTextDialogLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTextDialogLayout.h; sourceTree = "<group>"; };
+		CE524065197DD3BC007AC6D2 /* StartScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StartScene.cpp; sourceTree = "<group>"; };
+		CE524066197DD3BC007AC6D2 /* StartScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartScene.h; sourceTree = "<group>"; };
 		CE6651BA194D71A200333345 /* cocostudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cocostudio; sourceTree = "<group>"; };
 		CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeaderStatusLayout.cpp; sourceTree = "<group>"; };
 		CE72EB5E19683729006FDA87 /* HeaderStatusLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderStatusLayout.h; sourceTree = "<group>"; };
@@ -1016,6 +1019,8 @@
 				CE2D047E195EFE5800267EFB /* part */,
 				CE19BE5819322B0D007715BA /* common */,
 				CE19BE5D19322B0D007715BA /* page */,
+				CE524065197DD3BC007AC6D2 /* StartScene.cpp */,
+				CE524066197DD3BC007AC6D2 /* StartScene.h */,
 				CE068DA91955D1910007786F /* TopScene.cpp */,
 				CE068DAA1955D1910007786F /* TopScene.h */,
 				CE19BE6619322B0D007715BA /* RogueScene.cpp */,
@@ -1419,6 +1424,7 @@
 				CE19BEA119322B0D007715BA /* RogueScene.cpp in Sources */,
 				CE19BE9719322B0D007715BA /* NovelScene.cpp in Sources */,
 				CE19BEA319322B0D007715BA /* SRPGMapLayer.cpp in Sources */,
+				CE524067197DD3BC007AC6D2 /* StartScene.cpp in Sources */,
 				CE19BEA219322B0D007715BA /* DropItemSprite.cpp in Sources */,
 				CE19BE8119322B0D007715BA /* TableViewTestLayer.cpp in Sources */,
 				CE19BE9419322B0D007715BA /* TMXGenerator.cpp in Sources */,

@@ -31,6 +31,7 @@ class MyPageBaseScene : public cocos2d::Layer
 {
     
 public:
+    
     MyPageBaseScene();
     virtual ~MyPageBaseScene();
     virtual bool init();
