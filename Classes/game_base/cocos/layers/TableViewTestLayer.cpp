@@ -64,10 +64,14 @@ void TableViewTestLayer::touchCellRefreshColor(TableView* pTable, int touchCellI
     
     for (auto pLayer : pTable->getChildren()) {
         for (auto pCell : pLayer->getChildren()) {
-            if (static_cast<TableViewCell*>(pCell)->getIdx() == touchCellIdx) {
-                pCell->getChildByTag(TableViewTestLayer::ItemLayerTag)->setColor(Color3B::GREEN);
-            } else {
-                pCell->getChildByTag(TableViewTestLayer::ItemLayerTag)->setColor(Color3B::BLACK);
+            auto cell = dynamic_cast<TableViewCell*>(pCell);
+            auto layer = dynamic_cast<LayerColor*>(cell->getChildByTag(TableViewTestLayer::ItemLayerTag));
+            if (layer && layer->isVisible()) {
+                if (cell->getIdx() == touchCellIdx) {
+                    layer->setColor(Color3B::GREEN);
+                } else {
+                    layer->setColor(Color3B::BLACK);
+                }
             }
         }
     }
@@ -108,21 +112,21 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) 
         auto text_layer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7), content_size.width * 0.9, content_size.height / TableViewTestLayer::LIST_SIZE * 0.9);
         text_layer->setPosition(content_size.width * 0.05, content_size.height / TableViewTestLayer::LIST_SIZE * 0.05);
         text_layer->setTag(TableViewTestLayer::ItemLayerTag);
-        
-        auto item_image_sprite = Sprite::createWithSpriteFrame(sprite_frame);
-        item_image_sprite->setTag(TableViewTestLayer::ItemImageTag);
-        item_image_sprite->setPosition(Point(item_image_sprite->getContentSize().width / 2, text_layer->getContentSize().height / 2));
-        text_layer->addChild(item_image_sprite);
-        
-        auto text_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), table_item.labelText);
-        text_label->setColor(table_item.textColor);
-        text_label->setPosition(Point(text_label->getSystemFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
-        text_label->setTag(TableViewTestLayer::ItemTextLabelTag);
+        {
+            auto item_image_sprite = Sprite::createWithSpriteFrame(sprite_frame);
+            item_image_sprite->setTag(TableViewTestLayer::ItemImageTag);
+            item_image_sprite->setPosition(Point(item_image_sprite->getContentSize().width / 2, text_layer->getContentSize().height / 2));
+            text_layer->addChild(item_image_sprite);
+            
+            auto text_label = Label::createWithTTF(FontUtils::getDefaultFontTTFConfig(), table_item.labelText);
+            text_label->setColor(table_item.textColor);
+            text_label->setPosition(Point(text_label->getSystemFontSize() + item_image_sprite->getContentSize().width + text_label->getContentSize().width / 2, text_layer->getContentSize().height / 2));
+            text_label->setTag(TableViewTestLayer::ItemTextLabelTag);
 
-        text_label->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
-        text_label->setHorizontalAlignment(TextHAlignment::LEFT);
-        text_layer->addChild(text_label);
-        
+            text_label->setVerticalAlignment(cocos2d::TextVAlignment::TOP);
+            text_label->setHorizontalAlignment(TextHAlignment::LEFT);
+            text_layer->addChild(text_label);
+        }
         cell->addChild(text_layer);
     } else {
         auto text_layer = static_cast<LayerColor*>(cell->getChildByTag(TableViewTestLayer::ItemLayerTag));

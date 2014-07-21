@@ -341,20 +341,20 @@ void ItemWindowLayer::setItemDetail(const ItemDto& itemDto) {
                 if (itemDto.getItemType() == MUseItem::ItemType::EQUIP_WEAPON ||
                            itemDto.getItemType() == MUseItem::ItemType::EQUIP_ACCESSORY) {
                     if (menuItemKey == ItemWindowMenuType::ITEM_USE) {
-                        std::string text = itemDto.isEquip() ? text = "はずす" :  text = "そうび";
+                        std::string text = itemDto.isEquip() ? "はずす" : "そうび";
                         setMenuItemTest(menuItemKey, text);
-                    } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
-                        // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので補正
-                        std::string text = itemDto.isEquip() ? text = "はずす" :  text = "そうび";
-                        setMenuItemTest(menuItemKey, text);
+//                    } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
+//                        // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので補正
+//                        std::string text = itemDto.isEquip() ? text = "はずす" :  text = "そうび";
+//                        setMenuItemTest(menuItemKey, text);
                     }
                 } else {
                     if (menuItemKey == ItemWindowMenuType::ITEM_USE) {
                         std::string text = getMenuItemKeyText(ItemWindowMenuType::ITEM_USE);
                         setMenuItemTest(menuItemKey, text);
-                    } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
-                        this->_menuItemMap.at(menuItemKey)->setVisible(false);
-                        this->_menuItemMap.at(menuItemKey)->setEnabled(false);
+//                    } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
+//                        this->_menuItemMap.at(menuItemKey)->setVisible(false);
+//                        this->_menuItemMap.at(menuItemKey)->setEnabled(false);
                     }
                 }
             }
