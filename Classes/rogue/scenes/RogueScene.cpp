@@ -99,7 +99,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
         AccountData::getInstance()->resetRoguePlayData();
         this->_roguePlayDto.setPlayQuest(questType, quest_id);
         // デフォルトステータス
-        actor_dto = ActorDto::createActorDto(m_player::data_.at("1").asString());
+        actor_dto = ActorDto::createActorDto(m_player::data_.at("4").asString());
     } else {
         // ロード処理
         this->_roguePlayDto = AccountData::getInstance()->getRoguePlayData();

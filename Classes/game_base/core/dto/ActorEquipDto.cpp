@@ -9,6 +9,9 @@
 #include "ActorEquipDto.h"
 #include "StringUtils.h"
 
+#include "MWeaponDao.h"
+#include "MAccessoryDao.h"
+
 using namespace GameCore;
 
 ActorEquipDto::ActorEquipDto(const long objectId_,

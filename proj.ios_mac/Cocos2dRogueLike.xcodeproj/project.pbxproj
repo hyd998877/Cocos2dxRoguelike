@@ -89,10 +89,7 @@
 		CE19BE8519322B0D007715BA /* MLevelDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE0F19322B0C007715BA /* MLevelDao.cpp */; };
 		CE19BE8619322B0D007715BA /* MUseItemDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1119322B0C007715BA /* MUseItemDao.cpp */; };
 		CE19BE8719322B0D007715BA /* MWeaponDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1319322B0C007715BA /* MWeaponDao.cpp */; };
-		CE19BE8819322B0D007715BA /* MAccessory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1619322B0C007715BA /* MAccessory.cpp */; };
 		CE19BE8919322B0D007715BA /* MLevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1819322B0C007715BA /* MLevel.cpp */; };
-		CE19BE8A19322B0D007715BA /* MUseItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1C19322B0C007715BA /* MUseItem.cpp */; };
-		CE19BE8B19322B0D007715BA /* MWeapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE1E19322B0C007715BA /* MWeapon.cpp */; };
 		CE19BE8C19322B0D007715BA /* ActorDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE2119322B0C007715BA /* ActorDto.cpp */; };
 		CE19BE8D19322B0D007715BA /* ActorEquipDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE2319322B0C007715BA /* ActorEquipDto.cpp */; };
 		CE19BE8E19322B0D007715BA /* ItemDto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE2519322B0C007715BA /* ItemDto.cpp */; };
@@ -384,16 +381,10 @@
 		CE19BE1219322B0C007715BA /* MUseItemDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItemDao.h; sourceTree = "<group>"; };
 		CE19BE1319322B0C007715BA /* MWeaponDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeaponDao.cpp; sourceTree = "<group>"; };
 		CE19BE1419322B0C007715BA /* MWeaponDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeaponDao.h; sourceTree = "<group>"; };
-		CE19BE1619322B0C007715BA /* MAccessory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MAccessory.cpp; sourceTree = "<group>"; };
-		CE19BE1719322B0C007715BA /* MAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAccessory.h; sourceTree = "<group>"; };
 		CE19BE1819322B0C007715BA /* MLevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLevel.cpp; sourceTree = "<group>"; };
 		CE19BE1919322B0C007715BA /* MLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLevel.h; sourceTree = "<group>"; };
 		CE19BE1A19322B0C007715BA /* MMonster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMonster.h; sourceTree = "<group>"; };
 		CE19BE1B19322B0C007715BA /* MPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayer.h; sourceTree = "<group>"; };
-		CE19BE1C19322B0C007715BA /* MUseItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MUseItem.cpp; sourceTree = "<group>"; };
-		CE19BE1D19322B0C007715BA /* MUseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUseItem.h; sourceTree = "<group>"; };
-		CE19BE1E19322B0C007715BA /* MWeapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MWeapon.cpp; sourceTree = "<group>"; };
-		CE19BE1F19322B0C007715BA /* MWeapon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWeapon.h; sourceTree = "<group>"; };
 		CE19BE2119322B0C007715BA /* ActorDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorDto.cpp; sourceTree = "<group>"; };
 		CE19BE2219322B0C007715BA /* ActorDto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActorDto.h; sourceTree = "<group>"; };
 		CE19BE2319322B0C007715BA /* ActorEquipDto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActorEquipDto.cpp; sourceTree = "<group>"; };
@@ -700,24 +691,14 @@
 		CE19BDE319322B0C007715BA /* battle */ = {
 			isa = PBXGroup;
 			children = (
-				CE19BDE419322B0C007715BA /* dao */,
 				CE19BDE519322B0C007715BA /* data */,
 				CE19BDE619322B0C007715BA /* dto */,
 				CE19BDE719322B0C007715BA /* layers */,
-				CE19BDE819322B0C007715BA /* logic */,
 				CE19BDE919322B0C007715BA /* scenes */,
 				CE19BDEC19322B0C007715BA /* sprites */,
-				CE19BDED19322B0C007715BA /* util */,
 			);
 			name = battle;
 			path = ../Classes/battle;
-			sourceTree = "<group>";
-		};
-		CE19BDE419322B0C007715BA /* dao */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = dao;
 			sourceTree = "<group>";
 		};
 		CE19BDE519322B0C007715BA /* data */ = {
@@ -741,13 +722,6 @@
 			path = layers;
 			sourceTree = "<group>";
 		};
-		CE19BDE819322B0C007715BA /* logic */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = logic;
-			sourceTree = "<group>";
-		};
 		CE19BDE919322B0C007715BA /* scenes */ = {
 			isa = PBXGroup;
 			children = (
@@ -762,13 +736,6 @@
 			children = (
 			);
 			path = sprites;
-			sourceTree = "<group>";
-		};
-		CE19BDED19322B0C007715BA /* util */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = util;
 			sourceTree = "<group>";
 		};
 		CE19BDEE19322B0C007715BA /* game_base */ = {
@@ -881,16 +848,10 @@
 		CE19BE1519322B0C007715BA /* data */ = {
 			isa = PBXGroup;
 			children = (
-				CE19BE1619322B0C007715BA /* MAccessory.cpp */,
-				CE19BE1719322B0C007715BA /* MAccessory.h */,
 				CE19BE1819322B0C007715BA /* MLevel.cpp */,
 				CE19BE1919322B0C007715BA /* MLevel.h */,
 				CE19BE1A19322B0C007715BA /* MMonster.h */,
 				CE19BE1B19322B0C007715BA /* MPlayer.h */,
-				CE19BE1C19322B0C007715BA /* MUseItem.cpp */,
-				CE19BE1D19322B0C007715BA /* MUseItem.h */,
-				CE19BE1E19322B0C007715BA /* MWeapon.cpp */,
-				CE19BE1F19322B0C007715BA /* MWeapon.h */,
 			);
 			path = data;
 			sourceTree = "<group>";
@@ -968,24 +929,14 @@
 		CE19BE3F19322B0D007715BA /* novel */ = {
 			isa = PBXGroup;
 			children = (
-				CE19BE4019322B0D007715BA /* dao */,
 				CE19BE4119322B0D007715BA /* data */,
 				CE19BE4219322B0D007715BA /* dto */,
 				CE19BE4319322B0D007715BA /* layers */,
-				CE19BE4419322B0D007715BA /* logic */,
 				CE19BE4519322B0D007715BA /* scenes */,
 				CE19BE4819322B0D007715BA /* sprites */,
-				CE19BE4919322B0D007715BA /* util */,
 			);
 			name = novel;
 			path = ../Classes/novel;
-			sourceTree = "<group>";
-		};
-		CE19BE4019322B0D007715BA /* dao */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = dao;
 			sourceTree = "<group>";
 		};
 		CE19BE4119322B0D007715BA /* data */ = {
@@ -1009,13 +960,6 @@
 			path = layers;
 			sourceTree = "<group>";
 		};
-		CE19BE4419322B0D007715BA /* logic */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = logic;
-			sourceTree = "<group>";
-		};
 		CE19BE4519322B0D007715BA /* scenes */ = {
 			isa = PBXGroup;
 			children = (
@@ -1032,34 +976,17 @@
 			path = sprites;
 			sourceTree = "<group>";
 		};
-		CE19BE4919322B0D007715BA /* util */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = util;
-			sourceTree = "<group>";
-		};
 		CE19BE4A19322B0D007715BA /* rogue */ = {
 			isa = PBXGroup;
 			children = (
-				CE19BE4B19322B0D007715BA /* dao */,
 				CE19BE4C19322B0D007715BA /* data */,
 				CE19BE5019322B0D007715BA /* dto */,
 				CE19BE5319322B0D007715BA /* layers */,
-				CE19BE5619322B0D007715BA /* logic */,
 				CE19BE5719322B0D007715BA /* scenes */,
 				CE19BE6819322B0D007715BA /* sprites */,
-				CE19BE6B19322B0D007715BA /* util */,
 			);
 			name = rogue;
 			path = ../Classes/rogue;
-			sourceTree = "<group>";
-		};
-		CE19BE4B19322B0D007715BA /* dao */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = dao;
 			sourceTree = "<group>";
 		};
 		CE19BE4C19322B0D007715BA /* data */ = {
@@ -1088,13 +1015,6 @@
 				CE19BE5519322B0D007715BA /* RogueTMXTiledMap.h */,
 			);
 			path = layers;
-			sourceTree = "<group>";
-		};
-		CE19BE5619322B0D007715BA /* logic */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = logic;
 			sourceTree = "<group>";
 		};
 		CE19BE5719322B0D007715BA /* scenes */ = {
@@ -1156,34 +1076,17 @@
 			path = sprites;
 			sourceTree = "<group>";
 		};
-		CE19BE6B19322B0D007715BA /* util */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = util;
-			sourceTree = "<group>";
-		};
 		CE19BE6C19322B0D007715BA /* srpg */ = {
 			isa = PBXGroup;
 			children = (
-				CE19BE6D19322B0D007715BA /* dao */,
 				CE19BE6E19322B0D007715BA /* data */,
 				CE19BE6F19322B0D007715BA /* dto */,
 				CE19BE7019322B0D007715BA /* layers */,
-				CE19BE7319322B0D007715BA /* logic */,
 				CE19BE7419322B0D007715BA /* scenes */,
 				CE19BE7719322B0D007715BA /* sprites */,
-				CE19BE7819322B0D007715BA /* util */,
 			);
 			name = srpg;
 			path = ../Classes/srpg;
-			sourceTree = "<group>";
-		};
-		CE19BE6D19322B0D007715BA /* dao */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = dao;
 			sourceTree = "<group>";
 		};
 		CE19BE6E19322B0D007715BA /* data */ = {
@@ -1209,13 +1112,6 @@
 			path = layers;
 			sourceTree = "<group>";
 		};
-		CE19BE7319322B0D007715BA /* logic */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = logic;
-			sourceTree = "<group>";
-		};
 		CE19BE7419322B0D007715BA /* scenes */ = {
 			isa = PBXGroup;
 			children = (
@@ -1230,13 +1126,6 @@
 			children = (
 			);
 			path = sprites;
-			sourceTree = "<group>";
-		};
-		CE19BE7819322B0D007715BA /* util */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = util;
 			sourceTree = "<group>";
 		};
 		CE2D047E195EFE5800267EFB /* part */ = {
@@ -1574,7 +1463,6 @@
 				CE19BE9919322B0D007715BA /* RoguePlayDto.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				CE068DB91955E37E0007786F /* ItemMixedScene.cpp in Sources */,
-				CE19BE8819322B0D007715BA /* MAccessory.cpp in Sources */,
 				CE19BE7A19322B0D007715BA /* LabelRPG.cpp in Sources */,
 				CE19BE9519322B0D007715BA /* json11.cpp in Sources */,
 				CE8B22271955A3BE0085EB9B /* MyPageBaseScene.cpp in Sources */,
@@ -1584,9 +1472,7 @@
 				CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */,
 				CE068DB11955DC420007786F /* QuestChoiceScene.cpp in Sources */,
 				CED73AB319697EB300D3DF3C /* GameLogLayout.cpp in Sources */,
-				CE19BE8B19322B0D007715BA /* MWeapon.cpp in Sources */,
 				CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */,
-				CE19BE8A19322B0D007715BA /* MUseItem.cpp in Sources */,
 				CE19BE9619322B0D007715BA /* pugixml.cpp in Sources */,
 				CE19BE8419322B0D007715BA /* MAccessoryDao.cpp in Sources */,
 				CE19BE9119322B0D007715BA /* BattleLogic.cpp in Sources */,

@@ -12,7 +12,7 @@
 #include <string>
 #include <stdlib.h>
 
-#include "MUseItem.h"
+#include "MUseItemDao.h"
 
 class ItemDto
 {

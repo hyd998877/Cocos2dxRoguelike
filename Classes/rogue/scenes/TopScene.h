@@ -44,6 +44,8 @@ private:
     int getMenuId() { return MENU_ID; }
     
     void initQuestSave();
+    
+    void loadMasterData();
 };
 
 #endif /* defined(__Cocos2dRogueLike__TopScene__) */

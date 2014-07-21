@@ -70,7 +70,7 @@ namespace RogueGameConfig {
             // 20%
             cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(0)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(0)} }), // hazure
             // 80%
-            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value(8000)}, {DropProb, cocos2d::Value(1000)} })  // sura
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(901)}, {Prob, cocos2d::Value(8000)}, {DropProb, cocos2d::Value(1000)} })  // sura
         })},
         {DropItemCount, cocos2d::Value(10)},
         {DropItemIds, cocos2d::Value(cocos2d::ValueVector{
@@ -113,11 +113,11 @@ namespace RogueGameConfig {
             // 20%
             cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(0)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(0)} }), // hazure
             // 40%
-            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(1)}, {Prob, cocos2d::Value(4000)}, {DropProb, cocos2d::Value(1000)} }),  // sura
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(901)}, {Prob, cocos2d::Value(4000)}, {DropProb, cocos2d::Value(1000)} }),  // sura
             // 20%
-            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(2)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(1000)} }),  // youhei
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(902)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(1000)} }),  // youhei
             // 20%
-            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(3)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(1000)} }),  // youkan
+            cocos2d::Value(cocos2d::ValueMap{ {Id, cocos2d::Value(903)}, {Prob, cocos2d::Value(2000)}, {DropProb, cocos2d::Value(1000)} }),  // youkan
         })},
         {DropItemCount, cocos2d::Value(10)},
         {DropItemIds, cocos2d::Value(cocos2d::ValueVector{

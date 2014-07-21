@@ -11,7 +11,6 @@
 
 #include "cocos2d.h"
 #include "MapManager.h"
-#include "MUseItem.h"
 
 #include "ItemDto.h"
 

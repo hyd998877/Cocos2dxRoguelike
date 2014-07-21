@@ -17,6 +17,11 @@ Cocos2dRogueLike
 
 #include "AlertDialogLayer.h"
 
+#include "MWeaponDao.h"
+#include "MAccessoryDao.h"
+#include "MUseItemDao.h"
+#include "json11.hpp"
+
 USING_NS_CC;
 
 TopScene::TopScene()
@@ -36,6 +41,9 @@ Node* TopScene::initLayout()
     auto layout = TopPageLayer::create();
     layout->setPosition(Vec2(visibleSize.width/2 - layout->getContentSize().width/2*layout->getScaleX(),
                              visibleSize.height/2 - layout->getContentSize().height/2*layout->getScaleY()));
+
+    // InitData
+    loadMasterData();
     
     // セーブあり
     if (RogueLikeGame::AccountData::getInstance()->isQuestSaveData()) {
@@ -60,4 +68,17 @@ void TopScene::initQuestSave()
     }, "いいえ", [this](Ref *ref) {
         RogueLikeGame::AccountData::getInstance()->resetRoguePlayData();
     }));
+}
+
+void TopScene::loadMasterData()
+{
+    auto jsonStringFile = FileUtils::getInstance()->getStringFromFile("test_master/RogueGameMaster.json");
+    std::string err;
+    auto json = json11::Json::parse(jsonStringFile, err);
+    if (!err.empty()) {
+        CCLOG("error = %s", err.c_str());
+    }
+    MWeaponDao::getInstance()->init(json["M_WEAPON"]);
+    MAccessoryDao::getInstance()->init(json["M_ACCESSORY"]);
+    MUseItemDao::getInstance()->init(json["M_USER_ITEM"]);
 }

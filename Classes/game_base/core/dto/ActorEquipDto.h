@@ -13,8 +13,8 @@
 #include <string>
 #include <stdlib.h>
 
-#include "MWeapon.h"
-#include "MAccessory.h"
+class MWeapon;
+class MAccessory;
 
 class ActorEquipDto {
     const static int SplitCount = 6;
