@@ -1000,7 +1000,8 @@ void RogueScene::attack() {
     }), NULL));
 }
 
-void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySprite) {
+void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySprite)
+{
     auto player = pActorSprite->getActorDto();
     auto enemy = pEnemySprite->getActorDto();
     

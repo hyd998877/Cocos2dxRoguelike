@@ -231,7 +231,9 @@ bool RogueTMXTiledMap::tileSetDropMapItem(const ItemDto& itemDto, MapIndex mapIn
     auto dropItemSprite = DropItemSprite::createWithItemDto(itemDto);
     dropItemSprite->setDropMapItem(dropMapItem);
     dropItemSprite->setPosition(indexToPoint(dropMapItem.mapIndex));
-    pDropItemLayer->addChild(dropItemSprite, TiledMapIndexs::TiledMapDropItemBaseZOrder, TiledMapTags::TiledMapDropItemBaseTag + dropMapItem.seqNo);
+    pDropItemLayer->addChild(dropItemSprite,
+                             TiledMapIndexs::TiledMapDropItemBaseZOrder,
+                             TiledMapTags::TiledMapDropItemBaseTag + dropMapItem.seqNo);
     
     // マップに追加
     this->getMapManager()->addDropItem(dropItemSprite->getDropMapItem());
