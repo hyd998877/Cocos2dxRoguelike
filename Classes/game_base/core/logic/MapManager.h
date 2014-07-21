@@ -84,9 +84,7 @@ public:
     } MapDataSetting;
     
     typedef struct _MapData {
-        
         MapDataSetting map_data_setting;
-        
         // マップカーソル一時データ
         std::vector<std::vector<MapItem>> map_cursor_data_array;
         // マップオブジェクトデータ（ドロップアイテム等）
@@ -102,14 +100,47 @@ public:
         std::list<MapIndex> map_move_point_list;
     } MapData;
 
-    static std::list<MapIndex> createRelatedMapIndexList(MapIndex baseMapIndex);
-    static MapIndex checkTouchEventIndex(const MapIndex& target_map_index, const MapIndex& touch_point_map_index);
+    // MapItemの初期データを作ります
+    template <typename TYPE>
+    static TYPE createNoneMapItem(int x, int y) {
+        TYPE mapItem;
+        mapItem.mapDataType = MapDataType::NONE;
+        mapItem.mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
+        mapItem.moveDist = 0;
+        mapItem.attackDist = 0;
+        return mapItem;
+    }
     
+    static bool equalMapItem(const MapItem& m1, const MapItem& m2) {
+        if (m1.mapDataType != m2.mapDataType) {
+            return false;
+        }
+        if (m1.mapIndex.x != m2.mapIndex.x) {
+            return false;
+        }
+        if (m1.mapIndex.y != m2.mapIndex.y) {
+            return false;
+        }
+        if (m1.moveDist != m2.moveDist) {
+            return false;
+        }
+        if (m1.attackDist != m2.attackDist) {
+            return false;
+        }
+        return true;
+    }
+    
+    static MapIndex checkTouchEventIndex(const MapIndex& target_map_index, const MapIndex& touch_point_map_index);
+
+    static MapIndex createMapIndexEmpty() { return {-1, -1, MoveDirectionType::MOVE_NONE}; }
     static bool isMapIndexEmpty(const MapIndex& mapIndex) {
         MapIndex emptyMapIndex = createMapIndexEmpty();
         return (mapIndex.x == emptyMapIndex.x && mapIndex.y == emptyMapIndex.y && mapIndex.moveDictType == emptyMapIndex.moveDictType) ? true : false;
     }
-    static MapIndex createMapIndexEmpty() { return {-1, -1, MoveDirectionType::MOVE_NONE}; }
+    
+    static std::list<MapIndex> createRelatedMapIndexList(const MapIndex& baseMapIndex);
+    static MapIndex addMoveDirectionMapIndex(const MapIndex& mapIndex, int num, MoveDirectionType moveType =  MoveDirectionType::MOVE_NONE);
+    
 private:
     // マップデータ save
     MapData map_data_;
@@ -148,59 +179,26 @@ public:
    
     MapData getMapData() const { return map_data_; }
     
-    // MapItemの初期データを作ります
-    template <typename TYPE>
-    static TYPE createNoneMapItem(int x, int y)
-    {
-        TYPE mapItem;
-        mapItem.mapDataType = MapDataType::NONE;
-        mapItem.mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
-        mapItem.moveDist = 0;
-        mapItem.attackDist = 0;
-        return mapItem;
-    }
+    bool isMapIndexMapOver(const MapIndex& mapIndex);
     
-    static bool equalMapItem(const MapItem& m1, const MapItem& m2)
-    {
-        if (m1.mapDataType != m2.mapDataType) {
-            return false;
-        }
-        if (m1.mapIndex.x != m2.mapIndex.x) {
-            return false;
-        }
-        if (m1.mapIndex.y != m2.mapIndex.y) {
-            return false;
-        }
-        if (m1.moveDist != m2.moveDist) {
-            return false;
-        }
-        if (m1.attackDist != m2.attackDist) {
-            return false;
-        }
-        return true;
-    }
     void showDebug() const;
     
 private:
     void init();
     
-    bool vaildateInit() const
-    {
+    bool vaildateInit() const {
         if (map_data_.map_data_setting.bottom == 0 &&
             map_data_.map_data_setting.left == 0 &&
             map_data_.map_data_setting.right == 0 &&
-            map_data_.map_data_setting.top == 0)
-        {
+            map_data_.map_data_setting.top == 0) {
             return false;
         }
-        
         return true;
     }
     
     // 2次元配列をTYPEので初期化します
     template <typename TYPE>
-    void clearMapItemArray(std::vector<std::vector<TYPE>> *pMapItemArray)
-    {
+    void clearMapItemArray(std::vector<std::vector<TYPE>> *pMapItemArray) {
         pMapItemArray->clear();
         for (int x = 0; x < map_data_.map_data_setting.right; x++)
         {
@@ -216,8 +214,7 @@ private:
     
     // 2次元配列をTYPEのvalue値で初期化します
     template <typename TYPE>
-    void clearArray(std::vector<std::vector<TYPE>> *pArray, TYPE value)
-    {
+    void clearArray(std::vector<std::vector<TYPE>> *pArray, TYPE value) {
         pArray->clear();
         for (int x = 0; x < map_data_.map_data_setting.right; x++)
         {

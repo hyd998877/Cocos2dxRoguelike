@@ -51,6 +51,9 @@ void MapManager::initMapping(int top, int bottom, int left, int right)
     map_data_.map_move_point_list.clear();
 }
 
+#pragma mark
+#pragma mark 探索系
+
 /**
  * キャラクター移動範囲検索.
  * @param mapIndex 移動するキャラクターの座標
@@ -236,6 +239,9 @@ bool MapManager::chkMovePoint(MapIndex mapIndex, int dist, MapDataType ignoreTyp
     return false;
 }
 
+#pragma mark 
+#pragma mark マップ配置
+
 /**
  * 移動カーソル追加.
  */
@@ -362,6 +368,9 @@ void MapManager::removeMapItem(const MapItem& mapItem)
     DEBUG_LOG_MAP_ITEM_LAYER();
 }
 
+#pragma mark
+#pragma mark Mapping関連
+
 void MapManager::addMapping(const MapIndex& mapIndex)
 {
     assert(vaildateInit());
@@ -375,6 +384,9 @@ std::vector<std::vector<bool>> MapManager::getMappingData()
     
     return map_data_.mapping_array;
 }
+
+#pragma mark
+#pragma mark マップオブジェクト取得
 
 /**
  * 指定座標のMapItemを取得します。
@@ -563,37 +575,46 @@ bool MapManager::isMapIndexMapOver(const MapIndex& mapIndex)
 /**
  * 指定したMapIndexの周辺MapIndexのListを作成して返却します。
  */
-std::list<MapIndex> MapManager::createRelatedMapIndexList(MapIndex baseMapIndex) {
+std::list<MapIndex> MapManager::createRelatedMapIndexList(const MapIndex& baseMapIndex)
+{
     std::list<MapIndex> relatedMapIndexList;
-    relatedMapIndexList.clear();
-    
-    // 右
-    MapIndex searchMapIndex = baseMapIndex;
-    searchMapIndex.x += 1;
-    searchMapIndex.y += 0;
-    searchMapIndex.moveDictType = MoveDirectionType::MOVE_LEFT;
-    relatedMapIndexList.push_back(searchMapIndex);
-    // 左
-    searchMapIndex = baseMapIndex;
-    searchMapIndex.x += -1;
-    searchMapIndex.y += 0;
-    searchMapIndex.moveDictType = MoveDirectionType::MOVE_RIGHT;
-    relatedMapIndexList.push_back(searchMapIndex);
-    // 上
-    searchMapIndex = baseMapIndex;
-    searchMapIndex.x += 0;
-    searchMapIndex.y += 1;
-    searchMapIndex.moveDictType = MoveDirectionType::MOVE_DOWN;
-    relatedMapIndexList.push_back(searchMapIndex);
-    // 下
-    searchMapIndex = baseMapIndex;
-    searchMapIndex.x += 0;
-    searchMapIndex.y += -1;
-    searchMapIndex.moveDictType = MoveDirectionType::MOVE_UP;
-    relatedMapIndexList.push_back(searchMapIndex);
-    
+    relatedMapIndexList.push_back(addMoveDirectionMapIndex(baseMapIndex, 1, MoveDirectionType::MOVE_LEFT));
+    relatedMapIndexList.push_back(addMoveDirectionMapIndex(baseMapIndex, 1, MoveDirectionType::MOVE_RIGHT));
+    relatedMapIndexList.push_back(addMoveDirectionMapIndex(baseMapIndex, 1, MoveDirectionType::MOVE_DOWN));
+    relatedMapIndexList.push_back(addMoveDirectionMapIndex(baseMapIndex, 1, MoveDirectionType::MOVE_UP));
     return relatedMapIndexList;
 }
+
+// 方向に応じて加算したMapIndexを返却
+MapIndex MapManager::addMoveDirectionMapIndex(const MapIndex& mapIndex, int num, MoveDirectionType moveType /* =  MoveDirectionType::MOVE_NONE */)
+{
+    MapIndex result = mapIndex;
+    if (moveType == MoveDirectionType::MOVE_NONE) {
+        moveType = mapIndex.moveDictType;
+    }
+    switch (moveType) {
+        case MoveDirectionType::MOVE_LEFT:
+            result.x += -num;
+            result.y += 0;
+            break;
+        case MoveDirectionType::MOVE_RIGHT:
+            result.x += num;
+            result.y += 0;
+            break;
+        case MoveDirectionType::MOVE_DOWN:
+            result.x += 0;
+            result.y += -num;
+            break;
+        case MoveDirectionType::MOVE_UP:
+            result.x += 0;
+            result.y += num;
+            break;
+        default:
+            break;
+    }
+    return result;
+}
+
 
 // ターゲットとタッチした位置が1マス以内の場合に移動距離のMapIndexを返却する
 MapIndex MapManager::checkTouchEventIndex(const MapIndex& target_map_index, const MapIndex& touch_point_map_index) {
