@@ -4,7 +4,7 @@
 <dict>
 	<key>frames</key>
 	<dict>
-		<key>actor_901_0_top_3.jpg</key>
+		<key>actor_901_0_top_3.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{64,96},{32,32}}</string>
@@ -17,7 +17,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_top_2.jpg</key>
+		<key>actor_901_0_top_2.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{32,96},{32,32}}</string>
@@ -30,7 +30,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_top_1.jpg</key>
+		<key>actor_901_0_top_1.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{0,96},{32,32}}</string>
@@ -43,7 +43,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_right_3.jpg</key>
+		<key>actor_901_0_right_3.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{64,64},{32,32}}</string>
@@ -56,7 +56,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_right_2.jpg</key>
+		<key>actor_901_0_right_2.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{32,64},{32,32}}</string>
@@ -69,7 +69,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_right_1.jpg</key>
+		<key>actor_901_0_right_1.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{0,64},{32,32}}</string>
@@ -82,7 +82,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_left_3.jpg</key>
+		<key>actor_901_0_left_3.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{64,32},{32,32}}</string>
@@ -95,7 +95,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_left_2.jpg</key>
+		<key>actor_901_0_left_2.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{32,32},{32,32}}</string>
@@ -108,7 +108,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_left_1.jpg</key>
+		<key>actor_901_0_left_1.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{0,32},{32,32}}</string>
@@ -121,7 +121,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_bottom_3.jpg</key>
+		<key>actor_901_0_bottom_3.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{64,0},{32,32}}</string>
@@ -134,7 +134,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_bottom_2.jpg</key>
+		<key>actor_901_0_bottom_2.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{32,0},{32,32}}</string>
@@ -147,7 +147,7 @@
 			<key>sourceSize</key>
 			<string>{32,32}</string>
 		</dict>
-		<key>actor_901_0_bottom_1.jpg</key>
+		<key>actor_901_0_bottom_1.png</key>
 		<dict>
 			<key>frame</key>
 			<string>{{0,0},{32,32}}</string>
