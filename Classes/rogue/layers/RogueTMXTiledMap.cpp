@@ -244,6 +244,36 @@ bool RogueTMXTiledMap::tileSetDropMapItem(const ItemDto& itemDto, MapIndex mapIn
     return true;
 }
 
+void RogueTMXTiledMap::throwDropMapItem(const ItemDto& itemDto, MapIndex startMapIndex, MapIndex endMapIndex, const ThrowDropMapItemCallback& callback)
+{
+    auto pDropItemLayer = this->getChildByTag(TiledMapTags::TiledMapDropItemBaseTag);
+    
+    // すぐ消すからtagとかいらない
+    DropMapItem dropMapItem;
+    dropMapItem.seqNo = endMapIndex.x * 100 + endMapIndex.y;
+    dropMapItem.itemId = itemDto.getItemId();
+    dropMapItem.mapDataType = MapDataType::MAP_ITEM;
+    dropMapItem.moveDist = 0;
+    dropMapItem.mapIndex = endMapIndex;
+    
+    auto dropItemSprite = DropItemSprite::createWithItemDto(itemDto);
+    dropItemSprite->setDropMapItem(dropMapItem);
+    dropItemSprite->setPosition(indexToPoint(startMapIndex));
+    pDropItemLayer->addChild(dropItemSprite,
+                             TiledMapIndexs::TiledMapDropItemBaseZOrder,
+                             TiledMapTags::TiledMapDropItemBaseTag + dropMapItem.seqNo);
+    
+    dropItemSprite->runAction(Sequence::create(MoveTo::create(0.2f, indexToPoint(endMapIndex)),
+                                               CallFunc::create([callback, dropItemSprite, endMapIndex, itemDto]() {
+        callback(dropItemSprite, endMapIndex, itemDto);
+    } ), NULL));
+    
+    // マップに追加
+    this->getMapManager()->addDropItem(dropItemSprite->getDropMapItem());
+    // ミニマップも更新
+    addMiniMapItem(dropItemSprite->getDropMapItem(), dropItemSprite->getTag());
+}
+
 void RogueTMXTiledMap::removeDropItemSprite(DropItemSprite* pDropItemSprite) {
     // mapManagerから消す
     this->getMapManager()->removeMapItem(pDropItemSprite->getDropMapItem());

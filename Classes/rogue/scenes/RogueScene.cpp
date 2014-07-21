@@ -315,7 +315,8 @@ void RogueScene::showItemInventoryWindow()
         ItemInventoryLayer::ActionCallback{ItemWindowLayer::ItemWindowMenuType::ITEM_THROW, ItemInventoryLayer::CloseType::CLOSE,
             [this](ItemWindowLayer::ItemWindowMenuType menuType, Ref *ref, const ItemDto &itemDto) {
                 CCLOG("RogueScene::itemThrowMenuCallback itemType = %d", itemDto.getItemType());
-                // TODO: アイテム投げる処理
+                // アイテム投げる処理
+                this->itemThrow(itemDto);
             }
         },
     };
@@ -461,6 +462,54 @@ void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
     
     // ターン消費
     this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
+}
+
+void RogueScene::itemThrow(const ItemDto &itemDto)
+{
+    // TODO: 向いてる方向へ
+    auto player = getPlayerActorSprite(1);
+    
+    // TODO: 投げる距離はとりあえず固定
+    const int throwRange = 10;
+    auto basePositionIndex = player->getActorMapItem().mapIndex;
+
+    // baseから10先までの経路に何があるかチェック
+    // TODO: #40 listで壁と壁にあたって跳ね返ったMapIndexを返せばできそう
+    MapIndex throwMapIndex = getMapManager()->checkItemThrow(basePositionIndex, throwRange);
+    // 投げ先に今いるものをとっておく
+    auto targetMapIndexMapItem = getMapManager()->getMapItem(throwMapIndex);
+    
+    // アニメーション
+    getRogueMapLayer()->throwDropMapItem(itemDto, basePositionIndex, throwMapIndex, [this, targetMapIndexMapItem](DropItemSprite* dropItemSprite, const MapIndex& mapIndex, const ItemDto& itemDto) {
+        
+        std::string message = itemDto.createItemName() + "を投げた。";
+        this->logMessage(message);
+        
+        if (targetMapIndexMapItem.mapDataType == MapDataType::ENEMY) {
+            // 敵だったら敵へダメージとか
+            auto player = getPlayerActorSprite(1);
+            
+            auto enemyActorMapItem = this->getMapManager()->getActorMapItem(targetMapIndexMapItem.mapIndex);
+            auto enemy = this->getRogueMapLayer()->getEnemyActorSprite(enemyActorMapItem.seqNo);
+            this->attackItemThrowCallback(itemDto, player, enemy);
+            // アイテムは消す
+            this->getRogueMapLayer()->removeDropItemSprite(dropItemSprite);
+            
+        } else if (targetMapIndexMapItem.mapDataType == MapDataType::MAP_ITEM) {
+            // 重なるっぽい時
+            this->getRogueMapLayer()->removeDropItemSprite(dropItemSprite);
+            std::string message = itemDto.createItemName() + "は消えた。";
+            this->logMessage(message);
+        } else {
+            CCLOG("mapdatatype = %d", targetMapIndexMapItem.mapDataType);
+        }
+        // ターン消費
+        this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
+    });
+    
+    // もし装備してたら外す
+    this->unEquipItem(itemDto);
+    this->_itemInventory.removeItemDto(itemDto.getObjectId());
 }
 
 // --------------------------
@@ -1010,6 +1059,46 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
     // 攻撃イベント
     auto message = cocos2d::StringUtils::format("%sの攻撃: %sに%dのダメージ",
                                                 player->getName().c_str(), enemy->getName().c_str(), damage);
+    this->logMessage(message);
+    
+    // 敵の死亡判定
+    bool isDead = enemy->damageHitPoint(damage);
+    if (isDead) {
+        
+        auto message = cocos2d::StringUtils::format("%sを倒した。経験値%dを得た。",
+                                                    enemy->getName().c_str(), enemy->getExp());
+        this->logMessage(message);
+        // TODO: (kyokomi) 経験値更新（計算式 適当）
+        if (player->growExpAndLevelUpCheck(enemy->getExp())) {
+            
+            // TODO: レベルアップ演出（SE？）
+            auto message = cocos2d::StringUtils::format("%sはレベル%dになった。",
+                                                        player->getName().c_str(), player->getLv());
+            this->logMessage(message);
+            
+            // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
+            this->refreshStatusEquip(*player);
+        }
+        
+        // 敵のドロップ確率を抽選してアイテムの抽選（TODO: とりあえず一律3%）
+        if (LotteryUtils::isHit(300)) {
+            // アイテムdrop
+            institutionDropItem(1, pEnemySprite->getActorMapItem().mapIndex);
+        }
+        // マップから消える
+        getRogueMapLayer()->removeEnemyActorSprite(pEnemySprite);
+    }
+}
+
+void RogueScene::attackItemThrowCallback(const ItemDto& itemDto, ActorSprite* pActorSprite, ActorSprite* pEnemySprite)
+{
+    auto player = pActorSprite->getActorDto();
+    auto enemy = pEnemySprite->getActorDto();
+    
+    // 攻撃開始
+    int damage = BattleLogic::itemThrow(itemDto, *enemy);
+    // 攻撃イベント
+    auto message = cocos2d::StringUtils::format("%sに%dのダメージ", enemy->getName().c_str(), damage);
     this->logMessage(message);
     
     // 敵の死亡判定

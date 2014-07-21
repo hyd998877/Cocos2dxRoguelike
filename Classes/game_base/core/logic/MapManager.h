@@ -179,6 +179,8 @@ public:
    
     MapData getMapData() const { return map_data_; }
     
+    MapIndex checkItemThrow(const MapIndex& baseMapIndex, int throwRange);
+    
     bool isMapIndexMapOver(const MapIndex& mapIndex);
     
     void showDebug() const;

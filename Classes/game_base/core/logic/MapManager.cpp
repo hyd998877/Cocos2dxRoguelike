@@ -545,6 +545,48 @@ std::list<DropMapItem> MapManager::findDropMapItem() const
 }
 
 #pragma mark
+#pragma mark チェック関連
+
+// アイテムを投げるときの投げた結果どこにいくかチェックして返す
+MapIndex MapManager::checkItemThrow(const MapIndex& baseMapIndex, int throwRange)
+{
+    // baseからrange分のチェック
+    for (int i = 0; i < throwRange; i++) {
+        auto checkMapIndex = addMoveDirectionMapIndex(baseMapIndex, i + 1);
+        if (isMapIndexMapOver(checkMapIndex)) {
+            return checkMapIndex;
+        }
+        
+        MapItem mapItem = getMapItem(checkMapIndex);
+        if (mapItem.mapDataType == MapDataType::OBSTACLE) {
+            // 壁Hitは一歩手前へ
+            auto obstacleMapIndex = addMoveDirectionMapIndex(checkMapIndex, -1);
+            MapItem mapItem = getMapItem(obstacleMapIndex);
+            if (mapItem.mapDataType != MapDataType::MAP_ITEM) {
+                return obstacleMapIndex;
+            }
+            // アイテムの上にアイテムは置けないので周辺を取得
+            auto relatedList = createRelatedMapIndexList(obstacleMapIndex);
+            for (auto relatedIndex : relatedList) {
+                MapItem mapItem = getMapItem(relatedIndex);
+                if (mapItem.mapDataType == MapDataType::OBSTACLE ||
+                    mapItem.mapDataType == MapDataType::MAP_ITEM) {
+                    continue;
+                }
+                
+                return relatedIndex;
+            }
+            // 仕方ないので重ねる
+            return obstacleMapIndex;
+            
+        } else if (mapItem.mapDataType == MapDataType::ENEMY) {
+            // 敵Hit
+            return checkMapIndex;
+        }
+    }
+    return addMoveDirectionMapIndex(baseMapIndex, throwRange);
+}
+
 // 画面外かチェック
 bool MapManager::isMapIndexMapOver(const MapIndex& mapIndex)
 {

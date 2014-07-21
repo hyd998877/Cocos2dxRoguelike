@@ -72,6 +72,8 @@ private:
     TMXMapData _tmxMapData;
     
 public:
+    typedef std::function<void(DropItemSprite* dropItemSprite, const MapIndex&, const ItemDto&)> ThrowDropMapItemCallback;
+    
     static RogueTMXTiledMap* create(const std::string& tmxFile = "");
     
     ActorMapItem startPlayerRandomPosition(const ActorDto& actor_dto, const MapIndex& base_actor_index);
@@ -80,6 +82,7 @@ public:
     void removeEnemyActorSprite(ActorSprite* pEnemySprite);
     
     bool tileSetDropMapItem(const ItemDto& itemDto, MapIndex mapIndex);
+    void throwDropMapItem(const ItemDto& itemDto, MapIndex startMapIndex, MapIndex endMapIndex, const ThrowDropMapItemCallback& callback);
     
     void removeDropItemSprite(DropItemSprite* pDropItemSprite);
     ActorSprite* getEnemyActorSprite(int seq_no);

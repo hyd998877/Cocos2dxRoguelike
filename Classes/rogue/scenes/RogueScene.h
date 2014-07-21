@@ -63,6 +63,7 @@ private:
     
     void attack();
     void attackCallback(ActorSprite* player, ActorSprite* enemy);
+    void attackItemThrowCallback(const ItemDto& itemDto, ActorSprite* pActorSprite, ActorSprite* pEnemySprite);
     
     // UI関連
     
@@ -77,6 +78,7 @@ private:
     void itemWindowChangeItem(const ItemDto &itemDto);
     void itemWindowEquipItem(const ItemDto &itemDto);
     void itemWindowUseItem(const ItemDto &itemDto);
+    void itemThrow(const ItemDto &itemDto);
     
     // システムメニュ
     void showSystemMenu();
