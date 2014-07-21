@@ -2,8 +2,8 @@
 
 [![](https://dply.me/ks7a9w/button/small)](https://dply.me/ks7a9w#install)
 
-[master](https://docs.google.com/spreadsheets/d/1ElK17LjkOF1EYS0w1TwvziqaeJir0o35PIx9wSeYWXI/edit#gid=1026156113)
-[json](https://script.googleusercontent.com/macros/echo?user_content_key=6Ee5WBBtlA2YhCmpkPFuTwpuKfk9srngi3NG1FK0qPkwOTA3HXP4uajUjHuGraGSiC_pZxkP9F1rVzB81oOg_d7t43n9BMSXm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnANycIlS0ocQ5IbabE3Hy1zd581o9NTjYJhCGTaDxS2nXZqsT7d1JGn4NjEoAWiFjw&lib=M54n8VKua0UjROgaCb3YvcwXKz5yR0Jn-)
+- [master](https://docs.google.com/spreadsheets/d/1ElK17LjkOF1EYS0w1TwvziqaeJir0o35PIx9wSeYWXI/edit#gid=1026156113)
+- [json](https://script.google.com/macros/s/AKfycbxDIVz0IR0o-5VTTAwqnEo1lsFZCYo5s58vBJMYvNYBi8gwO_I/exec)
 
 もともとSRPGゲーム作ってたのですが、現在はローグライクゲーム開発にシフトしてます。
 
