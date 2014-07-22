@@ -1,0 +1,4 @@
+Android NDK: WARNING: APP_PLATFORM android-19 is larger than android:minSdkVersion 9 in ./AndroidManifest.xml    
+Android NDK: WARNING:/Users/kyokomi/src/github.com/kyokomi/Cocos2dxRoguelike/proj.android/../cocos2d/cocos/./Android.mk:cocos2dx_static: LOCAL_LDLIBS is always ignored for static libraries    
+Android NDK: WARNING:/Users/kyokomi/src/github.com/kyokomi/Cocos2dxRoguelike/proj.android/../cocos2d/cocos/platform/android/Android.mk:cocos2dxandroid_static: LOCAL_LDLIBS is always ignored for static libraries    
+The Selected NDK toolchain version was 4.8 !
