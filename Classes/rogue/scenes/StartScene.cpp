@@ -73,7 +73,7 @@ bool StartScene::init()
         if (error) {
             auto jsonStringFile = FileUtils::getInstance()->getStringFromFile("test_master/RogueGameMaster.json");
             std::string err;
-            auto json = json11::Json::parse(jsonStringFile, err);
+            response = json11::Json::parse(jsonStringFile, err);
             if (!err.empty()) {
                 CCLOG("error = %s", err.c_str());
             }
