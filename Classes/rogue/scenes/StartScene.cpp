@@ -26,6 +26,8 @@
 #include "MUseItemDao.h"
 #include "MPlayerDao.h"
 #include "MMonsterDao.h"
+#include "MLevelDao.h"
+
 #include "json11.hpp"
 
 #include "network/HttpClient.h"
@@ -87,6 +89,7 @@ bool StartScene::init()
         MUseItemDao::getInstance()->init(response["M_USER_ITEM"]);
         MPlayerDao::getInstance()->init(response["M_PLAYER"]);
         MMonsterDao::getInstance()->init(response["M_MONSTER"]);
+        MLevelDao::getInstance()->init(response["M_LEVEL"]);
         
         // TODO: ローディング解除
         label->setVisible(false);

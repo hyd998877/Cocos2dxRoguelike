@@ -12,15 +12,29 @@
 #include <iostream>
 #include <list>
 
+namespace json11 {
+    class Json;
+}
+
 class MLevel
 {
 public:
-    MLevel(int levelId, int exp, int growHitPoint)
+    MLevel()
+    : _levelId(0)
+    , _exp(0)
+    , _growHitPoint(0)
+    , _growAttackPoint(0)
+    , _growDefencePoint(0)
+    {
+        
+    }
+    MLevel(int levelId, int exp, int growHitPoint,
+           int growAttackPoint, int growDefencePoint)
     : _levelId(levelId)
     , _exp(exp)
     , _growHitPoint(growHitPoint)
-    , _growAttackPoint(1)
-    , _growDefencePoint(1)
+    , _growAttackPoint(growAttackPoint)
+    , _growDefencePoint(growDefencePoint)
     {
     }
     
@@ -57,6 +71,8 @@ public:
     bool checkLevelUp(int lv, int exp);
     const MLevel selectById(int lv);
     
+    void init(json11::Json json);
+        
     MLevelDao();
     virtual ~MLevelDao();
 private:
