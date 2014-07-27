@@ -72,21 +72,6 @@ namespace FontUtils {
     }
 }
 
-class StringUtils
-{
-public:
-    static std::vector<std::string> split(std::string&& s)
-    {
-        std::vector<std::string> res;
-        size_t current = 0, found;
-        while((found = s.find_first_of(',', current)) != std::string::npos){
-            res.push_back(std::string(s, current, found - current));
-            current = found + 1;
-        }
-        res.push_back(std::string(s, current, s.size() - current));
-        return res;
-    }
-};
 
 #define EVENT_COME_TO_FOREGROUND_ROGUE "EVENT_COME_TO_FOREGROUND_ROGUE"
 
@@ -99,13 +84,5 @@ static int GetRandom(int min,int max)
 //#define CREATE_WINDOW_WAKU() extension::Scale9Sprite::create("ui/dot_waku.png", Rect(0, 0, 16, 16), Rect(3, 3, 10, 10));
 
 // マルチレゾリューション対応
-#define HOGE() Director::getInstance()->setOpenGLView(eglView); \
-Size frameSize = eglView->getFrameSize(); \
-std::vector<std::string> searchPath; \
-if (frameSize.height > largeResource.size.height) { searchPath.push_back(xlargeResource.directory);Director::getInstance()->setContentScaleFactor(MIN(xlargeResource.size.height / designResolutionSize.height, xlargeResource.size.width / designResolutionSize.width )); \
-} else if (frameSize.height > smallResource.size.height) { searchPath.push_back(largeResource.directory); Director::getInstance()->setContentScaleFactor(MIN(largeResource.size.height / designResolutionSize.height, largeResource.size.width / designResolutionSize.width )); \
-} else { searchPath.push_back(smallResource.directory); Director::getInstance()->setContentScaleFactor(MIN(smallResource.size.height / designResolutionSize.height, smallResource.size.width / designResolutionSize.width )); } \
-FileUtils* fileUtils = FileUtils::getInstance(); \
-fileUtils->setSearchPaths(searchPath);
 
 #endif

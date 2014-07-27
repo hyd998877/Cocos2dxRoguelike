@@ -19,7 +19,7 @@ namespace GameCore {
     class StringUtils
     {
     public:
-        static std::vector<std::string> split(std::string&& s)
+        static std::vector<std::string> split(const std::string&& s)
         {
             std::vector<std::string> res;
             size_t current = 0, found;
@@ -28,6 +28,17 @@ namespace GameCore {
                 current = found + 1;
             }
             res.push_back(std::string(s, current, s.size() - current));
+            return res;
+        }
+        static std::vector<int> splitInt(const std::string&& s)
+        {
+            std::vector<int> res;
+            size_t current = 0, found;
+            while((found = s.find_first_of(',', current)) != std::string::npos){
+                res.push_back(atoi(std::string(s, current, found - current).c_str()));
+                current = found + 1;
+            }
+            res.push_back(atoi(std::string(s, current, s.size() - current).c_str()));
             return res;
         }
         
