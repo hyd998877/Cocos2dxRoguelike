@@ -29,6 +29,12 @@
 #include "MPlayerDao.h"
 #include "MMonsterDao.h"
 
+#include "MDungeonDao.h"
+#include "MQuestFloorDao.h"
+#include "MItemPlusLimitGroupDao.h"
+#include "MDropGroupDao.h"
+#include "MMobGroupDao.h"
+
 #include "MRogueMap.h"
 
 #include "AccountData.h"
@@ -169,13 +175,13 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // ---------------------
     // 敵キャラ生成
     // ---------------------
-    int probCount = getRogueMapData().at(RogueGameConfig::MobCount).asInt();
+    int probCount = getRogueMapData().mobCount;
     institutionEnemy(probCount);
     
     //-------------------------
     // アイテム配置
     //-------------------------
-    int dropItemCount = getRogueMapData().at(RogueGameConfig::DropItemCount).asInt();
+    int dropItemCount = getRogueMapData().dropCount;
     institutionDropItem(dropItemCount);
     
     // -------------------------------
@@ -530,7 +536,8 @@ void RogueScene::playFloorTitleCutIn(int quest_id, RoguePlayDto::QuestType quest
     floorTitleCutInLayer->setContentSize(winSize);
     // テキスト中央
     auto questKey = RoguePlayDto::findQuestKey(questType);
-    auto questName = RogueGameConfig::getQuestData(questKey).at("name").asString();
+    auto dungeon = MDungeonDao::getInstance()->selectById(questKey);
+    auto questName = dungeon.dungeonName;
     
     auto floorTitleText = cocos2d::StringUtils::format("%s %d層", questName.c_str(), quest_id);
     auto floorTitleTextLabel = Label::createWithTTF(FontUtils::getStrongFontTTFConfig(), floorTitleText);
@@ -988,9 +995,9 @@ void RogueScene::touchKaidan() {
                                          playerActor,
                                          this->_itemInventory);
         
-        auto questData = RogueGameConfig::getQuestData(RoguePlayDto::findQuestKey(this->_roguePlayDto.getQuestType()));
-        int clearCount = questData.at("clearCount").asInt();
-        if (clearCount < nextQuestId) {
+        auto questKey = RoguePlayDto::findQuestKey(this->_roguePlayDto.getQuestType());
+        auto questData = MDungeonDao::getInstance()->selectById(questKey);
+        if (questData.clearCount < nextQuestId) {
             // クエストクリア
             this->changeGameStatus(RoguePlayDto::GameStatus::QUEST_CLEAR);
         } else {
@@ -1387,9 +1394,22 @@ void RogueScene::floorMappingAllShow() {
 
 // モンスター配置
 void RogueScene::institutionEnemy(int probCount) {
-    ValueMap rogueMapDatas = getRogueMapData();
+    auto rogueMapDatas = getRogueMapData();
     
-    ValueVector probList = rogueMapDatas.at(RogueGameConfig::MobIds).asValueVector();
+    auto mobGroupId = rogueMapDatas.mobGroupId;
+    auto mobGroups = MMobGroupDao::getInstance()->selectById(mobGroupId);
+    
+    
+    std::vector<LotteryObject<MMobGroup>> probList;
+    for (auto mobGroup : mobGroups) {
+        probList.push_back(LotteryObject<MMobGroup>{
+            mobGroup.monsterId != 0 ? true : false,
+            mobGroup.monsterId,
+            mobGroup.popProb,
+            mobGroup
+        });
+    }
+    
     std::vector<int> hitIds = LotteryUtils::lot(probCount, probList);
     if (hitIds.size() <= 0) {
         hitIds.clear();
@@ -1408,11 +1428,24 @@ void RogueScene::institutionEnemy(int probCount) {
 }
 
 // アイテム配置
-void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* = MapManager::createMapIndexEmpty() */) {
-    ValueMap rogueMapDatas = getRogueMapData();
+void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* = MapManager::createMapIndexEmpty() */)
+{
+    auto rogueMapDatas = getRogueMapData();
     
-    ValueVector probList = rogueMapDatas.at(RogueGameConfig::DropItemIds).asValueVector();
-    ValueVector hitValues = LotteryUtils::lotValues(probCount, probList);
+    auto dropGroupId = rogueMapDatas.dropGroupId;
+    auto dropGroups = MDropGroupDao::getInstance()->selectById(dropGroupId);
+    
+    std::vector<LotteryObject<MDropGroup>> probList;
+    for (auto dropGroup : dropGroups) {
+        probList.push_back(LotteryObject<MDropGroup>{
+            dropGroup.dropItemId != 0 ? true : false,
+            dropGroup.dropItemId,
+            dropGroup.prob,
+            dropGroup
+        });
+    }
+    
+    auto hitValues = LotteryUtils::lotValues(probCount, probList);
     if (hitValues.size() <= 0) {
         hitValues.clear();
         return;
@@ -1420,22 +1453,32 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
     
     auto tiled_map_layer = getRogueMapLayer();
     
-    for (Value hitValue : hitValues) {
+    for (auto hitValue : hitValues) {
         
-        ValueMap valueMap = hitValue.asValueMap();
+        auto dropItem = hitValue.object;
         
-        MUseItem::ItemType itemType = static_cast<MUseItem::ItemType>(valueMap.at(RogueGameConfig::ItemType).asInt());
-        int hitId = valueMap.at(RogueGameConfig::Id).asInt();
+        MUseItem::ItemType itemType = static_cast<MUseItem::ItemType>(dropItem.dropItemType);
+        int hitId = dropItem.dropItemId;
         
         // 武器、防具の+値やゴールド値を決定する
         int param = 0;
         if (itemType == MUseItem::ItemType::GOLD) {
-            int gold = GetRandom(rogueMapDatas.at(RogueGameConfig::GoldMin).asInt(),
-                                 rogueMapDatas.at(RogueGameConfig::GoldMax).asInt());
+            int gold = GetRandom(rogueMapDatas.goldMin, rogueMapDatas.goldMax);
             param = gold;
         } else if (itemType == MUseItem::ItemType::EQUIP_WEAPON || itemType == MUseItem::ItemType::EQUIP_ACCESSORY) {
-            auto dropItemUpValueLimits = getRogueMapData().at(RogueGameConfig::DropItemUpValueLimits).asValueVector();
-            param = LotteryUtils::lot(dropItemUpValueLimits);
+            auto itemPlusLimitGroupId = rogueMapDatas.itemPlusLimitGroupId;
+            auto itemPlusLimitGroups = MItemPlusLimitGroupDao::getInstance()->selectById(itemPlusLimitGroupId);
+            
+            std::vector<LotteryObject<MItemPlusLimitGroup>> probList;
+            for (auto itemGroup : itemPlusLimitGroups) {
+                probList.push_back(LotteryObject<MItemPlusLimitGroup>{
+                    true,
+                    itemGroup.plusValue,
+                    itemGroup.prob,
+                    itemGroup
+                });
+            }
+            param = LotteryUtils::lot(probList);
         }
         
         if (itemType == MUseItem::ItemType::USE_ITEM || itemType == MUseItem::ItemType::GOLD) {
@@ -1509,16 +1552,20 @@ void RogueScene::institutionDropItem(int probCount, const MapIndex& mapIndex /* 
 #pragma mark 汎用
 
 // ローグマップ基本データ取得
-const ValueMap RogueScene::getRogueMapData() {
+const MQuestFloor& RogueScene::getRogueMapData()
+{
     // フロア情報のIndexを用意する（データがない場合は最終データで補正）
     long questIndex = _roguePlayDto.getQuestId() - 1;
-    auto questData = RogueGameConfig::getQuestData(RoguePlayDto::findQuestKey(_roguePlayDto.getQuestType()));
-    auto datas = questData.at("floor").asValueVector();
-    if (datas.size() <= questIndex) {
-        questIndex = datas.size() - 1;
+    auto questKey = RoguePlayDto::findQuestKey(_roguePlayDto.getQuestType());
+    auto dungeon = MDungeonDao::getInstance()->selectById(questKey);
+    
+    auto floorIds = dungeon.floorIds;
+    if (floorIds.size() <= questIndex) {
+        questIndex = floorIds.size() - 1;
     }
-    Value rogueMapData = datas[questIndex];
-    return rogueMapData.asValueMap();
+    
+    int floorId = floorIds[questIndex];
+    return MQuestFloorDao::getInstance()->selectById(floorId);
 }
 
 ActorSprite* RogueScene::getPlayerActorSprite(int seqNo)

@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef __Cocos2dRogueLike__MDropGroup__
-#define __Cocos2dRogueLike__MDropGroup__
+#ifndef __Cocos2dRogueLike__MDropGroupDao__
+#define __Cocos2dRogueLike__MDropGroupDao__
 
 #include <iostream>
 #include <string>
@@ -22,9 +22,9 @@ class MDropGroup
 {
 public:
     MDropGroup()
-    : dropGroupId(0)
-    , dropItemType(0)
-    , dropItemId(0)
+    : dropGroupId(0)   // key
+    , dropItemType(0)  // key
+    , dropItemId(0)    // key
     , prob(0)
     {
         
@@ -46,7 +46,7 @@ public:
     // シングルトン
     static MDropGroupDao* getInstance();
     
-    const MDropGroup& selectById(int dropGroupId) const;
+    std::list<MDropGroup> selectById(int dropGroupId) const;
     
     MDropGroupDao();
     virtual ~MDropGroupDao();
@@ -57,4 +57,4 @@ private:
     void init();
 };
 
-#endif /* defined(__Cocos2dRogueLike__MDropGroup__) */
+#endif /* defined(__Cocos2dRogueLike__MDropGroupDao__) */

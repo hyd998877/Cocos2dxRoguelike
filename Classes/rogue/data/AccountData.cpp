@@ -9,6 +9,7 @@
 #include "AccountData.h"
 
 #include "MRogueMap.h"
+#include "MDungeonDao.h"
 
 NS_ROGUE_BEGIN
 
@@ -249,9 +250,10 @@ void AccountData::resetAll()
 std::string AccountData::createQuestSaveDetailText() const
 {
     auto questKey = RoguePlayDto::findQuestKey(this->_roguePlayData.getQuestType());
-    auto questName = RogueGameConfig::getQuestData(questKey).at("name").asString();
+    
+    auto dungeon = MDungeonDao::getInstance()->selectById(questKey);
     return cocos2d::StringUtils::format("%s（%d F）\nLv %d exp %d HP %d/%d 所持金 %d G",
-                        questName.c_str(),
+                        dungeon.dungeonName.c_str(),
                         this->_roguePlayData.getQuestId(),
                         this->_playerActor.getLv(),
                         this->_playerActor.getExp(),

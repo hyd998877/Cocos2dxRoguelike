@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef __Cocos2dRogueLike__MQuestFloor__
-#define __Cocos2dRogueLike__MQuestFloor__
+#ifndef __Cocos2dRogueLike__MQuestFloorDao__
+#define __Cocos2dRogueLike__MQuestFloorDao__
 
 #include <iostream>
 #include <string>
@@ -65,4 +65,4 @@ private:
     void init();
 };
 
-#endif /* defined(__Cocos2dRogueLike__MQuestFloor__) */
+#endif /* defined(__Cocos2dRogueLike__MQuestFloorDao__) */

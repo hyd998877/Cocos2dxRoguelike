@@ -25,6 +25,37 @@ namespace RogueLikeGame {
     //     Value(ValueMap{ {"id", Value(3)}, {"prob", Value(2000)} }), // 20%
     // }
     //
+    template <class T>
+    class LotteryObject
+    {
+    public:
+        LotteryObject()
+        : isLot(false)
+        , hitId(0)
+        , prob(0)
+        , object()
+        {
+            
+        }
+        LotteryObject(bool isLot, int hitId, int prob, const T& object)
+        : isLot(isLot)
+        , hitId(hitId)
+        , prob(prob)
+        , object(object)
+        {
+            
+        }
+        virtual ~LotteryObject()
+        {
+            
+        }
+        
+        bool isLot; // falseはずれ
+        int hitId;
+        int prob;
+        T object;
+    };
+    
     class LotteryUtils
     {
     public:
@@ -41,13 +72,14 @@ namespace RogueLikeGame {
             }
         }
         
-        static const cocos2d::ValueVector lotValues(const int probCount, const cocos2d::ValueVector probList) {
-            cocos2d::ValueVector hitValues;
+        template <class T>
+        static std::vector<LotteryObject<T>> lotValues(const int probCount, const std::vector<LotteryObject<T>>& probList) {
+            std::vector<LotteryObject<T>> hitValues;
             
             // 抽選合計値を求める（100%基準を作成）
             int probSum = 0;
             for (auto probData : probList) {
-                int prob = probData.asValueMap().at("prob").asInt();
+                int prob = probData.prob;
                 probSum += prob;
             }
             
@@ -62,15 +94,13 @@ namespace RogueLikeGame {
                 
                 int tempProbability = 0;
                 for (auto probData : probList) {
-                    auto probDataMap = probData.asValueMap();
-                    int prob = probData.asValueMap().at("prob").asInt();
+                    int prob = probData.prob;
                     tempProbability += prob;
 
                     if (tempProbability >= randomProbability) {
-                        int probId = probDataMap.at("id").asInt();
-                        if (probId > 0) {
+                        if (probData.isLot) {
                             // hit
-                            hitValues.push_back(cocos2d::Value(probDataMap));
+                            hitValues.push_back(probData);
                         }
                         break;
                     }
@@ -79,7 +109,8 @@ namespace RogueLikeGame {
             return hitValues;
         }
         
-        static const int lot(const cocos2d::ValueVector probList) {
+        template <class T>
+        static int lot(const std::vector<LotteryObject<T>> probList) {
             auto ids = lot(1, probList);
             if (ids.empty()) {
                 return 0;
@@ -87,12 +118,13 @@ namespace RogueLikeGame {
             return ids.at(0);
         }
         
-        static const std::vector<int> lot(const int probCount, const cocos2d::ValueVector probList) {
+        template <class T>
+        static std::vector<int> lot(const int probCount, const std::vector<LotteryObject<T>> probList) {
             std::vector<int> hitIds;
             
             auto hitValues = lotValues(probCount, probList);
             for (auto value : hitValues) {
-                hitIds.push_back(value.asValueMap().at("id").asInt());
+                hitIds.push_back(value.hitId);
             }
             hitValues.clear();
             return hitIds;

@@ -6,7 +6,7 @@
 //
 //
 
-#include "MItemPlusLimitGroup.h"
+#include "MItemPlusLimitGroupDao.h"
 
 #include "json11.hpp"
 
@@ -52,12 +52,13 @@ void MItemPlusLimitGroupDao::init(json11::Json json)
     printf("MItemPlusLimitGroup load completed (%d)\n", (int)json.array_items().size());
 }
 
-const MItemPlusLimitGroup& MItemPlusLimitGroupDao::selectById(int itemPlusLimitGroupId) const
+std::list<MItemPlusLimitGroup> MItemPlusLimitGroupDao::selectById(int itemPlusLimitGroupId) const
 {
+    std::list<MItemPlusLimitGroup> list;
     for (const MItemPlusLimitGroup& itemPlusGroup : _mItemPlusLimitGroupList) {
         if (itemPlusGroup.itemPlusLimitGroupId == itemPlusLimitGroupId) {
-            return itemPlusGroup;
+            list.push_back(itemPlusGroup);
         }
     }
-    throw std::logic_error("m_item_plus_limit_group not found key ");
+    return list;
 }

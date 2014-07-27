@@ -6,7 +6,7 @@
 //
 //
 
-#include "MDropGroup.h"
+#include "MDropGroupDao.h"
 
 #include "json11.hpp"
 
@@ -53,12 +53,13 @@ void MDropGroupDao::init(json11::Json json)
     printf("MDropGroup load completed (%d)\n", (int)json.array_items().size());
 }
 
-const MDropGroup& MDropGroupDao::selectById(int dropGroupId) const
+std::list<MDropGroup> MDropGroupDao::selectById(int dropGroupId) const
 {
+    std::list<MDropGroup> list;
     for (const MDropGroup& dropGroup : _mDropGroupList) {
         if (dropGroup.dropGroupId == dropGroupId) {
-            return dropGroup;
+            list.push_back(dropGroup);
         }
     }
-    throw std::logic_error("m_drop_group not found key ");
+    return list;
 }

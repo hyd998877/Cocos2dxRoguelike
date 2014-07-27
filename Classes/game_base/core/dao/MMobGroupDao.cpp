@@ -6,7 +6,7 @@
 //
 //
 
-#include "MMobGroup.h"
+#include "MMobGroupDao.h"
 
 #include "json11.hpp"
 
@@ -53,12 +53,13 @@ void MMobGroupDao::init(json11::Json json)
     printf("MMobGroup load completed (%d)\n", (int)json.array_items().size());
 }
 
-const MMobGroup& MMobGroupDao::selectById(int mobGroupId) const
+std::list<MMobGroup> MMobGroupDao::selectById(int mobGroupId) const
 {
+    std::list<MMobGroup> list;
     for (const MMobGroup& mobGroup : _mMobGroupList) {
         if (mobGroup.mobGroupId == mobGroupId) {
-            return mobGroup;
+            list.push_back(mobGroup);
         }
     }
-    throw std::logic_error("m_mob_group not found key ");
+    return list;
 }

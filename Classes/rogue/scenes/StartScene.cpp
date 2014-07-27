@@ -16,10 +16,10 @@
 #include "AppMacros.h"
 
 #include "MDungeonDao.h"
-#include "MQuestFloor.h"
-#include "MMobGroup.h"
-#include "MDropGroup.h"
-#include "MItemPlusLimitGroup.h"
+#include "MQuestFloorDao.h"
+#include "MMobGroupDao.h"
+#include "MDropGroupDao.h"
+#include "MItemPlusLimitGroupDao.h"
 
 #include "MWeaponDao.h"
 #include "MAccessoryDao.h"

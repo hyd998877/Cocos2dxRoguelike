@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef __Cocos2dRogueLike__MMobGroup__
-#define __Cocos2dRogueLike__MMobGroup__
+#ifndef __Cocos2dRogueLike__MMobGroupDao__
+#define __Cocos2dRogueLike__MMobGroupDao__
 
 #include <iostream>
 #include <string>
@@ -46,7 +46,7 @@ public:
     // シングルトン
     static MMobGroupDao* getInstance();
     
-    const MMobGroup& selectById(int mobGroupId) const;
+    std::list<MMobGroup> selectById(int mobGroupId) const;
     
     MMobGroupDao();
     virtual ~MMobGroupDao();
@@ -57,4 +57,4 @@ private:
     void init();
 };
 
-#endif /* defined(__Cocos2dRogueLike__MMobGroup__) */
+#endif /* defined(__Cocos2dRogueLike__MMobGroupDao__) */

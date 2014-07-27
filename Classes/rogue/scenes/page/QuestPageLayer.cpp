@@ -16,6 +16,7 @@
 #include "RogueScene.h"
 
 #include "MRogueMap.h"
+#include "MDungeonDao.h"
 
 USING_NS_CC;
 
@@ -83,7 +84,9 @@ bool QuestPageLayer::init()
 std::string QuestPageLayer::createQuestName(const RoguePlayDto::QuestType& questType)
 {
     auto questKey = RoguePlayDto::findQuestKey(questType);
-    return RogueGameConfig::getQuestData(questKey).at("name").asString();
+    auto dungeon = MDungeonDao::getInstance()->selectById(questKey);
+    
+    return dungeon.dungeonName;
 }
 
 NS_ROGUE_END

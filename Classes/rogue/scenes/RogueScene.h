@@ -25,6 +25,7 @@ USING_NS_CC;
 class KeypadLayout;
 class HeaderStatusLayout;
 class GameLogLayout;
+class MQuestFloor;
 
 NS_ROGUE_BEGIN
 
@@ -89,7 +90,7 @@ private:
     void institutionDropItem(int probCount, const MapIndex& mapIndex = MapManager::createMapIndexEmpty());
     
     // 汎用
-    const ValueMap getRogueMapData();
+    const MQuestFloor& getRogueMapData();
     ActorSprite* getPlayerActorSprite(int seqNo);
     RogueTMXTiledMap* getRogueMapLayer();
     

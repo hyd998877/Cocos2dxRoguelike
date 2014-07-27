@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef __Cocos2dRogueLike__MItemPlusLimitGroup__
-#define __Cocos2dRogueLike__MItemPlusLimitGroup__
+#ifndef __Cocos2dRogueLike__MItemPlusLimitGroupDao__
+#define __Cocos2dRogueLike__MItemPlusLimitGroupDao__
 
 #include <iostream>
 #include <string>
@@ -44,7 +44,7 @@ public:
     // シングルトン
     static MItemPlusLimitGroupDao* getInstance();
     
-    const MItemPlusLimitGroup& selectById(int itemPlusLimitGroupId) const;
+    std::list<MItemPlusLimitGroup> selectById(int itemPlusLimitGroupId) const;
     
     MItemPlusLimitGroupDao();
     virtual ~MItemPlusLimitGroupDao();
@@ -55,4 +55,4 @@ private:
     void init();
 };
 
-#endif /* defined(__Cocos2dRogueLike__MItemPlusLimitGroup__) */
+#endif /* defined(__Cocos2dRogueLike__MItemPlusLimitGroupDao__) */
