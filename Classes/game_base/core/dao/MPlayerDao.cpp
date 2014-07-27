@@ -64,6 +64,7 @@ void MPlayerDao::init(json11::Json json)
                           item["gold"].int_value());
         this->_mMonsterList.push_back(actorDto);
     }
+    printf("MPlayer load completed (%d)\n", (int)json.array_items().size());
 }
 
 const ActorDto& MPlayerDao::selectById(int monsterId) const

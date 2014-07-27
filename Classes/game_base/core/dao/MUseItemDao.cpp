@@ -35,26 +35,7 @@ MUseItemDao::~MUseItemDao()
 
 void MUseItemDao::init()
 {
-//    // Jsonを読み込む
-//    auto jsonStringFile = FileUtils::getInstance()->getStringFromFile("test_master/M_USE_ITEM.json");
-//    std::string err;
-//    auto json = json11::Json::parse(jsonStringFile, err);
-//    if (!err.empty()) {
-//        CCLOG("error = %s", err.c_str());
-//    } else {
-//        CCLOG("%s", json["srpgquest"].dump().c_str());
-//        auto jsonArray = json["srpgquest"]["M_USE_ITEM"]["row"].array_items();
-//        
-//        for (auto &item : jsonArray) {
-//            MUseItem mUseItem(item["USE_ITEM_ID"].int_value(),
-//                              item["USE_ITEM_IMAGE_ID"].int_value(),
-//                              static_cast<MUseItem::ItemType>(item["USE_ITEM_TYPE"].int_value()),
-//                              item["USE_ITEM_NAME"].string_value(),
-//                              item["USE_ITEM_DETAIL"].string_value(),
-//                              item["USE_ITEM_PARAM"].int_value());
-//            this->m_useItemList.push_back(mUseItem);
-//        }
-//    }
+
 }
 
 void MUseItemDao::init(json11::Json json)
@@ -69,6 +50,7 @@ void MUseItemDao::init(json11::Json json)
                           item["USE_ITEM_PARAM"].int_value());
         this->m_useItemList.push_back(mUseItem);
     }
+    printf("MUseItem load completed (%d)\n", (int)json.array_items().size());
 }
 
 const MUseItem & MUseItemDao::selectById(int useItemId) const

@@ -64,6 +64,7 @@ void MMonsterDao::init(json11::Json json)
                           item["gold"].int_value());
         this->_mMonsterList.push_back(actorDto);
     }
+    printf("MMonster load completed (%d)\n", (int)json.array_items().size());
 }
 
 const ActorDto& MMonsterDao::selectById(int monsterId) const

@@ -118,6 +118,11 @@
 		CE524067197DD3BC007AC6D2 /* StartScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE524065197DD3BC007AC6D2 /* StartScene.cpp */; };
 		CE6651BB194D71A200333345 /* cocostudio in Resources */ = {isa = PBXBuildFile; fileRef = CE6651BA194D71A200333345 /* cocostudio */; };
 		CE72EB5F19683729006FDA87 /* HeaderStatusLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */; };
+		CE797F83198500BD00B165E3 /* MDungeonDao.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE797F81198500BD00B165E3 /* MDungeonDao.cpp */; };
+		CE797F8B1985089B00B165E3 /* MQuestFloor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE797F891985089B00B165E3 /* MQuestFloor.cpp */; };
+		CE797F8E198508AA00B165E3 /* MMobGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE797F8C198508AA00B165E3 /* MMobGroup.cpp */; };
+		CE797F91198508B600B165E3 /* MDropGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE797F8F198508B600B165E3 /* MDropGroup.cpp */; };
+		CE797F96198508DF00B165E3 /* MItemPlusLimitGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE797F94198508DF00B165E3 /* MItemPlusLimitGroup.cpp */; };
 		CE836F931942EB4900880652 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE836F921942EB4900880652 /* XCTest.framework */; };
 		CE836F941942EB4900880652 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		CE836F951942EB4900880652 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -445,6 +450,16 @@
 		CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeaderStatusLayout.cpp; sourceTree = "<group>"; };
 		CE72EB5E19683729006FDA87 /* HeaderStatusLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderStatusLayout.h; sourceTree = "<group>"; };
 		CE75E79D1955317C0048742B /* WidgetUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WidgetUtil.h; sourceTree = "<group>"; };
+		CE797F81198500BD00B165E3 /* MDungeonDao.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MDungeonDao.cpp; sourceTree = "<group>"; };
+		CE797F82198500BD00B165E3 /* MDungeonDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDungeonDao.h; sourceTree = "<group>"; };
+		CE797F891985089B00B165E3 /* MQuestFloor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MQuestFloor.cpp; sourceTree = "<group>"; };
+		CE797F8A1985089B00B165E3 /* MQuestFloor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MQuestFloor.h; sourceTree = "<group>"; };
+		CE797F8C198508AA00B165E3 /* MMobGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MMobGroup.cpp; sourceTree = "<group>"; };
+		CE797F8D198508AA00B165E3 /* MMobGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMobGroup.h; sourceTree = "<group>"; };
+		CE797F8F198508B600B165E3 /* MDropGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MDropGroup.cpp; sourceTree = "<group>"; };
+		CE797F90198508B600B165E3 /* MDropGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDropGroup.h; sourceTree = "<group>"; };
+		CE797F94198508DF00B165E3 /* MItemPlusLimitGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MItemPlusLimitGroup.cpp; sourceTree = "<group>"; };
+		CE797F95198508DF00B165E3 /* MItemPlusLimitGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MItemPlusLimitGroup.h; sourceTree = "<group>"; };
 		CE836F911942EB4900880652 /* Cocos2dRogueLike iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cocos2dRogueLike iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE836F921942EB4900880652 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		CE836F981942EB4900880652 /* Cocos2dRogueLike iOS Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Cocos2dRogueLike iOS Tests-Info.plist"; sourceTree = "<group>"; };
@@ -848,6 +863,16 @@
 				CE019575197D60E400551D6E /* MMonsterDao.h */,
 				CE019579197D664500551D6E /* MPlayerDao.cpp */,
 				CE01957A197D664500551D6E /* MPlayerDao.h */,
+				CE797F81198500BD00B165E3 /* MDungeonDao.cpp */,
+				CE797F82198500BD00B165E3 /* MDungeonDao.h */,
+				CE797F891985089B00B165E3 /* MQuestFloor.cpp */,
+				CE797F8A1985089B00B165E3 /* MQuestFloor.h */,
+				CE797F8C198508AA00B165E3 /* MMobGroup.cpp */,
+				CE797F8D198508AA00B165E3 /* MMobGroup.h */,
+				CE797F8F198508B600B165E3 /* MDropGroup.cpp */,
+				CE797F90198508B600B165E3 /* MDropGroup.h */,
+				CE797F94198508DF00B165E3 /* MItemPlusLimitGroup.cpp */,
+				CE797F95198508DF00B165E3 /* MItemPlusLimitGroup.h */,
 			);
 			path = dao;
 			sourceTree = "<group>";
@@ -1460,8 +1485,11 @@
 				CE19BE8019322B0D007715BA /* SystemMenuLayer.cpp in Sources */,
 				CE19BE7D19322B0D007715BA /* ItemWindowLayer.cpp in Sources */,
 				CE19BE9919322B0D007715BA /* RoguePlayDto.cpp in Sources */,
+				CE797F8B1985089B00B165E3 /* MQuestFloor.cpp in Sources */,
+				CE797F96198508DF00B165E3 /* MItemPlusLimitGroup.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
 				CE068DB91955E37E0007786F /* ItemMixedScene.cpp in Sources */,
+				CE797F8E198508AA00B165E3 /* MMobGroup.cpp in Sources */,
 				CE19BE7A19322B0D007715BA /* LabelRPG.cpp in Sources */,
 				CE19BE9519322B0D007715BA /* json11.cpp in Sources */,
 				CE8B22271955A3BE0085EB9B /* MyPageBaseScene.cpp in Sources */,
@@ -1474,6 +1502,8 @@
 				CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */,
 				CE19BE9619322B0D007715BA /* pugixml.cpp in Sources */,
 				CE19BE8419322B0D007715BA /* MAccessoryDao.cpp in Sources */,
+				CE797F83198500BD00B165E3 /* MDungeonDao.cpp in Sources */,
+				CE797F91198508B600B165E3 /* MDropGroup.cpp in Sources */,
 				CE19BE9119322B0D007715BA /* BattleLogic.cpp in Sources */,
 				CE19BE9E19322B0D007715BA /* ItemStockPageLayer.cpp in Sources */,
 				CE01957B197D664500551D6E /* MPlayerDao.cpp in Sources */,

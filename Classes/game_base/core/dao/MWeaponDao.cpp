@@ -36,29 +36,11 @@ MWeaponDao::~MWeaponDao()
 
 void MWeaponDao::init()
 {
-//    // Jsonを読み込む
-//    auto jsonStringFile = FileUtils::getInstance()->getStringFromFile("test_master/M_WEAPON.json");
-//    std::string err;
-//    auto json = json11::Json::parse(jsonStringFile, err);
-//    if (!err.empty()) {
-//        CCLOG("error = %s", err.c_str());
-//    } else {
-//        CCLOG("%s", json["srpgquest"].dump().c_str());
-//        auto jsonArray = json["srpgquest"]["M_WEAPON"]["row"].array_items();
-//        for (auto &item : jsonArray) {
-//            MWeapon weapon(item["WEAPON_ID"].int_value(),
-//                           item["WEAPON_IMAGE_ID"].int_value(),
-//                           item["WEAPON_NAME"].string_value(),
-//                           item["WEAPON_DETAIL"].string_value(),
-//                           item["ATTACK_POINT"].int_value());
-//            this->m_weaponList.push_back(weapon);
-//        }
-//    }
+    
 }
 
 void MWeaponDao::init(json11::Json json)
 {
-    // Jsonを読み込む
     for (auto &item : json.array_items()) {
         MWeapon weapon(item["WEAPON_ID"].int_value(),
                        item["WEAPON_IMAGE_ID"].int_value(),
@@ -67,6 +49,7 @@ void MWeaponDao::init(json11::Json json)
                        item["ATTACK_POINT"].int_value());
         this->m_weaponList.push_back(weapon);
     }
+    printf("MWeapon load completed (%d)\n", (int)json.array_items().size());
 }
 
 const MWeapon& MWeaponDao::selectById(int weaponId) const

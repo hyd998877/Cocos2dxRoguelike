@@ -15,6 +15,12 @@
 
 #include "AppMacros.h"
 
+#include "MDungeonDao.h"
+#include "MQuestFloor.h"
+#include "MMobGroup.h"
+#include "MDropGroup.h"
+#include "MItemPlusLimitGroup.h"
+
 #include "MWeaponDao.h"
 #include "MAccessoryDao.h"
 #include "MUseItemDao.h"
@@ -70,6 +76,12 @@ bool StartScene::init()
                 CCLOG("error = %s", err.c_str());
             }
         }
+        
+        MDungeonDao::getInstance()->init(response["M_DUNGEON"]);
+        MQuestFloorDao::getInstance()->init(response["M_QUEST_FLOOR"]);
+        MMobGroupDao::getInstance()->init(response["M_MOB_GROUP"]);
+        MDropGroupDao::getInstance()->init(response["M_DROP_GROUP"]);
+        MItemPlusLimitGroupDao::getInstance()->init(response["M_ITEM_PLUS_LIMIT_GROUP"]);
         MWeaponDao::getInstance()->init(response["M_WEAPON"]);
         MAccessoryDao::getInstance()->init(response["M_ACCESSORY"]);
         MUseItemDao::getInstance()->init(response["M_USER_ITEM"]);
