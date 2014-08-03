@@ -278,6 +278,8 @@ bool RogueScene::isKeypadControll()
 
 void RogueScene::showItemInventoryWindow()
 {
+    AudioUtil::playSE(AudioUtil::SE_OK);
+    
     // メニュー消す
     _keypadLayout->hideKeypadMenu();
     
@@ -330,9 +332,13 @@ void RogueScene::showItemInventoryWindow()
     };
     itemWindowLayer->initMenuActionCallback(itemMenuList);
     itemWindowLayer->setSortCallback([this](ItemInventoryDto::Comparator comparator) {
+        AudioUtil::playSE(AudioUtil::SE_OK2);
         this->_itemInventory.sortItemList(comparator);
     });
     itemWindowLayer->setCloseCallback([this]() {
+        
+        AudioUtil::playSE(AudioUtil::SE_CANCEL);
+        
         // メニュー戻す
         _keypadLayout->showKeypadMenu();
     });
@@ -465,6 +471,8 @@ void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
 
 void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
 {
+    AudioUtil::playSE(AudioUtil::SE_ITEM_USE);
+    
     auto player_sprite = this->getPlayerActorSprite(1);
     
     // itemIdで処理してくれるlogicへ
@@ -480,6 +488,8 @@ void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
 
 void RogueScene::itemThrow(const ItemDto &itemDto)
 {
+    AudioUtil::playSE(AudioUtil::SE_ITEM_THROW);
+    
     // 向いてる方向へ
     auto player = getPlayerActorSprite(1);
     
@@ -808,7 +818,9 @@ void RogueScene::enemyTurn() {
                                                          CallFunc::create([this, pEnemySprite, pPlayerActorSprite]() {
                     auto player = pPlayerActorSprite->getActorDto();
                     auto enemy = pEnemySprite->getActorDto();
-                                        
+                    
+                    AudioUtil::playSE(AudioUtil::SE_DAMAGE);
+                    
                     int damage = BattleLogic::exec(*enemy, *player);
                     // 攻撃イベント
                     auto message = cocos2d::StringUtils::format("%sの攻撃: %sに%dダメージ",
@@ -1056,7 +1068,7 @@ void RogueScene::attack() {
         pEnemySprite = rogue_map_layer->getEnemyActorSprite(pEnemyMapItem.seqNo);
     } else {
         // 空振り
-        // TODO: #12 空振りSE
+        AudioUtil::playSE(AudioUtil::SE_MISS);
     }
     
     // アニメーション
@@ -1092,7 +1104,7 @@ void RogueScene::attackDamageCallback(int damage, ActorSprite* pActorSprite, Act
     auto player = pActorSprite->getActorDto();
     auto enemy = pEnemySprite->getActorDto();
     
-    // TODO: 攻撃SE
+    AudioUtil::playSE(AudioUtil::SE_ATTACK);
     
     // 攻撃イベント
     auto message = cocos2d::StringUtils::format("%sに%dのダメージ", enemy->getName().c_str(), damage);
