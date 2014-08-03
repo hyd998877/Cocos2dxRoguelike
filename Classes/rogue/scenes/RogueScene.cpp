@@ -1270,10 +1270,10 @@ void RogueScene::refreshStatus()
         // 残りHPで文字色を変える
         float hitPointDiv = (float)pPlayerDto->getHitPoint() / (float)pPlayerDto->getHitPointLimit();
         float mpDiv = (float)pPlayerDto->getMagicPoint() / (float)pPlayerDto->getMagicPointLimit();
-        if (hitPointDiv <= 0.25 || mpDiv <= 0.10) {
+        if (hitPointDiv <= 0.10 || mpDiv <= 0.10) {
             _statusWidget->setStatusColor(Color3B::RED);
             _gameLogWidget->setStatusColor(Color3B::RED);
-        } else if (hitPointDiv <= 0.50 || mpDiv <= 0.30) {
+        } else if (hitPointDiv <= 0.30 || mpDiv <= 0.30) {
             _statusWidget->setStatusColor(Color3B::YELLOW);
             _gameLogWidget->setStatusColor(Color3B::YELLOW);
         } else {
