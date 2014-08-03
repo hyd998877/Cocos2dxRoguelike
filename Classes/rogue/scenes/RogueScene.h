@@ -65,6 +65,7 @@ private:
     void attack();
     void attackCallback(ActorSprite* player, ActorSprite* enemy);
     void attackItemThrowCallback(const ItemDto& itemDto, ActorSprite* pActorSprite, ActorSprite* pEnemySprite);
+    void attackDamageCallback(int damage, ActorSprite* pActorSprite, ActorSprite* pEnemySprite);
     
     // UI関連
     

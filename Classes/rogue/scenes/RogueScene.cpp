@@ -1060,47 +1060,23 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
     
     // 攻撃開始
     int damage = BattleLogic::exec(*player, *enemy);
-    // 攻撃イベント
-    auto message = cocos2d::StringUtils::format("%sの攻撃: %sに%dのダメージ",
-                                                player->getName().c_str(), enemy->getName().c_str(), damage);
-    this->logMessage(message);
-    
-    // 敵の死亡判定
-    bool isDead = enemy->damageHitPoint(damage);
-    if (isDead) {
-        
-        auto message = cocos2d::StringUtils::format("%sを倒した。経験値%dを得た。",
-                                                    enemy->getName().c_str(), enemy->getExp());
-        this->logMessage(message);
-        // 経験値更新
-        if (player->growExpAndLevelUpCheck(enemy->getExp())) {
-            
-            // TODO: #12 レベルアップ演出（SE？）
-            auto message = cocos2d::StringUtils::format("%sはレベル%dになった。",
-                                                        player->getName().c_str(), player->getLv());
-            this->logMessage(message);
-            
-            // レベル上がってステータスが上がるかもしれないので攻撃力、防御力のステータスを更新する
-            this->refreshStatusEquip(*player);
-        }
-        
-        // 敵のドロップ確率を抽選してアイテムの抽選（TODO: #30 とりあえず敵撃破時のドロップ確率は一律3%）
-        if (LotteryUtils::isHit(300)) {
-            // アイテムdrop
-            institutionDropItem(1, pEnemySprite->getActorMapItem().mapIndex);
-        }
-        // マップから消える
-        getRogueMapLayer()->removeEnemyActorSprite(pEnemySprite);
-    }
+    attackDamageCallback(damage, pActorSprite, pEnemySprite);
 }
 
 void RogueScene::attackItemThrowCallback(const ItemDto& itemDto, ActorSprite* pActorSprite, ActorSprite* pEnemySprite)
 {
-    auto player = pActorSprite->getActorDto();
     auto enemy = pEnemySprite->getActorDto();
     
     // 攻撃開始
     int damage = BattleLogic::itemThrow(itemDto, *enemy);
+    attackDamageCallback(damage, pActorSprite, pEnemySprite);
+}
+
+void RogueScene::attackDamageCallback(int damage, ActorSprite* pActorSprite, ActorSprite* pEnemySprite)
+{
+    auto player = pActorSprite->getActorDto();
+    auto enemy = pEnemySprite->getActorDto();
+    
     // 攻撃イベント
     auto message = cocos2d::StringUtils::format("%sに%dのダメージ", enemy->getName().c_str(), damage);
     this->logMessage(message);
