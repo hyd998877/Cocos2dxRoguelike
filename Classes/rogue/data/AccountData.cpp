@@ -36,6 +36,7 @@ AccountData::AccountData()
 , _itemInventory("所持品", 0, RogueGameConfig::USE_ITEM_MAX)
 , _itemInventoryStock("倉　庫", 0, RogueGameConfig::STOCK_ITEM_MAX)
 , _systemData()
+, playedBGMKey()
 {
 };
 

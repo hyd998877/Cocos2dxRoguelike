@@ -31,10 +31,11 @@ public:
         MAINQUEST2_CLEAR = 22,
         DEEPQUEST_CLEAR  = 23,
     };
+    std::string playedBGMKey;
     
     // シングルトン
     static AccountData* getInstance();
-
+    
     const RoguePlayDto &getRoguePlayData() { return _roguePlayData; }
     const ActorDto &getPlayerActor() { return _playerActor; }
     const ItemInventoryDto &getItemInventory() { return _itemInventory; }
@@ -68,6 +69,7 @@ public:
     
     // イベントリ系
     const ItemInventoryDto &changeInventoryItem(long objectId);
+    
 private:
     
     AccountData();
