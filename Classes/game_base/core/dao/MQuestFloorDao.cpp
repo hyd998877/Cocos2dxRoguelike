@@ -47,7 +47,7 @@ void MQuestFloorDao::init(json11::Json json)
         data.mobCount = item["MOB_COUNT"].int_value();
         data.mobGroupId = item["MOB_GROUP_ID"].int_value();
         data.dropCount = item["DROP_COUNT"].int_value();
-        data.dropGroupId = item["DROP_GRPUP_ID"].int_value();
+        data.dropGroupId = item["DROP_GROUP_ID"].int_value();
         data.goldMin = item["GOLD_MIN"].int_value();
         data.goldMax = item["GOLD_MAX"].int_value();
         data.itemPlusLimitGroupId = item["ITEM_PLUS_LIMIT_GROUP_ID"].int_value();
