@@ -38,6 +38,8 @@ namespace AudioUtil {
     static constexpr auto SE_DAMAGE          = "sound/se/se_maoudamashii_battle15.mp3";
     static constexpr auto SE_MISS            = "se_maoudamashii_se_paper01.mp3";
     
+    static std::string playedBGM;
+    
     static void pause() {
         CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
     }
@@ -50,6 +52,10 @@ namespace AudioUtil {
         CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(seKey.c_str());
     }
     static void playBGM(const std::string& bgmKey) {
+        if (playedBGM == bgmKey) {
+            return;
+        }
+        playedBGM = bgmKey;
         CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(bgmKey.c_str());
     }
 }
