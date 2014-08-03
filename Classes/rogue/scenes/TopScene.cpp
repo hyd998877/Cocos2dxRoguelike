@@ -41,6 +41,8 @@ TopScene::~TopScene()
 
 Node* TopScene::initLayout()
 {
+    // TODO: #12 通常BGM
+    
     auto visibleSize = Director::getInstance()->getVisibleSize();
     
     auto layout = TopPageLayer::create();

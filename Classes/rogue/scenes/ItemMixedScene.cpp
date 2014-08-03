@@ -38,6 +38,8 @@ ItemMixedScene::~ItemMixedScene()
 
 Node* ItemMixedScene::initLayout()
 {
+    // TODO: #12 店BGM
+    
     auto visibleSize = Director::getInstance()->getVisibleSize();
     
     this->loadInventory();

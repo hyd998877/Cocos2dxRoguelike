@@ -34,6 +34,8 @@ QuestChoiceScene::~QuestChoiceScene()
 
 Node* QuestChoiceScene::initLayout()
 {
+    // TODO: #12 ダンジョンBGM
+    
     auto visibleSize = Director::getInstance()->getVisibleSize();
     
     auto layout = QuestPageLayer::create();

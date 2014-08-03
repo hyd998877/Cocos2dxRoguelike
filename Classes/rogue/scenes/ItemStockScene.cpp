@@ -40,6 +40,8 @@ ItemStockScene::~ItemStockScene()
 
 Node* ItemStockScene::initLayout()
 {
+    // TODO: #12 店BGM
+    
     auto visibleSize = Director::getInstance()->getVisibleSize();
     
     auto layout = ItemStockPageLayer::create();

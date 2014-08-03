@@ -94,6 +94,9 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     if ( !Layer::init() ) {
         return false;
     }
+    
+    // TODO: #12 ダンジョンBGM
+    
     // 乱数初期化
     srand((unsigned int)time(NULL));
 
@@ -975,11 +978,14 @@ ItemDto RogueScene::touchDropItem(const DropMapItem& drop_map_item, bool isDropM
 
 void RogueScene::touchKaidan() {
     
-    // TODO: #12 階段SE
+    // TODO: #12 階段の上に乗ったときのSE
     
     // 階段下りる判定
     Size win_size = Director::getInstance()->getWinSize();
     auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "は　い", [this](Ref *ref) {
+        
+        // TODO: #12 階段降りるSE
+        
         // save
         auto actor_sprite = getPlayerActorSprite(1);
         
@@ -1088,10 +1094,10 @@ void RogueScene::attackDamageCallback(int damage, ActorSprite* pActorSprite, Act
         auto message = cocos2d::StringUtils::format("%sを倒した。経験値%dを得た。",
                                                     enemy->getName().c_str(), enemy->getExp());
         this->logMessage(message);
-        // TODO: #12 経験値更新（計算式 適当）
+        // 経験値更新（計算式 適当）
         if (player->growExpAndLevelUpCheck(enemy->getExp())) {
             
-            // TODO: #12 レベルアップ演出（SE？）
+            // TODO: #12 レベルアップSE
             auto message = cocos2d::StringUtils::format("%sはレベル%dになった。",
                                                         player->getName().c_str(), player->getLv());
             this->logMessage(message);

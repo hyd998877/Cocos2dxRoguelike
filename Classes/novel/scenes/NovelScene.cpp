@@ -65,7 +65,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     }
     this->m_novelTextEndCallback = callback;
     
-    // TODO: #12 BGM再生
+    // TODO: #12 BGM
 //    AudioUtil::playBGM("audio/tutorial_bgm1.mp3");
     
     // シングルタップイベントを受け付ける
