@@ -4,6 +4,8 @@
 
 #include "StartScene.h"
 
+#include "AudioUtil.h"
+
 USING_NS_CC;
 USING_NS_CC_EXT;
 
@@ -68,7 +70,7 @@ void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 
     // if you use SimpleAudioEngine, it must be pause
-    // SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+    AudioUtil::pause();
 }
 
 // this function will be called when the app is active again
@@ -76,9 +78,5 @@ void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 
     // if you use SimpleAudioEngine, it must resume here
-    // SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
-
-    // フォアグラウンド時のイベントを発行
-//    cocos2d::EventCustom foreground_event_rgoue(EVENT_COME_TO_FOREGROUND_ROGUE);
-//    Director::getInstance()->getEventDispatcher()->dispatchEvent(&foreground_event_rgoue);
+    AudioUtil::resume();
 }

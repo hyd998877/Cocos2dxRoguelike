@@ -18,6 +18,8 @@ Cocos2dRogueLike
 
 #include "AlertDialogLayer.h"
 
+#include "AudioUtil.h"
+
 USING_NS_CC;
 
 using namespace RogueLikeGame;
@@ -34,7 +36,7 @@ QuestChoiceScene::~QuestChoiceScene()
 
 Node* QuestChoiceScene::initLayout()
 {
-    // TODO: #12 ダンジョンBGM
+    AudioUtil::playBGM(AudioUtil::BGM_DUNGEON_START);
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     

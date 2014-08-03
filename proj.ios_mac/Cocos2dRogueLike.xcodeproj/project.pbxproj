@@ -114,6 +114,7 @@
 		CE19BEA319322B0D007715BA /* SRPGMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7119322B0D007715BA /* SRPGMapLayer.cpp */; };
 		CE19BEA419322B0D007715BA /* SRPGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE7519322B0D007715BA /* SRPGScene.cpp */; };
 		CE2D0483195EFEA900267EFB /* EditTextDialogLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */; };
+		CE47910D198E3B7D006C89A1 /* sound in Resources */ = {isa = PBXBuildFile; fileRef = CE47910C198E3B7D006C89A1 /* sound */; };
 		CE524067197DD3BC007AC6D2 /* StartScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE524065197DD3BC007AC6D2 /* StartScene.cpp */; };
 		CE6651BB194D71A200333345 /* cocostudio in Resources */ = {isa = PBXBuildFile; fileRef = CE6651BA194D71A200333345 /* cocostudio */; };
 		CE72EB5F19683729006FDA87 /* HeaderStatusLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE72EB5D19683729006FDA87 /* HeaderStatusLayout.cpp */; };
@@ -441,6 +442,8 @@
 		CE19BE7619322B0D007715BA /* SRPGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPGScene.h; sourceTree = "<group>"; };
 		CE2D0481195EFEA900267EFB /* EditTextDialogLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditTextDialogLayout.cpp; sourceTree = "<group>"; };
 		CE2D0482195EFEA900267EFB /* EditTextDialogLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTextDialogLayout.h; sourceTree = "<group>"; };
+		CE47910B198E3A3E006C89A1 /* AudioUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioUtil.h; sourceTree = "<group>"; };
+		CE47910C198E3B7D006C89A1 /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sound; sourceTree = "<group>"; };
 		CE524065197DD3BC007AC6D2 /* StartScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StartScene.cpp; sourceTree = "<group>"; };
 		CE524066197DD3BC007AC6D2 /* StartScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartScene.h; sourceTree = "<group>"; };
 		CE6651BA194D71A200333345 /* cocostudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cocostudio; sourceTree = "<group>"; };
@@ -685,6 +688,7 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CE47910C198E3B7D006C89A1 /* sound */,
 				CE6651BA194D71A200333345 /* cocostudio */,
 				CE19BDC819322AFA007715BA /* actor */,
 				CE19BDC919322AFA007715BA /* battle */,
@@ -828,6 +832,7 @@
 				CE19BE0919322B0C007715BA /* LayerActionUtils.h */,
 				CE19BE0A19322B0C007715BA /* MenuItemUtil.h */,
 				CE75E79D1955317C0048742B /* WidgetUtil.h */,
+				CE47910B198E3A3E006C89A1 /* AudioUtil.h */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -1373,6 +1378,7 @@
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				CE19BDDE19322AFA007715BA /* novel in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
+				CE47910D198E3B7D006C89A1 /* sound in Resources */,
 				CE19BDD519322AFA007715BA /* actor in Resources */,
 				CE19BDD919322AFA007715BA /* game_over.jpg in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,

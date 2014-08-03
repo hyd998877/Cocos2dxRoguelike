@@ -48,6 +48,8 @@
 
 #include "WidgetUtil.h"
 
+#include "AudioUtil.h"
+
 NS_ROGUE_BEGIN
 
 #pragma mark
@@ -95,7 +97,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
         return false;
     }
     
-    // TODO: #12 ダンジョンBGM
+    AudioUtil::playBGM(AudioUtil::BGM_DUNGEON_NORMAL);
     
     // 乱数初期化
     srand((unsigned int)time(NULL));
@@ -352,6 +354,8 @@ void RogueScene::itemWindowDropItem(const ItemDto &itemDto)
         return;
     }
     
+    AudioUtil::playSE(AudioUtil::SE_ITEM_DROP);
+    
     std::string message = itemDto.createItemName() + "を床においた。";
     // もし装備してたら外す
     unEquipItem(itemDto);
@@ -399,6 +403,8 @@ void RogueScene::itemWindowChangeItem(const ItemDto &itemDto)
     this->getRogueMapLayer()->tileSetDropMapItem(itemDto, targetMapIndex);
     this->_itemInventory.removeItemDto(itemDto.getObjectId());
     
+    AudioUtil::playSE(AudioUtil::SE_ITEM_DROP);
+    
     // ターン消費
     this->changeGameStatus(RoguePlayDto::GameStatus::ENEMY_TURN);
     
@@ -409,6 +415,8 @@ void RogueScene::itemWindowChangeItem(const ItemDto &itemDto)
 void RogueScene::itemWindowEquipItem(const ItemDto &itemDto)
 {
     auto player_sprite = this->getPlayerActorSprite(1);
+    
+    AudioUtil::playSE(AudioUtil::SE_ITEM_EQUIP);
     
     if (!itemDto.isEquip()) {
         long relaseObjectId = 0L;
@@ -896,8 +904,8 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     
     // 障害物判定
     if (rogue_map_layer->isTiledMapColisionLayer(touchPointMapIndex)) {
-        // TODO: #12 ぶつかるSE再生
-        this->logMessage("壁ドーン SE再生");
+        
+        AudioUtil::playSE(AudioUtil::SE_COLLISION);
         
         // ターン経過なし
         
@@ -941,7 +949,7 @@ ItemDto RogueScene::touchDropItem(const DropMapItem& drop_map_item, bool isDropM
     // ゴールドは別扱い
     if (itemDto.getItemType() == MUseItem::ItemType::GOLD) {
         
-        // TODO: #12 拾うSE再生
+        AudioUtil::playSE(AudioUtil::SE_OK);
         
         // メッセージログ
         message = cocos2d::StringUtils::format("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
@@ -959,7 +967,7 @@ ItemDto RogueScene::touchDropItem(const DropMapItem& drop_map_item, bool isDropM
         if (this->_itemInventory.addItemDto(itemDto)) {
             message = itemDto.createItemName() + "を拾った。";
             
-            // TODO: #12 拾うSE再生
+            AudioUtil::playSE(AudioUtil::SE_OK);
             
             // Map上から削除する
             rogue_map_layer->removeDropItemSprite(drop_item_sprite);
@@ -978,13 +986,13 @@ ItemDto RogueScene::touchDropItem(const DropMapItem& drop_map_item, bool isDropM
 
 void RogueScene::touchKaidan() {
     
-    // TODO: #12 階段の上に乗ったときのSE
+    AudioUtil::playSE(AudioUtil::SE_TOUCH_KAIDAN);
     
     // 階段下りる判定
     Size win_size = Director::getInstance()->getWinSize();
     auto alertDialog = AlertDialogLayer::createWithContentSizeModal(win_size * 0.5, "階段です。\n　\n次の階に進みますか？", "は　い", [this](Ref *ref) {
         
-        // TODO: #12 階段降りるSE
+        AudioUtil::playSE(AudioUtil::SE_KAIDAN);
         
         // save
         auto actor_sprite = getPlayerActorSprite(1);
@@ -1006,7 +1014,7 @@ void RogueScene::touchKaidan() {
             // 画面遷移
             this->changeScene(RogueScene::scene(this->_roguePlayDto.getQuestType(), nextQuestId));
         }
-    }, "いいえ", [](Ref *ref) {});
+    }, "いいえ", [](Ref *ref) { AudioUtil::playSE(AudioUtil::SE_CANCEL); });
     this->addChild(alertDialog, ZOrders::ModalLayerZOrder);
 }
 
@@ -1048,6 +1056,7 @@ void RogueScene::attack() {
         pEnemySprite = rogue_map_layer->getEnemyActorSprite(pEnemyMapItem.seqNo);
     } else {
         // 空振り
+        // TODO: #12 空振りSE
     }
     
     // アニメーション
@@ -1083,6 +1092,8 @@ void RogueScene::attackDamageCallback(int damage, ActorSprite* pActorSprite, Act
     auto player = pActorSprite->getActorDto();
     auto enemy = pEnemySprite->getActorDto();
     
+    // TODO: 攻撃SE
+    
     // 攻撃イベント
     auto message = cocos2d::StringUtils::format("%sに%dのダメージ", enemy->getName().c_str(), damage);
     this->logMessage(message);
@@ -1096,8 +1107,9 @@ void RogueScene::attackDamageCallback(int damage, ActorSprite* pActorSprite, Act
         this->logMessage(message);
         // 経験値更新（計算式 適当）
         if (player->growExpAndLevelUpCheck(enemy->getExp())) {
+
+            AudioUtil::playSE(AudioUtil::SE_LEVElUP);
             
-            // TODO: #12 レベルアップSE
             auto message = cocos2d::StringUtils::format("%sはレベル%dになった。",
                                                         player->getName().c_str(), player->getLv());
             this->logMessage(message);
@@ -1125,6 +1137,8 @@ void RogueScene::logMessage(const std::string& messageText)
 }
 
 void RogueScene::showSystemMenu() {
+    
+    AudioUtil::playSE(AudioUtil::SE_OK);
     
     auto systemMenuModalLayer = dynamic_cast<ModalLayer*>(this->getChildByTag(Tags::SystemMenuWindowTag));
     if (systemMenuModalLayer) {
@@ -1222,6 +1236,9 @@ void RogueScene::showSystemMenu() {
 }
 
 void RogueScene::hideSystemMenu() {
+    
+    AudioUtil::playSE(AudioUtil::SE_CANCEL);
+    
     auto systemMenuModalLayer = dynamic_cast<ModalLayer*>(this->getChildByTag(Tags::SystemMenuWindowTag));
     if (systemMenuModalLayer) {
         systemMenuModalLayer->setVisible(false);

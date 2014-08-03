@@ -18,11 +18,12 @@ Cocos2dRogueLike
 #include "EditTextDialogLayout.h"
 #include "AlertDialogLayer.h"
 
+#include "AudioUtil.h"
+
 USING_NS_CC;
 
 using namespace cocostudio;
 using namespace ui;
-
 using namespace RogueLikeGame;
 
 BankScene::BankScene()
@@ -37,7 +38,7 @@ BankScene::~BankScene()
 
 Node* BankScene::initLayout()
 {
-    // TODO: #12 店BGM
+    AudioUtil::playBGM(AudioUtil::BGM_MYPAGE);
     
     auto layout = WidgetUtil::createCocoStudioWidget("cocostudio/bank_ui.json");
     layout->setScale(0.75f);

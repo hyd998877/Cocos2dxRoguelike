@@ -53,8 +53,6 @@ bool StartScene::init()
         return false;
     }
     
-    // TODO: #12 通常BGM
-    
     auto winSize = Director::getInstance()->getWinSize();
 
     // 気合ローディング処理

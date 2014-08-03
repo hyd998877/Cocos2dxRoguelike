@@ -26,6 +26,8 @@ Cocos2dRogueLike
 
 #include "network/HttpClient.h"
 
+#include "AudioUtil.h"
+
 USING_NS_CC;
 using namespace cocos2d::network;
 
@@ -41,7 +43,7 @@ TopScene::~TopScene()
 
 Node* TopScene::initLayout()
 {
-    // TODO: #12 通常BGM
+    AudioUtil::playBGM(AudioUtil::BGM_MYPAGE);
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     

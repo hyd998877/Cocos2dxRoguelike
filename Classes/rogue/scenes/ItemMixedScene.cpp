@@ -22,6 +22,8 @@ Cocos2dRogueLike
 
 #include "AccountData.h"
 
+#include "AudioUtil.h"
+
 USING_NS_CC;
 
 using namespace RogueLikeGame;
@@ -38,7 +40,7 @@ ItemMixedScene::~ItemMixedScene()
 
 Node* ItemMixedScene::initLayout()
 {
-    // TODO: #12 店BGM
+    AudioUtil::playBGM(AudioUtil::BGM_MIXED);
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     

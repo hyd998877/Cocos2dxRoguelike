@@ -24,6 +24,8 @@ Cocos2dRogueLike
 
 #include "ItemLogic.h"
 
+#include "AudioUtil.h"
+
 USING_NS_CC;
 
 using namespace RogueLikeGame;
@@ -40,7 +42,7 @@ ItemStockScene::~ItemStockScene()
 
 Node* ItemStockScene::initLayout()
 {
-    // TODO: #12 店BGM
+    AudioUtil::playBGM(AudioUtil::BGM_MYPAGE);
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     
