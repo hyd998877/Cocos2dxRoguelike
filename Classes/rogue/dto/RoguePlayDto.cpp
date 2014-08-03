@@ -78,18 +78,18 @@ std::string RoguePlayDto::toSeparatedString() const
 }
 
 
-const std::string& RoguePlayDto::findQuestKey(QuestType questType) {
+const std::string RoguePlayDto::findQuestKey(QuestType questType) {
     switch (questType) {
         case QuestType::TUTORIAL:
-            return RogueGameConfig::TUTORIAL_KEY;
+            return TUTORIAL_KEY;
         case QuestType::MAIN_QUEST:
-            return RogueGameConfig::MAIN_QUEST_KEY;
+            return MAIN_QUEST_KEY;
         case QuestType::MAIN_QUEST2:
-            return RogueGameConfig::MAIN_QUEST2_KEY;
+            return MAIN_QUEST2_KEY;
         case QuestType::DEEP_QUEST:
-            return RogueGameConfig::DEEP_QUEST_KEY;
+            return DEEP_QUEST_KEY;
         default:
-            return RogueGameConfig::TUTORIAL_KEY;
+            return TUTORIAL_KEY;
     }
 }
 

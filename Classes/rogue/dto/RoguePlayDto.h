@@ -30,6 +30,12 @@ NS_ROGUE_BEGIN
 class RoguePlayDto
 {
 public:
+    // 必要ぽい
+    static constexpr auto TUTORIAL_KEY    = "TUTORIAL_KEY";
+    static constexpr auto MAIN_QUEST_KEY  = "MAIN_QUEST_KEY";
+    static constexpr auto MAIN_QUEST2_KEY = "MAIN_QUEST2_KEY";
+    static constexpr auto DEEP_QUEST_KEY  = "DEEP_QUEST_KEY";
+    
     enum class QuestType {
         TUTORIAL     = 1, /// > 初心者の洞窟
         MAIN_QUEST   = 2, /// > 不思議な洞窟
@@ -75,7 +81,7 @@ public:
      */
     std::string toSeparatedString() const;
     
-    const static std::string& findQuestKey(QuestType questType);
+    static const std::string findQuestKey(QuestType questType);
     
     void setQuestId(int questId) { _questId = questId; }
     void setGameStatus(GameStatus gameStatus) { _gameStatus = gameStatus; }
