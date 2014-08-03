@@ -50,7 +50,7 @@ RoguePlayDto::~RoguePlayDto()
 RoguePlayDto RoguePlayDto::createWithSeparatedString(const std::string& separatedString)
 {
     std::vector<std::string> dataStringArray = GameCore::StringUtils::split(std::string(separatedString));
-    if (dataStringArray.size() != 7) {
+    if (dataStringArray.size() != 6) {
         return RoguePlayDto();
     }
     int index = 0;
