@@ -50,8 +50,6 @@ private:
     int getMenuId() { return MENU_ID; }
     
     void initQuestSave();
-    
-    void requestMasterData(RequestMasterDataCallback callback);
 };
 
 #endif /* defined(__Cocos2dRogueLike__TopScene__) */
