@@ -11,7 +11,7 @@
 
 namespace RogueGameConfig {
 
-    // TODO: 所持可能アイテム数 MConfigへ移行する
+    // TODO: #46 所持可能アイテム数 MConfigへ移行する
     const int USE_ITEM_MAX = 20;
     const int STOCK_ITEM_MAX = 40;
     

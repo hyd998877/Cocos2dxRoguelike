@@ -54,7 +54,8 @@ bool StartScene::init()
     }
     
     auto winSize = Director::getInstance()->getWinSize();
-    
+
+    // 気合ローディング処理
     auto label = Label::createWithTTF(FontUtils::getTitleFontTTFConfig(), "データロード中   ");
     label->setAlignment(cocos2d::TextHAlignment::LEFT, cocos2d::TextVAlignment::CENTER);
     label->setPosition(winSize.width/2-label->getContentSize().width/2, winSize.height/2-label->getContentSize().height/2);
@@ -67,7 +68,6 @@ bool StartScene::init()
         label->setString("データロード中...");
     }),NULL)));
     
-    // TODO: ローディング入れたほうがよさそう
     // InitData
     requestMasterData([label](bool error, json11::Json response) {
         if (error) {
@@ -91,7 +91,7 @@ bool StartScene::init()
         MMonsterDao::getInstance()->init(response["M_MONSTER"]);
         MLevelDao::getInstance()->init(response["M_LEVEL"]);
         
-        // TODO: ローディング解除
+        // ローディング解除
         label->setVisible(false);
         
         auto trans = TransitionFadeDown::create(1, MyPageBaseScene::scene<TopScene>());

@@ -642,7 +642,7 @@ void RogueTMXTiledMap::refreshAutoMapping(const MapIndex& minMapIndex, const Map
         for (int y = minMapIndex.y; y < maxMapIndex.y; y++) {
             MapIndex mapIndex = {x, y, MoveDirectionType::MOVE_NONE};
             auto tileMapIndex = mapIndexToTileIndex(mapIndex);
-            // TODO: タグが強引すぎる・・・
+            // TODO: (リファクタリング) タグが強引すぎる・・・
             int tag = 10000 * tileMapIndex.x + 100 * tileMapIndex.y;
             auto pNode = pBatchNode->getChildByTag(tag);
             if (pNode) {

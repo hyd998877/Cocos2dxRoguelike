@@ -20,10 +20,10 @@ private:
     
     // --------------- 変数 -------------------
     
-    /** 選択肢表示中フラグ */ // TODO: Modalレイヤーつかいたいね
-    bool m_isMenuSelect;
-    /** バックログ表示中フラグ */ // TODO: Modalレイヤー使いたいね
-    bool m_isShowTextLog;
+//    /** 選択肢表示中フラグ */ // Modalレイヤーつかいたいね
+//    bool m_isMenuSelect;
+//    /** バックログ表示中フラグ */ // Modalレイヤー使いたいね
+//    bool m_isShowTextLog;
     
     /** ノベル情報Json */
     Json* m_novelJson;

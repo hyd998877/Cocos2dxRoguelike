@@ -239,7 +239,7 @@ TMXMapData TMXGenerator::createTMXMapData()
             }
         }
         
-        // TODO: 通路口を決める とりあえず/2して真ん中くらいにおいてるけど、角以外ならOKにしたい
+        // TODO: (リファクタリング) 通路口を決める とりあえず/2して真ん中くらいにおいてるけど、角以外ならOKにしたい
         std::list<TMXLayerData::MapIndex> gateList;
         
         // 4方向すべて抽選する
@@ -357,7 +357,7 @@ TMXMapData TMXGenerator::createTMXMapData()
 // private
 TMXCreateBaseConfig TMXGenerator::createTMXCreateConfig()
 {
-    // TODO: とりあえず固定40x20 10x10 最低4x2フロア数
+    // TODO: (リファクタリング) とりあえず固定40x20 10x10 最低4x2フロア数
     int mapWidth    = GetRandom(4, 8) * 10;
     int mapHeight   = GetRandom(2, 3) * 10;
     int floorWidth  = 10;

@@ -57,7 +57,7 @@ bool TopPageLayer::init()
                                      winSize.height * 0.5 - messageLayer->getContentSize().height / 2));
     this->addChild(messageLayer);
     
-    // TODO: なんかランダムなメッセージとかにしたいです
+    // TODO: #53 なんかランダムなメッセージとかにしたいです
     std::string messageText = "今日も気合いれてダンジョンいこー";
     auto gameProgress = RogueLikeGame::AccountData::getInstance()->getGamePlayProgress();
     if (gameProgress == RogueLikeGame::AccountData::GamePlayProgress::INIT) {

@@ -105,8 +105,7 @@ void KeypadLayout::hideKeypadMenu()
 
 bool KeypadLayout::isKeypadDashed()
 {
-    // TODO: ベタ書きやだなぁ
-    auto button = dynamic_cast<ui::Button*>(WidgetUtil::getChildByNameRecursion(dynamic_cast<ui::Widget*>(_baseLayout), "Button_B"));
+    auto button = WidgetUtil::getChildByNameRecursion<ui::Button>(dynamic_cast<ui::Widget*>(_baseLayout), "Button_B");
     if (button) {
         if (button->isHighlighted()) {
             return true;

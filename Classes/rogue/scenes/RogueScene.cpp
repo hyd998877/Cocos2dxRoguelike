@@ -125,11 +125,7 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
     // ---------------------
     // タイルマップを生成
     // ---------------------
-    // TODO: (kyokomi)ランダムなマップIDを指定する
-    this->_roguePlayDto.setFloorId(2);
-    
-    auto tmxFileName = cocos2d::StringUtils::format("tmx/quest_%d.tmx", this->_roguePlayDto.getFloorId());
-    auto tiled_map_layer = RogueTMXTiledMap::create(tmxFileName);
+    auto tiled_map_layer = RogueTMXTiledMap::create();
 
     tiled_map_layer->setPosition(Point::ZERO);
     this->addChild(tiled_map_layer, ZOrders::TiledMapLayerZOrder, Tags::TiledMapLayerTag);
@@ -473,10 +469,10 @@ void RogueScene::itemWindowUseItem(const ItemDto &itemDto)
 
 void RogueScene::itemThrow(const ItemDto &itemDto)
 {
-    // TODO: 向いてる方向へ
+    // 向いてる方向へ
     auto player = getPlayerActorSprite(1);
     
-    // TODO: 投げる距離はとりあえず固定
+    // TODO: #46 投げる距離はとりあえず10固定
     const int throwRange = 10;
     auto basePositionIndex = player->getActorMapItem().mapIndex;
 
@@ -520,7 +516,7 @@ void RogueScene::itemThrow(const ItemDto &itemDto)
 }
 
 // --------------------------
-// TODO: CutInクラス作ってcreateしてattachしてrunする感じがいい気がする
+// TODO: (リファクタリング) CutInクラス作ってcreateしてattachしてrunする感じがいい気がする
 // --------------------------
 // floorTitleカットインを生成する
 // タッチイベントでフェードアウトしてremoveする
@@ -558,7 +554,7 @@ void RogueScene::playGameOverCutIn() {
     auto winSize = Director::getInstance()->getWinSize();
     auto modalLayer = ModalLayer::create(Color3B::BLACK, 255);
 
-    // TODO: (kyokomi) この画像は一般公開できないので注意
+    // TODO: #51 (kyokomi) この画像は一般公開できないので注意
     auto gameOverSprite = Sprite::create("game_over.jpg");
     gameOverSprite->setPosition(Point(winSize.width / 2, winSize.height / 2));
     modalLayer->addChild(gameOverSprite, ZOrders::CutInLayerZOrder);
@@ -618,7 +614,7 @@ void RogueScene::changeGameStatus(RoguePlayDto::GameStatus gameStatus) {
             // クリアフラグ更新
             AccountData::getInstance()->clearQuestTypeWithUpdateGamePlayProgress(this->_roguePlayDto.getQuestType());
             
-            // クリア演出ADVパートへ(TODO: とりあえずquestType=ノベルIDにしてる)
+            // TODO: (ノベル) クリア演出ADVパートへ(とりあえずquestType=ノベルIDにしてる)
             changeScene(NovelScene::scene((int)this->_roguePlayDto.getQuestType(), 0, [this]() {
                 // ADVパート終わったらマイページへ
                 auto trans = TransitionProgressOutIn::create(0.5f, TopScene::scene<TopScene>());
@@ -646,7 +642,6 @@ void RogueScene::changeGameStatus(RoguePlayDto::GameStatus gameStatus) {
         // ターン数を進める
         _roguePlayDto.countUpTurn();
         
-        // TODO: とりあえずここで・・・
         auto pPlayerDto = pPlayer->getActorDto();
         
         // 10ターンに1空腹度が減るという
@@ -701,16 +696,17 @@ void RogueScene::enemyTurn() {
     // モンスターの数だけ繰り返す
     std::list<ActorMapItem> enemyList = this->getMapManager()->findEnemyMapItem();
     for (ActorMapItem enemyMapItem : enemyList) {
-        // TODO: ランダムでとどまるか移動するかきめる
+        // TODO: #52 ランダムでとどまるか移動するかきめる
         int rand = GetRandom(2, 2);
         if (rand == 1) {
             auto pEnemySprite = rogue_map_layer->getEnemyActorSprite(enemyMapItem.seqNo);
-            // TODO: MapManagerも更新する必要がある
+            // MapManagerも更新する必要がある
             pEnemySprite->moveDone();
             
             // とどまる
             auto message = cocos2d::StringUtils::format("様子を見ている seqNo = %d", enemyMapItem.seqNo);
             this->logMessage(message);
+            
         } else if (rand == 2) {
             // プレイヤーに向かって移動 or プレイヤーに攻撃
             auto pPlayerActorSprite = getPlayerActorSprite(1);
@@ -897,7 +893,7 @@ void RogueScene::touchEventExec(MapIndex addMoveIndex, MapIndex touchPointMapInd
     
     // 障害物判定
     if (rogue_map_layer->isTiledMapColisionLayer(touchPointMapIndex)) {
-        // TODO: ぶつかるSE再生
+        // TODO: #12 ぶつかるSE再生
         this->logMessage("壁ドーン SE再生");
         
         // ターン経過なし
@@ -942,7 +938,7 @@ ItemDto RogueScene::touchDropItem(const DropMapItem& drop_map_item, bool isDropM
     // ゴールドは別扱い
     if (itemDto.getItemType() == MUseItem::ItemType::GOLD) {
         
-        // TODO: (kyokomi) 拾うSE再生
+        // TODO: #12 拾うSE再生
         
         // メッセージログ
         message = cocos2d::StringUtils::format("%d%sを拾った。", itemDto.getParam(), itemDto.getName().c_str());
@@ -960,7 +956,7 @@ ItemDto RogueScene::touchDropItem(const DropMapItem& drop_map_item, bool isDropM
         if (this->_itemInventory.addItemDto(itemDto)) {
             message = itemDto.createItemName() + "を拾った。";
             
-            // TODO: (kyokomi) 拾うSE再生
+            // TODO: #12 拾うSE再生
             
             // Map上から削除する
             rogue_map_layer->removeDropItemSprite(drop_item_sprite);
@@ -979,7 +975,7 @@ ItemDto RogueScene::touchDropItem(const DropMapItem& drop_map_item, bool isDropM
 
 void RogueScene::touchKaidan() {
     
-    // TODO: (kyokomi)階段SE
+    // TODO: #12 階段SE
     
     // 階段下りる判定
     Size win_size = Director::getInstance()->getWinSize();
@@ -1076,10 +1072,10 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
         auto message = cocos2d::StringUtils::format("%sを倒した。経験値%dを得た。",
                                                     enemy->getName().c_str(), enemy->getExp());
         this->logMessage(message);
-        // TODO: (kyokomi) 経験値更新（計算式 適当）
+        // 経験値更新
         if (player->growExpAndLevelUpCheck(enemy->getExp())) {
             
-            // TODO: レベルアップ演出（SE？）
+            // TODO: #12 レベルアップ演出（SE？）
             auto message = cocos2d::StringUtils::format("%sはレベル%dになった。",
                                                         player->getName().c_str(), player->getLv());
             this->logMessage(message);
@@ -1088,7 +1084,7 @@ void RogueScene::attackCallback(ActorSprite* pActorSprite, ActorSprite* pEnemySp
             this->refreshStatusEquip(*player);
         }
         
-        // 敵のドロップ確率を抽選してアイテムの抽選（TODO: とりあえず一律3%）
+        // 敵のドロップ確率を抽選してアイテムの抽選（TODO: #30 とりあえず敵撃破時のドロップ確率は一律3%）
         if (LotteryUtils::isHit(300)) {
             // アイテムdrop
             institutionDropItem(1, pEnemySprite->getActorMapItem().mapIndex);
@@ -1116,10 +1112,10 @@ void RogueScene::attackItemThrowCallback(const ItemDto& itemDto, ActorSprite* pA
         auto message = cocos2d::StringUtils::format("%sを倒した。経験値%dを得た。",
                                                     enemy->getName().c_str(), enemy->getExp());
         this->logMessage(message);
-        // TODO: (kyokomi) 経験値更新（計算式 適当）
+        // TODO: #12 経験値更新（計算式 適当）
         if (player->growExpAndLevelUpCheck(enemy->getExp())) {
             
-            // TODO: レベルアップ演出（SE？）
+            // TODO: #12 レベルアップ演出（SE？）
             auto message = cocos2d::StringUtils::format("%sはレベル%dになった。",
                                                         player->getName().c_str(), player->getLv());
             this->logMessage(message);
@@ -1128,7 +1124,7 @@ void RogueScene::attackItemThrowCallback(const ItemDto& itemDto, ActorSprite* pA
             this->refreshStatusEquip(*player);
         }
         
-        // 敵のドロップ確率を抽選してアイテムの抽選（TODO: とりあえず一律3%）
+        // 敵のドロップ確率を抽選してアイテムの抽選（TODO: #30 とりあえず敵撃破時のドロップ確率は一律3%）
         if (LotteryUtils::isHit(300)) {
             // アイテムdrop
             institutionDropItem(1, pEnemySprite->getActorMapItem().mapIndex);
@@ -1156,7 +1152,7 @@ void RogueScene::showSystemMenu() {
         Size win_size = Director::getInstance()->getWinSize();
         std::list<SystemMenuLayer::SystemMenuButtonInfo> menuButtonInfoList;
         
-        // TODO: (kyokomi) デバッグ用
+        // TODO: (デバッグ用)
         SystemMenuLayer::SystemMenuButtonInfo menu1("千里眼", [this, systemMenuModalLayer]() {
             CCLOG("Menu1ボタンが押された！");
             
@@ -1167,7 +1163,7 @@ void RogueScene::showSystemMenu() {
             this->hideSystemMenu();
         });
         
-        // TODO: (kyokomi) デバッグ用
+        // TODO: (デバッグ用)
         SystemMenuLayer::SystemMenuButtonInfo menu2("地獄耳", [this, systemMenuModalLayer]() {
             CCLOG("Menu2ボタンが押された！");
             
@@ -1178,7 +1174,7 @@ void RogueScene::showSystemMenu() {
             this->hideSystemMenu();
         });
         
-        // TODO: (kyokomi) デバッグ用
+        // TODO: (デバッグ用)
         SystemMenuLayer::SystemMenuButtonInfo menu3("階　段", [this, systemMenuModalLayer]() {
             CCLOG("Menu3ボタンが押された！");
             this->touchKaidan();
@@ -1200,7 +1196,7 @@ void RogueScene::showSystemMenu() {
             this->hideSystemMenu();
         });
         
-        // TODO: (kyokomi) 足元処理未実装
+        // TODO: #41 足元処理未実装
         SystemMenuLayer::SystemMenuButtonInfo menu5("足　元", [this, systemMenuModalLayer]() {
             CCLOG("Menu5ボタンが押された！");
             
@@ -1262,7 +1258,7 @@ void RogueScene::refreshStatus()
     int questId = _roguePlayDto.getQuestId(); // フロア情報（クエストID=フロア数でいい？)
     _statusWidget->setStatus(questId, *pPlayerDto, this->_itemInventory.getGold());
     
-    // TODO: 死亡判定ここで？
+    // 死亡判定ここで
     if (pPlayerDto->getHitPoint() == 0) {
         auto message = cocos2d::StringUtils::format("%sは死亡した。", pPlayerDto->getName().c_str());
         this->logMessage(message);

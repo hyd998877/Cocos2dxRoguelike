@@ -357,10 +357,9 @@ void SRPGMapLayer::executeMapIndex(MapIndex mapIndex)
     if (mapItem.mapDataType == MapDataType::MOVE_DIST) {
         auto pActorSprite = findActorSprite(1);
         
-        // 移動対象を取得
-//        auto pActorMapItem = this->getMapManager()->getActorMapItemById(1); // TODO: とりあえず1固定
         // 移動可能範囲のリストを作成
-        std::list<MapIndex> moveList = this->getMapManager()->createActorFindDist(pActorSprite->getActorMapItem().mapIndex, pActorSprite->getActorMapItem().moveDist);
+        std::list<MapIndex> moveList = this->getMapManager()->createActorFindDist(pActorSprite->getActorMapItem().mapIndex,
+                                                                                  pActorSprite->getActorMapItem().moveDist);
         // 移動可能範囲を表示
         addMapCursor(MapDataType::MOVE_DIST, moveList);
         // 移動経路の作成と表示

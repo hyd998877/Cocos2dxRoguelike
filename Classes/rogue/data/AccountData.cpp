@@ -31,7 +31,7 @@ AccountData* AccountData::getInstance()
 }
 
 AccountData::AccountData()
-: _roguePlayData({RoguePlayDto::QuestType::TUTORIAL, 0, 0, RoguePlayDto::GameStatus::INIT, 0, 0, 0})
+: _roguePlayData()
 , _playerActor(ActorDto())
 , _itemInventory("所持品", 0, RogueGameConfig::USE_ITEM_MAX)
 , _itemInventoryStock("倉　庫", 0, RogueGameConfig::STOCK_ITEM_MAX)

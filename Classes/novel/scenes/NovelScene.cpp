@@ -19,8 +19,6 @@ USING_NS_CC_EXT;
 
 NovelScene::NovelScene()
 :m_textIndex(0),
-m_isMenuSelect(false),
-m_isShowTextLog(false),
 m_novelJson(NULL),
 m_novelTextEndCallback(nullptr)
 {
@@ -67,7 +65,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     }
     this->m_novelTextEndCallback = callback;
     
-    // TODO: BGM再生
+    // TODO: #12 BGM再生
 //    AudioUtil::playBGM("audio/tutorial_bgm1.mp3");
     
     // シングルタップイベントを受け付ける
@@ -84,7 +82,7 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     // 背景表示
     
     // -----------------------------
-    // TODO: テキスト表示 Class化したい・・・
+    // テキスト表示 TODO: (リファクタリング) Class化したい・・・
     // -----------------------------
     
     // 本文
@@ -120,20 +118,6 @@ bool NovelScene::init(int sceneNo, int novelIndex, const NovelTextEndCallback& c
     nameTextLayer->addChild(nameTextLabel, kZOrder_TextLayer, kTag_TextLayer_nameTextLabel);
     
     CommonWindowUtil::attachWindowWaku(nameTextLayer);
-    
-    // -----------------------------
-    // ログ表示用ボタン配置
-    // TODO: ログ機能はとりあえず外しました
-//    Label* logButtonLabel = Label::create("Log", GAME_FONT(fontSize), GAME_FONT_SIZE(fontSize));
-//    MenuItemLabel* logButtonMenuItem = MenuItemLabel::create(logButtonLabel, [this](Ref *pSender) {
-//        this->logMenuSelectCallback(pSender);
-//    });
-//    
-//    logButtonMenuItem->setPosition(Point(winSize.width * 0.95, logButtonMenuItem->getContentSize().height));
-//    
-//    Menu* pMenu = Menu::create(logButtonMenuItem, NULL);
-//    pMenu->setPosition(Point::ZERO);
-//    this->addChild(pMenu, kZOrder_MenuItem, kTag_MenuItem_log);
 
     // -----------------------------
     UserDefault::getInstance()->setIntegerForKey("sceneNo", sceneNo);
@@ -156,25 +140,6 @@ void NovelScene::initNovelJson(int sceneNo, int novelIndex)
     if (novelIndex == 0) {
         return;
     }
-    
-    // TODO: 中断機能も一旦外す
-    //    int arrayCount = m_novelJson->size;
-    //    for (int i = 0; i < arrayCount; i++) {
-    //        Json* item = m_novelJson->next;
-    //
-    //        if (i >= novelIndex) {
-    //            continue;
-    //        }
-    //
-    //        int textType = Json_getItem(item, "type")->valueInt;
-    //        if (textType == kSelectItem)
-    //        {
-    //            i++;
-    //            continue;
-    //        }
-    //        m_textIndex = i;
-    //        nextNovelJson();
-    //    }
 }
 
 /**
@@ -184,10 +149,10 @@ bool NovelScene::onTouchBegan(Touch *pTouch, Event *pEvent)
 {
     CCLOG("%s", "------ ccTouchBegan ------");
     // 選択肢とバックログ表示中は何もしない
-    if (m_isMenuSelect || m_isShowTextLog)
-    {
-        return false;
-    }
+//    if (m_isMenuSelect || m_isShowTextLog)
+//    {
+//        return false;
+//    }
     
     return true;
 }
@@ -197,6 +162,7 @@ void NovelScene::onTouchEnded(Touch *pTouch, Event *pEvent)
     auto pLayer = static_cast<Layer*>(this->getChildByTag(kTag_TextLayer));
     if (pLayer->getBoundingBox().containsPoint(pTouch->getLocation())) {
         
+        // TODO: #12 テキスト送りのタッチ音
 //        AudioUtil::playBtnSE();
 
         // 保存
@@ -265,7 +231,6 @@ void NovelScene::nextNovelJson()
         if (textType == NovelType::SelectItem)
         {
             // 選択肢表示
-            m_isMenuSelect = true;
             makeSelectSpriteButton(Json_getItem(item, "select1")->valueString, Json_getItem(item, "next1Id")->valueInt,
                                    Json_getItem(item, "select2")->valueString, Json_getItem(item, "next2Id")->valueInt);
         }
@@ -348,66 +313,13 @@ void NovelScene::changeBackgroundAnimation(const std::string& imgFilePath)
 
 void NovelScene::makeSelectSpriteButton(const std::string& str1, int next1Id, const std::string& str2, int next2Id)
 {
-    // TODO: (kyokomi)選択肢は廃止
-#if 0
-    Size winSize = Director::getInstance()->getWinSize();
-    
-    Menu* pMenu = (Menu*) this->getChildByTag(kTag_MenuSelect);
-    if (pMenu)
-    {
-        pMenu->setVisible(true);
-        MenuItemSelectLabelSprite* menuSprite1 = (MenuItemSelectLabelSprite*) pMenu->getChildByTag(kTag_MenuSelect1);
-        menuSprite1->setNovelText(str1);
-        
-        MenuItemSelectLabelSprite* menuSprite2 = (MenuItemSelectLabelSprite*) pMenu->getChildByTag(kTag_MenuSelect2);
-        menuSprite2->setNovelText(str2);
-    }
-    else
-    {
-        // 選択肢1
-        const int FONT_SIZE = 24;
-        MenuItemSelectLabelSprite* menuSprite1 = MenuItemSelectLabelSprite::createWithLabelSprite("menu_button.png", str1, GAME_FONT(FONT_SIZE), GAME_FONT_SIZE(FONT_SIZE), Color3B::RED, Color3B::BLUE, Color3B::RED, [this](Ref *pSender) {
-            this->menuSelectCallback(pSender);
-        });
-        menuSprite1->setPosition(Point(winSize.width * 0.5, winSize.height * 0.55));
-        menuSprite1->setTag(kTag_MenuSelect1);
-        menuSprite1->setZOrder(kZOrder_MenuSelect);
-        // 選択肢2
-        MenuItemSelectLabelSprite* menuSprite2 = MenuItemSelectLabelSprite::createWithLabelSprite("menu_button.png", str2, GAME_FONT(FONT_SIZE), GAME_FONT_SIZE(FONT_SIZE), Color3B::BLACK, Color3B::BLUE, Color3B::RED, [this](Ref *pSender) {
-            this->menuSelectCallback(pSender);
-        });
-        menuSprite2->setPosition(Point(winSize.width * 0.5, winSize.height * 0.45));
-        menuSprite2->setTag(kTag_MenuSelect2);
-        menuSprite2->setZOrder(kZOrder_MenuSelect);
-        
-        //メニュー作成
-        pMenu = Menu::create(menuSprite1, menuSprite2, NULL);
-        pMenu->setPosition(Point::ZERO);
-        this->addChild(pMenu, kZOrder_MenuSelect, kTag_MenuSelect);
-    }
-#endif
+
 }
 
 
 void NovelScene::menuSelectCallback(Ref *ref)
 {
-    if (m_isShowTextLog)
-    {
-        return;
-    }
-    
-#if 0
-//    AudioUtil::playBtnSE();
-    
-    this->getChildByTag(kTag_MenuSelect)->setVisible(false);
-    m_isMenuSelect = false;
-
-    MenuItemSelectLabelSprite* menuItem = (MenuItemSelectLabelSprite*) pSender;
-    dispText(menuItem->m_labelText);
-    
-    m_textIndex++;
-#endif
-    
+    return;
 }
 
 
@@ -489,62 +401,17 @@ void NovelScene::resetShadeActorImage(int dict)
 
 void NovelScene::logMenuSelectCallback(cocos2d::Ref *pSender)
 {
-//    AudioUtil::playBtnSE();
     
-    if (m_isShowTextLog)
-    {
-        hideTextLog();
-    }
-    else
-    {
-        showTextLog(m_textIndex);
-    }
 }
 
 void NovelScene::showTextLog(int showTextIndex)
 {
-    // TODO: バックログ機能はとりあえずなしで
-//    if (showTextIndex <= 0)
-//    {
-//        return;
-//    }
-//    isShowTextLog = true;
-//    
-//    std::vector<std::string> textArray;
-//    
-//    for (int i = 0; i < showTextIndex; i++)
-//    {
-//        Json* item = m_novelJson->next;
-////        Json* item = Json_getItemAt(m_novelJson, i);
-//        if (Json_getItem(item, "text"))
-//        {
-//            textArray.push_back(Json_getItem(item, "text")->valueString);
-//        }
-//    }
-//    
-//    TableViewTestLayer* logLayer = (TableViewTestLayer*) this->getChildByTag(kTag_TextLogLayer);
-//    if (logLayer)
-//    {        
-//        logLayer->makeItemList(textArray);
-//        logLayer->setVisible(true);
-//    }
-//    else
-//    {
-//        logLayer = TableViewTestLayer::createWithTextArray(textArray);
-//        logLayer->setPosition(PointointZero);
-//        this->addChild(logLayer, kZOrder_TextLogLayer, kTag_TextLogLayer);
-//    }
+
 }
 
 void NovelScene::hideTextLog()
 {
-    TableViewTestLayer* logLayer = (TableViewTestLayer*) this->getChildByTag(kTag_TextLogLayer);
-    if (logLayer)
-    {
-        logLayer->setVisible(false);
-    }
-    
-    m_isShowTextLog = false;
+
 }
 
 void NovelScene::endNovel()

@@ -103,7 +103,6 @@ void BattleScene::onTouchEnded(Touch *touch, Event *unused_event)
     Size winSize = Director::getInstance()->getWinSize();
     
     // 技名表示
-    // TODO: あとで
     
     ActorSprite* actorSprite = dynamic_cast<ActorSprite*>(getChildByTag(1));
     
@@ -192,8 +191,6 @@ void BattleScene::onTouchEnded(Touch *touch, Event *unused_event)
         // プレイヤーアニメーション変更（攻撃）：前と同じだから変更なし
         // プレイヤー移動（右上）
         // 斬撃エフェクト（下から上）
-        
-        // TODO: 
         
         
         actorSprite->runAction(Sequence::create(seq1, seq2, spawn3, NULL));

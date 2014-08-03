@@ -52,7 +52,6 @@ public:
     
     RoguePlayDto(QuestType questType,    /// > クエスト種類
                  int questId,            /// > クエストID（階数）
-                 int floorId,            /// > フロアID(マップデータID)
                  GameStatus gameStatus,  /// > ゲーム状態
                  int noActionCount,      /// > 未行動カウント(足踏み自動回復とかの）
                  int turnCount,          /// > ターン数
@@ -80,7 +79,6 @@ public:
     
     void setQuestId(int questId) { _questId = questId; }
     void setGameStatus(GameStatus gameStatus) { _gameStatus = gameStatus; }
-    void setFloorId(int floorId) { _floorId = floorId; }
     void setPlayQuest(QuestType questType, int questId) {
         _questType = questType;
         _questId = questId;
@@ -93,7 +91,6 @@ public:
     
     QuestType getQuestType() const { return _questType; }
     int getQuestId() const { return _questId; }
-    int getFloorId() const { return _floorId; }
     GameStatus getGameStatus() const { return _gameStatus; }
     int getNoActionCount() const { return _noActionCount; }
     int getTurnCount() const { return _turnCount; }
@@ -101,7 +98,6 @@ public:
 private:
     QuestType _questType;    /// > クエスト種類
     int _questId;            /// > クエストID（階数）
-    int _floorId;            /// > フロアID(マップデータID)
     GameStatus _gameStatus;  /// > ゲーム状態
     int _noActionCount;      /// > 未行動カウント(足踏み自動回復とかの）
     int _turnCount;          /// > ターン数

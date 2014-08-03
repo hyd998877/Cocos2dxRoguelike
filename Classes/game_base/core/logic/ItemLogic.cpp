@@ -33,12 +33,13 @@ std::string ItemLogic::use(int itemId, ActorDto* pUseActorDto)
 
 int ItemLogic::sale(const ItemDto &itemDto)
 {
-    // TODO: 金額計算だけ。実際のお金振込とかアイテム削除は別でやる
+    // TODO: #10 金額計算だけ。実際のお金振込とかアイテム削除は別でやる
     return 10;
 }
 
 std::string ItemLogic::createItemImageFileName(int itemResId)
 {
+    // TODO: #49 10000がやばい
     return StringUtils::format("icon_set/item_%d.png", itemResId % 10000);
 }
 
@@ -52,13 +53,13 @@ bool ItemLogic::isMixedItem(const ItemDto &baseItemDto, const ItemDto &materialI
 
 bool ItemLogic::isMixedItemEvolution(const ItemDto &baseItemDto, const ItemDto &materialItemDto)
 {
-    // TODO: 別アイテムへの進化判定はいずれ
+    // TODO: #48 別アイテムへの進化判定はいずれ
     return false;
 }
 
 int ItemLogic::calcMixedItemGold(const ItemDto &baseItemDto, const ItemDto &materialItemDto)
 {
-    // TODO: 定数にするべきかマスタにするべきか（マスタだと別ゲームでも依存しなく使える。定数だとゲームごとに定義しないとだけど管理が楽）
+    // TODO: #46 定数にするべきかマスタにするべきか（マスタだと別ゲームでも依存しなく使える。定数だとゲームごとに定義しないとだけど管理が楽）
     return ((baseItemDto.getParam() + materialItemDto.getParam()) * 1000) + 5000;
 }
 

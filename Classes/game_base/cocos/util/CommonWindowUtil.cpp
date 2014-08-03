@@ -97,31 +97,6 @@ cocos2d::extension::Scale9Sprite* CommonWindowUtil::createWindowWaku(cocos2d::Si
 #pragma mark
 #pragma mark sprite
 
-// TODO: (kyokomi) ちゃんと専用クラスつくらないとダメだこりゃ（SpriteとTextの更新でtagはイケてない）
-cocos2d::Layer* CommonWindowUtil::createSpriteWithLabelLayer(const cocos2d::Size& layerSize, const std::string& spriteFrameFileName, const cocos2d::TTFConfig& ttfConfig, const std::string& text) {
-    auto equipWeaponLayer = cocos2d::LayerColor::create(cocos2d::Color4B::BLACK);
-    equipWeaponLayer->setOpacity(128);
-    equipWeaponLayer->setContentSize(layerSize);
-    CommonWindowUtil::attachWindowWaku(equipWeaponLayer);
-    
-    auto equipWeaponSprite = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameFileName);
-    if (!equipWeaponSprite) {
-        equipWeaponSprite = cocos2d::Sprite::create(spriteFrameFileName)->getSpriteFrame();
-        cocos2d::SpriteFrameCache::getInstance()->addSpriteFrame(equipWeaponSprite, spriteFrameFileName);
-    }
-    auto sprite = cocos2d::Sprite::createWithSpriteFrame(equipWeaponSprite);
-    sprite->setPosition(cocos2d::Point(sprite->getContentSize().width / 2, equipWeaponLayer->getContentSize().height /2));
-    sprite->setTag(1);// TODO: (kyokomi)とりあえず...サーセン
-    equipWeaponLayer->addChild(sprite);
-    
-    auto textLabel = cocos2d::Label::createWithTTF(ttfConfig, text);
-    textLabel->setPosition(cocos2d::Point(equipWeaponLayer->getContentSize().width * 0.5 + textLabel->getContentSize().width / 2, equipWeaponLayer->getContentSize().height / 2));
-    textLabel->setTag(2);// TODO: (kyokomi)とりあえず...サーセン
-    equipWeaponLayer->addChild(textLabel);
-    
-    return equipWeaponLayer;
-}
-
 cocos2d::MenuItem* CommonWindowUtil::createMenuItemLabelWithSpriteIcon(const cocos2d::Size& layerSize,
                                                                        cocos2d::Node* iconNode,
                                                                        const cocos2d::TTFConfig& ttfConfig,

@@ -82,8 +82,6 @@ bool AlertDialogLayer::initWithContentSize(Size contentSize, std::string titleTe
     pTitle->setPosition(Point(this->getContentSize().width * 0.5, this->getContentSize().height * 0.75 - pTitle->getContentSize().height/4));
     this->addChild(pTitle);
     
-    // TODO: 本文分けた方がいいのかな？
-    
     // --------------
     // ボタン生成
     const Size WAKU_PADDING = Size(12, 4);

@@ -250,7 +250,6 @@ FiniteTimeAction* ActorSprite::createActorAnimate(int actorId, int typeId, std::
 /////////////
 // static
 
-// TODO: キャラ固定なのはいずれ
 // 立ち絵
 Sprite* ActorSprite::createNovelActorSprite(ActorSprite::NovelDirection novelDirection)
 {

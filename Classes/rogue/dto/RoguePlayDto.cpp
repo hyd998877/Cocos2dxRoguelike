@@ -16,7 +16,6 @@ NS_ROGUE_BEGIN
 
 RoguePlayDto::RoguePlayDto(QuestType questType,    /// > クエスト種類
                            int questId,            /// > クエストID（階数）
-                           int floorId,            /// > フロアID(マップデータID)
                            GameStatus gameStatus,  /// > ゲーム状態
                            int noActionCount,      /// > 未行動カウント(足踏み自動回復とかの）
                            int turnCount,          /// > ターン数
@@ -24,7 +23,6 @@ RoguePlayDto::RoguePlayDto(QuestType questType,    /// > クエスト種類
                            )
 : _questType(questType)
 , _questId(questId)
-, _floorId(questId)
 , _gameStatus(gameStatus)
 , _noActionCount(noActionCount)
 , _turnCount(turnCount)
@@ -36,7 +34,6 @@ RoguePlayDto::RoguePlayDto(QuestType questType,    /// > クエスト種類
 RoguePlayDto::RoguePlayDto()
 : _questType(QuestType::TUTORIAL)
 , _questId(0)
-, _floorId(0)
 , _gameStatus(GameStatus::INIT)
 , _noActionCount(0)
 , _turnCount(0)
@@ -60,7 +57,6 @@ RoguePlayDto RoguePlayDto::createWithSeparatedString(const std::string& separate
     
     RoguePlayDto dto(static_cast<QuestType>(atoi(dataStringArray[index++].c_str())),
                      atoi(dataStringArray[index++].c_str()),
-                     atoi(dataStringArray[index++].c_str()),
                      static_cast<GameStatus>(atoi(dataStringArray[index++].c_str())),
                      atoi(dataStringArray[index++].c_str()),
                      atoi(dataStringArray[index++].c_str()),
@@ -71,10 +67,9 @@ RoguePlayDto RoguePlayDto::createWithSeparatedString(const std::string& separate
 
 std::string RoguePlayDto::toSeparatedString() const
 {
-    return cocos2d::StringUtils::format("%d,%d,%d,%d,%d,%d,%d",
+    return cocos2d::StringUtils::format("%d,%d,%d,%d,%d,%d",
                                         this->_questType,
                                         this->_questId,
-                                        this->_floorId,
                                         this->_gameStatus,
                                         this->_noActionCount,
                                         this->_turnCount,

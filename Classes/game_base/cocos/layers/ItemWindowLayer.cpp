@@ -275,7 +275,7 @@ void ItemWindowLayer::setItemDetail(const ItemDto& itemDto) {
             if (itemDto.getName().empty()) {
                 pItemNameLabel->setString(ITEM_LAYER_NAME_DEFAULT);
             } else {
-                // TODO: とりあえず装備中で文言かえる
+                // 装備中で文言かえる
                 std::string itemNameText = itemDto.createItemName();
                 if (itemDto.isEquip()) {
                     pItemNameLabel->setString(cocos2d::StringUtils::format("%s (装備中)", itemNameText.c_str()));
@@ -343,18 +343,11 @@ void ItemWindowLayer::setItemDetail(const ItemDto& itemDto) {
                     if (menuItemKey == ItemWindowMenuType::ITEM_USE) {
                         std::string text = itemDto.isEquip() ? "はずす" : "そうび";
                         setMenuItemTest(menuItemKey, text);
-//                    } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
-//                        // MenuItemLabelのsetStringを行うとsetContentSizeされてwaku分ずれるので補正
-//                        std::string text = itemDto.isEquip() ? text = "はずす" :  text = "そうび";
-//                        setMenuItemTest(menuItemKey, text);
                     }
                 } else {
                     if (menuItemKey == ItemWindowMenuType::ITEM_USE) {
                         std::string text = getMenuItemKeyText(ItemWindowMenuType::ITEM_USE);
                         setMenuItemTest(menuItemKey, text);
-//                    } else if (menuItemKey == ItemWindowMenuType::ITEM_EQUIP) {
-//                        this->_menuItemMap.at(menuItemKey)->setVisible(false);
-//                        this->_menuItemMap.at(menuItemKey)->setEnabled(false);
                     }
                 }
             }

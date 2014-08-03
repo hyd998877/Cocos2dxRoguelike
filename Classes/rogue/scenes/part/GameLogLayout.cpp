@@ -79,7 +79,7 @@ void GameLogLayout::logMessage(const char * pszFormat, ...) {
     
     if (_logTextLabel) {
         
-        // TODO: 別クラスにしてログをlistで保持する。デフォルトの表示は1件だけで、center寄せ表示でいいかと
+        // TODO: #38 別クラスにしてログをlistで保持する。デフォルトの表示は1件だけで、center寄せ表示でいいかと
         auto pMessage = String::create(buf);
         
         pMessage->append("\n");

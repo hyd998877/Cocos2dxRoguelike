@@ -24,7 +24,7 @@ int BattleLogic::exec(const ActorDto& from, const ActorDto& to)
 
 int BattleLogic::itemThrow(const ItemDto& itemDto, const ActorDto& to)
 {
-    // TODO: 仮
+    // TODO: #47 アイテム投げたときのダメージ計算
     int damage = 10;
     
     // 10%くらい乱数考慮

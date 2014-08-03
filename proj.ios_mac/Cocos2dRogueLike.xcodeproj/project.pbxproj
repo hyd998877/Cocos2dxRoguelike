@@ -81,7 +81,6 @@
 		CE19BE7B19322B0D007715BA /* AlertDialogLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BDF419322B0C007715BA /* AlertDialogLayer.cpp */; };
 		CE19BE7C19322B0D007715BA /* ItemInventoryLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BDF619322B0C007715BA /* ItemInventoryLayer.cpp */; };
 		CE19BE7D19322B0D007715BA /* ItemWindowLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BDF819322B0C007715BA /* ItemWindowLayer.cpp */; };
-		CE19BE7E19322B0D007715BA /* JoystickLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BDFA19322B0C007715BA /* JoystickLayer.cpp */; };
 		CE19BE7F19322B0D007715BA /* ModalLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BDFC19322B0C007715BA /* ModalLayer.cpp */; };
 		CE19BE8019322B0D007715BA /* SystemMenuLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BDFE19322B0C007715BA /* SystemMenuLayer.cpp */; };
 		CE19BE8119322B0D007715BA /* TableViewTestLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE19BE0019322B0C007715BA /* TableViewTestLayer.cpp */; };
@@ -370,8 +369,6 @@
 		CE19BDF719322B0C007715BA /* ItemInventoryLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInventoryLayer.h; sourceTree = "<group>"; };
 		CE19BDF819322B0C007715BA /* ItemWindowLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ItemWindowLayer.cpp; sourceTree = "<group>"; };
 		CE19BDF919322B0C007715BA /* ItemWindowLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemWindowLayer.h; sourceTree = "<group>"; };
-		CE19BDFA19322B0C007715BA /* JoystickLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JoystickLayer.cpp; sourceTree = "<group>"; };
-		CE19BDFB19322B0C007715BA /* JoystickLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoystickLayer.h; sourceTree = "<group>"; };
 		CE19BDFC19322B0C007715BA /* ModalLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModalLayer.cpp; sourceTree = "<group>"; };
 		CE19BDFD19322B0C007715BA /* ModalLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalLayer.h; sourceTree = "<group>"; };
 		CE19BDFE19322B0C007715BA /* SystemMenuLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemMenuLayer.cpp; sourceTree = "<group>"; };
@@ -797,8 +794,6 @@
 				CE19BDF719322B0C007715BA /* ItemInventoryLayer.h */,
 				CE19BDF819322B0C007715BA /* ItemWindowLayer.cpp */,
 				CE19BDF919322B0C007715BA /* ItemWindowLayer.h */,
-				CE19BDFA19322B0C007715BA /* JoystickLayer.cpp */,
-				CE19BDFB19322B0C007715BA /* JoystickLayer.h */,
 				CE19BDFC19322B0C007715BA /* ModalLayer.cpp */,
 				CE19BDFD19322B0C007715BA /* ModalLayer.h */,
 				CE19BDFE19322B0C007715BA /* SystemMenuLayer.cpp */,
@@ -1463,7 +1458,6 @@
 				CE19BE8519322B0D007715BA /* MLevelDao.cpp in Sources */,
 				CE19BE9019322B0D007715BA /* SystemDataDto.cpp in Sources */,
 				CE19BE7919322B0D007715BA /* BattleScene.cpp in Sources */,
-				CE19BE7E19322B0D007715BA /* JoystickLayer.cpp in Sources */,
 				CE19BE9F19322B0D007715BA /* QuestPageLayer.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				CE19BE9819322B0D007715BA /* AccountData.cpp in Sources */,

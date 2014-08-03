@@ -97,8 +97,6 @@ std::list<MapIndex> MapManager::createMovePointList(const MapIndex& moveFromMapI
     // 経路探索(再帰呼び出し)
     findMovePointList(moveFromMapItem.mapIndex.x, moveFromMapItem.mapIndex.y, moveFromMapItem.moveDist, moveToMapItem);
     
-    // TODO: 1件も取れない時に目的地だけ返してしまう
-    
     // 目的地を最終到達点として最後に追加（ただしカーソル情報なので移動の向きをここで指定する）
     MapIndex moveEndMapIndex = moveFromMapIndex;
     
@@ -327,7 +325,6 @@ void MapManager::addObstacle(const MapIndex& obsMapIndex)
 {
     assert(vaildateInit());
     
-    // TODO: とりあえずactorと同じにする。。。大丈夫か？
     ActorMapItem mapItem = createNoneMapItem<ActorMapItem>(obsMapIndex.x, obsMapIndex.y);
     mapItem.mapDataType = MapDataType::OBSTACLE;
     mapItem.seqNo = 0;
