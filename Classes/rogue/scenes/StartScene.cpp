@@ -30,21 +30,21 @@
 
 #include "json11.hpp"
 
-#include "network/HttpClient.h"
-
 #include "TopScene.h"
 
 USING_NS_CC;
 using namespace cocos2d::network;
 
 StartScene::StartScene()
+: _request(nullptr)
 {
     
 }
 
 StartScene::~StartScene()
 {
-    
+    _request->release();
+    _request = nullptr;
 }
 
 bool StartScene::init()
@@ -52,6 +52,7 @@ bool StartScene::init()
     if (!Layer::init()) {
         return false;
     }
+    _request = new HttpRequest();
     
     auto winSize = Director::getInstance()->getWinSize();
 
@@ -68,8 +69,36 @@ bool StartScene::init()
         label->setString("データロード中...");
     }),NULL)));
     
-    // InitData
-    requestMasterData([label](bool error, json11::Json response) {
+    // ログイン
+    auto loginUrl = "http://rogue-game-web.herokuapp.com/login/";
+    request(HttpRequest::Type::POST, json11::Json::object{{"uuid", "1111111111"}, {"name", "test"}}, loginUrl, [this, label](bool error, json11::Json response) {
+        std::string versionCode;
+        if (error) {
+            CCLOG("login error");
+            versionCode = "1";
+        } else {
+            versionCode = response["VersionCode"].string_value();
+        }
+        
+        // マスターデータの読みこみ
+        auto masterLoadUrl = StringUtils::format("http://rogue-game-web.herokuapp.com/load/master/%s", versionCode.c_str());
+        this->requestLoadMaster(masterLoadUrl, [label](bool error, json11::Json response) {
+            if (error) {
+                CCLOG("load master error");
+            }
+            label->setVisible(false);
+            
+            auto trans = TransitionFadeDown::create(1.0f, MyPageBaseScene::scene<TopScene>());
+            Director::getInstance()->replaceScene(trans);
+        });
+    });
+    
+    return true;
+}
+
+void StartScene::requestLoadMaster(const std::string &requestUrl, const RequestCallback &callback)
+{
+    request(HttpRequest::Type::GET, json11::Json::NUL, requestUrl, [callback](bool error, json11::Json response) {
         if (error) {
             auto jsonStringFile = FileUtils::getInstance()->getStringFromFile("test_master/RogueGameMaster.json");
             std::string err;
@@ -92,25 +121,22 @@ bool StartScene::init()
         MLevelDao::getInstance()->init(response["M_LEVEL"]);
         
         // ローディング解除
-        label->setVisible(false);
-        
-        auto trans = TransitionFadeDown::create(1, MyPageBaseScene::scene<TopScene>());
-        Director::getInstance()->replaceScene(trans);
+        callback(false, json11::Json::NUL);
     });
-    
-    return true;
 }
 
-// init MasterData server request.
-void StartScene::requestMasterData(RequestMasterDataCallback callback)
+// server request json.
+void StartScene::request(HttpRequest::Type requestType, json11::Json requestData, const std::string &requestUrl, const RequestCallback &callback)
 {
-    HttpRequest* request = new HttpRequest();
-    // Google SpreadSheetの公開URL
-    request->setUrl("https://script.google.com/macros/s/AKfycbxDIVz0IR0o-5VTTAwqnEo1lsFZCYo5s58vBJMYvNYBi8gwO_I/exec");
-    request->setRequestType(HttpRequest::Type::GET);
-    request->setResponseCallback([this, callback](HttpClient* client, HttpResponse* response) {
+    _request->setUrl(requestUrl.c_str());
+    _request->setRequestType(requestType);
+    if (!requestData.is_null()) {
+        auto data = requestData.dump().c_str();
+        _request->setRequestData(data, sizeof(data));
+    }
+    _request->setResponseCallback([this, callback](HttpClient* client, HttpResponse* response) {
         if (!response) {
-            callback(true, json11::Json());
+            callback(true, json11::Json::NUL);
             return;
         }
         
@@ -125,9 +151,11 @@ void StartScene::requestMasterData(RequestMasterDataCallback callback)
         if (!response->isSucceed()) {
             CCLOG("response failed");
             CCLOG("error buffer: %s", response->getErrorBuffer());
-            callback(true, json11::Json());
+            callback(true, json11::Json::NUL);
             return;
         }
+        
+        // TODO: check contentType
         
         // dropbox/json11 dump data
         std::string responseString(response->getResponseData()->begin(), response->getResponseData()->end());
@@ -135,12 +163,12 @@ void StartScene::requestMasterData(RequestMasterDataCallback callback)
         auto json = json11::Json::parse(responseString, err);
         if (!err.empty()) {
             CCLOG("error = %s", err.c_str());
-            callback(true, json11::Json());
+            callback(true, json11::Json::NUL);
+            return;
         }
         CCLOG("response = %s", json.dump().c_str());
         callback(false, json);
     });
-    request->setTag("GET test1");
-    HttpClient::getInstance()->send(request);
-    request->release();
+    _request->setTag("GET test1");
+    HttpClient::getInstance()->send(_request);
 }

@@ -20,6 +20,8 @@ namespace json11 {
     class Json;
 }
 
+#include "network/HttpClient.h"
+
 /**
  @class StartScene StartScene.h
  
@@ -33,7 +35,7 @@ namespace json11 {
 class StartScene : public cocos2d::Layer
 {
 public:
-    typedef std::function<void(bool error, json11::Json json)> RequestMasterDataCallback;
+    typedef std::function<void(bool error, json11::Json json)> RequestCallback;
     
     StartScene();
     virtual ~StartScene();
@@ -51,7 +53,10 @@ public:
 protected:
     
 private:
-    void requestMasterData(RequestMasterDataCallback callback);
+    cocos2d::network::HttpRequest* _request;
+    
+    void requestLoadMaster(const std::string &requestUrl, const RequestCallback &callback);
+    void request(cocos2d::network::HttpRequest::Type requestType, json11::Json requestData, const std::string &requestUrl, const RequestCallback &callback);
 };
 
 #endif /* defined(__Cocos2dRogueLike__StartScene__) */
