@@ -9,6 +9,7 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+void fitDesignResolutionSize(GLView *glview, float width, float height, float scale = 1.00f);
 
 AppDelegate::AppDelegate()
 {
@@ -31,26 +32,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // チラツキ対策
     Director::getInstance()->setDepthTest(false);
 
-    const float baseScale  = 0.75f;
-    const float baseWidth  = 480.0f;
-    const float baseHeight = 320.0f;
-    const float baseScaleWidth  = baseWidth * baseScale;
-    const float baseScaleHeight = baseHeight * baseScale;
-    
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    const int widthDiff = (int)visibleSize.width % (int)baseWidth;
-    const int heightDiff = (int)visibleSize.height % (int)baseHeight;
-
-    if (widthDiff == 0 && heightDiff == 0) {
-        glview->setDesignResolutionSize(baseScaleWidth, baseScaleHeight, ResolutionPolicy::SHOW_ALL);
-    } else {
-        float divX = visibleSize.width / baseWidth;
-        float divY = visibleSize.height / baseHeight;
-        glview->setDesignResolutionSize(baseScaleWidth + (widthDiff / divX),
-                                        baseScaleHeight + (heightDiff / divY),
-                                        ResolutionPolicy::SHOW_ALL);
-        CCLOG("###### designSize w=%f h=%f", (baseScaleWidth + (widthDiff / divX)), (baseScaleHeight + (heightDiff / divY)));
-    }
+    // 480x320準拠
+    fitDesignResolutionSize(glview, 480.0f, 320.0f, 0.75f);
     
     // turn on display FPS
     director->setDisplayStats(true);
@@ -65,6 +48,31 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->runWithScene(scene);
 
     return true;
+}
+
+void fitDesignResolutionSize(GLView *glview, float width, float height, float scale)
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    
+    const float baseScaleWidth  = width * scale;
+    const float baseScaleHeight = height * scale;
+    
+    const int widthDiff = abs((int)visibleSize.width - (int)width);
+    const int heightDiff = abs((int)visibleSize.height - (int)height);
+    
+    if (widthDiff == 0 && heightDiff == 0) {
+        glview->setDesignResolutionSize(baseScaleWidth,
+                                        baseScaleHeight,
+                                        ResolutionPolicy::SHOW_ALL);
+    } else {
+        float divX = visibleSize.width / baseScaleWidth;
+        float divY = visibleSize.height / baseScaleHeight;
+        float fixWidth = widthDiff / divY;
+        float fixHeight = heightDiff / divX;
+        glview->setDesignResolutionSize(baseScaleWidth + fixWidth,
+                                        baseScaleHeight + fixHeight,
+                                        ResolutionPolicy::SHOW_ALL);
+    }
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
