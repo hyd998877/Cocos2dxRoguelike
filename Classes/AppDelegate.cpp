@@ -9,7 +9,7 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-void fitDesignResolutionSize(GLView *glview, float width, float height, float scale = 1.00f);
+Size getFitDesignResolutionSize(float width, float height, float scale);
 
 AppDelegate::AppDelegate()
 {
@@ -33,7 +33,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     Director::getInstance()->setDepthTest(false);
 
     // 480x320準拠
-    fitDesignResolutionSize(glview, 480.0f, 320.0f, 0.75f);
+    auto fitSize = getFitDesignResolutionSize(480.0f, 320.0f, 1.0f);
+    CCLOG("fitSize w = %f h = %f", fitSize.width, fitSize.height);
+    glview->setDesignResolutionSize(fitSize.width, fitSize.height, ResolutionPolicy::SHOW_ALL);
     
     // turn on display FPS
     director->setDisplayStats(true);
@@ -50,7 +52,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     return true;
 }
 
-void fitDesignResolutionSize(GLView *glview, float width, float height, float scale)
+Size getFitDesignResolutionSize(float width, float height, float scale)
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     
@@ -61,17 +63,19 @@ void fitDesignResolutionSize(GLView *glview, float width, float height, float sc
     const int heightDiff = abs((int)visibleSize.height - (int)height);
     
     if (widthDiff == 0 && heightDiff == 0) {
-        glview->setDesignResolutionSize(baseScaleWidth,
-                                        baseScaleHeight,
-                                        ResolutionPolicy::SHOW_ALL);
+        return Size(baseScaleWidth, baseScaleHeight);
+    }
+    
+    float divX = visibleSize.width / baseScaleWidth;
+    float divY = visibleSize.height / baseScaleHeight;
+    float fixWidth = widthDiff / divY;
+    float fixHeight = heightDiff / divX;
+    if (width > height) {
+        float addWidth = (heightDiff / divY * (width / height));
+        return Size(baseScaleWidth + fixWidth - addWidth, baseScaleHeight);
     } else {
-        float divX = visibleSize.width / baseScaleWidth;
-        float divY = visibleSize.height / baseScaleHeight;
-        float fixWidth = widthDiff / divY;
-        float fixHeight = heightDiff / divX;
-        glview->setDesignResolutionSize(baseScaleWidth + fixWidth,
-                                        baseScaleHeight + fixHeight,
-                                        ResolutionPolicy::SHOW_ALL);
+        float addheight = (widthDiff / divX * (height / width));
+        return Size(baseScaleWidth, baseScaleHeight + fixHeight - addheight);
     }
 }
 
