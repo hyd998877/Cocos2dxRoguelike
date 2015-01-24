@@ -38,3 +38,7 @@ https://rogue-game-web.herokuapp.com/
 
 **「このアプリは、上記の画像提供元の画像素材を使用しています。このアプリで使用されている画像を、このゲームを遊ぶ以外の用途には使用しないで下さい」**
 
+## License
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/2.1/jp/88x31.png" /></a><br />この 作品 は <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.1/jp/">クリエイティブ・コモンズ 表示 - 非営利 - 継承 2.1 日本 ライセンスの下に提供されています。</a>
+
