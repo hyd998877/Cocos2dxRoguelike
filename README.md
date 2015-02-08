@@ -1,6 +1,7 @@
 # Cocos2d-xローグライクゲーム
 
-[![](https://dply.me/ks7a9w/button/small)](https://dply.me/ks7a9w#install)
+![2014-06-07 22.10.23.png](https://qiita-image-store.s3.amazonaws.com/0/40887/780d78cf-16ac-c4ae-01b5-bb362a450d0e.png "2014-06-07 22.10.23.png")
+
 
 - [masterデータ](https://docs.google.com/spreadsheets/d/1ElK17LjkOF1EYS0w1TwvziqaeJir0o35PIx9wSeYWXI/edit#gid=1026156113)
 - [masterデータのjson取得](https://script.google.com/macros/s/AKfycbxDIVz0IR0o-5VTTAwqnEo1lsFZCYo5s58vBJMYvNYBi8gwO_I/exec)
