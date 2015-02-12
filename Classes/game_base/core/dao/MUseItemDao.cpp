@@ -9,6 +9,7 @@
 #include "MUseItemDao.h"
 
 #include "json11.hpp"
+#include <algorithm>
 
 // シングルトン
 static MUseItemDao *s_m_user_item_dao_instance = nullptr;

@@ -77,12 +77,12 @@ void TableViewTestLayer::touchCellRefreshColor(TableView* pTable, int touchCellI
     }
 }
 
-Size TableViewTestLayer::tableCellSizeForIndex(TableView *table, long idx) {
+Size TableViewTestLayer::tableCellSizeForIndex(TableView *table, ssize_t idx) {
     Size content_size = getContentSize();
     return Size(content_size.width, content_size.height / TableViewTestLayer::LIST_SIZE);
 }
 
-TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) {
+TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, ssize_t idx) {
     
     Size content_size = getContentSize();
     TableLayout table_item;
@@ -150,7 +150,7 @@ TableViewCell* TableViewTestLayer::tableCellAtIndex(TableView *table, long idx) 
     return cell;
 }
 
-long TableViewTestLayer::numberOfCellsInTableView(TableView *table)
+ssize_t TableViewTestLayer::numberOfCellsInTableView(TableView *table)
 {
     return m_itemList.size();
 }

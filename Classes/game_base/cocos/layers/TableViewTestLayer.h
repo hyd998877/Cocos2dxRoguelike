@@ -32,18 +32,22 @@ public:
     // 初期
     virtual bool init(std::list<TableLayout> itemList, cocos2d::Size contentSize);
     TableViewTestLayer();
+    virtual ~TableViewTestLayer() {
+        
+    }
     static TableViewTestLayer* createWithTextArray(std::list<TableLayout> itemList, cocos2d::Size contentSize);
     
     // デリゲート関連
     virtual void scrollViewDidScroll(cocos2d::extension::ScrollView* view) {};
     virtual void scrollViewDidZoom(cocos2d::extension::ScrollView* view) {}
-    virtual void tableCellTouched(cocos2d::extension::TableView* table, cocos2d::extension::TableViewCell* cell);
-    virtual cocos2d::Size tableCellSizeForIndex(cocos2d::extension::TableView *table, long idx);
-    virtual cocos2d::extension::TableViewCell* tableCellAtIndex(cocos2d::extension::TableView *table, long idx);
-    virtual long numberOfCellsInTableView(cocos2d::extension::TableView *table);
+    virtual cocos2d::Size tableCellSizeForIndex(cocos2d::extension::TableView *table, ssize_t idx);
+    virtual cocos2d::extension::TableViewCell* tableCellAtIndex(cocos2d::extension::TableView *table, ssize_t idx);
+    virtual ssize_t numberOfCellsInTableView(cocos2d::extension::TableView *table);
     
     void touchCellRefreshColor(cocos2d::extension::TableView* pTable, int touchCellIdx);
     
+    // TableViewDelegate
+    virtual void tableCellTouched(cocos2d::extension::TableView* table, cocos2d::extension::TableViewCell* cell);
     // リスト作成
     void makeItemList(std::list<TableLayout> itemList);
     

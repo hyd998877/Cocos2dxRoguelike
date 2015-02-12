@@ -32,7 +32,7 @@ RogueTMXTiledMap * RogueTMXTiledMap::create(const std::string& tmxFile /* = "" *
     // 自動生成
     ret->_tmxMapData = TMXGenerator::createTMXMapData();
     std::string tmxString = TMXGenerator::generator(ret->_tmxMapData);
-    if (ret->initWithXML(tmxString, FileUtils::getInstance()->fullPathForFilename("tmx"))) {
+    if (ret->initWithXML(tmxString, "tmx")) {
 //    if (ret->initWithTMXFile(tmxFile)) {
         ret->initRogue();
         ret->autorelease();

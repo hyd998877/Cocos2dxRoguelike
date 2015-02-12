@@ -9,6 +9,7 @@
 #ifndef __Cocos2dRogueLike__StringUtils__
 #define __Cocos2dRogueLike__StringUtils__
 
+#include <stdlib.h>
 #include <vector>
 #include <string>
 #include <functional>

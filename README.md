@@ -9,15 +9,15 @@
 2015/01/24: 開発飽きたのでちょっと放置中
 
 ## バージョンなど
-- Cocos2d-x 3.2（Cocos2d-x 2.2.0からstart）
+- Cocos2d-x 3.4（Cocos2d-x 2.2.0からstart）
 - Tiled Map Editor Version 0.9.1
 - ~~CocosBuilder 3.0-alpha5~~（そこまでガッツリレイアウトしないのでやめた）
 - CocosStudio 1.5.0.1 (win)
 
 ## 開発環境
 - Mac OS X 10.9.2
-- Xcode 5.1
-- Android NDK r9d
+- Xcode 6.1
+- Android NDK r10d
 
 ## サーバー
 アカウント管理とマスタデータの取得のみ

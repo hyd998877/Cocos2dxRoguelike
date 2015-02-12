@@ -70,7 +70,7 @@ bool StartScene::init()
     }),NULL)));
     
     // ログイン
-    auto loginUrl = "http://rogue-game-web.herokuapp.com/login/";
+    auto loginUrl = "https://rogue-game-web.herokuapp.com/login/";
     request(HttpRequest::Type::POST, json11::Json::object{{"uuid", "1111111111"}, {"name", "test"}}, loginUrl, [this, label](bool error, json11::Json response) {
         std::string versionCode;
         if (error) {
@@ -81,7 +81,7 @@ bool StartScene::init()
         }
         
         // マスターデータの読みこみ
-        auto masterLoadUrl = StringUtils::format("http://rogue-game-web.herokuapp.com/load/master/%s", versionCode.c_str());
+        auto masterLoadUrl = StringUtils::format("https://rogue-game-web.herokuapp.com/load/master/%s", versionCode.c_str());
         this->requestLoadMaster(masterLoadUrl, [label](bool error, json11::Json response) {
             if (error) {
                 CCLOG("load master error");
@@ -170,5 +170,5 @@ void StartScene::request(HttpRequest::Type requestType, json11::Json requestData
         callback(false, json);
     });
     _request->setTag("GET test1");
-    HttpClient::getInstance()->send(_request);
+    HttpClient::getInstance()->sendImmediate(_request);
 }
