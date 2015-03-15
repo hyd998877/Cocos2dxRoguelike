@@ -1,9 +1,6 @@
 /****************************************************************************
-Copyright (c) 2008-2010 Ricardo Quesada
-Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2011      Zynga Inc.
 Copyright (c) 2013-2014 Chukong Technologies Inc.
- 
+
 http://www.cocos2d-x.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,22 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-package org.cocos2dx.cpp;
 
-import android.os.Bundle;
+package org.cocos2dx.lib;
 
-import org.cocos2dx.lib.GameControllerActivity;
-
-public class AppActivity extends GameControllerActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //The standard controller,without doing anything special. e.g: Amazon Fire TV
-        //Manually specify an adapter.
-        this.connectController(DRIVERTYPE_NIBIRU);
-        //this.connectController(DRIVERTYPE_MOGA);
-        //this.connectController(DRIVERTYPE_OUYA);
-    }
+public class Cocos2dxLuaJavaBridge
+{
+    public static native int callLuaFunctionWithString(int luaFunctionId, String value);
+    public static native int callLuaGlobalFunctionWithString(String luaFunctionName, String value);
+    public static native int retainLuaFunction(int luaFunctionId);
+    public static native int releaseLuaFunction(int luaFunctionId);
 }

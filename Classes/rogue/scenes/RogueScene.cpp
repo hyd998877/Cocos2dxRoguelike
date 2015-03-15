@@ -68,6 +68,7 @@ RogueScene::RogueScene()
 
 RogueScene::~RogueScene()
 {
+    Controller::stopDiscoveryController();
     CCLOG("death rogueScene");
 }
 
@@ -203,6 +204,8 @@ bool RogueScene::initWithQuestId(RoguePlayDto::QuestType questType, int quest_id
 
 void RogueScene::setupKeypadLayout()
 {
+    registerControllerListener();
+    
     auto keypad = KeypadLayout::create();
     keypad->setKeypadCallback(KeypadLayout::ButtonType::UP, [this]() {
         if (!this->isKeypadControll()) {
@@ -1587,6 +1590,206 @@ MapManager* RogueScene::getMapManager()
 
 RogueTMXTiledMap* RogueScene::getRogueMapLayer() {
     return static_cast<RogueTMXTiledMap*>(this->getChildByTag(Tags::TiledMapLayerTag));
+}
+
+
+void RogueScene::registerControllerListener()
+{
+    _listener = EventListenerController::create();
+    
+    _listener->onConnected = CC_CALLBACK_2(RogueScene::onConnectController,this);
+    _listener->onDisconnected = CC_CALLBACK_2(RogueScene::onDisconnectedController,this);
+    _listener->onKeyDown = CC_CALLBACK_3(RogueScene::onKeyDown, this);
+    _listener->onKeyUp = CC_CALLBACK_3(RogueScene::onKeyUp, this);
+    _listener->onAxisEvent = CC_CALLBACK_3(RogueScene::onAxisEvent, this);
+    
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(_listener, this);
+    
+    Controller::startDiscoveryController();
+    
+    //get game pad status in polling mode
+    //scheduleUpdate();
+}
+
+void RogueScene::onConnectController(Controller* controller, Event* event)
+{
+    if (controller == nullptr) {
+        return;
+    }
+//    if (controller == nullptr || controller == _firstHolder.controller || controller == _secondHolder.controller)
+//    {
+//        return;
+//    }
+//    
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //receive back key
+    controller->receiveExternalKeyEvent(4,true);
+    //receive menu key
+    controller->receiveExternalKeyEvent(82,true);
+#endif
+    
+}
+
+void RogueScene::onDisconnectedController(Controller* controller, Event* event)
+{
+    log("onDisconnectedController:%d",controller->getDeviceId());
+}
+
+void RogueScene::onKeyDown(cocos2d::Controller *controller, int keyCode, cocos2d::Event *event)
+{
+    touchPadEvent(controller, keyCode, true);
+}
+
+void RogueScene::onKeyUp(cocos2d::Controller *controller, int keyCode, cocos2d::Event *event)
+{
+    touchPadEvent(controller, keyCode, false);
+}
+
+void RogueScene::onAxisEvent(cocos2d::Controller* controller, int keyCode, cocos2d::Event* event)
+{
+//    ControllerHolder* holder = nullptr;
+//    if (controller == _firstHolder.controller)
+//        holder = &_firstHolder;
+//    else if(controller == _secondHolder.controller)
+//        holder = &_secondHolder;
+//    else
+//        return;
+//    
+//    const auto& ketStatus = controller->getKeyStatus(keyCode);
+//    switch (keyCode)
+//    {
+//        case Controller::Key::JOYSTICK_LEFT_X:
+//            holder->_leftJoystick->setPositionX(238 + ketStatus.value * 24);
+//            break;
+//        case Controller::Key::JOYSTICK_LEFT_Y:
+//            holder->_leftJoystick->setPositionY(460 - ketStatus.value * 24);
+//            break;
+//        case Controller::Key::JOYSTICK_RIGHT_X:
+//            holder->_rightJoystick->setPositionX(606 + ketStatus.value * 24);
+//            break;
+//        case Controller::Key::JOYSTICK_RIGHT_Y:
+//            holder->_rightJoystick->setPositionY(293 - ketStatus.value * 24);
+//            break;
+//        case Controller::Key::AXIS_LEFT_TRIGGER:
+//            holder->_buttonL2->setOpacity(200 * controller->getKeyStatus(keyCode).value);
+//            break;
+//        case Controller::Key::AXIS_RIGHT_TRIGGER:
+//            holder->_buttonR2->setOpacity(200 * controller->getKeyStatus(keyCode).value);
+//            break;
+//        default:
+//            break;
+//    }
+}
+
+void RogueScene::touchPadEvent(cocos2d::Controller *controller, int keyCode, bool isPressed)
+{
+    onConnectController(controller, nullptr);
+    if (isPressed)
+    {
+        auto mapIndex = getNowRogueMapIndex();
+        switch (keyCode)
+        {
+            case Controller::Key::BUTTON_A:
+                if (!this->isKeypadControll()) {
+                    return;
+                }
+                break;
+            case Controller::Key::BUTTON_B:
+                if (!this->isKeypadControll()) {
+                    return;
+                }
+                this->attack();
+                break;
+            case Controller::Key::BUTTON_X:
+                if (!this->isKeypadControll()) {
+                    return;
+                }
+                this->showSystemMenu();
+                break;
+            case Controller::Key::BUTTON_Y:
+                if (!this->isKeypadControll()) {
+                    return;
+                }
+                this->showItemInventoryWindow();
+                break;
+            case Controller::Key::BUTTON_DPAD_UP:
+                if (!this->isKeypadControll()) {
+                    return;
+                }
+                this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y + 1));
+                break;
+            case Controller::Key::BUTTON_DPAD_DOWN:
+                if (!this->isKeypadControll()) {
+                    return;
+                }
+                this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x, mapIndex.y - 1));
+                break;
+            case Controller::Key::BUTTON_DPAD_LEFT:
+                if (!this->isKeypadControll()) {
+                    return;
+                }
+                this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x - 1, mapIndex.y));
+                break;
+            case Controller::Key::BUTTON_DPAD_RIGHT:
+                if (!this->isKeypadControll()) {
+                    return;
+                }
+                this->touchEventExec(getRogueMapLayer()->indexToPoint(mapIndex.x + 1, mapIndex.y));
+                break;
+            case Controller::Key::BUTTON_LEFT_SHOULDER:
+                break;
+            case Controller::Key::BUTTON_RIGHT_SHOULDER:
+                break;
+            case Controller::Key::BUTTON_LEFT_THUMBSTICK:
+                break;
+            case Controller::Key::BUTTON_RIGHT_THUMBSTICK:
+                break;
+            default:
+            {
+                char ketStatus[30];
+                sprintf(ketStatus,"Key Down:%d",keyCode);
+                CCLOG("%s", ketStatus);
+                break;
+            }
+        }
+    }
+    else
+    {
+        switch (keyCode)
+        {
+            case Controller::Key::BUTTON_A:
+                break;
+            case Controller::Key::BUTTON_B:
+                break;
+            case Controller::Key::BUTTON_X:
+                break;
+            case Controller::Key::BUTTON_Y:
+                break;
+            case Controller::Key::BUTTON_DPAD_UP:
+                break;
+            case Controller::Key::BUTTON_DPAD_DOWN:
+                break;
+            case Controller::Key::BUTTON_DPAD_LEFT:
+                break;
+            case Controller::Key::BUTTON_DPAD_RIGHT:
+                break;
+            case Controller::Key::BUTTON_LEFT_SHOULDER:
+                break;
+            case Controller::Key::BUTTON_RIGHT_SHOULDER:
+                break;
+            case Controller::Key::BUTTON_LEFT_THUMBSTICK:
+                break;
+            case Controller::Key::BUTTON_RIGHT_THUMBSTICK:
+                break;
+            default:
+            {
+                char ketStatus[30];
+                sprintf(ketStatus,"Key Up:%d",keyCode);
+                CCLOG("%s", ketStatus);
+                break;
+            }
+        }
+    }
 }
 
 NS_ROGUE_END
