@@ -8,10 +8,13 @@ gen
 *o.d
 doc/
 
+# idea, gradle
 .gradle
-proj.android/build
-
-modules/libcocos
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+build
 
 proj.ios_mac/Cocos2dRogueLike.xcodeproj/project.xcworkspace/xcuserdata/m00206-yokomichi.xcuserdatad
 project.xcworkspace

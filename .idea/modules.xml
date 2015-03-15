@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Cocos2dxRoguelike.iml" filepath="$PROJECT_DIR$/Cocos2dxRoguelike.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cocos2d/cocos/platform/android/ControllerManualAdapter/ControllerManualAdapter.iml" filepath="$PROJECT_DIR$/cocos2d/cocos/platform/android/ControllerManualAdapter/ControllerManualAdapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/proj.android/proj.android.iml" filepath="$PROJECT_DIR$/proj.android/proj.android.iml" />
+    </modules>
+  </component>
+</project>
+
