@@ -6,6 +6,7 @@
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
+        <option name="gradleJvm" value="1.8" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -13,7 +14,7 @@
             <option value="$PROJECT_DIR$/cocos2d/cocos" />
             <option value="$PROJECT_DIR$/cocos2d/cocos/platform" />
             <option value="$PROJECT_DIR$/cocos2d/cocos/platform/android" />
-            <option value="$PROJECT_DIR$/cocos2d/cocos/platform/android/ControllerManualAdapter" />
+            <option value="$PROJECT_DIR$/cocos2d/cocos/platform/android/java" />
             <option value="$PROJECT_DIR$/proj.android" />
           </set>
         </option>
@@ -21,4 +22,3 @@
     </option>
   </component>
 </project>
-

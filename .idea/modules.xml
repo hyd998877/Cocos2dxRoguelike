@@ -4,8 +4,12 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Cocos2dxRoguelike.iml" filepath="$PROJECT_DIR$/Cocos2dxRoguelike.iml" />
       <module fileurl="file://$PROJECT_DIR$/cocos2d/cocos/platform/android/ControllerManualAdapter/ControllerManualAdapter.iml" filepath="$PROJECT_DIR$/cocos2d/cocos/platform/android/ControllerManualAdapter/ControllerManualAdapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cocos2d/cocos/platform/android/android.iml" filepath="$PROJECT_DIR$/cocos2d/cocos/platform/android/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cocos2d/cocos/cocos.iml" filepath="$PROJECT_DIR$/cocos2d/cocos/cocos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cocos2d/cocos2d.iml" filepath="$PROJECT_DIR$/cocos2d/cocos2d.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cocos2d/cocos/platform/android/java/java.iml" filepath="$PROJECT_DIR$/cocos2d/cocos/platform/android/java/java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cocos2d/cocos/platform/platform.iml" filepath="$PROJECT_DIR$/cocos2d/cocos/platform/platform.iml" />
       <module fileurl="file://$PROJECT_DIR$/proj.android/proj.android.iml" filepath="$PROJECT_DIR$/proj.android/proj.android.iml" />
     </modules>
   </component>
 </project>
-

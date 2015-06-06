@@ -19,7 +19,6 @@
 
 #include "ItemInventoryDto.h"
 #include "RoguePlayDto.h"
-#include "base/CCGameController.h"
 
 USING_NS_CC;
 
@@ -112,16 +111,6 @@ private:
     ///////////
     MapManager* getMapManager();
     
-    // TODO: あとで別クラスにする
-    cocos2d::EventListenerController* _listener;
-    
-    void registerControllerListener();
-    void onConnectController(Controller* controller, Event* event);
-    void onDisconnectedController(Controller* controller, Event* event);
-    void onKeyDown(cocos2d::Controller *controller, int keyCode, cocos2d::Event *event);
-    void onKeyUp(cocos2d::Controller *controller, int keyCode, cocos2d::Event *event);
-    void onAxisEvent(cocos2d::Controller* controller, int keyCode, cocos2d::Event* event);
-    void touchPadEvent(cocos2d::Controller *controller, int keyCode, bool isPressed);
 private:
     enum Tags {
         TiledMapLayerTag          =      1,

@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-		compile project(':cocos2d:cocos:platform:android:ControllerManualAdapter')
+    compile project(':cocos2d:cocos:platform:android:java')
 }
 
 task resourcesCopy(dependsOn: "resourcesClean", type: Copy) {

@@ -1,3 +1,2 @@
-include ':cocos2d:cocos:platform:android:ControllerManualAdapter'
+include ':cocos2d:cocos:platform:android:java'
 include ':proj.android'
-
